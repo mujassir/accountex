@@ -1,0 +1,109 @@
+﻿@using AccountEx.Common
+@{
+    ViewBag.Title = "Contact Groups";
+}
+
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">Manage Contact Groups</h1>
+}
+
+
+<!-- END PAGE HEADER-->
+
+<div class="row" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-edit"></i>Add/Edit Groups
+                </div>
+
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal" data-save="save">
+                    <input type="text" id="Id" class="hide" />
+                    <input type="text" id="AccountId" class="hide" />
+                    <div class="form-body">
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Name</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control " placeholder="Name" id="Name" data-required="required" data-message="Name is required" />
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">Code</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control " placeholder="Name" id="Code" data-required="required" data-message="Code is required" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="prefix">Description</label>
+                        <div class="col-md-6">
+                            <textarea class="form-control" id="Description" rows="4"></textarea>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+
+                    <div class="col-md-8">
+                        <button type="button" id="btn-save" class="btn btn-primary">Save</button>
+                        <button id="btnCancel" type="button" class="btn btn-default">Cancel</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <!-- END EXAMPLE TABLE PORTLET-->
+</div>
+</div>
+
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Record Listing
+                </div>
+            </div>
+
+            <div class="portlet-body">
+
+                <table class="table table-striped table-bordered table-hover" id="mainTable">
+                    <thead>
+                        <tr>
+
+                            <th>Name</th>
+                            <th>Code</th>
+                            <th style="width: 75px;" class="no-sort"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="3">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+@section FooterScript
+{
+    <script src="~/Content/AppJS/CRM/ContactGroup.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            ContactGroup.init();
+        });
+    </script>
+}

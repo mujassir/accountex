@@ -1,0 +1,432 @@
+﻿
+.portlet > .portlet-title,
+.dataTables_wrapper .row,
+span.action {
+    display: none;
+}
+
+
+
+.footer {
+    position: fixed;
+    bottom: 1px;
+    display: none;
+}
+
+table {
+    page-break-inside: auto;
+}
+
+tr {
+    page-break-inside: avoid;
+    /*page-break-after: auto;*/
+}
+
+table {
+    page-break-after: auto;
+}
+
+tr {
+    page-break-inside: avoid;
+    /*page-break-after: always;*/
+}
+
+td {
+    page-break-inside: avoid;
+    /*page-break-after: auto;*/
+}
+
+thead {
+    display: table-header-group;
+}
+
+tfoot {
+    display: table-footer-group;
+}
+
+.portlet.box.green, .portlet.box.red, .portlet.box.purple, .portlet.box.yellow, .portlet.box.gray {
+    border-width: 0;
+    border: none !important;
+}
+
+.portlet > .portlet-body {
+    padding: 0 !important;
+}
+
+.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+    padding: 3px 8px;
+    font-size: 0.75em;
+}
+
+.table-bordered, .table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+    border: 1px solid #AAA !important;
+}
+
+thead {
+    display: table-header-group;
+}
+
+tfoot {
+    display: table-footer-group;
+}
+
+.blockUI, .blockOverlay {
+    display: none;
+}
+
+#toast-container {
+    display: none;
+}
+
+.hidden-print {
+    display: none;
+}
+
+.report-links a:link:after,
+.report-links a:visited:after {
+    content: "" !important;
+}
+
+.page-head {
+    display: block !important;
+}
+
+    .page-head .page-title {
+        display: block !important;
+        float: none;
+    }
+
+
+
+#div-report #invoicetitle {
+    color: white !important;
+    background-color: black !important;
+    -webkit-print-color-adjust: exact;
+}
+
+*,
+*:before,
+*:after {
+    background: transparent !important;
+    color: #000 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+
+a,
+a:visited {
+    text-decoration: underline;
+}
+
+    a[href]:after {
+        /*content: " (" attr(href) ")";*/
+    }
+
+abbr[title]:after {
+    /*content: " (" attr(title) ")";*/
+}
+
+a[href^="#"]:after,
+a[href^="javascript:"]:after {
+    content: "";
+}
+
+pre,
+blockquote {
+    border: 1px solid #999;
+    page-break-inside: avoid;
+}
+
+thead {
+    display: table-header-group;
+}
+
+tr,
+img {
+    page-break-inside: avoid;
+}
+
+img {
+    max-width: 100% !important;
+}
+
+p,
+h2,
+h3 {
+    orphans: 3;
+    widows: 3;
+}
+
+h2,
+h3 {
+    page-break-after: avoid;
+}
+
+.navbar {
+    display: none;
+}
+
+.btn > .caret,
+.dropup > .btn > .caret {
+    border-top-color: #000 !important;
+}
+
+.label {
+    border: 1px solid #000;
+}
+
+.table {
+    border-collapse: collapse !important;
+}
+
+    .table td,
+    .table th {
+        background-color: #fff !important;
+    }
+
+.table-bordered th,
+.table-bordered td {
+    border: 1px solid #ddd !important;
+}
+
+.visible-print {
+    display: block !important;
+}
+
+table.visible-print {
+    display: table !important;
+}
+
+tr.visible-print {
+    display: table-row !important;
+}
+
+th.visible-print,
+td.visible-print {
+    display: table-cell !important;
+}
+
+.visible-print-block {
+    display: block !important;
+}
+
+
+.visible-print-inline {
+    display: inline !important;
+}
+
+.visible-print-inline-block {
+    display: inline-block !important;
+}
+
+.hidden-print {
+    display: none !important;
+}
+
+.note-editor * {
+    text-shadow: none !important;
+    color: #000 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+.note-editor a,
+.note-editor a:visited {
+    text-decoration: underline;
+}
+
+    .note-editor a[href]:after {
+        content: " (" attr(href) ")";
+    }
+
+.note-editor abbr[title]:after {
+    content: " (" attr(title) ")";
+}
+
+.note-editor .ir a:after,
+.note-editor a[href^="javascript:"]:after,
+.note-editor a[href^="#"]:after {
+    content: "";
+}
+
+.note-editor pre,
+.note-editor blockquote {
+    border: 1px solid #999;
+    page-break-inside: avoid;
+}
+
+.note-editor thead {
+    display: table-header-group;
+}
+
+.note-editor tr,
+.note-editor img {
+    page-break-inside: avoid;
+}
+
+.note-editor img {
+    max-width: 100% !important;
+}
+
+@page {
+    margin: 2cm .5cm;
+}
+
+.note-editor p,
+.note-editor h2,
+.note-editor h3 {
+    orphans: 3;
+    widows: 3;
+}
+
+.note-editor h2,
+.note-editor h3 {
+    page-break-after: avoid;
+}
+
+.note-editor .navbar {
+    display: none;
+}
+
+.note-editor .table td,
+.note-editor .table th {
+    background-color: #fff !important;
+}
+
+.note-editor .btn > .caret,
+.note-editor .dropup > .btn > .caret {
+    border-top-color: #000 !important;
+}
+
+.note-editor .label {
+    border: 1px solid #000;
+}
+
+.note-editor .table {
+    border-collapse: collapse !important;
+}
+
+.note-editor .table-bordered th,
+.note-editor .table-bordered td {
+    border: 1px solid #ddd !important;
+}
+
+.visible-print {
+    display: block !important;
+}
+
+tr.visible-print {
+    display: table-row !important;
+}
+
+th.visible-print,
+td.visible-print {
+    display: table-cell !important;
+}
+
+.hidden-print,
+tr.hidden-print,
+th.hidden-print,
+td.hidden-print {
+    display: none !important;
+}
+
+* {
+    text-shadow: none !important;
+    color: #000 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+a,
+a:visited {
+    text-decoration: underline;
+}
+
+    a[href]:after {
+        /*content: " (" attr(href) ")";*/
+    }
+
+abbr[title]:after {
+    /*content: " (" attr(title) ")";*/
+}
+
+.ir a:after,
+a[href^="javascript:"]:after,
+a[href^="#"]:after {
+    content: "";
+}
+
+pre,
+blockquote {
+    border: 1px solid #999;
+    page-break-inside: avoid;
+}
+
+thead {
+    display: table-header-group;
+}
+
+tr,
+img {
+    page-break-inside: avoid;
+}
+
+img {
+    max-width: 100% !important;
+}
+
+@page {
+    margin: 0.5cm;
+}
+
+p,
+h2,
+h3 {
+    orphans: 3;
+    widows: 3;
+}
+
+h2,
+h3 {
+    page-break-after: avoid;
+}
+
+
+.visible-print {
+    display: inherit !important;
+}
+
+.hidden-print {
+    display: none !important;
+}
+
+.visible-print {
+    display: inherit !important;
+}
+
+.hidden-print {
+    display: none !important;
+}
+
+.visible-print {
+    display: block !important;
+}
+
+.hidden-print {
+    display: none !important;
+}
+
+.page-header, .actions {
+    display: none !important;
+}
+
+a {
+    color: #333333 !important;
+    text-decoration: none !important;
+}
+
+.page-head .page-title > h1 {
+    color: #000 !important;
+  
+}

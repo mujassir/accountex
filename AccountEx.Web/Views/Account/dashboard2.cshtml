@@ -1,0 +1,432 @@
+﻿@{
+    ViewBag.Title = "Dashboard";
+    ViewBag.TitleDescription = "dashboard & statistics";
+}
+
+<!-- BEGIN PAGE HEADER-->
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">Dashboard </h1>
+}
+<!-- BEGIN DASHBOARD STATS -->
+
+    <div class="portlet light bordered">
+        <div class="portlet-title hide">
+            <div class="caption">
+                <i class="icon-share font-blue-steel"></i>
+                <span class="caption-subject font-blue-steel ">Recent Activity</span>
+            </div>
+            <div class="actions hide">
+                <div class="btn-group">
+                    <a class="btn btn-sm btn-default btn-circle" href="#" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">Filter By <i class="fa fa-angle-down"></i>
+                    </a>
+                    <div class="dropdown-menu hold-on-click dropdown-checkboxes pull-right">
+                        <label>
+                            <input type="checkbox">
+                            Finance</label>
+                        <label>
+                            <input type="checkbox" checked="">
+                            Membership</label>
+                        <label>
+                            <input type="checkbox">
+                            Customer Support</label>
+                        <label>
+                            <input type="checkbox" checked="">
+                            HR</label>
+                        <label>
+                            <input type="checkbox">
+                            System</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row hide">
+            <div class="col-md-12">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="dashboard-stat green">
+                        <div class="visual">
+                            <i class="fa fa-shopping-cart"></i>
+                        </div>
+                        <div class="details">
+                            <div class="number">
+                                @ViewBag.CashInBank
+                            </div>
+                            <div class="desc">
+                                Sales
+                            </div>
+                        </div>
+                        <a class="more" href="../transaction/index?type=Sale">View more <i class="m-icon-swapright m-icon-white"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="dashboard-stat blue">
+                        <div class="visual">
+                            <i class="fa fa-comments"></i>
+                        </div>
+                        <div class="details">
+                            <div class="number">
+                                @ViewBag.Taxes
+                            </div>
+                            <div class="desc">
+                                Purchase
+                            </div>
+                        </div>
+                        <a class="more" href="../transaction/index?type=Purchase">View more <i class="m-icon-swapright m-icon-white"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="dashboard-stat purple">
+                        <div class="visual">
+                            <i class="fa fa-globe"></i>
+                        </div>
+                        <div class="details">
+                            <div class="number">
+                                @ViewBag.Sale
+                            </div>
+                            <div class="desc">
+                                Debtors
+                            </div>
+                        </div>
+                        <a class="more" href="#">View more <i class="m-icon-swapright m-icon-white"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="dashboard-stat yellow">
+                        <div class="visual">
+                            <i class="fa fa-bar-chart-o"></i>
+                        </div>
+                        <div class="details">
+                            <div class="number">
+                                @ViewBag.Purchase
+                            </div>
+                            <div class="desc">
+                                Creditors
+                            </div>
+                        </div>
+                        <a class="more" href="#">View more <i class="m-icon-swapright m-icon-white"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="tiles">
+                    <a>
+                        <div class="tile bg-blue-steel">
+                            <div class="tile-body">
+                                <i class="glyphicon glyphicon-transfer"></i>
+                            </div>
+                            <div class="tile-object">
+                                <div class="name">
+                                    Daily Activity Report
+                                </div>
+
+                            </div>
+                        </div>
+                    </a>
+
+                    @* <a href="../transaction/trans?type=Purchase">*@
+                    <div class="tile bg-red-intense ">
+                        <div class="tile-body">
+                            <i class="fa fa-shopping-cart"></i>
+                        </div>
+                        <div class="tile-object">
+                            <div class="name">
+                                Order Status
+                            </div>
+
+                        </div>
+                    </div>
+                    @*</a>*@
+                    <a href="../transaction/trans?type=Sale">
+                        <div class="tile bg-green">
+                            <div class="tile-body">
+                                <i class="fa icon-handbag"></i>
+                            </div>
+                            <div class="tile-object">
+                                <div class="name">
+                                    Sales
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="../transaction/trans?type=Purchase">
+                        <div class="tile bg-red-intense ">
+                            <div class="tile-body">
+                                <i class="fa fa-shopping-cart"></i>
+                            </div>
+                            <div class="tile-object">
+                                <div class="name">
+                                    Purchases
+                                </div>
+
+                            </div>
+                        </div>
+                    </a>
+                    <a>
+                        <div class="tile bg-yellow-lemon">
+                            <div class="tile-body">
+                                <i class="fa fa-money"></i>
+                            </div>
+                            <div class="tile-object">
+                                <div class="name">
+                                    Recovery Report
+                                </div>
+
+                            </div>
+                        </div>
+                    </a>
+                    <a href="../reports/generalledger?type=cash">
+
+                        <div class="tile bg-blue-hoki">
+                            <div class="tile-body">
+                                <i class="fa fa-usd"></i>
+                            </div>
+                            <div class="tile-object">
+                                <div class="name">
+                                    Cash Book
+                                </div>
+
+                            </div>
+                        </div>
+                    </a>
+                    <a href="../reports/generalledger?type=banks">
+
+                        <div class="tile bg-red-intense">
+                            <div class="tile-body">
+                                <i class="fa fa-bank"></i>
+                            </div>
+                            <div class="tile-object">
+                                <div class="name">
+                                    Bank Book
+                                </div>
+
+                            </div>
+                        </div>
+                    </a>
+                    <a>
+                        <div class="tile bg-red-intense">
+                            <div class="tile-body">
+                                <i class="fa fa-user"></i>
+                            </div>
+                            <div class="tile-object">
+                                <div class="name">
+                                    Customer Ledger
+                                </div>
+
+                            </div>
+                        </div>
+                    </a>
+                    <a>
+                        <div class="tile bg-yellow">
+                            <div class="tile-body">
+                                <i class="fa fa-user"></i>
+                            </div>
+                            <div class="tile-object">
+                                <div class="name">
+                                    Supplier Ledger
+                                </div>
+
+                            </div>
+                        </div>
+                    </a>
+                    <a href="../transaction/vouchertrans?type=CashPayments">
+                        <div class="tile bg-purple-studio">
+                            <div class="tile-body">
+                                <i class="fa fa-money"></i>
+                            </div>
+                            <div class="tile-object">
+                                <div class="name">
+                                    Cash Payment
+                                </div>
+                                @*<div class="number">
+                        121
+                    </div>*@
+                            </div>
+                        </div>
+                    </a>
+                    <a href="../transaction/vouchertrans?type=CashReceipts">
+
+                        <div class="tile bg-yellow-lemon">
+                            <div class="tile-body">
+                                <i class="fa fa-money"></i>
+                            </div>
+                            <div class="tile-object">
+                                <div class="name">
+                                    Cash Receipt
+                                </div>
+                                @*<div class="number">
+                        121
+                    </div>*@
+                            </div>
+                        </div>
+                    </a>
+                    <a href="../transaction/vouchertrans?type=BankPayments">
+
+                        <div class="tile bg-blue-steel">
+                            <div class="tile-body">
+                                <i class="fa fa-bank"></i>
+                            </div>
+                            <div class="tile-object">
+                                <div class="name">
+                                    Bank Payment
+                                </div>
+                                @*<div class="number">
+                        121
+                    </div>*@
+                            </div>
+                        </div>
+                    </a>
+                    <a href="../transaction/vouchertrans?type=BankReceipts">
+
+                        <div class="tile bg-green-meadow">
+                            <div class="tile-body">
+                                <i class="fa fa-bank"></i>
+                            </div>
+                            <div class="tile-object">
+                                <div class="name">
+                                    Bank Receipt
+                                </div>
+                                @*<div class="number">
+                        121
+                    </div>*@
+                            </div>
+                        </div>
+                    </a>
+                    <a href="../transaction/vouchertrans?type=TransferVoucher">
+
+                        <div class="tile bg-blue">
+                            <div class="tile-body">
+                                <i class="glyphicon glyphicon-transfer"></i>
+                            </div>
+                            <div class="tile-object">
+                                <div class="name">
+                                    Journal Voucher
+                                </div>
+                                @*<div class="number">
+                        121
+                    </div>*@
+                            </div>
+                        </div>
+                    </a>
+                    @* <a href="../transaction/trans?type=Purchase">*@
+                    <div class="tile bg-purple-studio ">
+                        <div class="tile-body">
+                            <i class="glyphicon glyphicon-transfer"></i>
+                        </div>
+                        <div class="tile-object">
+                            <div class="name">
+                                Add Order
+                            </div>
+
+                        </div>
+                    </div>
+                    @*</a>*@
+                    @*<a href="../transaction/trans?type=Purchase">*@
+                    <div class="tile bg-red-intense ">
+                        <div class="tile-body">
+                            <i class="fa icon-social-dropbox"></i>
+                        </div>
+                        <div class="tile-object">
+                            <div class="name">
+                                Add DC
+                            </div>
+
+                        </div>
+                    </div>
+                    @*</a>*@
+                    @*<a href="../transaction/trans?type=Purchase">*@
+                    <div class="tile bg-green ">
+                        <div class="tile-body">
+                            <i class="fa icon-handbag"></i>
+                        </div>
+                        <div class="tile-object">
+                            <div class="name">
+                                Add Sale
+                            </div>
+
+                        </div>
+                    </div>
+                    @*</a>*@
+                    @* <a href="../transaction/trans?type=Purchase">*@
+                    <div class="tile bg-red-intense ">
+                        <div class="tile-body">
+                            <i class="fa fa-shopping-cart"></i>
+                        </div>
+                        <div class="tile-object">
+                            <div class="name">
+                                Add Purchase
+                            </div>
+
+                        </div>
+                    </div>
+                    @*</a>*@
+
+                    <a href="../manage/customers">
+                        <div class="tile bg-red">
+                            <div class="tile-body">
+                                <i class="fa fa-user"></i>
+                            </div>
+                            <div class="tile-object">
+                                <div class="name">
+                                    Add Customers
+                                </div>
+
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="../manage/Products">
+
+                        <div class="tile bg-blue-steel">
+                            <div class="tile-body">
+                                <i class="icon-social-dropbox"></i>
+                            </div>
+                            <div class="tile-object">
+                                <div class="name">
+                                    Add Products
+                                </div>
+
+                            </div>
+                        </div>
+                    </a>
+                    <a href="../reports/stockreport">
+
+                        <div class="tile bg-green">
+                            <div class="tile-body">
+                                <i class="fa fa-cubes"></i>
+                            </div>
+                            <div class="tile-object">
+                                <div class="name">
+                                    Stock Report
+                                </div>
+
+                            </div>
+                        </div>
+                    </a>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END DASHBOARD STATS -->
+    <!-- END PAGE CONTENT-->
+    @section FooterScript
+{
+        <script src="~/Content/AppJS/Account/Dashboard.js"></script>
+        <script>
+            jQuery(document).ready(function () {
+                Dashboard.init();
+                Dashboard.initDashboardDaterange();
+            });
+        </script>
+    }

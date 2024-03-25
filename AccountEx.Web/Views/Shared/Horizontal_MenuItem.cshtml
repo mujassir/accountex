@@ -1,0 +1,73 @@
+﻿@model AccountEx.Common.SiteContextMenuItemExtra
+@functions {
+
+    public string GetDataType()
+    {
+        return Model.DataType + "" == "" ? "" : "data-type=" + Model.DataType + "";
+    }
+    public int GetLevel()
+    {
+        return AccountEx.Common.Numerics.GetInt(ViewData["Level"]);
+    }
+    public int Level { get; set; }
+    
+}
+@{
+    if (Level == 0) { Level = 1; }
+    if (Model.SubMenues.Where(p => p.IsVisible).ToList().Count > 0)
+    {
+        Level += GetLevel();
+
+        if (Level == 1)
+        {
+    <li class="menu-dropdown classic-menu-dropdown" data-level="@Level">
+
+        <a data-hover="dropdown" data-close-others="true" href="javascript:;">
+
+            <span class="title">@Model.Title
+            </span>
+
+            <span class="fa fa-angle-down"></span>
+        </a>
+        <ul class="dropdown-menu pull-left">
+            @foreach (var item in Model.SubMenues.Where(p => p.IsVisible).ToList())
+            {
+                var dic = new ViewDataDictionary();
+                dic.Add("Level", Level);
+                @Html.Partial("Horizontal_MenuItem", item, dic);
+            }
+        </ul>
+    </li>
+        }
+        else
+        {
+    <li class="dropdown-submenu" data-level="@Level">
+
+        <a href="javascript:;">
+
+            <span class="title">@Model.Title
+            </span>
+
+        </a>
+        <ul class="dropdown-menu">
+            @foreach (var item in Model.SubMenues.Where(p => p.IsVisible).ToList())
+            {
+                var dic = new ViewDataDictionary();
+                dic.Add("Level", Level);
+                @Html.Partial("Horizontal_MenuItem", item, dic);
+            }
+        </ul>
+    </li>
+
+        }
+    }
+    else
+    {
+    <li>
+        <a href="@Url.Content(string.IsNullOrWhiteSpace(Model.Url) ? "javascript:void(0);" : Model.Url)" @GetDataType()>
+            @if (Model.IconClass + "" != "")
+            { <i class="@Model.IconClass"></i>}
+            <span class="title">@Model.Title</span></a>
+    </li>
+    }
+}

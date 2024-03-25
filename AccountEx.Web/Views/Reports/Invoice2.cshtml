@@ -1,0 +1,344 @@
+﻿@model AccountEx.Web.Models.InvoiceModel
+@using AccountEx.Common;
+@{
+    Layout = "_Layout.cshtml";
+    ViewBag.Title = "Invoice";
+}
+<style type="text/css">
+    .report-table tbody tr td:nth-last-child(1),
+    .report-table tbody tr td:nth-last-child(2),
+    .report-table tbody tr td:nth-last-child(3) {
+        text-align: right;
+    }
+
+    .report-table td {
+        padding: 4px;
+    }
+
+    @@page {
+        size: landscape;
+        margin: 0.5cm;
+    }
+
+    .copy-left {
+        padding-right: 0.75cm;
+    }
+
+    .copy-right {
+        padding-left: 0.75cm;
+    }
+
+    .address {
+        display: block;
+    }
+
+    hr {
+        margin: 0;
+    }
+
+    .page-title {
+        margin-bottom: 3px;
+    }
+
+    h2 {
+        margin: 0;
+    }
+
+    th.number {
+        width: 60px;
+    }
+
+    .fixed-height {
+        height: 300px !important;
+    }
+</style>
+@{ var type = ((VoucherType)Enum.Parse(typeof(VoucherType), Request["type"], true)); }
+@if (Model == null)
+{
+    <div class="alert alert-danger">
+        <strong>Error!</strong>
+
+        @Html.ValidationSummary()
+    </div>
+}
+else
+{
+    <div class="row align-right">
+    </div>
+    <!-- BEGIN PAGE CONTENT-->
+
+    <div class="row">
+        <div class="portlet light">
+            <div class="portlet-title hidden-print">
+                @* <div class="caption">
+                        <i class="fa fa-list"></i>Report Data
+                    </div>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse"></a>
+                        <a href="javascript:;" class="remove"></a>
+                    </div>*@
+                <div class="actions">
+                    <button class="btn blue hidden-print" onclick="window.print();"><i class="fa fa-print"></i>&nbsp;Print </button>
+                </div>
+
+            </div>
+            <div class="portlet-body" style="overflow: auto">
+                <div class="col-xs-6 invoice copy-left">
+                    <span>Original</span>
+                    <label class="page-title text-center">
+                        Umar Traders
+                        <label class="address">Pakistan Cycle Market, Nila Ghumbad Lahore.</label>
+                    </label>
+                    <hr />
+                    <h2>@(type == VoucherType.Sale || type == VoucherType.SaleReturn ? "Sale Invoice" : "Purchase Invoice")</h2>
+
+                    <div class="row">
+                        <div class="col-xs-5">
+                            <h3>@(type == VoucherType.Sale || type == VoucherType.SaleReturn ? "Client" : "Supplier") :</h3>
+                            <ul class="list-unstyled">
+                                <li>
+                                    @Model.Account.Name
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div class="col-xs-2">
+                    </div>
+                    <div class="col-xs-5 invoice-payment">
+                        <h3>Invoice Details:</h3>
+                        <ul class="list-unstyled">
+                            <li>
+
+                                <strong class="">Invoice Number:</strong>
+                                @Model.InvoiceNumber
+                            </li>
+                            <li>
+                                <strong class="">Date:</strong> @Model.Date.ToString(AppSetting.DateFormat)
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+                <div class="row fixed-height">
+                    <div class="col-xs-12">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="width: 20px;">
+                                        #
+                                    </th>
+                                    <th>
+                                        Item
+                                    </th>
+                                    <th class="number">
+                                        Qty
+                                    </th>
+                                    <th class="number">
+                                        Price
+                                    </th>
+                                    <th class="number">
+                                        Total
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @foreach (var item in Model.Items.Select((p, i) => new { Index = i + 1, Value = p }))
+                                {
+                                    <tr>
+                                        <td>@item.Index</td>
+                                        <td>@item.Value.Name</td>
+                                        <td>@Numerics.IntToString(item.Value.Quantity) </td>
+
+                                        <td>@Numerics.DecimalToString(item.Value.Price)  </td>
+                                        <td class="align-right">@Numerics.DecimalToString(item.Value.Amount)  </td>
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <p>
+                            <b>Remarks:</b> @Model.Comments
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="invoice-block">
+                        <ul class="list-unstyled amounts">
+                            <li>
+                                <label class="col-xs-9 bold">Sub Total:</label>
+                                <label class="col-xs-2 underlined">
+                                    @Numerics.DecimalToString(Model.SubTotal)
+                                </label>
+                            </li>
+                            <li>
+                                <label class="col-xs-9 bold">Discount:</label>
+                                <label class="col-xs-2 underlined">
+                                    @Numerics.DecimalToString(Model.Discount)
+
+                                </label>
+                            </li>
+
+                            <li>
+                                <label class="col-xs-2 bold align-right">Signature:</label>
+                                <label class="col-xs-3 underlined">
+                                    &nbsp;
+                                </label>
+
+                                <label class="col-xs-4 bold">Net Total:</label>
+                                <label class="col-xs-2 underlined">
+                                    @Numerics.DecimalToString(Model.NetTotal)
+
+                                </label>
+                            </li>
+                        </ul>
+                        <br />
+                    </div>
+                </div>
+                <div class="row">
+                </div>
+            </div>
+            <div class="col-xs-6 invoice copy-right">
+                <span>Copy</span>
+
+                <label class="page-title text-center">
+                    Umar Traders
+                    <label class="address">Pakistan Cycle Market, Nila Ghumbad Lahore.</label>
+                </label>
+                <hr />
+                <h2>@(type == VoucherType.Sale || type== VoucherType.SaleReturn ? "Sale Invoice" : "Purchase Invoice")</h2>
+                <div class="row">
+                    <div class="col-xs-5">
+                        <h3>@(type == VoucherType.Sale || type== VoucherType.SaleReturn ? "Client" : "Supplier"):</h3>
+                        <ul class="list-unstyled">
+                            <li>
+                                @Model.Account.Name
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-xs-2">
+                </div>
+                <div class="col-xs-5 invoice-payment">
+                    <h3>Invoice Details:</h3>
+                    <ul class="list-unstyled">
+                        <li>
+
+                            <strong class="">Invoice Number:</strong>
+                            @Model.InvoiceNumber
+                        </li>
+                        <li>
+                            <strong class="">Date:</strong> @Model.Date.ToString(AppSetting.DateFormat)
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="tools pull-right">
+                @{ Html.RenderPartial("_Export_Button");  }
+            </div>
+            <div class="row fixed-height">
+                <div class="col-xs-12">
+                    <table class="table table-striped table-hover" data-export='true'>
+                        <thead>
+                            <tr>
+                                <th style="width: 20px;">
+                                    #
+                                </th>
+                                <th>
+                                    Item
+                                </th>
+                                <th class="number">
+                                    Qty
+                                </th>
+                                <th class="number">
+                                    Price
+                                </th>
+                                <th class="number">
+                                    Total
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="fixed-height">
+
+                            @foreach (var item in Model.Items.Select((p, i) => new { Index = i + 1, Value = p }))
+                            {
+                                <tr>
+                                    <td>@item.Index</td>
+                                    <td>@item.Value.Name</td>
+                                    <td>@Numerics.IntToString(item.Value.Quantity) </td>
+
+                                    <td>@Numerics.DecimalToString(item.Value.Price)  </td>
+                                    <td class="align-right">@Numerics.DecimalToString(item.Value.Amount)  </td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <p>
+                        <b>Remarks:</b> @Model.Comments
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class=" invoice-block">
+                    <ul class="list-unstyled amounts">
+                        <li>
+                            <label class="col-xs-9 bold">Sub Total:</label>
+                            <label class="col-xs-2 underlined">
+                                @Numerics.DecimalToString(Model.SubTotal)
+                            </label>
+                        </li>
+                        <li>
+                            <label class="col-xs-9 bold">Discount:</label>
+                            <label class="col-xs-2 underlined">
+                                @Numerics.DecimalToString(Model.Discount)
+
+                            </label>
+                        </li>
+
+                        <li>
+                            <label class="col-xs-2 bold align-right">Signature:</label>
+                            <label class="col-xs-3 underlined">
+                                &nbsp;
+                            </label>
+
+                            <label class="col-xs-4 bold">Net Total:</label>
+                            <label class="col-xs-2 underlined">
+                                @Numerics.DecimalToString(Model.NetTotal)
+
+                            </label>
+                        </li>
+                    </ul>
+                    <br />
+                </div>
+            </div>
+            <div class="row">
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+    <!-- END PAGE CONTENT-->
+                    }
+@section FooterScript
+{
+    <link href="~/Content/Metronic/assets/admin/pages/css/invoice.css" rel="stylesheet" type="text/css" />
+    <script>
+        jQuery(document).ready(function () {
+            window.print();
+        });
+    </script>
+}
+
+
+
+
+
+

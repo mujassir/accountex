@@ -1,0 +1,890 @@
+﻿@using AccountEx.Common;
+@{
+    ViewBag.Title = "Work In Progress";
+}
+@using AccountEx.BussinessLogic;
+@{
+    var error = "";
+    if (SettingManager.WorkInProcessHeadId == 0)
+    {
+        error += "<li>Work In Process account is missing.</li>";
+
+    }
+    if (SettingManager.FinishedProductionHeadId == 0)
+    {
+        error += "<li>Finshed Production account is missing.</li>";
+
+    }
+    if (SettingManager.PurchaseAccountHeadId == 0)
+    {
+        error += "<li>Purchase Account account is missing.</li>";
+
+    }
+
+    if (SettingManager.ProductHeadId == 0)
+    {
+        error += "<li>Product Account is Missing.</li>";
+
+    }
+    if (SiteContext.Current.Fiscal == null)
+    {
+        error += "<li>No Fiscal year found.</li>";
+    }
+}
+@if (!string.IsNullOrWhiteSpace(error))
+{
+    <div class="note note-danger note-bordered">
+        <h4 class="block">Head Account Missing</h4>
+        <div>
+            <i class="fa-lg fa fa-warning"></i>Head Account is missing in the application settings.In order to complete current transaction head accounts must be added in settings.<br />
+
+
+            <ul>
+                @Html.Raw(error)
+            </ul>
+
+
+            Add missing head accounts in settings and then try again by <a href="@Request.Url"><i class="fa fa-refresh"></i>&nbsp;Relaoding</a>&nbsp;the current page.
+        </div>
+    </div>
+}
+else
+{
+
+    @section PageTitle
+{
+
+        <h1 class="font-green-sharp bold hidden-print">Manage Work In Process</h1>
+    }
+    <!-- BEGIN PAGE HEADER-->
+    @*<h3 class="page-title">Dashboard <small>dashboard & statistics</small>
+        </h3>*@
+    <div class="hidden-print" id="form-info">
+        <div class="col-md-12 col-sm-12">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <div class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-edit"></i>Add/Edit Work In Progress
+                    </div>
+                    <div class="actions hide">
+                        <a href="javascript:;" onclick="Production.LoadVoucher('previous')" class="btn blue">
+                            <i class="fa fa-angle-left"></i>&nbsp;Back
+                        </a>
+                        <a href="javascript:;" onclick="Production.LoadVoucher('next')" class="btn blue">
+                            <i class="fa fa-angle-left"></i>&nbsp;Next
+                        </a>
+
+                    </div>
+                </div>
+                <div class="portlet-body form">
+
+                    <div id="mainform" class="form-horizontal" data-save="save">
+
+                        <input type="text" id="Id" class="hide" data-include-in-item="true" data-item-id="WorkInProgressId" />
+                        <input type="text" id="CreatedDate" class="hide date-picker" data-clear-type="date" />
+                        <input type="text" id="IsDeleted" class="hide" />
+                        <input type="text" id="PreVoucherNumber" class="hide" />
+                        @*<input type="text" id="TransactionType" class="hide" value="@vouchertype" data-clear="false" data-include-in-item="true" />*@
+                        <div class="form-body">
+                            <div class="hide alert alert-danger container-message">
+                                <i class="close" onclick="$(this).parent().hide();"></i>
+                                <strong></strong>
+                                <div class="form-body message-content"></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">Vou #</label>
+                                <div class="col-md-2 container-voucher">
+
+                                    <input type="text" class="form-control number input-small" id="VoucherNumber" data-plus-as-tab="false" data-required="required" data-message="Voucher Number is required"  data-include-in-item="true">
+                                </div>
+                                <label class="col-md-1 control-label" for="prefix">Book #</label>
+                                <div class="col-md-2">
+                                    <input type="text" id="InvoiceNumber" data-validate="true" data-required="required" data-message="Book Number is required"  class="number form-control input-small" data-include-in-item="true">
+                                </div>
+                                <label class="col-md-1 control-label" for="prefix">Date</label>
+                                <div class="col-md-2">
+                                    <input id="Date" type="text" class="form-control date-picker input-small" data-clear-type='date' data-validate="true" data-required="required" data-message="Date is required" data-hide-dropdown="true" data-fiscal-date="true">
+                                </div>
+
+                            </div>
+                            <div class="form-group hide">
+                                <label class="col-md-2 control-label" for="prefix">Order No</label>
+                                <div class="col-md-2">
+                                    <div class="input-group ">
+                                        <input type="text" class="form-control number " id="OrderNo" data-plus-as-tab="false" data-required="false" data-plus-as-tab="false" data-validate="true" data-message="Order Number is required">
+                                        <input type="hidden" id="OrderId" />
+                                        <span id="SearchIconOrder" class="input-group-btn">
+                                            <a class="btn green" data-toggle="tooltip" data-original-title="View Orders" onclick="Production.GetOrders()" style="height: 25px; width: 25px; padding-left: 7px; padding-top: 4px;">
+                                                <i class="icon-magnifier"></i>
+                                            </a>
+                                        </span>
+                                    </div>
+                                </div>
+                                <label class="col-md-1 control-label" for="prefix">Order Date</label>
+                                <div class="col-md-2">
+                                    <input id="OrderDate" type="text" class="form-control ac-date input-small" disabled="disabled" data-validate="true" data-plus-as-tab="false" data-hide-dropdown="true">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">Remarks</label>
+                                <div class="col-md-8">
+                                    <textarea class="form-control" id="Comments" rows="3"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group" data-save="save">
+
+                                <div id="rawitem-container" class="col-md-6 saleitem-container scroller12 parent-conatiner" style="height12: 200px; padding: 10px !important" data-always-visible="1" data-rail-visible1="1">
+                                    <div class="portlet">
+                                        <div class="portlet-title">
+                                            <div class="caption">
+                                                Issue
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <table id="item-container" class="table table-bordered griditem">
+                                        <thead>
+                                            <tr>
+                                                @* <th style="width: 10%;">Req No</th>
+                                                    <th style="width: 10%;">GINP No</th>*@
+                                                <th style="width: 10%;">Code</th>
+                                                <th style="width: 40%;">Name</th>
+                                                <th style="width: 15%;">Date</th>
+                                                <th style="width: 5%;" class="align-right">Quantity</th>
+                                                <th style="width: 5%;" class="align-right">Rate</th>
+                                                <th style="width: 10%;" class="align-right">Amount</th>
+                                                <th style="width: 2%;"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody data-plus-as-tab="false"></tbody>
+                                        <tfoot data-plus-as-tab="false">
+                                            <tr class="bold well">
+                                                <td colspan="3" class="bold align-right">Total</td>
+
+                                                <td colspan="1" class="bold well align-right">
+                                                    <input type="text" class="Quantity form-control input-small" disabled="disabled" readonly="readonly">
+                                                </td>
+                                                <td colspan="2" class="align-right">
+                                                    <input type="text" class="Amount form-control input-small" disabled="disabled" readonly="readonly">
+                                                </td>
+                                                <td></td>
+
+
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                    <div class="form-group">
+                                        <div class="col-md-6">
+                                        </div>
+                                        <div class="col-md-6 align-right">
+
+                                            <div class="form-group">
+                                                <label class="control-label col-md-6">Quantity Total</label>
+                                                <div class="col-md-4">
+                                                    <input id="QuantityTotal" class="form-control" type="text" disabled="disabled" readonly="readonly" data-required="required" data-message="Please add atleast one raw material item" />
+
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="control-label col-md-6">Net Total</label>
+                                                <div class="col-md-4">
+                                                    <input id="NetTotal" class="form-control" disabled="disabled" readonly="readonly" type="text" value="" />
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="finisheditem-container" class="col-md-6 saleitem-container scroller12  parent-conatiner" data-save="save" style="height12: 200px; padding: 10px !important" data-always-visible="1" data-rail-visible1="1">
+                                    <div class="portlet">
+                                        <div class="portlet-title">
+                                            <div class="caption">
+                                                Received
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <table id="finishedgoods-item-container" class="table table-bordered griditem">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 10%;">Code</th>
+                                                <th style="width: 40%;">Name</th>
+                                                <th style="width: 15%;">Date</th>
+                                                <th style="width: 5%;" class="align-right">Quantity</th>
+                                                <th style="width: 5%;" class="align-right">Rate</th>
+                                                <th style="width: 10%;" class="align-right">Amount</th>
+                                                <th style="width: 2%;"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody data-plus-as-tab="false"></tbody>
+                                        <tfoot data-plus-as-tab="false">
+                                            <tr class="bold well">
+                                                <td colspan="3" class="bold align-right">Total</td>
+
+                                                <td colspan="1" class="bold well align-right">
+                                                    <input type="text" class="Quantity form-control input-small" disabled="disabled" readonly="readonly">
+                                                </td>
+                                                <td colspan="2" class="align-right">
+                                                    <input type="text" class="Amount form-control input-small" disabled="disabled" readonly="readonly">
+                                                </td>
+
+                                                <td></td>
+
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                    <div class="form-group">
+                                        <div class="col-md-6">
+                                        </div>
+                                        <div class="col-md-6 align-right">
+
+                                            <div class="form-group">
+                                                <label class="control-label col-md-6">Quantity Total</label>
+                                                <div class="col-md-4">
+                                                    <input id="FinishedQuantityTotal" class="form-control" type="text" disabled="disabled" readonly="readonly" data-required="required" data-message="Please add atleast one good finished item" />
+
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <label class="control-label col-md-6">Net Total</label>
+                                                <div class="col-md-4">
+                                                    <input id="FinishedNetTotal" class="form-control" disabled="disabled" readonly="readonly" type="text" value="" />
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="expensesitem-container" class="col-md-12 saleitem-container scroller12 parent-conatiner" style="height12: 200px; padding: 10px !important" data-always-visible="1" data-rail-visible1="1">
+                                    <div class="portlet">
+                                        <div class="portlet-title">
+                                            <div class="caption">
+                                                Expenses
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <table id="expense-container" class="table table-bordered griditem">
+                                        <thead>
+                                            <tr>
+                                                @* <th style="width: 10%;">Req No</th>
+                                                    <th style="width: 10%;">GINP No</th>*@
+                                                <th style="width: 10%;">Code</th>
+                                                <th style="width: 20%;">Name</th>
+                                                <th style="width: 10%;">Date</th>
+                                                <th style="width: 30%;">Comments</th>
+                                                <th style="width: 10%;" class="align-right">Amount</th>
+                                                <th style="width: 2%;"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody data-plus-as-tab="false"></tbody>
+                                        <tfoot data-plus-as-tab="false">
+                                            <tr class="bold well">
+                                                <td colspan="4" class="bold align-right">Total</td>
+                                                <td class="align-right">
+                                                    <input type="text" class="Amount form-control input-small" disabled="disabled" readonly="readonly">
+                                                </td>
+                                                <td></td>
+
+
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                    <div class="form-group">
+                                        <div class="col-md-6">
+                                        </div>
+                                        <div class="col-md-6 align-right pull-right">
+
+
+                                            <div class="form-group">
+                                                <label class="control-label col-md-10">Total Issue</label>
+                                                <div class="col-md-2">
+                                                    <input id="TotalIssue" class="form-control" disabled="disabled" readonly="readonly" type="text" value="" />
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-10">Total Charges</label>
+                                                <div class="col-md-2">
+                                                    <input id="TotalCharges" class="form-control" disabled="disabled" readonly="readonly" type="text" value="" />
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-10">Total Received</label>
+                                                <div class="col-md-2">
+                                                    <input id="TotalReceived" class="form-control" disabled="disabled" readonly="readonly" type="text" value="" />
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-10">Difference</label>
+                                                <div class="col-md-2">
+                                                    <input id="Difference" class="form-control" disabled="disabled" readonly="readonly" type="text" value="" />
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 saleitem-container">
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="form-actions">
+                            <div class="btn-set pull-left">
+                                <a href="javascript:;" onclick="Production.LoadVoucher('first')" class="btn blue tooltips disabled first" data-original-title="First">
+                                    <i class="fa fa-angle-double-left"></i>
+                                </a>
+                                <a href="javascript:;" onclick="Production.LoadVoucher('previous')" class="btn blue tooltips disabled previous" data-original-title="Previous">
+                                    <i class="fa fa-angle-left"></i>
+                                </a>
+                                <a href="javascript:;" onclick="Production.LoadVoucher('next')" class="btn blue tooltips disabled next" data-original-title="Next">
+                                    <i class="fa fa-angle-right"></i>
+                                </a>
+                                <a href="javascript:;" onclick="Production.LoadVoucher('last')" class="btn blue tooltips disabled last" data-original-title="Last">
+                                    <i class="fa fa-angle-double-right"></i>
+                                </a>
+                            </div>
+                            <div class="btn-set pull-right">
+                                @if (!SiteContext.Current.Fiscal.IsClosed)
+                                {
+                                    <button type="button" class="btn purple-plum" onclick="Production.New()">
+                                        <i class="fa  fa-plus-circle"></i>
+                                        New
+                                    </button>
+                                    <button type="button" class="btn btn-primary green" onclick="Production.Save()">
+                                        <i class="fa fa-check"></i>
+                                        Save
+                                    </button>
+                                    <button type="button" class="btn red" onclick="Production.Delete()">
+                                        <i class="fa fa-trash-o"></i>
+                                        Delete
+                                    </button>
+                                }
+                                <button type="button" class="btn yellow" onclick="Production.Print()">
+                                    <i class="fa fa-print"></i>
+
+                                    Print
+                                </button>
+                                <button type="button" class="btn blue" onclick="window.location='@(Url.Content(SettingManager.DashBoardUrl))'">
+                                    <i class="fa  fa-times-circle"></i>
+
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <!-- END EXAMPLE TABLE PORTLET-->
+        </div>
+
+    </div>
+
+
+    <div class="row hidden-print" id="div-table">
+
+        <div class="col-md-12 col-sm-12">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <div class="portlet light">
+
+
+
+                <div class="form-horizontal" data-save='save' id="Job-Filters">
+                    <div class="col-md-12 col-sm-12">
+                        <div class="portlet light">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    <i class="fa fa-edit"></i>Filter
+                                </div>
+                                <div class="actions hide">
+                                    <a id="actionBackList" href="javascript:;" class="btn blue ">
+                                        <i class="fa fa-angle-left"></i>&nbsp;Back to list
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="form-body" data-querystring="true">
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="col-md-1 control-label" for="prefix">From</label>
+                                            <div class="col-md-2">
+                                                <input id="FromDate" name="FromDate" type="text" class="form-control ac-date date-picker" />
+                                            </div>
+                                            <label class="col-md-1 control-label" for="prefix">To</label>
+                                            <div class="col-md-2">
+                                                <input id="ToDate" name="ToDate" type="text" class="form-control ac-date date-picker" />
+
+                                            </div>
+
+                                        </div>
+                                        <div class="form-group">
+
+                                            <label class="col-md-1 control-label" for="prefix">Customer</label>
+                                            <div class="col-md-5">
+                                                <select id="FilterCustomer" class="form-control Filterselect2" data-trackchange='true' data-trackchange="true" placeholder=" ">
+                                                    <option></option>
+                                                    @* @foreach (var item in (List<IdName>)ViewBag.Customers)
+                                                        {
+                                                            <option data-custom="@item.Id" value="@item.Id" >@item.Name</option>
+                                                        }*@
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button id="btnSearch" type="button" class="btn btn-primary btnSearch"><i class="fa fa-filter"></i>&nbsp;Search Vouchers</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <table class="table table-striped table-bordered table-hover" id="mainTable">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Vou #
+                                </th>
+                                <th>Book #</th>
+                                <th>Date</th>
+                                <th>Issue</th>
+                                <th>Finished</th>
+                                <th>Expenses</th>
+                                <th>Difference</th>
+                                <th style="width: 75px;" class="no-sort"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="8">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- END EXAMPLE TABLE PORTLET-->
+        </div>
+    </div>
+
+
+    <div id="jsondata" class="hide">
+        <p id="data">@ViewBag.FormSetting</p>
+    </div>
+    <div id="Orders-Container" class="modal fade hidden-print bs-modal-lg" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title"><span class='caption-subject font-green-sharp bold'>Search Orders</span> </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table id="OrderTable" style="border: 1px solid #DDD" class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Order Number</th>
+                                        <th>Order Date</th>
+                                        <th>Party</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn" id="btnOrderClose">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        table.report-summary-info > tbody > tr > td {
+            padding: 5px;
+            border: 1px solid #AAA;
+        }
+
+        table.report-summary-info td table tr td:first-child {
+            font-size: 9px !important;
+            text-align: right;
+            font-weight: bold;
+        }
+
+        table.report-summary-info td table tr td {
+            padding: 2px 5px;
+        }
+
+        #div-report strong {
+            font-size: 9px !important;
+        }
+
+        #div-report span {
+            font-weight: normal;
+            font-size: 11px !important;
+        }
+
+        #div-report .table-bordered td, #div-report .table-bordered th {
+            border: 1px solid #AAA !important;
+        }
+
+        #tblAgingItems {
+            border: 1px solid #AAA;
+            font-size: 11px;
+        }
+
+            #tblAgingItems thead th {
+                border-bottom: 1px dashed #AAA;
+                text-align: center;
+            }
+
+            #tblAgingItems tbody td:nth-child(3),
+            #tblAgingItems tbody td:nth-child(4),
+            #tblAgingItems tbody td:nth-child(5),
+            #tblAgingItems tbody td:nth-child(6),
+            #tblAgingItems tbody td:nth-child(7),
+            #tblAgingItems tbody td:nth-child(8),
+            #tblAgingItems tbody td:nth-child(9),
+            #tblAgingItems tbody td:nth-child(10) {
+                text-align: right;
+            }
+
+            #tblAgingItems tbody td:nth-child(10) {
+                padding-right: 10px;
+            }
+    </style>
+    <div class="row"></div>
+    <div id="div-report" class="visible-print">
+        <div style="font-size: 18px; padding: 5px; font-weight: bold; margin-bottom: 3px" class="border-black align-center">
+            @if (!string.IsNullOrWhiteSpace(SettingManager.ReportHeader))
+            {
+                @(new HtmlString(SettingManager.ReportHeader))
+            }
+            else
+            {
+                @(SettingManager.ApplicationTitle)
+            }
+
+        </div>
+        <div style="font-size: 16px; padding: 5px;" class="border-black align-center"><u id="lblReportTitle">Production Voucher</u></div>
+        <div class="form-group"></div>
+
+        <table class="report-summary-info full-width">
+            <tbody>
+                <tr>
+                    <td style="width: 100%; vertical-align: top;">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>PRV No. : </td>
+                                    <td>
+                                        <span id="lblVoucherNumber"></span>
+
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>Date :</td>
+                                    <td>
+                                        <span id="lblDate"></span>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Description:</td>
+                                    <td>
+                                        <span id="lblComments"></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="col-md-1"></div>
+                        <div class="col-md-11">
+                        </div>
+                    </td>
+
+                </tr>
+            </tbody>
+        </table>
+        <div class="clearfix"></div>
+        <h2>Material Issued:</h2>
+        <table id="report-issued-item" class="table table-bordered full-width" style="margin-top: -1px;">
+            <thead>
+                <tr>
+                    <th style="width: 10%;">Code</th>
+                    <th style="width: 40%;">Item</th>
+                    <th style="width: 15%;">Date</th>
+                    <th style="width: 5%;" class="align-right">Quantity</th>
+                    <th style="width: 5%;" class="align-right">Rate</th>
+                    <th style="width: 10%;" class="align-right">Amount</th>
+
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <h2>Meterial Received:</h2>
+        <table id="report-finished-item" class="table table-bordered full-width" style="margin-top: -1px;">
+            <thead>
+                <tr>
+                    <th style="width: 10%;">Code</th>
+                    <th style="width: 40%;">Item</th>
+                    <th style="width: 15%;">Date</th>
+                    <th style="width: 5%;" class="align-right">Quantity</th>
+                    <th style="width: 5%;" class="align-right">Rate</th>
+                    <th style="width: 10%;" class="align-right">Amount</th>
+
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <h2>Expenses:</h2>
+        <table id="report-expenses-item" class="table table-bordered full-width" style="margin-top: -1px;">
+            <thead>
+                <tr>
+                    <th style="width: 10%;">Code</th>
+                    <th style="width: 20%;">Name</th>
+                    <th style="width: 15%;">Date</th>
+                    <th style="width: 30%;">Comments</th>
+                    <th style="width: 10%;" class="align-right">Amount</th>
+
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <div class="row-bottom" style="border-top: 1px solid #000; width: 720px; bottom: 10px; padding-top: 5px;">
+            <table class=" report-summary-info full-width">
+                <tbody>
+                    <tr>
+                        <td style="width: 60%; vertical-align: top; padding-top: 0; border-width: 0;" rowspan="3">
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <table class="full-width">
+                                <tr>
+                                    <td style="width: 0px;"></td>
+                                    <td>
+                                        <div style="font-weight: normal; text-align: center; padding: 0 2px; border-bottom: 1px solid #AAA;"><span>Prepared By</span></div>
+                                    </td>
+                                    <td>
+                                        <div style="font-weight: normal; text-align: center; padding: 0 2px; border-bottom: 1px solid #AAA;"><span>Checked By</span></div>
+                                    </td>
+                                    <td>
+                                        <div style="font-weight: normal; text-align: center; padding: 0 2px; border-bottom: 1px solid #AAA;"><span>Approved By</span></div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td style="width: 5%; border-width: 0;"></td>
+                        <td style="width: 35%">
+                            <div class="align-center hide" style="padding-bottom: 5px; "><strong>Summary </strong></div>
+                            <table class="full-width">
+                                <tbody>
+                                    <tr class="row-sale">
+                                        <td>Total Issue:</td>
+                                        <td style="width: 35%; text-align: right; border-bottom: 1px solid #000;">
+                                            <div id="lblNetTotal" data-formating="true">0</div>
+
+                                        </td>
+                                    </tr>
+                                    <tr class="row-sale">
+                                        <td>Total Expenses:</td>
+                                        <td style="border-bottom: 1px solid #000; text-align: right;">
+                                            <div id="lblexpensesTotal" data-formating="true">0</div>
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div>Total Received:</div>
+                                        </td>
+                                        <td style="border-bottom: 1px solid #000; text-align: right; width: 35%;">
+                                            <div id="lblFinishedNetTotal" data-formating="true">0</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div>Difference:</div>
+                                        </td>
+                                        <td style="border-bottom: 1px solid #000; text-align: right; width: 35%;">
+                                            <div id="lbldifference" data-formating="true">0</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border-width: 0;"></td>
+                        <td style="border-width: 0;">
+
+                            <br />
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border-width: 0;"></td>
+                        <td style="vertical-align: top;">
+                            <div class="align-center" style="padding-bottom: 5px;"><strong>Quantity Summary </strong></div>
+                            <table class="full-width">
+                                <tr>
+                                    <td style="text-align: right; width: 70%;">Total Issued:</td>
+                                    <td style="border-bottom: 1px solid #000;">
+                                        <div id="lblQuantityTotal">0</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: right; width: 70%;">Total Received:</td>
+                                    <td style="border-bottom: 1px solid #000;"><div id="lblFinishedQuantityTotal">0</div></td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: right; width: 70%;">Difference:</td>
+                                    <td style="border-bottom: 1px solid #000;"><div id="lblQuantityDifference">0</div></td>
+                                </tr>
+                            </table>
+                            <strong></strong>
+                            <br />
+                            <strong></strong>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="margin-top: 5px;">
+                <table>
+                    <tr>
+                        <td style="width: 20%"><span>@DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt")</span></td>
+                        <td style="width: 70%; text-align: center;"><strong id="lblFooterNotes" style="border-bottom: 1px solid #000;"></strong></td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                </table>
+
+
+            </div>
+        </div>
+
+    </div>
+}
+
+<script type="text/html" id="template-item">
+    <tr>
+
+        <td>
+            <input type="hidden" class="Id" data-db-column="Id">
+            <input type="text" class="ItemId hide" data-db-column="ItemId">
+            <input type="text" class="EntryType hide" data-db-column="EntryType" value="@((int)EntryType.RawMaterial)">
+            <input type="text" class="Code form-control typeahead input-small ui-autocomplete-input" data-db-column="ItemCode" autocomplete="off">
+        </td>
+        <td>
+            <input type="text" disabled="disabled" class="Name form-control input-medium" data-db-column="ItemName">
+        </td>
+        <td>
+            <input type="text" class="form-control date-picker" data-db-column="Date" data-db-type="date" data-hide-dropdown="true" />
+        </td>
+
+        <td class="align-right">
+            <input type="text" class="Quantity form-control input-small num3" data-db-column="Quantity" data-db-type="float">
+        </td>
+        <td class="align-right">
+            <input type="text" class="Rate form-control  input-small num3" data-db-column="Rate" data-db-type="float">
+        </td>
+        <td class="align-right">
+            <input type="text" class="Amount form-control input-small num3" data-db-column="Amount" data-db-type="float">
+        </td>
+        <td style="width: 8px;">
+            <span class="action"><i class="fa fa-trash-o" onclick="Production.DeleteRow(this)" data-original-title="Delete Item"></i></span>
+
+        </td>
+
+    </tr>
+</script>
+<script type="text/html" id="template-item-finishedgoods">
+    <tr>
+        <td>
+            <input type="hidden" class="Id" data-db-column="Id">
+            <input type="text" class="ItemId hide" data-db-column="ItemId">
+            <input type="text" class="EntryType hide" data-db-column="EntryType" value="@((int)EntryType.FinishedGoods)">
+            <input type="text" class="Code form-control typeahead input-small ui-autocomplete-input" data-db-column="ItemCode" autocomplete="off">
+        </td>
+        <td>
+            <input type="text" disabled="disabled" class="Name form-control input-medium" data-db-column="ItemName">
+        </td>
+        <td>
+            <input type="text" class="form-control date-picker" data-db-column="Date" data-db-type="date" data-hide-dropdown="true" />
+        </td>
+
+        <td class="align-right">
+            <input type="text" class="Quantity form-control input-small num3" data-db-column="Quantity" data-db-type="float">
+        </td>
+        <td class="align-right">
+            <input type="text" class="Rate form-control input-small num3" data-db-column="Rate" data-db-type="float">
+        </td>
+        <td class="align-right">
+            <input type="text" class="Amount form-control input-small num3" data-db-column="Amount" data-db-type="float">
+        </td>
+        <td style="width: 8px;">
+            <span class="action"><i class="fa fa-trash-o" onclick="Production.DeleteRow(this)" data-original-title="Delete Item"></i></span>
+
+        </td>
+
+    </tr>
+</script>
+<script type="text/html" id="template-item-expenses">
+    <tr>
+        <td>
+            <input type="hidden" class="Id" data-db-column="Id">
+            <input type="text" class="ItemId hide" data-db-column="ItemId">
+            <input type="text" class="EntryType hide" data-db-column="EntryType" value="@((int)EntryType.ServiceExpense)">
+            <input type="text" class="Code form-control typeahead input-small ui-autocomplete-input" data-db-column="ItemCode" autocomplete="off">
+        </td>
+        <td>
+            <input type="text" disabled="disabled" class="Name form-control input-medium" data-db-column="ItemName">
+        </td>
+        <td>
+            <input type="text" class="form-control date-picker" data-db-column="Date" data-db-type="date" data-hide-dropdown="true" />
+        </td>
+
+        <td>
+            <input type="text" class="Comments form-control input-large" data-db-column="Comments">
+        </td>
+        <td class="align-right">
+            <input type="hidden" value="1" class="Quantity form-control input-small num3" data-db-column="Quantity" data-db-type="int">
+            <input type="text" class="Amount form-control input-small num3" data-db-column="Amount" data-db-type="float">
+        </td>
+        <td style="width: 8px;">
+            <span class="action"><i class="fa fa-trash-o" onclick="Production.DeleteRow(this)" data-original-title="Delete Item"></i></span>
+
+        </td>
+
+    </tr>
+</script>
+@section FooterScript
+{
+    <script src="~/Content/AutoComplete/jquery-ui.js"></script>
+    <link href="~/Content/AutoComplete/jquery-ui.css" rel="stylesheet" />
+    <script src="~/Content/AppJS/Transaction/Production.js"></script>
+    <link href="~/Content/print.css" rel="stylesheet" />
+    <script>
+        jQuery(document).ready(function () {
+            Production.init();
+        });
+    </script>
+}
+
+

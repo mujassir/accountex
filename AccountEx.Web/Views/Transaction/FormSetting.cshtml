@@ -1,0 +1,198 @@
+﻿
+@using AccountEx.Common;
+<!-- BEGIN PAGE HEADER-->
+@*<h3 class="page-title">Form Setting <small>Configure title, account loading, transaction type and etc</small>
+</h3>
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <i class="fa fa-home"></i>
+            <a href="index.html">Home</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <a href="#">Dashboard</a>
+        </li>
+    </ul>
+
+</div>*@
+<!-- END PAGE HEADER-->
+ @section PageTitle
+{
+    <h1 class="font-green-sharp bold">Manage Form Setting</h1>
+}
+
+<div class="row hide" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-edit"></i>Add/Edit Detail
+                </div>
+                <div class="actions">
+                    <a href="javascript:;" onclick="ListView()" class="btn blue">
+                        <i class="fa fa-angle-left"></i>&nbsp;Back to list 
+                    </a>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal" data-save="save">
+                    <input type="text" id="Id" class="hide" />
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Voucher Type</label>
+                            <div class="col-md-3">
+                                <input type="text" id="VoucherType" data-validate="true" data-required="required" data-message="Voucher Type is required"  class="form-control">
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Key</label>
+                            <div class="col-md-3">
+                                <input type="text" id="KeyName" data-validate="true" data-required="required" data-message="Voucher Type is required"  class="form-control">
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Value</label>
+                            <div class="col-md-3">
+                                <input type="text" id="Value" data-validate="true" data-required="required" data-message="Voucher Type is required"  class="form-control">
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix"></label>
+                            <div class="col-md-3">
+                                <label>
+                                    <input type="checkbox" id="UseCOA" />
+                                    Use Chart Of Account (COA)
+                                </label>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group row-Account">
+                            <label class="col-md-2 control-label" for="prefix">Account</label>
+                            <div class="col-md-3">
+                                <select id="AccountId" class="form-control" onchange="$('#Value').val($(this).val())" data-trackchange='true' data-required="required" data-message="Select Customer" data-placeholder="Select Customer">
+                                    @*<option></option>*@
+                                    @foreach (var cat in ViewBag.Accounts as List<IdName>)
+                                    {
+                                        <option data-custom="@cat.Id" value="@cat.Id">@cat.Name</option>
+                                    }
+                                </select>
+                                @* <input type="hidden" id="SubCategoryId" value="0" />*@
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        @*<label class="col-md-2">&nbsp;</label>*@
+                        <button type="button" class="btn btn-primary" onclick="Save()">Save</button>
+                        @*<button type="submit" class="btn btn-primary"  onclick="SaveNClose()">Save & Close</button>*@
+                        <button id="btnCancel" type="button" class="btn btn-default" onclick="ListView()">Cancel</button>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+
+
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Record Listing
+                </div>
+                <div class="actions">
+                    <a href="javascript:;" onclick="Add()" class="btn blue">
+                        <i class="fa fa-plus"></i>&nbsp;New 
+                    </a>
+                    <div class="btn-group">
+                        <a class="btn purple" href="#" data-toggle="dropdown">
+                            <i class="fa fa-cogs"></i>&nbsp;Tools <i class="fa fa-angle-down"></i>
+                        </a>
+                        <ul class="dropdown-menu pull-right">
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-pencil"></i>Edit
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-trash-o"></i>Delete
+                                </a>
+                            </li>
+
+                            <li class="divider"></li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-print"></i>Print
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-table"></i>Export to CSV
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-bar-chart-o"></i>Export to excel
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover" id="mainTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 8px;" class="no-sort">
+                                <input type="checkbox" class="group-checkable" data-set="#mainTable .checkboxes" />
+                            </th>
+                            <th>Id</th>
+                            <th>Voucher Type</th>
+                            <th>Key</th>
+                            <th>Value</th>
+                            <th>Use COA</th>
+                            <th>Account Title</th>
+                            <th style="width: 50px;" class="no-sort"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="8">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+
+<div id="jsondata" class="hide">
+    <input id="FormSetting"  type="text" value="@ViewBag.FormSetting" />
+    <input id="Voucher"  type="text" value="@ViewBag.Voucher" />
+</div>
+
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Transaction/FormSetting.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+        });
+    </script>
+}
+

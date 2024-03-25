@@ -1,0 +1,194 @@
+﻿@using AccountEx.Common;
+@using AccountEx.CodeFirst;
+
+@{
+    ViewBag.Title = "Follow Up";
+}
+@section PageTitle
+{
+    <h1 class="font-green-sharp bold hidden-print">@ViewBag.Title</h1>
+}
+@section VehicleBranchesDropdown
+{
+
+    @Html.Partial("../Vehicle/_UserBranches_Dropdown")
+}
+
+@using AccountEx.BussinessLogic;
+
+<div class="row hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-edit"></i>@ViewBag.Title
+                </div>
+                <div class="actions hide">
+                    <a href="javascript:;" onclick="VehicleFollowUp.LoadVoucher('previous')" class="btn blue">
+                        <i class="fa fa-angle-left"></i>&nbsp;Back
+                    </a>
+                    <a href="javascript:;" onclick="VehicleFollowUp.LoadVoucher('next')" class="btn blue">
+                        <i class="fa fa-angle-left"></i>&nbsp;Next 
+                    </a>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div id="mainform" class="form-horizontal" data-save="save">
+
+                    <input type="text" id="CreatedDate" class="hide ac-date" data-clear-type="date" />
+                    <input type="text" id="IsDeleted" class="hide" />
+                    <input type="text" id="PreVoucherNumber" class="hide" />
+                    <div class="form-body">
+                        <div class="hide alert alert-danger container-message">
+                            <i class="close" onclick="$(this).parent().hide();"></i>
+                            <strong></strong>
+                            <div class="form-body message-content"></div>
+                        </div>
+
+                        <div class="row" data-save="false">
+                            <div class="col-md-12 saleitem-container scroller12" data-always-visible="1" data-rail-visible1="1">
+
+                                <table id="item-container" class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                         
+                                            <th colspan="5">Vehicle</th>
+                                            <th colspan="3">Customer</th>
+                                            <th></th>
+                                            <th colspan="2">Outstanding yet to date</th>
+                                            <th></th>
+                                        </tr>
+                                        <tr>
+                                           
+                                            <th style="width: 20%;">Chesis No</th>
+                                            <th>Reg. No</th>
+                                            <th>Model</th>
+                                            <th>Manufacturer</th>
+                                            <th>Color</th>
+                                            <th>Name</th>
+                                            <th>Contact No.</th>
+                                            <th>Email</th>
+                                            <th>Installment Date</th>
+                                            <th>Installments</th>
+                                            <th>Amount</th>
+                                            <th>Action</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody data-plus-as-tab="false">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+<div id="jsondata" class="hide">
+    <p id="data">@ViewBag.FormSetting</p>
+</div>
+
+<div id="followup-container" class="modal fade hidden-print bs-modal-lg" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title"><span class='caption-subject font-green-sharp bold'>Add Follow Up</span> </h4>
+            </div>
+            <div class="modal-body form-horizontal" data-save="save">
+                <input type="text" id="VehicleId" class="hide" />
+                <input type="text" id="CustomerId" class="hide" />
+                <div class="form-group">
+                    <label class="control-label col-md-2">Date</label>
+                    <div class="col-md-4">
+                        <input type="text" id="Date" class="form-control date-picker" data-required="required" data-message="Date is required." />
+                    </div>
+                    <label class="control-label col-md-2">Next Follow Up</label>
+                    <div class="col-md-4">
+                        <input type="text" id="NextFollowUp" class="form-control date-picker" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2">Remarks</label>
+                    <div class="col-md-10">
+                        <input type="text" id="Remarks" class="form-control" data-required="required" data-message="reamrks are required." />
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="VehicleFollowUp.Save()">Save</button>
+                    <button type="button" data-dismiss="modal" class="btn" id="btnOrderClose">Close</button>
+                </div>
+                <h5><strong>Previous Follow Up Detail</strong></h5>
+                <table id="FollowUpTable" style="border: 1px solid #DDD" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Remarks</th>
+                            <th>Next Follow Up</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+
+
+
+        </div>
+
+    </div>
+</div>
+
+<script type="text/html" id="template-item">
+    <tr>
+        <td>
+            <input type="hidden" class="VehicleId" data-db-column="VehicleId">
+            <input type="hidden" class="AccountId" data-db-column="AccountId">
+            <input type="hidden" class="SaleId" data-db-column="SaleId">
+            <input type="hidden" class="Id" data-db-column="Id">
+            <span class="pull-left"></span>{{ChassisNo}}<span class="pull-right">
+                <button type="button" class="btn btn-success btn-xs btn-view-ledger" onclick="VehicleFollowUp.ViewLedger(this)">View Ledger</button></span></td>
+        <td>{{RegNo}}
+        </td>
+        <td>{{Model}}
+        </td>
+        <td>{{Manufacturer}}
+        </td>
+        <td>{{Color}}
+        </td>
+        <td>{{Name}}
+        </td>
+        <td>{{ContactNumber}}
+        </td>
+        <td>{{Email}}
+        </td>
+        <td>
+            <label data-db-column="InstallmentDate" data-db-type="date"></label>
+        </td>
+        <td>{{TotalInstallment}}
+        </td>
+        <td>{{TotalAmount}}
+        </td>
+        <td class="td-actions">
+            <button type="button" class="btn btn-primary btn-xs btn-recovery-process" onclick="VehicleFollowUp.GetFollowUp(this)">Follow Up</button>
+
+        </td>
+    </tr>
+</script>
+
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Vehicle/VehicleFollowUp.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            VehicleFollowUp.init();
+        });
+    </script>
+}
+

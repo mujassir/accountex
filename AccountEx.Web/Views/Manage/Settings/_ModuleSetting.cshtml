@@ -1,0 +1,1200 @@
+﻿@{
+    Layout = null;
+}
+@using AccountEx.Common
+@using AccountEx.BussinessLogic;
+<div class="tabbable-custom">
+    <ul class="nav nav-tabs">
+        <li class="active">
+            <a data-toggle="tab" tabindex="-1" href="#OrderSetting">Orders</a>
+        </li>
+        <li>
+            <a data-toggle="tab" tabindex="-1" href="#DeliveryChallanSetting">Delivery Challans</a>
+        </li>
+        <li>
+            <a data-toggle="tab" tabindex="-1" href="#VoucherSetting">Vouchers</a>
+        </li>
+        <li>
+            <a data-toggle="tab" tabindex="-1" href="#SalePurchaseSetting">Sales Purchases</a>
+        </li>
+        <li>
+            <a data-toggle="tab" tabindex="-1" href="#UserManagmentSetting">User Managment</a>
+        </li>
+        <li>
+            <a data-toggle="tab" tabindex="-1" href="#ReportSetting">Reports</a>
+        </li>
+        <li>
+            <a data-toggle="tab" tabindex="-1" href="#VoucherReportSetting">Voucher Base Reports Settings</a>
+        </li> 
+    </ul>
+    <div class="tabbable-custom">
+        <div class="tab-content">
+
+            <div class="tab-pane active" id="OrderSetting">
+
+                <div class="form-horizontal" data-save="save">
+                    <div class="form-body">
+                        <div class="portlet">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    Sale Orders
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Rate</label>
+                                    <div class="col-md-6">
+                                        <select name="ORDER.SALEORDER.SHOWRATEAMOUNT" class="form-control select2">
+                                            <option value="true">Yes</option>
+                                            <option value="false">No</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Rate Name On Report</label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control " name="SALEORDER.RateNameText" data-plus-as-tab="false">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Partner</label>
+                                    <div class="col-md-6">
+                                        <select name="ORDER.SALEORDER.ALLOWPARTNER" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="portlet">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    Purchase Orders
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Rate</label>
+                                    <div class="col-md-6">
+                                        <select name="ORDER.PURCHASEORDER.SHOWRATEAMOUNT" class="form-control select2">
+                                            <option value="true">Yes</option>
+                                            <option value="false">No</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Rate Name On Report</label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control " name="PURCHASEORDER.RateNameText" data-plus-as-tab="false">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Partner</label>
+                                    <div class="col-md-6">
+                                        <select name="ORDER.PURCHASEORDER.ALLOWPARTNER" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+
+                                
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+            <div class="tab-pane" id="DeliveryChallanSetting">
+
+                <div class="form-horizontal" data-save="save">
+                    <div class="form-body">
+                        <div class="portlet">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    Genral
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow DC</label>
+                                    <div class="col-md-6">
+                                        <select name="DeliveryChallan.AllowDC" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Partner</label>
+                                    <div class="col-md-6">
+                                        <select name="DELIVERYCHALLAN.ALLOWPARTNER" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="portlet">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    GIN
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Rate</label>
+                                    <div class="col-md-6">
+                                        <select name="DELIVERYCHALLAN.GIN.SHOWRATEAMOUNT" class="form-control select2">
+                                            <option value="true">Yes</option>
+                                            <option value="false">No</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Partner</label>
+                                    <div class="col-md-6">
+                                        <select name="DELIVERYCHALLAN.GIN.ALLOWPARTNER" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="portlet">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    GRN
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Rate</label>
+                                    <div class="col-md-6">
+                                        <select name="DELIVERYCHALLAN.GRN.SHOWRATEAMOUNT" class="form-control select2">
+                                            <option value="true">Yes</option>
+                                            <option value="false">No</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Stock</label>
+                                    <div class="col-md-6">
+                                        <select name="DELIVERYCHALLAN.GRN.AllowStockOnGRN" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Partner</label>
+                                    <div class="col-md-6">
+                                        <select name="DELIVERYCHALLAN.GRN.ALLOWPARTNER" class="form-control select2">
+
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+
+            </div>
+
+            <div class="tab-pane" id="VoucherSetting">
+
+                <div class="form-horizontal" data-save="save">
+                    <div class="form-body">
+                        <div class="portlet">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    General Settings
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="prefix">Unpresented Cheque Transaction</label>
+                                        <div class="col-md-6">
+                                            <select name="VOUCHER.IsUnpresentedTransactionAllowed" class="form-control select2">
+                                                <option value="true">Yes</option>
+                                                <option value="false">No</option>
+
+
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="prefix">Amount in Words</label>
+                                        <div class="col-md-6">
+                                            <select name="VOUCHER.AmountInWords" class="form-control select2">
+                                                <option value="1">Lakh</option>
+                                                <option value="2">Million</option>
+
+
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="portlet">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    Cash Receipts
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Account Type</label>
+                                    <div class="col-md-6">
+                                        <select name="VOUCHER.CASHRECEIPT.AccountType" class="form-control select2">
+                                            <option value="@((byte)VoucherAccountType.Fixed)">Fixed</option>
+                                            <option value="@((byte)VoucherAccountType.Multiple)">Multiple</option>
+
+                                        </select>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="col-md-4 control-label" for="prefix">Allow Partner</label>
+                                <div class="col-md-6">
+                                    <select name="VOUCHER.CASHRECEIPT.ALLOWPARTNER" class="form-control select2">
+                                        <option value="false">No</option>
+                                        <option value="true">Yes</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow CostCenter </label>
+                                    <div class="col-md-6">
+                                        <select name="VOUCHER.CASHRECEIPT.ALLOWCOSTCENTER" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Vehicle</label>
+                                    <div class="col-md-6">
+                                        <select name="VOUCHER.CASHRECEIPT.allowVehicle" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Billing Month</label>
+                                    <div class="col-md-6">
+                                        <select name="Voucher.CashReciept.AllowBillingMonth" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                        <div class="portlet">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    Cash Payments
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Account Type</label>
+                                    <div class="col-md-6">
+                                        <select name="VOUCHER.CASHPAYMENT.AccountType" class="form-control select2">
+                                            <option value="@((byte)VoucherAccountType.Fixed)">Fixed</option>
+                                            <option value="@((byte)VoucherAccountType.Multiple)">Multiple</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Finalization </label>
+                                    <div class="col-md-6">
+                                        <select name="VOUCHER.CASHPAYMENT.ALLOWFINALIZATION" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Vehicle</label>
+                                    <div class="col-md-6">
+                                        <select name="VOUCHER.CASHPAYMENT.allowVehicle" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Partner</label>
+                                    <div class="col-md-6">
+                                        <select name="VOUCHER.CASHPAYMENT.ALLOWPARTNER" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow CostCenter </label>
+                                    <div class="col-md-6">
+                                        <select name="VOUCHER.CASHPAYMENT.ALLOWCOSTCENTER" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+
+                        <div class="portlet">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    Bank Receipts
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Account Type</label>
+                                    <div class="col-md-6">
+                                        <select name="VOUCHER.BANKRECEIPT.AccountType" class="form-control select2">
+                                            <option value="@((byte)VoucherAccountType.Fixed)">Fixed</option>
+                                            <option value="@((byte)VoucherAccountType.Multiple)">Multiple</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Finalization </label>
+                                    <div class="col-md-6">
+                                        <select name="VOUCHER.BANKRECEIPT.ALLOWFINALIZATION" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Vehicle</label>
+                                    <div class="col-md-6">
+                                        <select name="VOUCHER.BANKRECEIPT.allowVehicle" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Partner</label>
+                                    <div class="col-md-6">
+                                        <select name="VOUCHER.BANKRECEIPT.ALLOWPARTNER" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow CostCenter </label>
+                                    <div class="col-md-6">
+                                        <select name="VOUCHER.BANKRECEIPT.ALLOWCOSTCENTER" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Billing Month </label>
+                                    <div class="col-md-6">
+                                        <select name="Voucher.BankReciept.AllowBillingMonth" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                        <div class="portlet">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    Bank Payments
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Account Type</label>
+                                    <div class="col-md-6">
+                                        <select name="VOUCHER.BANKPAYMENT.AccountType" class="form-control select2">
+                                            <option value="@((byte)VoucherAccountType.Fixed)">Fixed</option>
+                                            <option value="@((byte)VoucherAccountType.Multiple)">Multiple</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Finalization </label>
+                                    <div class="col-md-6">
+                                        <select name="VOUCHER.BANKPAYMENT.ALLOWFINALIZATION" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Vehicle</label>
+                                    <div class="col-md-6">
+                                        <select name="VOUCHER.BANKPAYMENT.allowVehicle" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Partner</label>
+                                    <div class="col-md-6">
+                                        <select name="VOUCHER.BANKPAYMENT.ALLOWPARTNER" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow CostCenter </label>
+                                    <div class="col-md-6">
+                                        <select name="VOUCHER.BANKPAYMENT.ALLOWCOSTCENTER" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                        <div class="portlet">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    Journal Voucher
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Partner</label>
+                                    <div class="col-md-6">
+                                        <select name="VOUCHER.JOURNALVOUCHER.ALLOWPARTNER" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Finalization </label>
+                                    <div class="col-md-6">
+                                        <select name="VOUCHER.JOURNALVOUCHER.ALLOWFINALIZATION" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Cloning</label>
+                                    <div class="col-md-6">
+                                        <select name="VOUCHER.JOURNALVOUCHER.IsJVAllowCloning" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+            <div class="tab-pane" id="SalePurchaseSetting">
+
+                <div class="form-horizontal" data-save="save">
+                    <div class="form-body">
+                        <div class="portlet">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    GST Sale
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Rate</label>
+                                    <div class="col-md-6">
+                                        <select name="TRANSACTION.GSTSALE.SHOWRATEAMOUNT" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Partner</label>
+                                    <div class="col-md-6">
+                                        <select name="TRANSACTION.GSTSALE.ALLOWPARTNER" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="portlet">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    GST Sale Return
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Rate</label>
+                                    <div class="col-md-6">
+                                        <select name="TRANSACTION.GSTSALERETURN.SHOWRATEAMOUNT" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Partner</label>
+                                    <div class="col-md-6">
+                                        <select name="TRANSACTION.GSTSALERETURN.ALLOWPARTNER" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="portlet">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    GST Purchase
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Rate</label>
+                                    <div class="col-md-6">
+                                        <select name="TRANSACTION.GSTPURCHASE.SHOWRATEAMOUNT" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Partner</label>
+                                    <div class="col-md-6">
+                                        <select name="TRANSACTION.GSTPURCHASE.ALLOWPARTNER" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="portlet">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    GST Purchase Return
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Rate</label>
+                                    <div class="col-md-6">
+                                        <select name="TRANSACTION.GSTPURCHASERETURN.SHOWRATEAMOUNT" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Partner</label>
+                                    <div class="col-md-6">
+                                        <select name="TRANSACTION.GSTPURCHASERETURN.ALLOWPARTNER" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="portlet">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    Commercial Sale
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Rate</label>
+                                    <div class="col-md-6">
+                                        <select name="TRANSACTION.COMMERCIALSALE.SHOWRATEAMOUNT" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Partner</label>
+                                    <div class="col-md-6">
+                                        <select name="TRANSACTION.COMMERCIALSALE.ALLOWPARTNER" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Discount</label>
+                                    <div class="col-md-6">
+                                        <select name="Transaction.CommercialSale.AllowDiscount" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Multiple Item On SaleVoucher </label>
+                                    <div class="col-md-6">
+                                        <select name="TRANSACTION.CommercialSale.MultipleItemonSaleVoucher" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Invoice Text</label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" name="TRANSACTION.COMMERCIALSALE.InvoicesText">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="portlet">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    Commercial Sale Return
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Rate</label>
+                                    <div class="col-md-6">
+                                        <select name="TRANSACTION.COMMERCIALSALERETURN.SHOWRATEAMOUNT" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Multiple Item on SR</label>
+                                    <div class="col-md-6">
+                                        <select name="TRANSACTION.COMMERCIALSALERETURN.MultipleItemonSR" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Partner</label>
+                                    <div class="col-md-6">
+                                        <select name="TRANSACTION.COMMERCIALSALERETURN.ALLOWPARTNER" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="portlet">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    Commercial Purchase
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Rate</label>
+                                    <div class="col-md-6">
+                                        <select name="TRANSACTION.COMMERCIALPURCHASE.SHOWRATEAMOUNT" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Partner</label>
+                                    <div class="col-md-6">
+                                        <select name="TRANSACTION.COMMERCIALPURCHASE.ALLOWPARTNER" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Discount</label>
+                                    <div class="col-md-6">
+                                        <select name="Transaction.CommercialPurchase.AllowDiscount" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                            </div>
+                        </div>
+                        <div class="portlet">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    Commercial Purchase Return
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Rate</label>
+                                    <div class="col-md-6">
+                                        <select name="TRANSACTION.COMMERCIALPURCHASERETURN.SHOWRATEAMOUNT" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Partner</label>
+                                    <div class="col-md-6">
+                                        <select name="TRANSACTION.COMMERCIALPURCHASERETURN.ALLOWPARTNER" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="portlet">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    Wheat Purchase
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Weigh Bridge Amount &lt; 30000</label>
+                                    <div class="col-md-2">
+                                        <input type="text" class="form-control" name="Transaction.WheatPurcase.WeighAmount">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="prefix">Weigh Bridge Amount &gt; 30000</label>
+                                        <div class="col-md-2">
+                                            <input type="text" class="form-control" name="Transaction.WheatPurcase.WeighAmount1">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Wheat Trade Amount</label>
+                                    <div class="col-md-2">
+                                        <input type="text" class="form-control" name="Transaction.WheatPurcase.WheatTradeAmount">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+
+
+            </div>
+            <div class="tab-pane" id="UserManagmentSetting">
+
+                <div class="form-horizontal" data-save="save">
+                    <div class="form-body">
+                        <div class="portlet">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    User
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Vehicle Branches</label>
+                                    <div class="col-md-6">
+                                        <select name="Users.AllowVehicleBranches" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Show Industries in Role</label>
+                                    <div class="col-md-6">
+                                        <select name="Users.AllowShowIndustriesinRole" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Required Batch No and Expiry Date </label>
+                                    <div class="col-md-6">
+                                        <select name="ValidationAllForms.RequiredBatchNoandExpiryDate" class="form-control select2">
+                                            <option value="false">No</option>
+                                            <option value="required">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+            </div>
+
+            <div class="tab-pane" id="ReportSetting">
+
+                <div class="form-horizontal" data-save="save">
+                    <div class="form-body">
+                        <div class="portlet">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    Reports
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Allow Dynamic Report Graphs</label>
+                                    <div class="col-md-6">
+                                        <select name="Reports.Dynamic.AllowGraph" class="form-control select2">
+                                            <option value="true">Yes</option>
+                                            <option value="false">No</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+
+                </div>
+
+
+            </div>
+
+            <div class="tab-pane" id="VoucherReportSetting">
+
+                <div class="form-horizontal" data-save="save">
+                    <div class="form-body">
+                        <div class="portlet">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    Voucher Base  Settings
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">B.V Accountant</label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control " name="B.V.AccountantText" data-plus-as-tab="false">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">B.V Created By</label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control " name="B.V.CreatedByText" data-plus-as-tab="false">
+                                       
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">B.V Approved By</label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control " name="B.V.ApprovedByText" data-plus-as-tab="false">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">B.V Received By</label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control " name="B.V.ReceivedByText" data-plus-as-tab="false">  
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">C.V Accountant</label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control " name="C.V.AccountantText" data-plus-as-tab="false">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">C.V Created By</label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control " name="C.V.CreatedByText" data-plus-as-tab="false">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">C.V Approved By</label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control " name="C.V.ApprovedByText" data-plus-as-tab="false">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">C.V Received By</label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control " name="C.V.ReceivedByText" data-plus-as-tab="false">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">J.V Accountant</label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control " name="J.V.AccountantText" data-plus-as-tab="false">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">J.V Approved By</label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control " name="J.V.ApprovedByText" data-plus-as-tab="false">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">J.V Recieved By</label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control " name="J.V.RecievedByText" data-plus-as-tab="false">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

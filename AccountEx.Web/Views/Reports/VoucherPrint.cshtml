@@ -1,0 +1,168 @@
+﻿@{
+    Layout = "_Layout.cshtml";
+    ViewBag.Title = "Voucher Print";  
+}
+<style type="text/css">
+    .report-table tfoot {
+        font-weight: bold;
+    }
+
+        .report-table tbody tr td:nth-last-child(1),
+        .report-table tbody tr td:nth-last-child(2),
+        .report-table tfoot tr td:nth-last-child(1),
+        .report-table tfoot tr td:nth-last-child(2) {
+            text-align: right;
+            width: 100px;
+        }
+</style>
+<h3 class="page-title align-center"></h3>
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">Debit Voucher</h1>
+}
+
+<!-- END PAGE HEADER-->
+
+<div class="row hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-filter"></i>Report Filters
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                    @*<a href="javascript:;" class="remove"></a>*@
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal" data-save="Save">
+                    <input type="text" id="Id" class="hide" />
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Voucher Number</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" id="VoucherNumber" placeholder="Voucher Number" data-validate="true" data-required="required" >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+                        <div class="col-md-8">
+                            <button id="btnShowReport" type="submit" class="btn btn-primary">Show Report</button>
+                            <button id="btnPrintReport" type="button" class="btn btn-primary">
+                                <i class="fa fa-print"></i>
+                                Print Report</button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+<div class="row hide" id="div-report">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title hidden-print">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Report Data
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                    @*<a href="javascript:;" class="remove"></a>*@
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="form-horizontal">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td>Date: <span id="lblDate"></span></td>
+                            <td class="align-right">Voucher Number: <span id="lblVoucherNumber"></span></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                    <br />
+                    <br />
+
+                    <table class="table table-bordered report-table">
+                        <tr>
+                            <th>Party: <span id="lblAccountTitle"></span></th>
+                            <th>Debit </th>
+                            <th>Credit </th>
+                        </tr>
+                        <tr>
+                            <td>Details: <span id="lblComments"></span>
+                                <br />
+                                <br />
+                                <br />
+                                <br />
+                                <br />
+                                <br />
+                                <br />
+                                <br />
+                                <br />
+                                <br />
+                                <br />
+                            </td>
+                            <td>
+                                <span class="label-amount"></span>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="align-right">Balance
+
+                            </td>
+                            <td>
+                                <span class="label-amount"></span>
+
+                            </td>
+                            <td></td>
+                        </tr>
+                    </table>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="col-xs-2 bold align-right">Signed By:</label>
+                            <label class="col-xs-3 underlined">
+                                &nbsp;
+                            </label>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-xs-3 bold align-right">Approved By:</label>
+                            <label class="col-xs-3 underlined">
+                                &nbsp;
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+
+<div id="jsondata" class="hide">
+    @* <input id="FormSetting"  type="text" value="@ViewBag.FormSettings" />*@
+    @* <input id="OpeningBalances"  type="text" value="@ViewBag.OpeningBalances" />*@
+    <input id="Voucher"  type="text" value="@ViewBag.Voucher" />
+</div>
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Reports/VoucherPrint.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            VoucherPrint.init();
+        });
+    </script>
+}

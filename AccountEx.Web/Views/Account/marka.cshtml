@@ -1,0 +1,83 @@
+﻿@{
+   
+}
+<div class="row-fluid">
+    <div class="span12">
+        <h2 class="page-title">&nbsp<span class="formtitle12">@Resources.Resource.Mark</span> @*<small> &nbsp<span class="formtitle12"></span></small>*@</h2>
+    </div>
+</div>
+
+<div class="row-fluid" id="masterdetail">
+    <section class="widget">
+        @* <header>
+            <h4>
+                <i class="icon-file-alt"></i>
+                Show All purchase orders
+            </h4>
+        </header>*@
+
+
+        <div class="body">
+
+            <div id="form-info" data-save='Save' class="form-horizontal label-left hide">
+                <input type="text" id="Id" class="hide" />
+                <input type="text" id="IsDeleted" class="hide" data-checktrack='false' value="false" />
+
+
+                <fieldset>
+                    <legend class="section">@Resources.Resource.AddEdit&nbsp<span class="formtitle12">@Resources.Resource.Mark</span></legend>
+                    <div id="mainform">
+                        <div class="row-fluid">
+                            <div class="span4">
+                                <label class="control-label" for="prefix">Name</label>
+                                <div class="controls controls-row">
+
+                                    <input type="text" class="span12" id="Name" data-required="required" data-validate="true" data-message="Name is required" >
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-primary" onclick="Save()">@Resources.Resource.Save</button>
+                            @*<button type="submit" class="btn btn-primary"  onclick="SaveNClose()">Save & Close</button>*@
+                            <button type="button" class="btn" onclick="Close()">@Resources.Resource.Cancel</button>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div id="div-table">
+
+                <fieldset>
+                    <legend class="section">&nbsp<span class="formtitle12">@Resources.Resource.Mark</span>
+
+                        <button type="submit" class="btn btn-danger pull-right" onclick="Add()">
+                            <span class="small-circle"><i class="icon-plus"></i></span>
+                            @Resources.Resource.AddNew
+                        </button>
+
+                    </legend>
+                    <table id="datatable-table" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>@Resources.Resource.Mark</th>
+
+
+                                <th style="width: 100px;" class="no-sort"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </fieldset>
+            </div>
+        </div>
+
+
+    </section>
+</div>
+
+<div id="jsondata" class="hide">
+</div>
+<script src="~/Scripts/app/marka.js"></script>

@@ -1,0 +1,66 @@
+﻿@{
+    Layout = "_Layout.cshtml";
+    ViewBag.Title = "Asset List";   
+}
+
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">Asset List<small id="lblReportDate" class="pull-right small visible-print">Date: 24/10/2014</small></h1>
+}
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title hidden-print">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Report Data
+                </div>
+                
+
+                <div class="row">
+                    <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                    <a href="javascript:;" class="remove hide"></a>
+                </div>
+                <div class="tools pull-right">
+                    @{ Html.RenderPartial("_Export_Button");  }
+                </div>
+                </div>
+                <div class="actions">
+                    <button class="btn blue hidden-print" onclick="window.print();"><i class="fa fa-print"></i>&nbsp;Print </button>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover" id="mainTable" data-export='true'>
+                    <thead>
+                        <tr>
+                            <th>SN</th>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Asset Type</th>
+                            <th>Location</th>
+                            <th>Value </th>
+                            <th>Detail </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="11" class="align-center">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Reports/Listing.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            Listing.init("Asset");
+        });
+    </script>
+}

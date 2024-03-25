@@ -1,0 +1,300 @@
+﻿@section PageStyle
+{
+    <link href="~/Content/ultratechsale.css" rel="stylesheet" />
+
+}
+<style type="text/css">
+    .table td {
+        font-size: 12px;
+    }
+</style>
+@using AccountEx.Common;
+
+@{
+    var years = Enumerable.Range(DateTime.Now.Year - 5, 15).ToList();
+    ViewBag.FormTitle = "Consumed Electricity";
+    ViewBag.Title = ViewBag.FormTitle;
+    var monthslist = new List<IdName>();
+    var months = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.MonthNames;
+    for (int i = 0; i < months.Length; i++)
+    {
+        if (i <= 11)
+        {
+            monthslist.Add(new IdName() { Name = months[i], Id = i + 1 });
+        }
+
+    }
+}
+@section PageTitle
+{
+    <h1 class="font-green-sharp bold hidden-print">Manage @ViewBag.FormTitle</h1>
+}
+@using AccountEx.BussinessLogic;
+<div class="row hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-edit"></i>Add/Edit @ViewBag.FormTitle
+                </div>
+                <div class="tools">
+                    <div class="form-actions">
+                        <div class="btn-set pull-left">
+                            <a href="javascript:;" onclick="ElectricityUnits.LoadVoucher('first')" class="btn blue tooltips disabled first" data-original-title="First">
+                                <i class="fa fa-angle-double-left"></i>
+                            </a>
+                            <a href="javascript:;" onclick="ElectricityUnits.LoadVoucher('previous')" class="btn blue tooltips disabled previous" data-original-title="Previous">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a href="javascript:;" onclick="ElectricityUnits.LoadVoucher('next')" class="btn blue tooltips disabled next" data-original-title="Next">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                            <a href="javascript:;" onclick="ElectricityUnits.LoadVoucher('last')" class="btn blue tooltips disabled last" data-original-title="Last">
+                                <i class="fa fa-angle-double-right"></i>
+                            </a>
+                        </div>
+                        <div class="btn-set pull-right">
+                            <button type="button" class="btn purple-plum" onclick="ElectricityUnits.LoadVoucher('nextvouchernumber')">
+                                <i class="fa  fa-plus-circle"></i>
+                                New</button>
+                            <button type="button" class="btn btn-primary green" onclick="ElectricityUnits.SaveRecord()">
+                                <i class="fa fa-check"></i>
+                                Save</button>
+                            @*  <button type="button" class="btn red btndelete" onclick="ElectricityUnits.Delete()">
+                                <i class="fa fa-trash-o"></i>
+                                Delete</button>*@
+                            <button type="button" class="btn yellow btnprint" onclick="ElectricityUnits.Print()">
+                                <i class="fa fa-print"></i>
+
+                                Print</button>
+                            <button type="button" class="btn blue" onclick="window.location='@(Url.Content(SettingManager.DashBoardUrl))'">
+                                <i class="fa  fa-times-circle"></i>
+
+                                Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet-body form">
+
+                <div id="mainform" class="form-horizontal" data-save="save">
+                    <input type="text" id="Id" class="hide" data-include-in-item="true" data-item-id="ElectricityUnitId" />
+                    <div class="form-body">
+                        <div class="hide alert alert-danger container-message">
+                            <i class="close" onclick="$(this).parent().hide();"></i>
+                            <strong></strong>
+                            <div class="form-body message-content"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Vou #</label>
+                            <div class="col-md-1 container-voucher">
+                                <input type="text" class="form-control number input-small" id="VoucherNo" data-plus-as-tab="false" data-required="required" data-message="Voucher Number is required"  />
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">Month</label>
+                            <div class="col-md-2">
+                                <select id="Month" data-required="required" data-message="Month is required" class="form-control select2">
+                                    <option></option>
+                                    @foreach (var item in monthslist)
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
+                                </select>
+                                <input id="Date" type="hidden" class="form-control date-picker input-small" data-clear-type='date' data-validate="true" data-message="Date is required" data-plus-as-tab="false" data-hide-dropdown="" />
+                            </div>
+                            <label class="col-md-1 control-label" for="prefix">Year</label>
+                            <div class="col-md-2">
+                                <select id="Year" data-required="required" data-message="Year is required" class="form-control select2">
+                                    @foreach (var year in years)
+                                    {
+                                        <option value="@year">@year</option>
+                                    }
+                                </select>
+
+                            </div>
+                        </div>
+
+                        @*  <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Blocks</label>
+                            <div class="col-md-3">
+                                <select id="BlockId" data-required="required" data-message="Block is required" class="form-control select2">
+                                    <option></option>
+                                    @foreach (var item in ViewBag.Blocks as List<IdName>)
+                                    { 
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>*@
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Remarks</label>
+                            <div class="col-md-8">
+                                <input class="form-control" type="text" name="text" id="Remarks" />
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-icon right search-filter pull-right">
+                                <i class="icon-magnifier"></i>
+                                <input type="text" id="txtSearch" class="form-control searchtext" placeholder="Filter by keywords">
+                            </div>
+                        </div>
+                        <div class="form-group" data-save="false">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-10 item-container scroller12" @*style="height: 200px; padding: 10px !important"*@ data-always-visible="1" data-rail-visible1="1">
+
+                                <table id="item-container" class="table table-bordered griditem">
+                                    @* <thead>
+                                        <tr>
+                                            <th>Shop No</th>
+                                            <th style="width: 30%;">Tenant Name</th>
+                                            <th>Previous Reading</th>
+                                            <th>Current Reading</th>
+                                            <th>Units</th>
+                                        </tr>
+                                    </thead>*@
+                                    <tbody data-plus-as-tab="false">
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="form-actions">
+                        <div class="btn-set pull-left">
+                            <a href="javascript:;" onclick="ElectricityUnits.LoadVoucher('first')" class="btn blue tooltips disabled first" data-original-title="First">
+                                <i class="fa fa-angle-double-left"></i>
+                            </a>
+                            <a href="javascript:;" onclick="ElectricityUnits.LoadVoucher('previous')" class="btn blue tooltips disabled previous" data-original-title="Previous">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a href="javascript:;" onclick="ElectricityUnits.LoadVoucher('next')" class="btn blue tooltips disabled next" data-original-title="Next">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                            <a href="javascript:;" onclick="ElectricityUnits.LoadVoucher('last')" class="btn blue tooltips disabled last" data-original-title="Last">
+                                <i class="fa fa-angle-double-right"></i>
+                            </a>
+                        </div>
+                        <div class="btn-set pull-right">
+                            <button type="button" class="btn purple-plum" onclick="ElectricityUnits.LoadVoucher('nextvouchernumber');">
+                                <i class="fa  fa-plus-circle"></i>
+                                New</button>
+                            <button type="button" class="btn btn-primary green" onclick="ElectricityUnits.SaveRecord()">
+                                <i class="fa fa-check"></i>
+                                Save</button>
+                            @*  <button type="button" class="btn red btndelete" onclick="ElectricityUnits.Delete()">
+                                <i class="fa fa-trash-o"></i>
+                                Delete</button>*@
+                            <button type="button" class="btn yellow btnprint" onclick="ElectricityUnits.Print()">
+                                <i class="fa fa-print"></i>
+
+                                Print</button>
+                            <button type="button" class="btn blue" onclick="window.location='@(Url.Content(SettingManager.DashBoardUrl))'">
+                                <i class="fa  fa-times-circle"></i>
+
+                                Close</button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+
+<div id="jsondata" class="hide">
+    <input type="text" class="hide" id="FormSetting" value="@ViewBag.FormSetting"/>
+</div>
+
+<script type="text/html" id="template-item">
+
+    <tr>
+        <td>
+            <input type="hidden" class="Id" data-db-column="Id">
+            <input type="hidden" class="ItemId" id="ItemId" data-db-column="ItemId">
+            <input type="hidden" class="ShopId" id="ShopId" data-db-column="ShopId">
+            <input type="text" disabled="disabled" class="ShopNo form-control typeahead input-small " data-db-column="ShopNo">
+        </td>
+        <td>
+            <input type="hidden" class="RentAgreementId" id="RentAgreementId" data-db-column="RentAgreementId">
+            <input type="hidden" class="TenantAccountId" id="TenantAccountId" data-db-column="TenantAccountId">
+            <input type="text" disabled="disabled" class="TenantName form-control input-medium" data-db-column="TenantAccountName"></td>
+        <td>
+            <input type="text" class="PreviousReading form-control input-small" data-db-column="PreviousReading" data-db-type="int"></td>
+        <td>
+            <input type="text" class="CurrentReading form-control input-small" data-db-column="CurrentReading" data-db-type="int"></td>
+        <td>
+            <input type="text" class="Unit form-control input-small" data-db-column="Unit" data-db-type="int" disabled="disabled"></td>
+        <td>
+            <input type="text" class="ElectriciyUnitCharges form-control input-small" data-db-column="ElectriciyUnitCharges"></td>
+        <td>
+            <input type="text" class="Amount form-control input-small" data-db-column="Amount"></td>
+        @*        <td class="td-delete">
+            <span class="action"><i class="fa fa-trash-o" onclick="ElectricityUnits.DeleteRow(this)" data-original-title="Delete Item"></i></span>
+        </td>*@
+    </tr>
+</script>
+
+<div class="div-report visible-print">
+    <div class="row mainheader">
+        <div class="align-center">
+            <label class="bold" style="font-size: 12px">Electricity Charges Detail</label>
+        </div>
+    </div>
+    <div class="bill-details">
+        <table class="report-summary-info full-width">
+            <tbody>
+                <tr>
+                    <td colspan="2" class="solid" style="background-color: #E9E8E7;">
+                        <span>
+                            <label><b>Voucher No.</b> </label>
+                            &nbsp;<span id="lblVoucherNo" class="lblVoucherNo label-data inline"></span></span>
+                    </td>
+                    <td>
+                        <span>
+                            <label><b>Month</b> </label>
+                            &nbsp;<span id="lblMonth" class="lblMonth label-data inline"></span></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="solid" style="background-color: #E9E8E7;" colspan="2">
+                        <span>
+                            <label><b>Remarks:</b> </label>
+                            &nbsp;<span id="lblRemarks" class="lblRemarks label-data inline"></span></span>
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table id="electrity-unitPrint" class="report-summary-info full-width table table-bordered">
+            @*<thead>
+                <tr>
+                    <th>Shop No</th>
+                    <th style="width: 30%;">Tenant Name</th>
+                    <th>Previous Reading</th>
+                    <th>Current Reading</th>
+                    <th>Units</th>
+                </tr>
+            </thead>*@
+            <tbody data-plus-as-tab="false">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section FooterScript
+{
+    <script src="~/Content/AppJS/RentalSystem/ElectricityUnits.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            ElectricityUnits.init();
+        });
+    </script>
+}
+

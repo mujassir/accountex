@@ -1,0 +1,388 @@
+﻿@using AccountEx.Common;
+@using AccountEx.BussinessLogic;
+
+@{
+
+    ViewBag.FormTitle = "Voucher";
+    var type = Request.QueryString["type"] + "";
+    var vouchertype = Numerics.GetInt(((VoucherType)Enum.Parse(typeof(VoucherType), type, true)));
+}
+
+<div class="row hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-edit"></i>Add/Edit @ViewBag.FormTitle
+                </div>
+                <div class="actions hide">
+                    <a href="javascript:;" onclick="TradeSale.LoadVoucher('previous')" class="btn blue">
+                        <i class="fa fa-angle-left"></i>&nbsp;Back
+                    </a>
+                    <a href="javascript:;" onclick="TradeSale.LoadVoucher('next')" class="btn blue">
+                        <i class="fa fa-angle-left"></i>&nbsp;Next
+                    </a>
+
+                </div>
+            </div>
+            <div class="portlet-body form">
+
+                <div id="mainform" class="form-horizontal" data-save="save">
+
+                    <input type="text" id="Id" class="hide" data-include-in-item="true" data-item-id="SaleId" />
+                    <input type="text" id="CreatedDate" class="hide ac-date" data-clear-type="date" />
+                    <input type="text" id="IsDeleted" class="hide" />
+                    <input type="text" id="PreVoucherNumber" class="hide" />
+                    <input type="text" id="TransactionType" class="hide" value="@((byte)vouchertype)" data-clear="false" data-include-in-item="true" />
+                    <div class="form-body">
+                        <div class="hide alert alert-danger container-message">
+                            <i class="close" onclick="$(this).parent().hide();"></i>
+                            <strong></strong>
+                            <div class="form-body message-content"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Vou #</label>
+                            <div class="col-md-1 container-voucher">
+                                @* <label id="lblVoucherNumber" class="label label-info label-voucher hide"></label>*@
+                                <input type="text" class="form-control number input-xsmall" id="VoucherNumber" data-plus-as-tab="false" data-required="required" data-message="Voucher Number is required" data-include-in-item="true">
+                            </div>
+                            <label class="col-md-1 control-label" for="prefix">Book #</label>
+                            <div class="col-md-1">
+                                <input type="text" id="InvoiceNumber" data-validate="true" data-required="required" data-message="Book Number is required"  class="number form-control input-xsmall" data-plus-as-tab="false" data-include-in-item="true">
+                            </div>
+                            <label class="col-md-1 control-label" for="prefix">Date</label>
+                            <div class="col-md-1">
+
+                                <input id="Date" type="text" class="form-control date-picker input-small" data-clear-type='date' data-validate="true" data-required="required" data-message="Date is required" data-plus-as-tab="false" data-hide-dropdown="true" data-fiscal-date="true">
+                            </div>
+                            <label id="lbldc" class="col-md-1 control-label" for="prefix">DC #</label>
+
+                            <div class="col-md-1">
+                                <div class="input-group input-xsmall">
+                                    <input type="text" id="DCNo" class="number form-control " data-plus-as-tab="false" />
+
+                                    <span id="dc-search" class="input-group-btn">
+                                        <button onclick="TradeSale.GetDC()" class="btn green search-icon" data-toggle="tooltip" data-original-title="View Delivery Challans" type="button">
+                                            <i class="icon-magnifier"></i>
+                                        </button>
+                                    </span>
+
+                                </div>
+                            </div>
+                            <label id="lblorderno" class="col-md-1 control-label" for="prefix">Order #</label>
+                            <div class="col-md-1">
+                                <input type="text" id="OrderNo" class="number form-control input-xsmall" data-plus-as-tab="false" disabled="disabled" readonly="readonly">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label master-account-label" for="prefix">Party</label>
+                            <div class="col-md-1">
+                                <input type="text" class="form-control input-small" id="AccountCode" data-required="required" data-plus-as-tab="false" data-validate="true" data-message="Party Code is required" >
+                                <input type="hidden" id="AccountId" />
+
+                            </div>
+                            <div class="col-md-5">
+
+                                <input type="text" class="form-control" id="AccountName"  disabled="disabled">
+                            </div>
+                            <div class="col-md-4 hide" id="account-type-conatiner">
+                                <div class="radio-list">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="sale-type" value="@((byte)SaleTypeEnum.CashSale)">
+                                        Cash Sale
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="sale-type" value="@((byte)SaleTypeEnum.CreditSale)" checked="checked">
+                                        Credit Sale
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="sale-type" value="@((byte)SaleTypeEnum.Sampling)">
+                                        Sampling
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        @if (type.ToLower() == "sale" || type.ToLower() == "salereturn")
+                            {
+                            <div class="form-group">
+                                <label class="col-md-2 control-label master-account-label" for="prefix">Saleman</label>
+                                <div class="col-md-1">
+                                    <input type="text" class="form-control input-small" id="SalemanCode" data-required="required" data-plus-as-tab="false" data-validate="true" data-message="Saleman Code is required" >
+                                    <input type="hidden" id="SalemanId" />
+
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" id="SalemanName"  disabled="disabled">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label master-account-label" for="prefix">OrderTaker</label>
+                                <div class="col-md-1">
+                                    <input type="text" class="form-control input-small" id="OrderTakerCode" data-required="required" data-plus-as-tab="false" data-validate="true" data-message="OrderTaker Code is required" >
+                                    <input type="hidden" id="OrderTakerId" />
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" id="OrderTakerName"  disabled="disabled">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label master-account-label" for="prefix">Territory Manager</label>
+                                <div class="col-md-1">
+                                    <input type="text" class="form-control input-small" id="TerritoryManagerCode" data-required="required" data-plus-as-tab="false" data-validate="true" data-message="Territory Manager Code is required" >
+                                    <input type="hidden" id="TerritoryManagerId" />
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" id="TerritoryManagerName"  disabled="disabled">
+                                </div>
+                            </div>
+                            }
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Party Address</label>
+                            <div class="col-md-6">
+                                <input class="form-control" type="text" name="text" id="PartyAddress" />
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Remarks</label>
+                            <div class="col-md-6">
+                                <input class="form-control" type="text" name="text" id="Comments" />
+                                @*<span class="help-block">Optional summary of your Payment that can be used in Reports</span>*@
+                            </div>
+                            <input type="checkbox" id="Cleared" checked="checked" />Clear
+                        </div>
+
+                        <div class="form-group" data-save="false">
+                            <div class="col-md-12 saleitem-container scroller" style="height: 230px; padding: 10px !important" data-always-visible="1" data-rail-visible1="1">
+
+                                <table id="item-container" class="table table-bordered griditem">
+                                    <thead>
+                                        <tr>
+                                            <th>Code</th>
+                                            <th style="width: 25%;">Name</th>
+                                            <th class="align-right">Quantity</th>
+                                            <th class="align-right">Rate</th>
+                                            <th class="align-right">Amount</th>
+                                            <th class="align-right">Less/per Item</th>
+                                            <th class="align-right">Total Less</th>
+                                            <th class="align-right">Promotion</th>
+                                            <th style="width: 11%;" class="align-right">Promotion Amount</th>
+                                            <th class="align-right">Net Amt</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody data-plus-as-tab="false"></tbody>
+                                    <tfoot data-plus-as-tab="false">
+                                        <tr class="bold well">
+                                            <td colspan="2" class="bold align-right">Total &nbsp;</td>
+
+                                            <td colspan="2" class="bold well">
+                                                <input type="text" class="Quantity form-control input-small" disabled="disabled" readonly="readonly">
+                                            </td>
+                                            <td colspan="2">
+                                                <input type="text" class="Amount form-control input-small" disabled="disabled" readonly="readonly">
+                                            </td>
+
+                                            <td colspan="2">
+                                                <input type="text" class="DiscountAmount form-control input-small" disabled="disabled" readonly="readonly">
+                                            </td>
+                                            <td colspan="1">
+                                                <input type="text" class="PromotionAmount form-control input-small" disabled="disabled" readonly="readonly">
+                                            </td>
+
+                                            <td colspan="1">
+                                                <input type="text" class="NetAmount form-control input-small" disabled="disabled" readonly="readonly">
+                                            </td>
+
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+
+                        </div>
+                        <div class="form-group ">
+                            <div class="col-md-8">
+                                <div class="sale-content">
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label hide" for="prefix">Bilty #</label>
+                                        <div class="col-md-2 container-voucher hide">
+
+                                            <input type="text" class="form-control number input-small" id="BiltyNo" data-plus-as-tab="false">
+                                        </div>
+                                        <label class="col-md-2 control-label hide" for="prefix">Bilty Date</label>
+                                        <div class="col-md-2 hide">
+                                            <input id="BiltyDate" type="text" class="form-control date-picker" data-clear-type='date' data-plus-as-tab="false" data-hide-dropdown="true" />
+                                        </div>
+                                        <label class="control-label col-md-2 hide">Quantity Total</label>
+                                        <div class="col-md-2 hide">
+                                            <input id="QuantityTotal" class="form-control" type="text" disabled="disabled" readonly="readonly" value="0" />
+
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label" for="prefix">Ship Via</label>
+                                        <div class="col-md-1">
+                                            <input type="text" class="form-control input-small" id="ShipViaCode" data-required="false" data-plus-as-tab="false" />
+                                            <input type="hidden" id="ShipViaId" value="0" />
+
+                                        </div>
+                                        <div class="col-md-7">
+
+                                            <input type="text" class="form-control" id="ShipViaName"  disabled="disabled">
+                                        </div>
+
+
+
+                                        <label class="control-label col-md-2 hide">Quantity Ship</label>
+                                        <div class="col-md-2 hide">
+                                            <input id="ShipQty" class="form-control number" type="text" data-plus-as-tab="false" />
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="prefix">Previous Balance</label>
+                                    <div class="col-md-3 container-voucher">
+
+                                        <label id="lblpreviousbalance" class="label label-warning label-voucher">00</label>
+                                    </div>
+
+                                    <label class="control-label col-md-3">Current Balance</label>
+                                    <div class="col-md-2">
+                                        <label id="lblcurrentbalance" class="label label-success label-voucher">00</label>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-4 align-right">
+                                <div class="row">
+                                </div>
+                                <div class="row other-content12">
+                                    <label class="control-label col-md-7">Quantity Total</label>
+                                    <div class="col-md-5">
+                                        <input id="qtytotal1" class="form-control" type="text" disabled="disabled" readonly="readonly" data-required="required" data-message="Please add atleast one item" />
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label class="control-label col-md-7">Total sale</label>
+                                    <div class="col-md-5">
+                                        <input id="GrossTotal" class="form-control" type="text" disabled="disabled" readonly="readonly" data-required="FALSE" data-message="Please add atleast one item" />
+
+                                    </div>
+                                </div>
+                                @if (type.ToLower() == "sale" || type.ToLower() == "purchasereturn")
+                                    {
+                                    <div class="row hide">
+                                        <label class="control-label col-md-7">Discount %</label>
+                                        <div class="col-md-5">
+                                            <input id="DiscountPercent" class="form-control num2" type="text" value="0" />
+                                        </div>
+                                    </div>
+
+                                    }
+                                @if (type.ToLower() == "purchase" || type.ToLower() == "salereturn")
+                                    {
+                                    <div class="row hide">
+                                        <label class="control-label col-md-7">Advance Tax %</label>
+                                        <div class="col-md-5">
+                                            <input id="AdvanceTaxPercent" class="form-control" type="text" disabled="disabled" />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="control-label col-md-7">Advance Tax 0.1%</label>
+                                        <div class="col-md-5">
+                                            <input id="AdvanceTaxTotal" class="form-control" type="text" value="0" disabled="disabled" />
+
+                                        </div>
+                                    </div>
+                                    }
+                                <div class="row">
+                                    <label class="control-label col-md-7">Total Less</label>
+                                    <div class="col-md-5">
+                                        <input id="Discount" class="form-control" type="text" value="0" disabled="disabled" />
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label class="control-label col-md-7">Total Promotion</label>
+                                    <div class="col-md-5">
+                                        <input id="PromotionTotal" class="form-control" type="text" value="0" disabled="disabled" />
+
+                                    </div>
+                                </div>
+
+                                <div class="row net-total-row">
+                                    <label class="control-label col-md-7">Net Total</label>
+                                    <div class="col-md-5">
+                                        <input id="NetTotal" class="form-control" disabled="disabled" readonly="readonly" type="text" value="" />
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <div class="btn-set pull-left">
+
+                            @*<button class="btn tooltips" data-container="body" data-placement="top" data-original-title="Tooltip in top">Top</button>*@
+                            <a href="javascript:;" onclick="TradeSale.LoadVoucher('first')" class="btn blue tooltips disabled first" data-original-title="First">
+                                <i class="fa fa-angle-double-left"></i>
+                            </a>
+                            <a href="javascript:;" onclick="TradeSale.LoadVoucher('previous')" class="btn blue tooltips disabled previous" data-original-title="Previous">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a href="javascript:;" onclick="TradeSale.LoadVoucher('next')" class="btn blue tooltips disabled next" data-original-title="Next">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                            <a href="javascript:;" onclick="TradeSale.LoadVoucher('last')" class="btn blue tooltips disabled last" data-original-title="Last">
+                                <i class="fa fa-angle-double-right"></i>
+                            </a>
+                        </div>
+                        <div class="btn-set pull-right">
+                            @if (!SiteContext.Current.Fiscal.IsClosed)
+                                {
+                                <button type="button" class="btn purple-plum" onclick="TradeSale.New()">
+                                    <i class="fa  fa-plus-circle"></i>
+                                    New
+                                </button>
+                                <button type="button" class="btn btn-primary green" onclick="TradeSale.Save()">
+                                    <i class="fa fa-check"></i>
+                                    Save
+                                </button>
+                                <button id="btndelete" type="button" class="btn red" onclick="TradeSale.Delete()">
+                                    <i class="fa fa-trash-o"></i>
+                                    Delete
+                                </button>
+                                }
+                            <button id="btnprint" type="button" class="btn yellow" onclick="TradeSale.Print()">
+                                <i class="fa fa-print"></i>
+
+                                Print
+                            </button>
+                            <button type="button" class="btn blue" onclick="window.location='../account/dashboard2'">
+                                <i class="fa  fa-times-circle"></i>
+
+                                Close
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>

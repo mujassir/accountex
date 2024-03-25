@@ -1,0 +1,189 @@
+﻿@using AccountEx.Common;
+@using AccountEx.BussinessLogic;
+@{
+    var title = "Sale Forecast (Division Head)";
+    ViewBag.Title = title;
+}
+@section PageTitle
+{
+
+
+    <h1 class="font-green-sharp bold hidden-print">Manage @ViewBag.Title</h1>
+}
+
+
+<!-- END PAGE HEADER-->
+
+<div class="row" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-edit"></i>View Sale Forcast
+                </div>
+
+
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal" data-save="save">
+                    <input type="text" id="Id" class="hide" />
+                    <input type="text" id="AccountId" class="hide" />
+                    <div class="form-body">
+                        
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Month</label>
+                            <div class="col-md-3">
+                                <select class="form-control select2" id="Month" placeholder="select month" data-required="required" data-message="month is required" data-include-in-item="true" data-trackchange='true'>
+                                    @Html.Raw(FiscalYearManager.CreateMonthYearDropDownOptions());
+                                </select>
+                                <input type="hidden" id="Year" data-include-in-item="true" />
+                            </div>
+                        </div>
+                        <div id="saleforecast-recrod-container" class="form-group accordion hide">
+
+                            <div class="col-md-2"></div>
+                            <div class="col-md-12 panel panel-default">
+
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#saleforecast-recrod-container" href="#sale-forecase-summary" aria-expanded="false"><i class="fa fa-list"></i>&nbsp;Summary </a>
+                                    </h4>
+                                </div>
+                                <div id="sale-forecase-summary" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="dropdown pull-right">
+                                            <button class="btn green dropdown-toggle btn-sm" type="button" data-toggle="dropdown">
+                                                Export
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu data-table-export-buttons">
+                                                <li><a onclick="Common.DoExport(this, 'excel', '#sale-forecase-summary')" href="javascript:void(0)"><i class="fa fa-file-excel-o" aria-hidden="true"></i>&nbsp;Excel</a></li>
+                                                <li><a onclick="Common.DoExport(this, 'pdf', '#sale-forecase-summary')" href="javascript:void(0)"><i class="fa fa-file-pdf-o" aria-hidden="true"></i>&nbsp;Pdf</a></li>
+                                            </ul>
+                                        </div>
+                                        <table id="item-container-summary" class="table table-bordered griditem">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:20%"></th>
+                                                    <th colspan="12" class="align-center Bold" style="background-color: powderblue;">Previous 12 months</th>
+                                                    <th colspan="4" class="align-center Bold" style="background-color: skyblue;">Next 4 months</th>
+                                                </tr>
+
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#saleforecast-recrod-container" href="#sale-forecase-detail" aria-expanded="false"><i class="fa fa-list"></i>&nbsp;Sale Forecast Detail </a>
+
+
+                                    </h4>
+
+                                </div>
+                                <div id="sale-forecase-detail" class="panel-collapse in">
+                                    <div class="panel-body">
+                                        <div class="dropdown pull-right">
+                                            <button class="btn green dropdown-toggle btn-sm" type="button" data-toggle="dropdown">
+                                                Export
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu data-table-export-buttons">
+                                                <li><a onclick="Common.DoExport(this, 'excel','#item-container')" href="javascript:void(0)"><i class="fa fa-file-excel-o" aria-hidden="true"></i>&nbsp;Excel</a></li>
+                                                <li><a onclick="Common.DoExport(this, 'pdf','#item-container')" href="javascript:void(0)"><i class="fa fa-file-pdf-o" aria-hidden="true"></i>&nbsp;Pdf</a></li>
+                                            </ul>
+                                        </div>
+                                        <table id="item-container" class="table table-bordered griditem">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:20%"></th>
+                                                    <th colspan="12" class="align-center Bold" style="background-color: powderblue;">Previous 12 months</th>
+                                                    <th colspan="4" class="align-center Bold" style="background-color: skyblue;">Next 4 months</th>
+                                                    <th style="width:20%"></th>
+                                                </tr>
+
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+<div id="jsondata" class="hide">
+    <p id="data">@ViewBag.FormSetting</p>
+</div>
+<script type="text/html" id="template-item">
+    <tr>
+        <td>
+            <input type="hidden" class="Id" data-db-column="Id">
+            <input type="hidden" class="ProductId" data-db-column="ProductId">
+            <input type="text" class="Product form-control" data-db-column="Product">
+        </td>
+        <td class="align-right">
+            <input type="text" class="form-control input-small num4 Month1" data-db-column="Month1" data-db-type="int" disabled="disabled" readonly="readonly">
+        </td>
+        <td class="align-right">
+            <input type="text" class="form-control input-small num4 Month2" data-db-column="Month2" data-db-type="int" disabled="disabled" readonly="readonly">
+        </td>
+        <td class="align-right">
+            <input type="text" class="form-control input-small num4 Month3" data-db-column="Month3" data-db-type="int" disabled="disabled" readonly="readonly">
+        </td>
+        <td class="align-right">
+            <input type="text" class="form-control input-small num4 Month4" data-db-column="Month4" data-db-type="int">
+        </td>
+        <td class="align-right">
+            <input type="text" class="form-control input-small num4 Month5" data-db-column="Month5" data-db-type="int">
+        </td>
+        <td class="align-right">
+            <input type="text" class="form-control input-small num4 Month6" data-db-column="Month6" data-db-type="int">
+        </td>
+        
+    </tr>
+</script>
+
+
+
+@section FooterScript
+{
+
+    <script src="~/Content/AppJS/CRM/DHSaleForecast.js"></script>
+    <style type="text/css">
+        table.griditem tr.sales-man {
+            background-color: bisque !important;
+            text-transform: capitalize;
+        }
+
+            table.griditem tr.sales-man td {
+                padding: 5px !important;
+            }
+
+        tbody tr td {
+            background-color: #d3d3d32b;
+        }
+
+        th.Month1.align-right[data-next] {
+            background-color: #c3dee6;
+        }
+         th.Month1.align-right[data-prev] {
+            background-color:#ddf9f09e;
+        }
+
+    </style>
+    <script>
+        jQuery(document).ready(function () {
+            DHSaleForecast.init();
+        });
+    </script>
+}

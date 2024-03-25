@@ -1,0 +1,219 @@
+﻿@using AccountEx.Common;
+@{
+    Layout = "_Layout.cshtml";
+    ViewBag.HideMenu = "hide";
+    ViewBag.Title = "Day Book";   
+}
+@*<style type="text/css">
+    .report-table thead tr th:nth-last-child(1),
+    .report-table thead tr th:nth-last-child(2),
+    .report-table thead tr th:nth-last-child(3),
+    .report-table tbody tr td:nth-last-child(1),
+    .report-table tbody tr td:nth-last-child(2),
+    .report-table tbody tr td:nth-last-child(3) {
+        text-align: right;
+    }
+</style>*@
+<style type="text/css">
+    .head {
+        background-color: rgba(0, 0, 255, 0.13) !important;
+        font-size: 20px;
+         text-align: center;
+        font-weight: bold;
+        margin-right: 27px;
+    }
+
+
+</style>
+<div class="page-bar hide">
+    <ul class="page-breadcrumb">
+        <li>
+
+            <a href="#">Fortress Stadium Fund Acct Book for the Month of:</a>
+
+        </li>
+        <li>
+
+            <span><b><u>June</u></b></span>
+
+        </li>
+
+    </ul>
+    <div class="page-toolbar">
+    </div>
+    <button class="btn blue large pull-right hide" onclick="window.print();"><i class="fa fa-print"></i>&nbsp;Print </button>
+
+</div>
+<!-- END PAGE HEADER-->
+<div class="row hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+         <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-filter"></i>Report Filters
+                </div>
+
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                    @*<a href="javascript:;" class="remove"></a>*@
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal" data-save="save">
+                    <input type="text" id="Id" class="hide" />
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">From Date</label>
+                            <div class="col-md-3">
+                                <div class="input-group input-medium">
+                                    <input class="date-picker form-control date-picker" type="text" id="FromDate" data-validate="true" data-required="required" value="@SiteContext.Current.Fiscal.FromDate.ToString(AppSetting.DateFormat)" data-message="@Resources.Resource.Date"  data-fiscal-date="true">
+                                    <span class="input-group-btn date-icon">
+                                        <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">To Date</label>
+                            <div class="col-md-3">
+                                <div class="input-group input-medium">
+                                    <input class="date-picker form-control date-picker" type="text" id="ToDate" data-validate="true" data-required="required" value="@SiteContext.Current.Fiscal.ToDate.ToString(AppSetting.DateFormat)" data-message="@Resources.Resource.Date"  data-fiscal-date="true" >
+                                    <span class="input-group-btn date-icon">
+                                        <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+                        <div class="col-md-8">
+                            <button id="btnShowReport" type="submit" class="btn btn-primary">Show Report</button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+
+<div class="row" id="div-table">
+    <div class="col-md-6 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title hidden-print">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Cash Receipts
+                </div>
+                 <div class="tools pull-right">
+                    @{ Html.RenderPartial("_Export_Button");  }
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover report-table-cashreciepts" data-export='true'>
+                        <thead>
+                            <tr>
+                                <th style="width: 90px;">Date</th>
+                                <th>Voucher#</th>
+                                <th>From Account</th>
+                                <th>Description</th>
+                                <th class='align-right'>Credit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+    <div class="col-md-6 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title hidden-print">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Cash Payments
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover report-table-cashpayments">
+                        <thead>
+                            <tr>
+                                <th style="width: 90px;">Date</th>
+                                <th>Voucher#</th>
+                                <th>To Account</th>
+                                <th>Description</th>
+                                <th class='align-right'>Debit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+   
+</div>
+
+<div class="row">
+     <div class="col-md-9 col-sm-12"></div>
+    <div class="col-md-3 col-sm-12">
+       <table class="table table-striped  report-table">
+		<tr class="head"><td colspan="4" style="float: left; border:none" >Opening Balance </td><td style="border:none" class="align-right num3"><span id="lblOpeningBalance">0</span></td></tr>
+        <tr class="head"><td colspan="4" style="float: left;  border:none" >Total Receipts </td><td style="border:none" class="align-right num3"><span id="lblTotalCredit">0</span></td></tr>
+           <tr class="head"><td colspan="4" style="float: left;  border:none" >Total Payments </td><td style="border:none" class="align-right num3"> <span id="lblTotalDebit">0</span></td></tr>
+           <tr class="head"  style="border-top:1px solid "><td colspan="4" style="float: left; border:none">Balance </td><td style="border:none" class="align-right num3"> <span id="lblBalance">0</span></td></tr>
+		</table>
+   @*  <table>
+            <tbody>
+                    <tr>
+                    <td colspan="2"><b> Opening Balance:</b> </td>
+                    <td>
+                        <span id="lblOpeningBalance"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2"><b>Total Receipts:</b> </td>
+                    <td>
+                        <span id="lblTotalCredit"></span>
+                    </td>
+                </tr>
+                    <tr>
+                    <td colspan="2"><b>Total Payments:</b> </td>
+                    <td>
+                        <span id="lblTotalDebit"></span>
+                    </td>
+                </tr>
+                    <tr>
+                    <td colspan="2"><b>Balance:</b> </td>
+                    <td>
+                        <span style="border-bottom:1px solid black;border-top:1px solid black" id="lblBalance"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>*@
+        </div>
+
+    </div>
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Reports/DayBookReport.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            DayBookReport.init();
+        });
+    </script>
+}
+
+
+
+
+
+

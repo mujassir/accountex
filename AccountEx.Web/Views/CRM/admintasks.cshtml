@@ -1,0 +1,80 @@
+﻿@using AccountEx.Common
+@{
+    ViewBag.Title = "Admin Task";
+}
+
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">Admin Task</h1>
+}
+
+
+<!-- END PAGE HEADER-->
+
+<div class="row" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-edit"></i>Perform Admin Task
+                </div>
+
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal" data-save="save">
+                    <input type="text" id="Id" class="hide" />
+                    <input type="text" id="AccountId" class="hide" />
+                    <div class="form-body">
+
+
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+
+                                    <th>Task</th>
+                                    <th>Description</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr id="tr-project-pmc-transfer">
+                                    <td><span class="label label-success">Project &amp; PMC Transfer</span></td>
+                                    <td>Move Project &amp; PMC to Next year</td>
+                                    <td class="action-container"><div class="action-conatiner hide"><button type="button" id="btn-transfer-project-pmc" class="btn red btn-sm">Transfer</button></div></td>
+                                </tr>
+                                <tr id="tr-project-lock">
+                                    <td><span class="label label-info">Lock Project Module</span></td>
+                                    <td>Lock the Project module so that no one can make eny edit other than admin.</td>
+                                    <td class="action-container"><div class="action-conatiner hide"><button type="button" id="btn-lock-project" class="btn btn-primary btn-sm">Lock Project</button></div></td>
+                                </tr>
+                                <tr id="tr-pmc-lock">
+                                    <td><span class="label label-primary">Lock PMC Module</span></td>
+                                    <td>Lock the PMC module so that no one can make eny edit other than admin.</td>
+                                    <td class="action-container"><div class="action-conatiner hide"><button type="button" id="btn-lock-pmc" class="btn btn-success btn-sm">Lock PMC</button></div></td>
+                                </tr>
+                                <tr id="tr-missing-pmc-create">
+                                    <td><span class="label label-success">Create Missing PMC</span></td>
+                                    <td>Create PMC from Invoices and IGRN</td>
+                                    <td class="action-container"><div class="action-conatiner hide"><button type="button" id="btn-missing-pmc-create" class="btn red btn-sm">Create PMC</button></div></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+@section FooterScript
+{
+    <script src="~/Content/AppJS/CRM/AdminTask.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            AdminTask.init();
+        });
+    </script>
+}

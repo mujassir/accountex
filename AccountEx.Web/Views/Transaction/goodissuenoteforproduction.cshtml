@@ -1,0 +1,629 @@
+﻿@using AccountEx.Common;
+@{
+    ViewBag.Title = "Good Issue Note";   
+}
+@{
+    var type = Request.QueryString["type"] + "";
+    switch (type.ToLower())
+    {
+        case "ginp":
+            ViewBag.FormTitle = "Add/Edit Good Issue Note for Production";
+            break;
+
+    }
+    //ViewBag.Title = ViewBag.FormTitle;
+}
+@section PageTitle
+{
+    <h1 class="font-green-sharp bold hidden-print">Manage Good Issue Note for Production</h1>
+}
+@using AccountEx.BussinessLogic;
+@{
+    type = Request["type"].ToLower();
+    var vouchertype = ((VoucherType)Enum.Parse(typeof(VoucherType), type, true));
+    var error = "";
+
+    if (SettingManager.ProductHeadId == 0)
+    {
+        error += "<li>Product Account is Missing.</li>";
+
+    }
+    if (SiteContext.Current.Fiscal == null)
+    {
+        error += "<li>No Fiscal year found.</li>";
+    }
+    
+}
+@if (!string.IsNullOrWhiteSpace(error))
+{
+    <div class="note note-danger note-bordered">
+        <h4 class="block">Head Account Missing</h4>
+        <div>
+            <i class="fa-lg fa fa-warning"></i>Head Account is missing in the application settings.In order to complete current transaction head accounts must be added in settings.<br />
+
+
+            <ul>
+                @Html.Raw(error)
+            </ul>
+
+
+            Add missing head accounts in settings and then try again by <a href="@Request.Url"><i class="fa fa-refresh"></i>&nbsp;Relaoding</a>&nbsp;the current page.
+        </div>
+    </div>
+}
+
+else
+{
+    <div class="row hidden-print" id="form-info">
+        <div class="col-md-12 col-sm-12">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <div class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-edit"></i>Add/Edit Good Issue Note for Production
+                    </div>
+                    <div class="actions hide">
+                        <a href="javascript:;" onclick="GINP.LoadVoucher('previous')" class="btn blue">
+                            <i class="fa fa-angle-left"></i>&nbsp;Back
+                        </a>
+                        <a href="javascript:;" onclick="GINP.LoadVoucher('next')" class="btn blue">
+                            <i class="fa fa-angle-left"></i>&nbsp;Next 
+                        </a>
+
+                    </div>
+                </div>
+                <div class="portlet-body form">
+
+                    <div id="mainform" class="form-horizontal" data-save="save">
+
+                        <input type="text" id="Id" class="hide" data-include-in-item="true" data-item-id="DeliveryChallanId" />
+                        <input type="text" id="CreatedDate" class="hide ac-date" data-clear-type="date" />
+                        <input type="text" id="IsDeleted" class="hide" />
+                        <input type="text" id="PreVoucherNumber" class="hide" />
+                        <input type="text" id="TransactionType" class="hide" data-clear="false" data-include-in-item="true" />
+                        <input type="text" id="Transtype" class="hide" />
+                        <div class="form-body">
+                            <div class="hide alert alert-danger container-message">
+                                <i class="close" onclick="$(this).parent().hide();"></i>
+                                <strong></strong>
+                                <div class="form-body message-content"></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">GINP No.</label>
+                                <div class="col-md-1 container-voucher">
+                                    <label id="lblVoucherNumber" class="label label-info label-voucher hide"></label>
+                                    <input type="text" class="form-control number input-small" id="VoucherNumber" data-required="required" data-plus-as-tab="false" data-validate="true" data-message="GNIP  is required"  data-include-in-item="true" />
+                                </div>
+
+                                <label class="col-md-2 control-label" for="prefix">Date</label>
+                                <div class="col-md-2">
+                                    <input id="Date" type="text" class="form-control date-picker input-small" data-clear-type='date' data-required="required" data-message="GNIP Date is required" data-hide-dropdown="true" data-include-in-item="true" data-fiscal-date="true" />
+                                </div>
+                                <label class="col-md-2 control-label" for="prefix">Requisition No</label>
+                                <div class="col-md-2">
+                                    <div class="input-group ">
+                                        <input type="text" class="form-control number " id="RequisitionNo" data-plus-as-tab="false" data-required="required" data-validate="true" data-message="Requisition Number is required" data-include-in-item="true" />
+                                        <input type="hidden" id="RequisitionId" />
+                                        <span class="input-group-btn">
+                                            <a id="SearchIconRequisition" class="btn green" data-toggle="tooltip" data-original-title="View Requisitions" onclick="GINP.GetRequisitions()" style="height: 25px; width: 25px; padding-left: 7px; padding-top: 4px;">
+                                                <i class="icon-magnifier"></i></a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">GINP Book No.</label>
+                                <div class="col-md-1">
+                                    <input type="text" id="InvoiceNumber" data-validate="true" data-required="required" data-message="Book Number is required"  class="number form-control input-small" data-include-in-item="true" />
+                                </div>
+                                <label class="col-md-2 control-label" for="prefix">Order No</label>
+                                <div class="col-md-1">
+                                    <input type="text" class="form-control number input-small" id="OrderNo" readonly="readonly" disabled="disabled" data-include-in-item="true" />
+                                    <input type="hidden" id="OrderId" />
+                                </div>
+                                <label class="col-md-3 control-label" for="prefix">Order Date</label>
+                                <div class="col-md-2">
+                                    <input id="OrderDate" type="text" class="form-control ac-date input-small" disabled="disabled" data-hide-dropdown="true">
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">Requisition Date</label>
+                                <div class="col-md-1">
+                                    <input id="RequisitionDate" type="text" class="form-control ac-date input-small" disabled="disabled" data-hide-dropdown="true">
+                                </div>
+                                <label class="col-md-2 control-label" for="prefix">Delivery Date</label>
+                                <div class="col-md-2">
+                                    <input id="DeliveryDate" type="text" class="form-control ac-date input-small" disabled="disabled" data-hide-dropdown="true">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">Description</label>
+                                <div class="col-md-9">
+                                    <input class="form-control" type="text" name="text" id="Description" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">Remarks</label>
+                                <div class="col-md-9">
+                                    <textarea class="form-control" id="Comments" rows="3">
+                                    </textarea>
+
+
+                                </div>
+                            </div>
+                            <div class="form-group" data-save="false">
+                                <div class="col-md-12 saleitem-container">
+
+                                    <table id="item-container" class="table table-bordered griditem">
+                                        <thead>
+                                            <tr>
+                                                <th>Code</th>
+                                                <th style="width: 40%;">Name</th>
+                                                <th class="align-right">Quantity</th>
+
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody data-plus-as-tab="false">
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-7">
+                                </div>
+                                <div class="col-md-5 align-right">
+                                    <div class="row">
+                                    </div>
+                                    <div class="row">
+                                        <label class="control-label col-md-7">Qty Total</label>
+                                        <div class="col-md-5">
+                                            <input id="QuantityTotal" class="form-control" type="text" disabled="disabled" readonly="readonly" data-required="required" data-message="Please add atleast one item" />
+
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <div class="btn-set pull-left">
+
+                                @*<button class="btn tooltips" data-container="body" data-placement="top" data-original-title="Tooltip in top">Top</button>*@
+                                <a href="javascript:;" onclick="GINP.LoadVoucher('first')" class="btn blue tooltips disabled first" data-original-title="First">
+                                    <i class="fa fa-angle-double-left"></i>
+                                </a>
+                                <a href="javascript:;" onclick="GINP.LoadVoucher('previous')" class="btn blue tooltips disabled previous" data-original-title="Previous">
+                                    <i class="fa fa-angle-left"></i>
+                                </a>
+                                <a href="javascript:;" onclick="GINP.LoadVoucher('next')" class="btn blue tooltips disabled next" data-original-title="Next">
+                                    <i class="fa fa-angle-right"></i>
+                                </a>
+                                <a href="javascript:;" onclick="GINP.LoadVoucher('last')" class="btn blue tooltips disabled last" data-original-title="Last">
+                                    <i class="fa fa-angle-double-right"></i>
+                                </a>
+                            </div>
+                            <div class="btn-set pull-right">
+                                @if (!SiteContext.Current.Fiscal.IsClosed)
+                                {
+                                    <button type="button" class="btn purple-plum" onclick="GINP.New()">
+                                        <i class="fa  fa-plus-circle"></i>
+                                        New</button>
+                                    <button type="button" class="btn btn-primary green" onclick="GINP.Save()">
+                                        <i class="fa fa-check"></i>
+                                        Save</button>
+                                    <button type="button" id="btndelete" class="btn red" onclick="GINP.Delete()">
+                                        <i class="fa fa-trash-o"></i>
+                                        Delete</button>
+                                }
+                                <button type="button" id="btnprint" class="btn yellow" onclick="GINP.Print()">
+                                    <i class="fa fa-print"></i>
+
+                                    Print</button>
+                                <button type="button" class="btn blue" onclick="window.location='@(Url.Content(SettingManager.DashBoardUrl))'">
+                                    <i class="fa  fa-times-circle"></i>
+
+                                    Close</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <!-- END EXAMPLE TABLE PORTLET-->
+        </div>
+
+    </div>
+    <div class="row hide" id="div-table">
+        <div class="col-md-12 col-sm-12">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <div class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-list"></i>Delivery Challan Listing
+                    </div>
+                    <div class="actions">
+                        <a href="javascript:;" onclick="GINP.Add()" class="btn blue">
+                            <i class="fa fa-plus"></i>&nbsp;New 
+                        </a>
+                        @*<div class="btn-group">
+                        <a class="btn purple" href="#" data-toggle="dropdown">
+                            <i class="fa fa-cogs"></i>&nbsp;Tools <i class="fa fa-angle-down"></i>
+                        </a>
+                        <ul class="dropdown-menu pull-right">
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-pencil"></i>Edit
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-trash-o"></i>Delete
+                                </a>
+                            </li>
+
+                            <li class="divider"></li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-print"></i>Print
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-table"></i>Export to CSV
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-bar-chart-o"></i>Export to excel
+                                </a>
+                            </li>
+                        </ul>
+                    </div>*@
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="hide alert alert-danger container-message">
+                        <i class="close" onclick="$(this).parent().hide();"></i>
+                        <strong></strong>
+                        <div class="form-body message-content"></div>
+                    </div>
+
+                    <table class="table table-striped table-bordered table-hover" id="mainTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 8px;" class="no-sort">
+                                    <input type="checkbox" class="group-checkable" data-set="#mainTable .checkboxes" />
+                                </th>
+                                <th>Vou #
+                                </th>
+                                <th>Book #</th>
+                                <th>Party</th>
+                                <th>Total</th>
+                                <th>Date</th>
+                                <th>Remarks</th>
+                                <th style="width: 75px;" class="no-sort"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="8">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- END EXAMPLE TABLE PORTLET-->
+        </div>
+
+    </div>
+    <div id="Orders-Container" class="modal fade hidden-print bs-modal-lg" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title"><span class='caption-subject font-green-sharp bold'>Search Orders</span> </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-6 hide" id="servicetype">
+                                <select id="Customers" class="form-control select2">
+                                    <option></option>
+                                    <option value="@((byte)VoucherType.CustomerServiceOrder)">Customer</option>
+                                    <option value="@((byte)VoucherType.SiteServiceOrder)">Site</option>
+                                    <option value="@((byte)VoucherType.RepairingServiceOrder)">Repair</option>
+                                </select>
+                            </div>
+                            <table id="RequisitionTable" style="border: 1px solid #DDD" class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+
+                                        <th>Requisition No</th>
+                                        <th>Order No</th>
+                                        <th>Requisition Date</th>
+                                        @*<th>Order Date</th>*@
+                                        @*<th>Delivery Date</th>*@
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn" id="btnOrderClose">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="jsondata" class="hide">
+        <input id="FormSetting"  type="text" value="@ViewBag.FormSetting" />
+    </div>
+}
+<style>
+    .twitter-typeahead
+    {
+        /*width: 500%;*/
+    }
+</style>
+
+<script type="text/html" id="template-item">
+    <tr>
+        <td>
+            <input type="hidden" class="ItemId" id="ItemId" data-db-column="ItemId">
+            <input type="hidden" class="Id" data-db-column="Id">
+            <input type="hidden"  class="EntryType" id="EntryType" data-db-column="EntryType" value="@((int)EntryType.Item)"><input type="hidden">
+            <input type="text" class="Code form-control typeahead input-small ui-autocomplete-input" data-db-column="ItemCode" autocomplete="off">
+        </td>
+        <td>
+            <input type="text" disabled="disabled" class="Name form-control input-medium" data-db-column="ItemName"></td>
+        <td class="align-right">
+            <input type="text" class="Quantity form-control input-small" data-db-column="Quantity" data-db-type="decimal"></td>
+        <td style="width: 8px">
+            <span class="action"><i class="fa fa-trash-o" onclick="GINP.DeleteRow(this)" data-original-title="Delete Item"></i></span>
+        </td>
+    </tr>
+</script>
+
+<script type="text/html" id="template-item-print">
+    <tr>
+        <td>
+            <span>{{ItemName}}</span></td>
+        <td>
+            <span>{{Quantity}}</span></td>
+    </tr>
+</script>
+
+<style>
+    table.report-summary-info > tbody > tr > td
+    {
+        padding: 5px;
+        /*border: 1px solid #AAA;*/
+    }
+
+    table.report-summary-info td table tr td:first-child
+    {
+        font-size: 9px !important;
+        text-align: right;
+        font-weight: bold;
+    }
+
+    table.report-summary-info td table tr td
+    {
+        padding: 2px 5px;
+    }
+
+    #div-report strong
+    {
+        font-size: 9px !important;
+    }
+
+    #div-report span
+    {
+        font-weight: normal;
+        font-size: 11px !important;
+    }
+
+    /*#div-report .table-bordered td, #div-report .table-bordered th {
+        border: 1px solid #AAA !important;
+    }*/
+    #tblAgingItems tbody td:nth-child(1)
+    {
+        text-align: left;
+    }
+</style>
+<div class="row"></div>
+<div id="div-report" class="visible-print">
+    @* @if (!string.IsNullOrWhiteSpace(SettingManager.ApplicationLogo) && File.Exists(Server.MapPath("../Upload/ApplicationLogo/" + (SettingManager.ApplicationLogo))))
+    {
+        <div class="align-center">
+
+
+            <img style="height:90px !important" src="../Upload/ApplicationLogo/@(SettingManager.ApplicationLogo)" alt="logo" class="logo-default" />
+
+        </div>
+    }
+    else
+    {
+        *@<div style="font-size: 18px; padding: 5px; font-weight: bold; margin-bottom: 3px" class="border-black align-center">
+            @(!string.IsNullOrWhiteSpace(SettingManager.ApplicationPrintTitle) ? SettingManager.ApplicationPrintTitle : !string.IsNullOrWhiteSpace(SettingManager.ApplicationTitle) ? SettingManager.ApplicationTitle : "Management System")
+        </div>
+    @*}*@
+    <div style="font-size: 16px; padding: 5px;" class="border-black align-center"><u id="lblReportTitle">@ViewBag.Title</u></div>
+    <div class="form-group"></div>
+
+    <table class="report-summary-info full-width">
+        <tbody>
+            <tr>
+                <td style="width: 100%; vertical-align: top;">
+                    <table>
+                        <tbody>
+                            @*  <tr>
+                                <td style="width: 60px;">M/s : </td>
+                                <td>
+                                    <span id="lblAccountCode"></span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <span id="lblAccountName"></span>
+                                </td>
+                            </tr>*@
+                            <tr>
+                                <td>GINP No. : </td>
+                                <td>
+                                    <span id="lblVoucherNumber"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Date :</td>
+                                <td>
+                                    <span id="lblDate"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Requisition No. : </td>
+                                <td>
+                                    <span id="lblRequisitionNo"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Requisition Date :</td>
+                                <td>
+                                    <span id="lblRequisitionDate"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Order No: </td>
+                                <td>
+                                    <span id="lblOrderNo"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Order Date :</td>
+                                <td>
+                                    <span id="lblOrderDate"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Delivery Date :</td>
+                                <td>
+                                    <span id="lblDeliveryDate"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Description:</td>
+                                <td style="width: auto; text-align: right;">
+                                    <div style="text-decoration: underline; font-weight: normal; text-align: center;">
+                                        <span id="lblDescription"></span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-11">
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="clearfix"></div>
+    <table id="report-saleitem" class="table table-bordered full-width" style="margin-top: -1px;">
+        <thead>
+            <tr>
+                @*<th style="width: 30px;">S#</th>
+                <th>Account Head</th>*@
+                <th>Product Description</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+
+    <div class="row-bottom" style="position: fixed; border-top: 1px solid #000; width: 720px; bottom: 10px; padding-top: 5px;">
+        <table class=" report-summary-info full-width">
+            <tbody>
+                <tr>
+                    <td style="width: 60%; vertical-align: top; padding-top: 0; border-width: 0;" rowspan="3">
+                        <div style="min-height: 180px; padding: 0 10px; margin-top: 50px;">
+                            <table id="tblAgingItems" class="full-width">
+                                <tbody>
+                                    <tr>
+                                        <td>Remarks:</td>
+                                        <td style="width: 85%; text-align: right;">
+                                            <div style="border-bottom: 1px solid #AAA; font-weight: normal; text-align: center;">
+                                                <span id="lblComments"></span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <table>
+                            <tr>
+                                <td style="width: 0px;"></td>
+                                <td>
+                                    <div style="font-weight: normal; text-align: center; padding: 0 2px; border-bottom: 1px solid #AAA;"><span>Prepared By</span></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="width: 35%">
+                        <div style="margin-top: -90px">
+                            <table class="full-width">
+                                <tbody>
+                                    <tr>
+                                        <td>Total Quantity :</td>
+                                        <td style="width: 35%; text-align: right;">
+                                            <div style="border-bottom: 1px solid #AAA; font-weight: normal; text-align: center;">
+                                                <span id="lblNetTotal"></span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="margin-top: 5px;">
+            <table>
+                <tr>
+                    <td style="width: 20%"><span>@DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt")</span></td>
+                    <td style="width: 70%; text-align: center;"><strong id="lblFooterNotes" style="border-bottom: 1px solid #000;"></strong></td>
+                    <td style="width: 10%"></td>
+                </tr>
+            </table>
+
+
+        </div>
+    </div>
+
+</div>
+
+@section FooterScript
+{
+    <script src="~/Content/AutoComplete/jquery-ui.js"></script>
+    <link href="~/Content/AutoComplete/jquery-ui.css" rel="stylesheet" />
+    @* <script src="~/Content/HotKey/jquery.hotkeys.js"></script>*@
+    <script src="~/Content/AppJS/Transaction/GINP.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            GINP.init();
+        });
+    </script>
+}
+

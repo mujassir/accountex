@@ -1,0 +1,417 @@
+﻿@using AccountEx.Common;
+@section PageTitle
+{
+    <h1 class="font-green-sharp bold">Manage Clasification Of Asserts</h1>
+}
+<style>
+    .set {
+        margin-left: -15px;
+    }
+</style>
+
+<div class="row hidden-print" id="div-form">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-edit"></i>Add/Edit Asserts
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div id="mainform" class="form-horizontal" data-save="save">
+                    <input type="text" id="Id" class="hide" value="0" />
+                    <div class="form-body">
+                        <div class="hide alert alert-danger container-message">
+                            <i class="close" onclick="$(this).parent().hide();"></i>
+                            <strong></strong>
+                            <div class="form-body message-content"></div>
+                        </div>
+                        <div class="form-group col-md-12" style="margin-top: 20px">
+                            <div class="form-group col-md-6 pull-left">
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label">Date</label>
+                                    <div class="col-md-3">
+                                       <input class="date-picker form-control date-picker" type="text" id="FromDate" data-validate="true" data-required="required"  value="@SiteContext.Current.Fiscal.FromDate.ToString(AppSetting.DateFormat)" data-message="From Date"  data-fiscal-date="true" >
+
+                                    <span class="input-group-btn date-icon">
+                                        <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                    </div>
+                                    <label class="col-md-3 control-label" for="prefix">Voucher No.</label>
+
+                                    <div class="col-md-3">
+                                        <input id="" type="text" class="form-control">
+                                    </div>
+
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="prefix">Asset Name</label>
+                                    <div class="col-md-9">
+                                        <input id="" type="text" class="form-control">
+                                    </div>
+                                </div>
+                               
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="prefix">Vendor</label>
+                                    <div class="col-md-9">
+                                        <select id="" class="form-control select2">
+                                            <option></option>
+                                           
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="prefix">Title</label>
+                                    <div class="col-md-9">
+                                        <input id="" type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="prefix">Purchase Date</label>
+                                    <div class="col-md-9">
+                                        <input id="" type="text" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="prefix">In charge</label>
+                                    <div class="col-md-9">
+                                        <select id="" class="form-control select2">
+                                            <option></option>
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="prefix">Type</label>
+                                    <div class="col-md-9">
+                                        <select id="" class="form-control select2">
+                                            <option></option>
+                                            <option>Commercial</option>
+                                            <option>Residential</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="prefix">Asset Type</label>
+                                    <div class="col-md-9">
+                                        <select id="" class="form-control select2">
+                                            <option></option>
+                                            <option>Owned</option>
+                                            <option>Leased</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="prefix">Description</label>
+                                    <div class="col-md-9">
+                                        <textarea id="" class="form-control"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-8 control-label" for="prefix">Cost</label>
+                                    <div class="col-md-4">
+                                        <input id="" type="text" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-6 pull-rifht">
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="prefix">F Type</label>
+                                    <div class="col-md-9">
+                                        <select id="" class="form-control select2 set">
+                                            <option></option>
+                                            <option value="Land">LAND</option>
+                                            <option>Buildings</option>
+                                            <option>Vehicles</option>
+                                            <option>Data Processig Equipments </option>
+                                            <option>Furniture and Fixture</option>
+                                            <option>Office Equipments</option>
+                                            <option>Plan & Machinary </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                @*Land Field*@
+                                <div id="Land">
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label set">Location</label>
+                                        <div class="col-md-9">
+                                            <input id="" type="text" class="form-control">
+                                        </div>
+                                      
+                                      
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="prefix">Khasra No.</label>
+                                        <div class="row col-md-3">
+                                            <select id="" class="form-control select2">
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                        <label class="col-md-3 control-label">Khatoni No.</label>
+                                        <div class="row col-md-3">
+                                            <select id="" class="form-control select2">
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="prefix">Area</label>
+                                        <div class="row col-md-3">
+                                            <select id="" class="form-control select2">
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                          <label class="col-md-3 control-label" for="prefix">Department</label>
+                                          <div class="row col-md-3">
+                                            <select id="" class="form-control select2">
+                                                <option></option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                @*Building Field*@
+                                <div id="Building">
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">Manufacture Year</label>
+                                        <div class="row col-md-3">
+                                            <select id="" class="form-control select2">
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                        <label class="col-md-3 control-label" for="prefix">Engine No.</label>
+                                        <div class="row col-md-3">
+                                            <select id="" class="form-control select2">
+                                                <option></option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="prefix">Chasis No.</label>
+                                        <div class="row col-md-3">
+                                            <select id="" class="form-control select2">
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                        <label class="col-md-3 control-label">Covered Area</label>
+                                        <div class="row col-md-3">
+                                            <select id="" class="form-control select2">
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                @*Plant & Machinery*@
+                                <div id="PlantMachinery">
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">Registration No.</label>
+                                        <div class="row col-md-3">
+                                            <select id="" class="form-control select2">
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                        <label class="col-md-3 control-label" for="prefix">CC</label>
+                                        <div class="row col-md-3">
+                                            <select id="" class="form-control select2">
+                                                <option></option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="prefix">Sequence No.</label>
+                                        <div class="row col-md-3">
+                                            <select id="" class="form-control select2">
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                        <label class="col-md-3 control-label">HP</label>
+                                        <div class="row col-md-3">
+                                            <select id="" class="form-control select2">
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="prefix">Manufacturer</label>
+                                        <div class="row col-md-3">
+                                            <select id="" class="form-control select2">
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                        <label class="col-md-3 control-label">Make</label>
+                                        <div class="row col-md-3">
+                                            <select id="" class="form-control select2">
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="prefix">Registered To:</label>
+                                        <div class="row col-md-3">
+                                            <select id="" class="form-control select2">
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                        <label class="col-md-3 control-label">Color</label>
+                                        <div class="row col-md-3">
+                                            <select id="" class="form-control select2">
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="prefix">Allocated To:</label>
+                                        <div class="row col-md-3">
+                                            <select id="" class="form-control select2">
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                      
+                                    </div>
+
+
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                        <div id="all">
+                            <div id="All">
+
+                                @*footer*@
+                                <div class="portlet-body form">
+                                    <div class="form-actions">
+                                        <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+                                        <div class="col-md-8">
+                                            <button type="button" class="btn btn-primary green" onclick="ClasificationOfAsserts.Save()" data-plus-as-tab="false">Save</button>
+                                            <button id="btnCancel" type="button" class="btn btn-default" onclick="ClasificationOfAsserts.CustomClear()">Cancel</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- END EXAMPLE TABLE PORTLET-->
+
+
+    <div class="row" id="div-table">
+        <div class="col-md-12 col-sm-12">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <div class="portlet box grey-cascade">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-list"></i>Asserts Listing
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <table class="table table-striped table-bordered table-hover" id="mainTable">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th style="width: 200px;" class="no-sort"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="6" class="center">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- END EXAMPLE TABLE PORTLET-->
+        </div>
+
+    </div>
+    <div id="inventroy-transfer-Container" class="modal fade hidden-print bs-modal-lg" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title"><span class='caption-subject font-green-sharp bold'>Inverntory Transfer Request</span>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row installment-form">
+                        <div class="form-horizontal" data-save="save">
+                            <div class="form-group">
+
+                                <label class="col-md-2 control-label" for="prefix">Owner Branch:</label>
+                                <div class="col-md-3">
+                                    <input type="hidden" id="FromBranchId" />
+                                    <input type="hidden" id="VehicleId" />
+                                    <input type="hidden" id="Type" />
+                                    <span class="label label-sm label-success"><span id="lblownerbranch"></span></span>
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">Vehicle:</label>
+                                <div class="col-md-3">
+                                    <span class="label label-sm label-success"><span id="lblvehicle"></span></span>
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">Receiving Branch</label>
+                                <div class="col-md-5">
+                                    <span class="label label-sm label-success hide" id="lbltobranch"><span></span></span>
+                                    <select class="form-control select2" id="ToBranchId" placeholder="Select Branch" data-required="required" data-message="branch is required">
+                                        <option></option>
+                                        @* @foreach (var item in (List<IdName>)ViewBag.VehicleBranches)
+                                    {
+                                        <option data-custom="@item.Id" value="@item.Id">@item.Name</option>
+                                    }*@
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">Remarks</label>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" id="Remarks" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="prefix"></label>
+                        <button type="button" style="margin-right: 15px;" class="btn btn-primary green contacts-form" onclick="Vehicles.SendTransferRequst()" data-plus-as-tab="false">Save</button>
+                        <button type="button" data-dismiss="modal" class="btn btnclose-model">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Manage/ClasificationOfAsserts.js"></script>
+
+    <script>
+        jQuery(document).ready(function () {
+            ClasificationOfAsserts.init();
+        });
+    </script>
+}

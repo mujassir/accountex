@@ -1,0 +1,367 @@
+﻿@using AccountEx.Common;
+@section PageTitle
+{
+    <h1 class="font-green-sharp bold">Manage Salary Setup</h1>
+}
+@{
+    var error = "";
+    if (SiteContext.Current.Fiscal == null)
+    {
+        error += "<li>No fiscal year found.</li>";
+    }
+}
+<style>
+    #item-container
+    {
+    }
+
+    table#item-container tr td
+    {
+        padding: 2px 6px;
+    }
+
+        table#item-container tr td select
+        {
+            border-width: 0;
+            background-color: transparent;
+            padding: 0;
+            margin: 0;
+            height: 20px;
+        }
+
+        table#item-container tr td input[type='text']
+        {
+            padding: 0;
+            margin: 0;
+            border-width: 0;
+            height: 20px;
+            background-color: transparent;
+            width: 100%;
+        }
+
+        table#item-container tr td input[type='text']
+        {
+            width: 100% !important;
+        }
+    .txt-align {
+        text-align:center;
+    }
+</style>
+
+<div class="row hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa"></i>Monthly Salary Setup
+                </div>
+               
+            </div>
+            <div class="portlet-body form">
+                <div id="mainform" class="form-horizontal" data-save="save">
+                    <input type="text" id="Id" class="hide" value="0" />
+                    @* <input type="text" id="CreatedDate" class="hide ac-date" data-clear-type="date" />
+                    <input type="text" id="IsDeleted" class="hide" />
+                    <input type="text" id="PreVoucherNumber" class="hide" />*@
+                    <div class="form-body">
+                        <div class="hide alert alert-danger container-message">
+                            <i class="close" onclick="$(this).parent().hide();"></i>
+                            <strong></strong>
+                            <div class="form-body message-content"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Financial Year</label>
+                            <div class="col-md-2 ">
+                                <select id="FromMonth" class="form-control select" data-clear="false">
+                                    <option value="1">January</option>
+                                    <option value="2">February</option>
+                                    <option value="3">March</option>
+                                    <option value="4">April</option>
+                                    <option value="5">May</option>
+                                    <option value="6">June</option>
+                                    <option value="7">July</option>
+                                    <option value="8">August</option>
+                                    <option value="9">September</option>
+                                    <option value="10">October</option>
+                                    <option value="11">November</option>
+                                    <option value="12">December</option>
+                                </select>
+                            </div>
+                            <div class="col-md-1 ">
+                                <select id="FromYear" class="form-control select" data-clear="false">
+                                    <option value="2015">2015</option>
+                                    <option value="2016">2016</option>
+                                    <option value="2017">2017</option>
+                                    <option value="2018">2018</option>
+                                    <option value="2019">2019</option>
+                                    <option value="2020">2020</option>
+                                </select>
+                            </div>
+                            <label class="col-md-1 control-label" for="prefix">To</label>
+                            <div class="col-md-2">
+                                <input id="ToDate" type="text" class="form-control ac-date" disabled="disabled" data-include-in-item="true" data-db-column="ToDate">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Name</label>
+                            <div class="col-md-6 ">
+                                <input id="Name" type="text" class="form-control" data-required="required" data-message="Name is required" data-include-in-item="true" data-db-column="Name">
+                            </div>
+                        </div>
+                        <div class="form-group table-scrollable" data-save="false">
+                            <table id="item-container" class="table table-bordered table-striped ">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 90px;" rowspan="2">Code</th>
+                                        <th style="width: 10%;" rowspan="2">Name</th>
+                                        <th rowspan="2">Department</th>
+                                        <th rowspan="2">Designation</th>
+                                        <th rowspan="2">Basic Salary</th>
+                                        <th colspan="4" class="txt-align">Allowances</th>
+                                          <th rowspan="2">Gross Salary</th>
+                                         <th colspan="4" class="txt-align">Deductions</th>
+                                        @*<th rowspan="2">Gross Salary</th>*@
+                                          <th colspan="4" class="txt-align">Leaves</th>
+                                        <th rowspan="2">Working day</th>
+                                    </tr>
+                                    <tr>
+                                        <th>House</th>
+                                        <th>Conveyance</th>
+                                        <th>Medical</th>
+                                        <th >Total Allow.</th>
+
+                                        <th>PF</th>
+                                        <th>EOBI</th>
+                                        <th>SST</th>
+                                        <th >Total Deduction</th>
+                                       @* <th  rowspan="2">Gross Salary</th>*@
+                                        <th >OT Rate</th>
+                                        <th>Annual</th>
+                                        <th>Casual</th>
+                                        <th>Medical</th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody data-plus-as-tab="false">
+                                </tbody>
+                                @*  </tfoot>*@
+                            </table>
+                            @*</div>*@
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                         <div class="btn-set pull-left">
+
+                                @*<button class="btn tooltips" data-container="body" data-placement="top" data-original-title="Tooltip in top">Top</button>*@
+                                <a href="javascript:;" onclick="SalaryConfig.LoadConfig('first')" class="btn blue tooltips disabled first" data-original-title="First">
+                                    <i class="fa fa-angle-double-left"></i>
+                                </a>
+                                <a href="javascript:;" onclick="SalaryConfig.LoadConfig('previous')" class="btn blue tooltips disabled previous" data-original-title="Previous">
+                                    <i class="fa fa-angle-left"></i>
+                                </a>
+                                <a href="javascript:;" onclick="SalaryConfig.LoadConfig('next')" class="btn blue tooltips disabled next" data-original-title="Next">
+                                    <i class="fa fa-angle-right"></i>
+                                </a>
+                                <a href="javascript:;" onclick="SalaryConfig.LoadConfig('last')" class="btn blue tooltips disabled last" data-original-title="Last">
+                                    <i class="fa fa-angle-double-right"></i>
+                                </a>
+                            </div>
+                        <div class="btn-set pull-right">
+                              <button type="button" class="btn purple-plum" onclick="SalaryConfig.New()">
+                                    <i class="fa  fa-plus-circle"></i>
+                                    New</button>
+                             <button type="button" class="btn purple" onclick="SalaryConfig.Clone()" id="btnClone" disabled>
+                                    <i class="fa  fa-plus-circle"></i>
+                                    Clone</button>
+                            <button type="button" class="btn btn-primary green" onclick="SalaryConfig.Save()">
+                                <i class="fa fa-check"></i>
+                                Save</button>
+                            @*     <button id="btndelete" type="button" class="btn red" onclick="SalaryConfig.Delete()">
+                                <i class="fa fa-trash-o"></i>
+                                Delete</button>
+                            <button id="btnprint" type="button" class="btn yellow" onclick="SalaryConfig.Print()">
+                                <i class="fa fa-print"></i>
+
+                                Print</button>
+                            <button type="button" class="btn blue" onclick="SalaryConfig.CustomClear()">
+                                <i class="fa  fa-times-circle"></i>
+                                Cancel</button>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+
+
+
+<div id="jsondata" class="hide">
+    <p id="data">@ViewBag.FormSetting</p>
+</div>
+
+<script type="text/template" id="template-item-add">
+      <tr>
+        <td> 
+           {{AccountCode}}
+            <input type='hidden' id='AccountId' data-db-column="AccountId" value='{{AccountId}}'>
+            <input type='hidden' id='IsActive' data-db-column="IsActive" value='true'>
+        </td>
+        <td>
+    {{Name}}
+    
+        </td>
+         <td>
+            <select class="DepartmentId form-control select2" data-db-column="DepartmentId" data-db-type="int">
+                @* <option></option>*@
+                @foreach (var item in (List<IdName>)ViewBag.Department)
+                {
+                    <option data-custom="@item.Id" value="@item.Id">@(item.Name)</option>
+                }
+            </select>
+         </td>
+         <td>
+            <select class="DesignationId form-control select2" data-db-column="DesignationId" data-db-type="int">
+              @*   <option></option>*@
+                @foreach (var item in (List<IdName>)ViewBag.Designation)
+                {
+                    <option data-custom="@item.Id" value="@item.Id">@(item.Name)</option>
+                }
+            </select>
+       </td>
+       <td>
+            <input type="text" class="BasicSalary form-control input-small num3" data-db-column="BasicSalary" data-db-type="float">
+      </td>
+        <td>
+            <input type="text" class="HouseAllowance form-control input-small " data-db-column="HouseAllowance" data-db-type="float">
+        </td>
+        <td>
+            <input type="text" class="ConveyanceAllowance form-control input-small" data-db-column="ConveyanceAllowance" data-db-type="float">
+        </td>
+        <td>
+            <input type="text" class="MedicalAllowance form-control input-small" data-db-column="MedicalAllowance" data-db-type="float">
+        </td>
+        <td>
+            <input type="text" class="TotalAllowances form-control input-small" disabled="disabled"  data-db-column="TotalAllowances" data-db-type="float">
+         </td>
+       <td>
+            <input type="text" class="GrossSalary form-control input-small" disabled="disabled" readonly="readonly" data-db-column="GrossSalary" data-db-type="float">
+        </td>
+        <td>
+            <input type="text" class="ProvidentFund form-control input-small" data-db-column="ProvidentFund" data-db-type="float">
+        </td>
+        <td>
+            <input type="text" class="EOBI form-control input-small" data-db-column="EOBI" data-db-type="float">
+        </td>
+        <td>
+            <input type="text" class="SST form-control input-small" data-db-column="SST" data-db-type="float">
+         </td>
+         
+         <td>
+            <input type="text" class="TotalDeductions form-control input-small"  disabled="disabled" data-db-column="TotalDeductions"  data-db-type="float">
+         </td>
+
+        <td>
+            <input type="text" class="OverTimeRate form-control input-small" data-db-column="OverTimeRate" data-db-type="float">
+         </td>
+        <td>
+            <input type="text" class="AnnualLeaves form-control input-small" data-db-column="AnnualLeaves" data-db-type="int"></td>
+        <td>
+            <input type="text" class="CasualLeaves form-control input-small" data-db-column="CasualLeaves" data-db-type="int"></td>
+        <td>
+            <input type="text" class="SickLeaves form-control input-small" data-db-column="SickLeaves" data-db-type="int"></td>
+        <td>
+            <input type="text" class="WorkingDays form-control input-small" data-db-column="WorkingDays" data-db-type="int"></td>
+    </tr>
+</script>
+
+
+<script type="text/template" id="template-item-edit">
+      <tr>
+        <td> 
+           {{AccountCode}}
+            <input type='hidden' id='Id' data-db-column="Id" value='{{Id}}'>
+            <input type='hidden' id='AccountId' data-db-column="AccountId" value='{{AccountId}}'>
+            <input type='hidden' id='IsActive' data-db-column="IsActive" value='true'>
+        </td>
+        <td>
+    {{Name}}
+    
+        </td>
+         <td>
+            <select class="DepartmentId form-control select2" data-db-column="DepartmentId" data-value="{{DepartmentId}}" data-db-type="int">
+                @* <option></option>*@
+                @foreach (var item in (List<IdName>)ViewBag.Department)
+                {
+                    <option data-custom="@item.Id" value="@item.Id">@(item.Name)</option>
+                }
+            </select>
+         </td>
+         <td>
+            <select class="DesignationId form-control select2" data-db-column="DesignationId" data-value="{{DesignationId}}" data-db-type="int">
+              @*   <option></option>*@
+                @foreach (var item in (List<IdName>)ViewBag.Designation)
+                {
+                    <option data-custom="@item.Id" value="@item.Id">@(item.Name)</option>
+                }
+            </select>
+       </td>
+       <td>
+            <input type="text" class="BasicSalary form-control input-small" data-db-column="BasicSalary" value="{{BasicSalary}}" data-db-type="float">
+      </td>
+        <td>
+            <input type="text" class="HouseAllowance form-control input-small" data-db-column="HouseAllowance" value="{{HouseAllowance}}"  data-db-type="float">
+        </td>
+        <td>
+            <input type="text" class="ConveyanceAllowance form-control input-small" data-db-column="ConveyanceAllowance" value="{{ConveyanceAllowance}}"  data-db-type="float">
+        </td>
+        <td>
+            <input type="text" class="MedicalAllowance form-control input-small" data-db-column="MedicalAllowance" value="{{MedicalAllowance}}"  data-db-type="float">
+        </td>
+        <td>
+            <input type="text" class="TotalAllowances form-control input-small" data-db-column="TotalAllowances" value="{{TotalAllowances}}" data-db-type="float">
+         </td>
+         <td>
+            <input type="text" class="GrossSalary form-control input-small" disabled="disabled"  data-db-column="GrossSalary" value="{{GrossSalary}}" readonly="readonly" data-db-type="float">
+        </td>
+        <td>
+            <input type="text" class="ProvidentFund form-control input-small" data-db-column="ProvidentFund" value="{{ProvidentFund}}"  data-db-type="float">
+        </td>
+        <td>
+            <input type="text" class="EOBI form-control input-small" data-db-column="EOBI" value="{{EOBI}}"  data-db-type="float">
+        </td>
+        <td>
+            <input type="text" class="SST form-control input-small" data-db-column="SST" value="{{SST}}"  data-db-type="float">
+         </td>
+   
+        <td>
+            <input type="text" class="TotalDeductions form-control input-small" data-db-column="TotalDeductions" value="{{TotalDeductions}}" data-db-type="float">
+         </td>
+       
+        <td>
+            <input type="text" class="OverTimeRate form-control input-small" data-db-column="OverTimeRate" value="{{OverTimeRate}}"  data-db-type="float">
+         </td>
+        <td>
+            <input type="text" class="AnnualLeaves form-control input-small" data-db-column="AnnualLeaves" value="{{AnnualLeaves}}"  data-db-type="int"></td>
+        <td>
+            <input type="text" class="CasualLeaves form-control input-small" data-db-column="CasualLeaves" value="{{CasualLeaves}}"  data-db-type="int"></td>
+        <td>
+            <input type="text" class="SickLeaves form-control input-small" data-db-column="SickLeaves" value="{{SickLeaves}}"  data-db-type="int"></td>
+        <td>
+            <input type="text" class="WorkingDays form-control input-small" data-db-column="WorkingDays" value="{{WorkingDays}}"  data-db-type="int"></td>
+    </tr>
+</script>
+
+@section FooterScript
+{
+    <script src="~/Content/AppJS/HRM/SalaryConfig.js"></script>
+    @*<link href="~/Content/print.css" rel="stylesheet" />*@
+    <script>
+        jQuery(document).ready(function () {
+            SalaryConfig.init();
+        });
+    </script>
+}

@@ -1,0 +1,68 @@
+
+
+
+
+
+
+
+
+DECLARE db_cursor CURSOR FOR SELECT Id,Name,Category,[Category 2],Vendor FROM dbo.[Sheet1$]; 
+DECLARE @Id INT;
+DECLARE @Name varchar(500);
+DECLARE @Category VARCHAR(500);
+DECLARE @Category2 VARCHAR(500);
+DECLARE @Vendor VARCHAR(500);
+OPEN db_cursor;
+FETCH NEXT FROM db_cursor INTO @Id, @Name, @Category,@Category2,@Vendor;
+WHILE @@FETCH_STATUS = 0  
+BEGIN  
+DECLARE @CategoryId INT,
+@VendorId INT,
+@ProductId INT,
+@Category2Id INT;
+       --Do stuff with scalar values
+
+	   SELECT @CategoryId=ISNULL(Id,0) FROM dbo.ProductCategories WHERE LOWER(Name)=LOWER(@Category) AND CompanyId=91
+	   SELECT @Category2Id=ISNULL(Id,0) FROM dbo.ProductSecCategories WHERE LOWER(Name)=LOWER(@Category2) AND CompanyId=91
+	   SELECT @VendorId=ISNULL(Id,0) FROM dbo.CRMVendors WHERE LOWER(Name)=LOWER(@Vendor) AND CompanyId=91
+	   SELECT @ProductId= ISNULL( Id,0) FROM dbo.CRMProducts WHERE LOWER(Name)=LOWER(@Name) AND CompanyId=91 AND VendorId=@VendorId AND CategoryId=@CategoryId
+	   
+
+	     IF(@CategoryId=0) BEGIN
+        
+		  PRINT('Category:'+ CONVERT(VARCHAR(50),@Category))
+		 END
+		    IF(@Category2Id=0) BEGIN
+        
+		  PRINT('@Category2Id:'+ CONVERT(VARCHAR(50),@Category2))
+		 END
+
+		  IF(@VendorId=0) BEGIN
+        
+		  PRINT('@VendorId:'+ CONVERT(VARCHAR(50),@VendorId))
+		 END
+
+		   IF(@ProductId=0) BEGIN
+        
+		  PRINT('@Product:'+ CONVERT(VARCHAR(50),@Name))
+		 END
+		
+	   
+
+
+	   
+	   IF(@ProductId>0) BEGIN
+       DECLARE @C12ategoryId INT=10;
+	   UPDATE dbo.CRMProducts SET SecCategoryId=@Category2Id WHERE Id=@ProductId AND CompanyId=91
+	   --PRINT(@Name)
+
+	   END
+       ELSE BEGIN
+	     PRINT('Category 2:'+ CONVERT(VARCHAR(50),@Category2))
+		 PRINT(@Name)
+	   END
+       
+     FETCH NEXT FROM db_cursor INTO @Id, @Name, @Category,@Category2,@Vendor;
+END;
+CLOSE db_cursor;
+DEALLOCATE db_cursor;

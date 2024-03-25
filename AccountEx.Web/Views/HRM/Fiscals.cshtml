@@ -1,0 +1,154 @@
+﻿@using AccountEx.Common;
+
+@{
+    ViewBag.Title = "Fiscals";
+}
+
+@section PageTitle
+{
+    <h1 class="font-green-sharp bold">Manage Fiscals</h1>
+}
+
+
+<div class="row hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa"></i>Fiscals
+                </div>
+
+            </div>
+            <div class="portlet-body form">
+                <div id="mainform" class="form-horizontal" data-save="save">
+                    <input type="text" id="Id" class="hide" value="0" />
+                    @* <input type="text" id="CreatedDate" class="hide ac-date" data-clear-type="date" />
+                        <input type="text" id="IsDeleted" class="hide" />
+                        <input type="text" id="PreVoucherNumber" class="hide" />*@
+                    <div class="form-body">
+                        <div class="hide alert alert-danger container-message">
+                            <i class="close" onclick="$(this).parent().hide();"></i>
+                            <strong></strong>
+                            <div class="form-body message-content"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Applicable From</label>
+                            <div class="col-md-2 ">
+                                <select id="FromMonth" class="form-control select" data-clear="false">
+                                    <option value="1">January</option>
+                                    <option value="2">February</option>
+                                    <option value="3">March</option>
+                                    <option value="4">April</option>
+                                    <option value="5">May</option>
+                                    <option value="6">June</option>
+                                    <option value="7">July</option>
+                                    <option value="8">August</option>
+                                    <option value="9">September</option>
+                                    <option value="10">October</option>
+                                    <option value="11">November</option>
+                                    <option value="12">December</option>
+                                </select>
+                            </div>
+                            <div class="col-md-1 ">
+                                <select id="FromYear" class="form-control select" data-clear="false">
+                                    <option value="2012">2012</option>
+                                    <option value="2013">2013</option>
+                                    <option value="2014">2014</option>
+                                    <option value="2015">2015</option>
+                                    <option value="2016">2016</option>
+                                    <option value="2017">2017</option>
+                                    <option value="2018">2018</option>
+                                    <option value="2019">2019</option>
+                                    <option value="2020">2020</option>
+                                    <option value="2021">2021</option>
+                                    <option value="2022">2022</option>
+                                    <option value="2023">2023</option>
+                                </select>
+                            </div>
+                            <label class="col-md-1 control-label" for="prefix">To</label>
+                            <div class="col-md-2">
+                                <input id="ToDate" type="text" class="form-control ac-date" disabled="disabled">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Name</label>
+                            <div class="col-md-6 ">
+                                <input id="Name" type="text" class="form-control" data-required="required" data-message="Name is required">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Short Name</label>
+                            <div class="col-md-6 ">
+                                <input id="ShortName" type="text" class="form-control" data-required="required" data-message="Short Name is required">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+                            <div class="col-md-6">
+                                <label id="LableActive" class=" control-label" for="IsDefault">
+                                    <input type="checkbox" id="IsDefault" data-checktrack='false' />
+                                    Is Default
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <label class="col-md-4 control-label" for="prefix">&nbsp;</label>
+                        <div class="col-md-8">
+                            <button type="button" class="btn btn-primary green" onclick="Fiscals.Save()" data-plus-as-tab="false">Save</button>
+                            <button id="btnCancel" type="button" class="btn btn-default" onclick="Fiscals.CustomClear()">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+
+
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Fiscal Listing
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover" id="mainTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 8px;" class="no-sort">
+                                <input type="checkbox" class="group-checkable" data-set="#mainTable .checkboxes" />
+                            </th>
+                            <th>Name</th>
+                            @*<th>Code</th>*@
+                            <th style="width: 75px;" class="no-sort"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="6" class="center">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+
+@section FooterScript
+{
+    <script src="~/Content/AppJS/HRM/Fiscals.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            Fiscals.init();
+        });
+    </script>
+}

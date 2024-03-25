@@ -1,0 +1,213 @@
+﻿@model AccountEx.Web.Models.GeneralLedgerModel
+@using AccountEx.Common;
+@using AccountEx.BussinessLogic;
+
+@{
+    Layout = "_Layout.cshtml";
+    //ViewBag.Title = "General Ledger";
+    var type = Request.QueryString["type"] + "";
+    switch (type.ToLower())
+    {
+        case "customers":
+            ViewBag.Title = "Customer Ledger";
+            ViewBag.FormTitle = "Customer Ledger";
+            break;
+        case "suppliers":
+            ViewBag.Title = "Supplier Ledger";
+            ViewBag.FormTitle = "Supplier Ledger";
+            break;
+        case "products":
+            ViewBag.Title = "Product Ledger";
+            ViewBag.FormTitle = "Product Ledger";
+            break;
+        case "cash":
+            ViewBag.Title = "Cash Book";
+            ViewBag.FormTitle = "Cash Book";
+            break;
+        case "banks":
+            ViewBag.Title = "Bank Book";
+            ViewBag.FormTitle = "Bank Book";
+            break;
+        case "":
+            ViewBag.Title = "General Ledger";
+            ViewBag.FormTitle = "General Ledger";
+            break;
+    }
+}
+
+<style type="text/css">
+    .report-table thead tr th:nth-last-child(1),
+    .report-table thead tr th:nth-last-child(2),
+    .report-table thead tr th:nth-last-child(3),
+    .report-table tbody tr td:nth-last-child(1),
+    .report-table tbody tr td:nth-last-child(2),
+    .report-table tbody tr td:nth-last-child(3) {
+        text-align: right;
+    }
+</style>
+
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">
+
+        <span class="main-title">@ViewBag.FormTitle</span>
+        <small id="lblReportDate" class="pull-right small visible-print">Date: @Model.FromDate.ToString(AppSetting.DateFormat) to @Model.ToDate.ToString(AppSetting.DateFormat)
+
+        </small>
+        <br />
+        <small id="lblPartyName" class="pull-right small visible-print">Account Title:
+        <a href="javascript:void(0);"></a>
+        </small>
+
+    </h1>
+}
+@if (SettingManager.IsVehicleCompnay)
+{
+    @section VehicleBranchesDropdown
+{
+
+        @Html.Partial("../Vehicle/_UserBranches_Dropdown", new ViewDataDictionary { { "addAllOption", true } })
+    }
+}
+<div class="row hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-filter"></i>Report Filters
+                </div>
+                <div class="actions">
+                    <button class="btn blue hidden-print" onclick="window.print();"><i class="fa fa-print"></i>&nbsp;Print </button>
+                </div>
+
+            </div>
+            <div class="portlet-body form">
+                @using (Html.BeginForm())
+                {
+
+                    <div class="form-horizontal" data-save="Save">
+                        <input type="text" id="Id" class="hide" />
+                        <div class="form-body">
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">From Date</label>
+                                <div class="col-md-3">
+                                    <div class="input-group input-medium">
+                                        @Html.TextBoxFor(model => model.FromDate, new { @class = "form-control date-picker", @Value = Model.FromDate.ToString("dd/MM/yyyy"), data_fiscal_date = "true" })
+
+                                        <span class="input-group-btn date-icon">
+                                            <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                        </span>
+                                    </div>
+
+                                </div>
+                                <label class="col-md-2 control-label" for="prefix">To Date</label>
+                                <div class="col-md-3">
+                                    <div class="input-group input-medium">
+                                        @Html.TextBoxFor(model => model.ToDate, new { @class = "form-control date-picker", @Value = Model.ToDate.ToString("dd/MM/yyyy"), data_fiscal_date = "true" })
+                                        <span class="input-group-btn date-icon">
+                                            <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="form-group  row-account hide">
+                                <label class="col-md-2 control-label" for="prefix">Account/Party</label>
+                                <div class="col-md-8">
+                                    @*@Html.DropDownListFor(p => p.AccountId, new SelectList(Model.Accounts, "Id", "Name"), new { @class = "form-control select2" })*@
+                                    <select id="AccountId" class="form-control select2">
+                                        @foreach (var item in Model.Accounts)
+                                        {
+                                            <option value="@item.Id">@item.Name </option>
+                                        }
+                                    </select>
+
+                                </div>
+                            </div>
+                            <div class="form-group row-info hide">
+                                <label class="col-md-2 control-label" for="prefix"><strong>Account/Party:</strong></label>
+                                <div class="col-md-8">
+                                    <strong>
+                                        <label id="lblParty" class="label label-info"></label>
+                                    </strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+                            <div class="col-md-8">
+                                <button type="button" id="btnShowReport" class="btn btn-primary">Show Report</button>
+                            </div>
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+
+
+
+
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title hidden-print">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Report Data
+                </div>
+                <div class="tools">
+                    @{ Html.RenderPartial("_Export_Button");  }
+                </div>
+
+            </div>
+            <div class="portlet-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover report-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Voucher#</th>
+                                <th>Description</th>
+                                <th>Debit</th>
+                                <th>Credit</th>
+                                <th>Balance</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+<input type="hidden" id="txtFromDate" value="@Model.FromDate.ToString(AppSetting.DateFormat)" />
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Reports/GeneralLedger.js"></script>
+
+    <script>
+        jQuery(document).ready(function () {
+            GeneralLedger.init();
+        });
+    </script>
+}
+
+
+
+
+
+

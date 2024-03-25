@@ -1,0 +1,158 @@
+﻿@{
+    Layout = "_Layout.cshtml";
+    ViewBag.Title = "Stock";  
+}
+@using AccountEx.Common;
+<style type="text/css">
+    #tbldetail tfoot {
+        font-weight: bold;
+    }
+
+    .report-table tbody tr td:nth-last-child(1),
+    .report-table tbody tr td:nth-last-child(2),
+    .report-table tfoot tr td:nth-last-child(1),
+    .report-table tfoot tr td:nth-last-child(2) {
+        text-align: right;
+    }
+</style>
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">Stock Report <small id="lblReportDate" class="pull-right small visible-print">Date: 24/10/2014</small></h1>
+}
+<div class="row hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-filter"></i>Report Filters
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                    @*<a href="javascript:;" class="remove"></a>*@
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal" data-save="Save">
+                    <input type="text" id="Id" class="hide" />
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">From Date</label>
+                            <div class="col-md-3">
+                                <div class="input-group input-medium">
+                                    <input class="date-picker form-control date-picker" type="text" id="FromDate" data-validate="true" data-required="required" value="@SiteContext.Current.Fiscal.FromDate.ToString(AppSetting.DateFormat)" data-message="From Date"  data-fiscal-date="true" >
+
+                                    <span class="input-group-btn date-icon">
+                                        <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">To Date</label>
+                            <div class="col-md-3">
+                                <div class="input-group input-medium">
+                                    <input class="date-picker form-control date-picker" type="text" id="ToDate" data-validate="true" data-required="required" value="@SiteContext.Current.Fiscal.ToDate.ToString(AppSetting.DateFormat)" data-message="To Date"  data-fiscal-date="true" >
+
+                                    <span class="input-group-btn date-icon">
+                                        <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <div class="form-group">
+
+                            <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+                            <div class="col-md-8">
+                                <button id="btnShowReport" type="submit" class="btn btn-primary">Show Report</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title hidden-print">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Report Data
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                    @*<a href="javascript:;" class="remove"></a>*@
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class='searchpanel'>
+                    Search
+                <input type="text" id='txtSearch' class="searchtext form-control" />
+                </div>
+                 <div class="tools pull-right">
+                    @{ Html.RenderPartial("_Export_Button");  }
+                </div>
+                <table id="tbldetail" class="table table-striped table-bordered report-table" data-export='true'>
+                    <thead>
+                        <tr>
+                            @*<th style="width: 20px;">SN</th>*@
+                            <th style="width: 10%">Code</th>
+                            <th style="width: 20%">Product</th>
+                            <th style="width: 50%">Notes</th>
+                            <th class="hide">Generic/Salt</th>
+                            <th class="hide">Brand/Company</th>
+                            <th style="width: 10%; text-align:right" >Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot></tfoot>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+
+<div id="jsondata" class="hide">
+    @* <input id="FormSetting"  type="text" value="@ViewBag.FormSettings" />*@
+    @* <input id="OpeningBalances"  type="text" value="@ViewBag.OpeningBalances" />*@
+    <input id="Voucher"  type="text" value="@ViewBag.Voucher" />
+</div>
+@section FooterScript
+{
+    <script src="../../Content/AppJS/Reports/PharmacyStockWithNote.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            PharmacyStockWithNote.init();
+        });
+    </script>
+    <style type="text/css">
+        .searchtext {
+            /*border: 1px Solid #CCC;
+            height: 30px;*/
+            display: inline-block;
+            width: 400px;
+            background: url(../images/search.png) no-repeat scroll right center transparent;
+        }
+
+        .searchpanel {
+            float: right;
+            margin-bottom: 5px;
+        }
+
+        .highlighted {
+            background-color: Yellow;
+        }
+
+        .adminIcon {
+            float: left;
+        }
+    </style>
+}

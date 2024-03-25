@@ -1,0 +1,36 @@
+
+
+SELECT * FROM dbo.Companies WHERE Id=69
+
+
+DECLARE @CompanyId int=69
+
+DELETE FROM dbo.VoucherItems WHERE CompanyId=@CompanyId
+DELETE FROM dbo.Vouchers WHERE CompanyId=@CompanyId
+DELETE FROM dbo.SaleItems WHERE CompanyId=@CompanyId
+DELETE FROM dbo.Sales WHERE CompanyId=@CompanyId
+
+DELETE FROM dbo.ServiceItems WHERE CompanyId=@CompanyId
+
+DELETE FROM dbo.SaleServicesItems WHERE CompanyId=@CompanyId
+
+DELETE FROM dbo.Projects WHERE CompanyId=@CompanyId
+
+
+DELETE FROM dbo.WheatPurchaseItems WHERE CompanyId=@CompanyId
+DELETE FROM dbo.WheatPurchases WHERE CompanyId=@CompanyId
+
+
+DELETE FROM dbo.SalaryItems WHERE CompanyId=@CompanyId
+DELETE FROM dbo.Salaries WHERE CompanyId=@CompanyId
+
+DELETE FROM dbo.SalaryConfigItems WHERE CompanyId=@CompanyId
+DELETE FROM dbo.SalaryConfigs WHERE CompanyId=@CompanyId
+
+
+DELETE FROM dbo.Transactions WHERE CompanyId=@CompanyId
+
+DELETE FROM dbo.AccountDetails WHERE CompanyId=@CompanyId
+
+DELETE FROM dbo.Accounts WHERE CompanyId=@CompanyId AND Level=4
+

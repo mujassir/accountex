@@ -1,0 +1,186 @@
+﻿@model AccountEx.Web.Models.InvoiceModel
+@using AccountEx.Common;
+@{
+    Layout = "_Layout.cshtml";
+    ViewBag.Title = "Gst Invoice";
+}
+<style type="text/css">
+    .report-table tbody tr td:nth-last-child(1),
+    .report-table tbody tr td:nth-last-child(2),
+    .report-table tbody tr td:nth-last-child(3) {
+        text-align: right;
+    }
+</style>
+@{ var type = ((VoucherType)Enum.Parse(typeof(VoucherType), Request["type"], true)); }
+
+@if (Model == null)
+{
+    <div class="alert alert-danger">
+        <strong>Error!</strong>
+
+        @Html.ValidationSummary()
+    </div>
+}
+else
+{
+    <div class="theme-panel hidden-xs hidden-sm align-right">
+        <a class="btn btn-lg blue hidden-print margin-bottom-5" onclick="javascript:window.print();">
+            Print <i class="fa fa-print"></i>
+        </a>
+    </div>
+    <!-- BEGIN PAGE CONTENT-->
+    <div class="invoice">
+
+        <h3 class="page-title align-center">
+            @(type == VoucherType.Sale || type == VoucherType.SaleReturn ? "Sale Invoice" : "Purchase Invoice")
+    </h3>
+    <hr />
+    <div class="row">
+        <div class="col-xs-4">
+            <h3>@(type == VoucherType.Sale || type == VoucherType.SaleReturn ? "Client" : "Supplier") :</h3>
+            <ul class="list-unstyled">
+                <li>
+                    @Model.Account.Name
+            </li>
+            <li>
+                @Model.Account.Address
+        </li>
+    </ul>
+</div>
+<div class="col-xs-4">
+</div>
+<div class="col-xs-4 invoice-payment">
+    <h3>Invoice Details:</h3>
+    <ul class="list-unstyled">
+        <li>
+
+            <strong class="">Invoice Number:</strong>
+            @Model.InvoiceNumber
+        </li>
+        <li>
+            <strong class="">Date:</strong> @Model.Date.ToString(AppSetting.DateFormat)
+        </li>
+
+    </ul>
+</div>
+<div class="tools pull-right">
+    @{ Html.RenderPartial("_Export_Button");  }
+</div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <table class="table table-striped table-hover" data-export='true'>
+            <thead>
+                <tr>
+                    <th style="width: 20px;">
+                        #
+                    </th>
+                    <th style="width: 50%;">
+                        Item
+                    </th>
+                    <th class="hidden-480">
+                        Qty
+                    </th>
+                    <th class="hidden-480">
+                        Rate
+                    </th>
+                    <th class="hidden-480">
+                        Exc. Amt
+                    </th>
+                    <th class="hidden-480">
+                        GST %
+                    </th>
+                    <th style="width: 100px;">
+                        GST Amt
+                    </th>
+                    <th style="width: 100px;">
+                        Inc. Amt
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model.Items.Select((p, i) => new { Index = i + 1, Value = p }).ToList())
+                {
+                    <tr>
+                        <td>@item.Index</td>
+                        <td>@item.Value.Name</td>
+                        <td>@Numerics.IntToString(item.Value.Quantity) </td>
+                        <td>@Numerics.DecimalToString(item.Value.Price)  </td>
+                        <td>@Numerics.DecimalToString(item.Value.Amount)  </td>
+                        <td>@Numerics.DecimalToString(item.Value.Gst)  </td>
+                        <td>@Numerics.DecimalToString(item.Value.GstAmount)  </td>
+                        <td class="align-right">@Numerics.DecimalToString(item.Value.NetAmount)  </td>
+
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-7">
+        <p>
+            <b>Remarks:</b> @Model.Comments
+        </p>
+    </div>
+    <div class="col-xs-5 invoice-block">
+        <ul class="list-unstyled amounts">
+            <li>
+                <label class="col-xs-7 bold">Quantity Total:</label>
+                <label class="col-xs-5 underlined">
+                    @Numerics.DecimalToString(Model.Quanity)
+                </label>
+            </li>
+            <li>
+                <label class="col-xs-7 bold">Exc. Amount:</label>
+                <label class="col-xs-5 underlined">
+                    @Numerics.DecimalToString(Model.SubTotal)
+                </label>
+            </li>
+            <li>
+                <label class="col-xs-7 bold">GST:</label>
+                <label class="col-xs-5 underlined">
+                    @Numerics.DecimalToString(Model.Gst)
+
+                </label>
+            </li>
+
+            <li>
+                <label class="col-xs-7 bold">Inc. Amount:</label>
+                <label class="col-xs-5 underlined">
+                    @Numerics.DecimalToString(Model.NetTotal)
+
+                </label>
+            </li>
+        </ul>
+        <br />
+    </div>
+</div>
+<div class="row">
+
+    <label class="col-xs-2 bold align-right">Signature:</label>
+    <label class="col-xs-3 underlined">
+        &nbsp;
+    </label>
+
+</div>
+</div>
+    <!-- END PAGE CONTENT-->
+        }
+@section FooterScript
+{
+    <link href="~/Content/Metronic/assets/admin/pages/css/invoice.css" rel="stylesheet" type="text/css" />
+    <script>
+        jQuery(document).ready(function () {
+            window.print();
+        });
+    </script>
+}
+
+
+
+
+
+

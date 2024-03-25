@@ -1,0 +1,221 @@
+﻿@{
+    ViewBag.Title = "Dashboard";
+    ViewBag.TitleDescription = "dashboard & statistics";
+}
+
+<!-- BEGIN PAGE HEADER-->
+<h3 class="page-title"><small>dashboard & statistics</small>
+</h3>
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">Dashboard
+    </h1>
+}
+<div class="row">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="dashboard-stat green">
+            <div class="visual">
+                <i class="fa fa-shopping-cart"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    @ViewBag.CashInBank
+                </div>
+                <div class="desc">
+                    Bank Balance
+                </div>
+            </div>
+            <a class="more" href="../transaction/index?type=Sale">View more <i class="m-icon-swapright m-icon-white"></i>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="dashboard-stat blue">
+            <div class="visual">
+                <i class="fa fa-comments"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    @ViewBag.Taxes
+                </div>
+                <div class="desc">
+                    Taxes(Income,GST,WHT)
+                </div>
+            </div>
+            <a class="more" href="../transaction/index?type=Purchase">View more <i class="m-icon-swapright m-icon-white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="dashboard-stat purple">
+            <div class="visual">
+                <i class="fa fa-globe"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    @ViewBag.Sale
+                </div>
+                <div class="desc">
+                    Debtors
+                </div>
+            </div>
+            <a class="more" href="#">View more <i class="m-icon-swapright m-icon-white"></i>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="dashboard-stat yellow">
+            <div class="visual">
+                <i class="fa fa-bar-chart-o"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    @ViewBag.Purchase
+                </div>
+                <div class="desc">
+                    Creditors
+                </div>
+            </div>
+            <a class="more" href="#">View more <i class="m-icon-swapright m-icon-white"></i>
+            </a>
+        </div>
+    </div>
+</div>
+<!-- END DASHBOARD STATS -->
+<div class="clearfix">
+</div>
+<div class="row">
+    <div class="col-md-6 col-sm-6">
+        <!-- BEGIN PORTLET-->
+        <div class="portlet solid bordered grey-cararra">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-bar-chart-o"></i>Project Updates
+                </div>
+                <div class="actions">
+                    <div class="btn-group" data-toggle="buttons">
+                        @*<label class="btn grey-steel btn-sm active">
+                            <input type="radio" name="options" class="toggle" id="option1">New</label>*@
+                        @*<label class="btn grey-steel btn-sm">
+                            <input type="radio" name="options" class="toggle" id="option2">Returning</label>*@
+                        <div class="btn-group pull-right">
+                            <a href="" class="btn grey-steel btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">Project Lists <span class="fa fa-angle-down"></span>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+
+                                @* <li>
+                                <a href="javascript:;">Vex
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">Q2 2014 <span class="label label-sm label-default">past </span>
+                                </a>
+                            </li>
+                            <li class="active">
+                                <a href="javascript:;">Q3 2014 <span class="label label-sm label-success">current </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">Q4 2014 <span class="label label-sm label-warning">upcoming </span>
+                                </a>
+                            </li>*@
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div id="site_statistics_loading">
+                    <img src="~/Content/metronic/assets/admin/layout/img/loading.gif" alt="loading" />
+                </div>
+                <div id="site_statistics_content" class="display-none">
+                    <div id="site_statistics" class="chart">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END PORTLET-->
+    </div>
+    <div class="col-md-6 col-sm-6">
+        <!-- BEGIN PORTLET-->
+        <div class="portlet solid grey-cararra bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-bullhorn"></i>Revenue
+                </div>
+                <div class="actions">
+                    <div class="btn-group pull-right">
+                        <a href="" class="btn grey-steel btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">Filter <span class="fa fa-angle-down"></span>
+                        </a>
+                        <ul class="dropdown-menu pull-right">
+                            <li>
+                                <a href="javascript:;">Q1 2014 <span class="label label-sm label-default">past </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">Q2 2014 <span class="label label-sm label-default">past </span>
+                                </a>
+                            </li>
+                            <li class="active">
+                                <a href="javascript:;">Q3 2014 <span class="label label-sm label-success">current </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">Q4 2014 <span class="label label-sm label-warning">upcoming </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div id="site_activities_loading">
+                    <img src="~/Content/metronic/assets/admin/layout/img/loading.gif" alt="loading" />
+                </div>
+                <div id="site_activities_content" class="display-none">
+                    <div id="site_activities" style="height: 228px;">
+                    </div>
+                </div>
+                <div style="margin: 20px 0 10px 30px">
+                    <div class="row">
+                        <div class="col-md-3 col-sm-3 col-xs-6 text-stat">
+                            <span class="label label-sm label-success">Revenue: </span>
+                            <h3>$13,234</h3>
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-6 text-stat">
+                            <span class="label label-sm label-info">Tax: </span>
+                            <h3>$134,900</h3>
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-6 text-stat">
+                            <span class="label label-sm label-danger">Shipment: </span>
+                            <h3>$1,134</h3>
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-6 text-stat">
+                            <span class="label label-sm label-warning">Orders: </span>
+                            <h3>235090</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END PORTLET-->
+    </div>
+</div>
+<div class="clearfix">
+</div>
+
+
+<!-- END PAGE CONTENT-->
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Account/Dashboard.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            Dashboard.init();
+            Dashboard.initDashboardDaterange();
+            Dashboard.initCharts();
+        });
+    </script>
+}

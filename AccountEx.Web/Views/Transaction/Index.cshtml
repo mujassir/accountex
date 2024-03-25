@@ -1,0 +1,288 @@
+﻿
+<!-- END PAGE HEADER-->
+ @section PageTitle
+{
+    <h1 class="font-green-sharp bold">Manage Transaction</h1>
+}
+<div class="row hide" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-edit"></i>Add/Edit Detail
+                </div>
+                <div class="actions">
+                    <a href="javascript:;" onclick="Transaction.ListView()" class="btn blue">
+                        <i class="fa fa-angle-left"></i>&nbsp;Back to list 
+                    </a>
+                </div>
+            </div>
+            <div class="portlet-body form">
+
+                <div id="mainform" class="form-horizontal" data-save="save">
+
+                    <input type="text" id="Id" class="hide" />
+                    <div class="form-body">
+                        <div class="hide alert alert-danger container-message">
+                            <i class="close" onclick="$(this).parent().hide();"></i>
+                            <strong></strong>
+                            <div class="form-body message-content"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Voucher Number</label>
+                            <div class="col-md-3 container-voucher">
+                                <label id="lblVoucherNumber" class="label label-info label-voucher"></label>
+                                <input type="text" class="form-control hide" id="VoucherNumber" disabled="disabled" readonly="readonly" data-required="required" data-validate="true" data-message="P.O Number is required" >
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">Invoice Number</label>
+                            <div class="col-md-3">
+                                <input type="text" id="InvoiceNumber" data-validate="true" data-required="required" data-message="Invoice Number is required"  class="number form-control">
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label master-account-label" for="prefix">Party</label>
+                            <div class="col-md-3">
+                                <select id="AccountId" class="form-control" data-trackchange='true' data-required="required" data-message="Select Customer" data-placeholder="Select Party">
+                                    @*<option></option>
+                                    @foreach (var cat in ViewBag.Customers as List<IdName>)
+                                    {
+                                        <option data-custom="@cat.Id" value="@cat.Id">@cat.Name</option>
+                                    }*@
+                                </select>
+                                @* <input type="hidden" id="SubCategoryId" value="0" />*@
+
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">Date</label>
+                            <div class="col-md-3">
+                                <div class="input-group input-medium date">
+                                    <input id="Date" type="text" class="form-control date-picker" data-clear-type='date' data-validate="true" data-required="required" data-message="Date is required" data-hide-dropdown="true">
+                                    <span class="input-group-btn date-icon">
+                                        <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Remarks</label>
+                            <div class="col-md-8">
+                                <input class="form-control" type="text" name="text" id="Comments" />
+                                <span class="help-block">Optional summary of your Payment that can be used in Reports</span>
+                            </div>
+                        </div>
+                        <div class="portlet">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    Items
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="form-group" id="addrow" data-save="false">
+                            <div class="col-md-10">
+                                <div class="col-md-6">
+                                    <label class="pull-left control-label">Item</label>
+
+                                    <div class="col-md-10">
+                                        <select id="Item" class="form-control select2me" data-clear="false" placeholder="Select Item">
+                                            @*  @foreach (var cat in ViewBag.Items as List<IdName>)
+                                            {
+                                                <option data-custom="@cat.Id" value="@cat.Id">@cat.Name</option>
+                                            }*@
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="col-md-1 control-label">Qty</label>
+                                    <div class="col-md-3">
+                                        <input class="number form-control input-xsmall" value="" type="text" placeholder="Qty" id="qty" data-validate="true" >
+                                    </div>
+                                    <label class="col-md-1 control-label">Rate</label>
+                                    <div class="col-md-3">
+                                        <input class="number form-control input-xsmall" type="text" placeholder="Rate" id="Rate" data-validate="true" >
+                                    </div>
+                                    <label class="col-md-1 control-label">Amt</label>
+                                    <div class="col-md-3">
+                                        <input class="number form-control input-xsmall" type="text" readonly placeholder="Amount" id="Amount" data-validate="true" >
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <button class="btn btn-primary btn-mini" onclick="Transaction.AddItem()" type="button"><i class="icon-plus"></i>Add Item</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group" data-save="false">
+                            <div class="col-md-12">
+
+                                <table id="saleitem" class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Item</th>
+                                            <th>Quantity</th>
+                                            <th>Rate</th>
+                                            <th>Amount</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-7"></label>
+                            <div class="col-md-5 align-right">
+                                <div class="row">
+
+                                    <label class="control-label col-md-5">Quantity Total</label>
+                                    <div class="col-md-7">
+                                        <input id="qtytotal" class="form-control" type="text" disabled="disabled" readonly="readonly" value="0" />
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label class="control-label col-md-5">Amount Total</label>
+                                    <div class="col-md-7">
+                                        <input id="amounttotal" class="form-control" type="text" disabled="disabled" readonly="readonly" data-required="required" data-message="Please add atleast one item" />
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label class="control-label col-md-5">Discount</label>
+                                    <div class="col-md-7">
+                                        <input id="Discount" class="form-control" type="text" value="0" />
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label class="control-label col-md-5">Net Total</label>
+                                    <div class="col-md-7">
+                                        <input id="Nettotal" class="form-control" disabled="disabled" readonly="readonly" type="text" value="" />
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-actions">
+                        @*<label class="col-md-2">&nbsp;</label>*@
+                        <button type="button" class="btn btn-primary" onclick="Transaction.Save()">Save</button>
+                        <button type="button" class="btn btn-primary" onclick="Transaction.SaveClose()">Save & Close</button>
+                        @*<button type="submit" class="btn btn-primary"  onclick="SaveNClose()">Save & Close</button>*@
+                        <button type="button" class="btn btn-default" onclick="Transaction.Add()">Clear/New</button>
+                        @*<button id="btnCancel" type="button" class="btn btn-default" onclick="Transaction.ListView()">Close</button>*@
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+<div class="row hide" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Record Listing
+                </div>
+                <div class="actions">
+                    <a href="javascript:;" onclick="Transaction.Add()" class="btn blue">
+                        <i class="fa fa-plus"></i>&nbsp;New 
+                    </a>
+                    @*<div class="btn-group">
+                        <a class="btn purple" href="#" data-toggle="dropdown">
+                            <i class="fa fa-cogs"></i>&nbsp;Tools <i class="fa fa-angle-down"></i>
+                        </a>
+                        <ul class="dropdown-menu pull-right">
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-pencil"></i>Edit
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-trash-o"></i>Delete
+                                </a>
+                            </li>
+
+                            <li class="divider"></li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-print"></i>Print
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-table"></i>Export to CSV
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-bar-chart-o"></i>Export to excel
+                                </a>
+                            </li>
+                        </ul>
+                    </div>*@
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="hide alert alert-danger container-message">
+                    <i class="close" onclick="$(this).parent().hide();"></i>
+                    <strong></strong>
+                    <div class="form-body message-content"></div>
+                </div>
+
+                <table class="table table-striped table-bordered table-hover" id="mainTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 8px;" class="no-sort">
+                                <input type="checkbox" class="group-checkable" data-set="#mainTable .checkboxes" />
+                            </th>
+                            <th>Vou #
+                            </th>
+                            <th>Inv #</th>
+                            <th>Party</th>
+                            <th>Total</th>
+                            <th>Date</th>
+                            <th>Remarks</th>
+                            <th style="width: 75px;" class="no-sort"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="8">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+
+<div id="jsondata" class="hide">
+    <input id="FormSetting"  type="text" value="@ViewBag.FormSetting" />
+</div>
+
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Transaction/transaction.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            Transaction.init();
+        });
+    </script>
+}
+

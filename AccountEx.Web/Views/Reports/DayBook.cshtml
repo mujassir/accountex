@@ -1,0 +1,206 @@
+﻿@model AccountEx.Web.Models.GeneralLedgerModel
+@using AccountEx.Common;
+@{
+    Layout = "_Layout.cshtml";
+    ViewBag.HideMenu = "hide";
+    ViewBag.Title = "Day Book";   
+}
+<style type="text/css">
+    /*.report-table tbody tr td:nth-last-child(1),
+    .report-table tbody tr td:nth-last-child(2),*/
+    .report-table tbody tr td:nth-last-child(1) {
+        text-align: right;
+    }
+
+    table[data-view='hide'] thead tr th:nth-child(2),
+    table[data-view='hide'] tr td:nth-child(2) {
+        display: none;
+    }
+
+    @@media print {
+        @@page {
+            margin: 0.5cm 0.5cm;
+            size: legal landscape;
+        }
+
+        .div-page-break {
+            display: block;
+            page-break-after: always;
+        }
+    }
+
+    .report-table thead tr th {
+        font-size: 10px;
+        padding: 3px 3px;
+    }
+
+    .report-table tbody tr td {
+        font-size: 10px;
+        padding: 3px 3px;
+        text-align: right;
+    }
+
+        .report-table tbody tr td:nth-child(1),
+        .report-table tbody tr td:nth-child(2),
+        .report-table tbody tr td:nth-child(3) {
+            text-align: left;
+        }
+
+    h4 .month {
+        border-bottom: 1px solid #000;
+        padding: 0px 10px;
+        display: inline-block;
+        width: 150px;
+    }
+
+    .report-table .tr-total td {
+        font-weight: bold;
+    }
+</style>
+
+<div class="page-bar hide">
+    <ul class="page-breadcrumb">
+        <li>
+
+            <a href="#">Fortress Stadium Fund Acct Book for the Month of:</a>
+
+        </li>
+        <li>
+
+            <span><b><u>June</u></b></span>
+
+        </li>
+
+    </ul>
+    <div class="page-toolbar">
+    </div>
+    <button class="btn blue large pull-right hide" onclick="window.print();"><i class="fa fa-print"></i>&nbsp;Print </button>
+
+</div>
+<!-- END PAGE HEADER-->
+<div class="row hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+         <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-filter"></i>Report Filters
+                </div>
+
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                    <a href="javascript:;" class="remove"></a>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal" data-save="save">
+                    <input type="text" id="Id" class="hide" />
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">From Date</label>
+                            <div class="col-md-3">
+                                <div class="input-group input-medium">
+                                    <input class="date-picker form-control date-picker" type="text" id="FromDate" data-validate="true" data-required="required" value="@SiteContext.Current.Fiscal.FromDate.ToString(AppSetting.DateFormat)" data-message="@Resources.Resource.Date"  data-fiscal-date="true">
+                                    <span class="input-group-btn date-icon">
+                                        <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">To Date</label>
+                            <div class="col-md-3">
+                                <div class="input-group input-medium">
+                                    <input class="date-picker form-control date-picker" type="text" id="ToDate" data-validate="true" data-required="required" value="@SiteContext.Current.Fiscal.ToDate.ToString(AppSetting.DateFormat)" data-message="@Resources.Resource.Date"  data-fiscal-date="true" >
+                                    <span class="input-group-btn date-icon">
+                                        <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Type</label>
+                            <div class="col-md-2">
+                                <select id="Type" class="select2 form-control">
+                                    <option value="true">Debit</option>
+                                    <option value="false">Credit</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+                        <div class="col-md-8">
+                            <button id="btnShowReport" type="submit" class="btn btn-primary">Show Report</button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+ <div class="tools pull-right">
+                    @{ Html.RenderPartial("_Export_Button");  }
+                </div>
+<div id="div-table-data" class="row hide">
+    <div class="col-md-12 col-sm-12">
+        <h4>Fortress Stadium Fund Acct Book for the Month of:
+            <div class="month"></div>
+            <br />
+            <span class="debit-credit"></span>
+        </h4>
+        <table id="report-table-debit" class="table table-striped table-bordered table-hover report-table" data-export='true'>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th style="width: 70px;">Vou#</th>
+                    <th>Whome to What account</th>
+                    <th class='align-right'>Cash</th>
+                    <th class='align-right'>Bank</th>
+                    <th class='align-right'>Rent</th>
+                    <th class='align-right'>Utility Charges</th>
+                    <th class='align-right'>Electricity Charges</th>
+                    <th class='align-right'>Poss Charges</th>
+                    <th class='align-right'>Transfer Fee</th>
+                    <th class='align-right'>Security Money</th>
+                    <th class='align-right'>Prom Activities</th>
+                    <th class='align-right'>Car Parking</th>
+                    <th class='align-right'>Bank Profit</th>
+                    <th class='align-right'>Surcharge</th>
+                    <th class='align-right'>Misc</th>
+                    <th class='align-right'>CRs</th>
+                    <th class='align-right'>DR's</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+<br />
+
+
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Reports/DayBook.js"></script>
+
+    <script>
+        jQuery(document).ready(function () {
+            DayBook.init();
+
+        });
+    </script>
+}
+
+
+
+
+
+

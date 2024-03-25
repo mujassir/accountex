@@ -1,0 +1,39 @@
+﻿@model AccountEx.Common.MenuItemExtra
+@functions {
+
+    public string GetDataType()
+    {
+        return Model.DataType + "" == "" ? "" : "data-type=" + Model.DataType + "";
+    }
+
+}
+@{
+    if (Model.SubMenues.Count > 0)
+    {
+    <li>
+        <a href="javascript:;">
+            @if (Model.IconClass + "" != "")
+            { <i class="@Model.IconClass"></i>}
+            <span class="title">@Model.Title
+            </span>
+            <span class="arrow "></span>
+        </a>
+        <ul class="sub-menu">
+            @foreach (var item in Model.SubMenues)
+            {
+                @Html.Partial("_MenuItem", item)
+            }
+        </ul>
+    </li>
+    }
+    else
+    {
+    <li>
+        <a href="@Url.Content(Model.Url)" @GetDataType()>
+            @if (Model.IconClass + "" != "")
+            { <i class="@Model.IconClass"></i>}
+            <span class="title">@Model.Title</span></a>
+    </li>
+    }
+}
+

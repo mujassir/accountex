@@ -1,0 +1,113 @@
+EXEC dbo.GetCRMSaleForecastByProductCustomer @CompanyId = 0,          -- int
+                                             @UserId = 0,             -- int
+                                             @CRMCustomerIds = '',    -- varchar(max)
+                                             @SalePersonUserIds = '', -- varchar(max)
+                                             @Year = 0,               -- int
+                                             @Month = 0,              -- int
+                                             @RegionIds = '',         -- varchar(max)
+                                             @DivisionIds = '',       -- varchar(max)
+                                             @CategoryId = 0,         -- int
+                                             @SecCategoryId = 0       -- int
+
+
+SELECT SF.SalePersonId,
+       SalPersonForecast.FirstName + ' ' + SalPersonForecast.LastName AS SFSP,
+       CSSP.UserId,
+       SalPersonOrignal.FirstName + ' ' + SalPersonOrignal.LastName AS OrignalSP,
+       CP.CategoryId,
+       CSSP.CategroyId
+FROM dbo.CRMSaleForecasts SF
+    INNER JOIN dbo.CRMCustomers C
+        ON SF.CustomerId = C.Id
+    INNER JOIN dbo.CRMProducts CP
+        ON CP.Id = SF.ProductId
+    INNER JOIN dbo.CRMCustomerSalePersons CSSP
+        ON C.Id = CSSP.CRMCustomerId
+           AND CP.CategoryId = CSSP.CategroyId
+    INNER JOIN dbo.Users SalPersonForecast
+        ON SalPersonForecast.Id = SF.SalePersonId
+    INNER JOIN dbo.Users SalPersonOrignal
+        ON SalPersonOrignal.Id = CSSP.UserId
+WHERE CSSP.UserId <> SF.SalePersonId
+ORDER BY SF.SalePersonId
+
+
+DELETE FROM SF
+FROM dbo.CRMSaleForecasts SF
+    INNER JOIN dbo.CRMCustomers C
+        ON SF.CustomerId = C.Id
+    INNER JOIN dbo.CRMProducts CP
+        ON CP.Id = SF.ProductId
+    INNER JOIN dbo.CRMCustomerSalePersons CSSP
+        ON C.Id = CSSP.CRMCustomerId
+           AND CP.CategoryId = CSSP.CategroyId
+    INNER JOIN dbo.Users SalPersonForecast
+        ON SalPersonForecast.Id = SF.SalePersonId
+    INNER JOIN dbo.Users SalPersonOrignal
+        ON SalPersonOrignal.Id = CSSP.UserId
+WHERE CSSP.UserId <> SF.SalePersonId
+
+
+
+use xameer_accountex
+
+
+SELECT SF.ForecastYear,
+       SF.ForecaseMonth,
+       SF.Year,
+       SF.Month,
+       SF.SalePersonId,
+	   currentsp.FirstName+' '+ currentsp.LastName AS CurrentSalePerson,
+       csp.UserId AS RealSalePersonId,
+	   realsp.FirstName+' '+ realsp.LastName AS RealSalePerson,
+       createdby.CreatedBy,
+	   createdby.FirstName+' '+ createdby.LastName AS CreatedByName,
+	  SF.ModifiedBy,
+		sf.ModifiedAt
+	
+FROM dbo.CRMSaleForecasts SF
+    INNER JOIN dbo.vw_CRMProducts p
+        ON p.Id = SF.ProductId
+    INNER JOIN dbo.vw_CRMCustomers c
+        ON c.Id = SF.CustomerId
+    INNER JOIN dbo.CRMCustomerSalePersons csp
+        ON c.Id = csp.CRMCustomerId
+           AND csp.CategroyId = p.CategoryId
+    INNER JOIN dbo.Users currentsp
+        ON currentsp.Id = SF.SalePersonId
+    INNER JOIN dbo.Users realsp
+        ON realsp.Id = csp.UserId
+    INNER JOIN dbo.Users createdby
+        ON createdby.Id = SF.CreatedBy
+WHERE SF.Type = 0
+      AND SF.SalePersonId <> csp.UserId;
+
+
+
+
+
+
+
+
+	  UPDATE SF
+	  SET SF.SalePersonId=csp.UserId
+
+FROM dbo.CRMSaleForecasts SF
+    INNER JOIN dbo.vw_CRMProducts p
+        ON p.Id = SF.ProductId
+    INNER JOIN dbo.vw_CRMCustomers c
+        ON c.Id = SF.CustomerId
+    INNER JOIN dbo.CRMCustomerSalePersons csp
+        ON c.Id = csp.CRMCustomerId
+           AND csp.CategroyId = p.CategoryId
+    INNER JOIN dbo.Users currentsp
+        ON currentsp.Id = SF.SalePersonId
+    INNER JOIN dbo.Users realsp
+        ON realsp.Id = csp.UserId
+    INNER JOIN dbo.Users createdby
+        ON createdby.Id = SF.CreatedBy
+WHERE SF.Type = 0
+      AND SF.SalePersonId <> csp.UserId;
+
+
+                         

@@ -1,0 +1,92 @@
+﻿table.report-summary-info.information > tbody > tr > td {
+    padding: 5px;
+    border: 1px solid #AAA;
+}
+
+table.report-summary-infor.information > tbody > tr > td {
+    padding: 5px;
+}
+
+table.report-summary-info > tbody > tr > td {
+    padding: 5px;
+}
+
+table.report-summary-info td table tr td:first-child {
+    font-size: 9px !important;
+    text-align: right;
+    font-weight: bold;
+}
+
+table.report-summary-info td table tr td {
+    padding: 2px 5px;
+}
+
+.PoAddress {
+    float: left;
+    font-size: 10px;
+}
+
+.PoHead {
+    float: right;
+    font-size: 20px;
+    padding-right: 80px;
+}
+
+#div-report strong {
+    font-size: 9px !important;
+}
+
+#div-report span {
+    font-weight: normal;
+    font-size: 10px !important;
+}
+
+#tblAgingItems tbody td:nth-child(1) {
+    text-align: left;
+}
+
+#img-container {
+    width: 240px !important;
+    height: 60px !important;
+}
+
+    #img-container p, #img-container span, #img-container img {
+        height: 100% !important;
+        width: 100% !important;
+    }
+    .font-size {
+    font-size: 10px !important;
+}
+
+.address-company {
+    font-size: 10px;
+    padding-left: 30px;
+}
+
+.address-company-vendor {
+    font-size: 10px;
+    padding-left: 10px;
+}
+
+.verified-label {
+    position: fixed;
+    border-top: 2px #000;
+    width: 420px;
+    right: 0px;
+    bottom: 80px;
+    padding-top: 5px;
+}
+
+.authorized-by {
+    font-weight: normal;
+    text-align: center;
+    padding: 0 2px;
+    border-top: 1px solid #AAA;
+}
+
+.authorized-date {
+    font-weight: normal;
+    text-align: center;
+    padding: 0 2px;
+    border-top: 1px solid #AAA;
+}

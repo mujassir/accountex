@@ -1,0 +1,636 @@
+﻿@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">Manage Sales</h1>
+}
+<style type="text/css">
+    .print {
+        cursor: pointer;
+        margin-left: 20px;
+    }
+
+    #printdiv table {
+        font-size: 14px;
+        direction: rtl;
+        width: 100%;
+    }
+
+    .bordertbl td, .bordertbl th {
+        border-collapse: collapse;
+        border: 1px solid #000;
+        padding: 10px;
+    }
+
+    #tblitemdetail td, .tblitemdetail th {
+        border-collapse: collapse;
+        border: 1px solid #000;
+        padding: 4px;
+    }
+
+
+
+
+    #printdiv label {
+        font-size: 20px;
+    }
+</style>
+@using AccountEx.Common;
+<div id="maincontainer">
+    <div class="row-fluid">
+        <div class="span12">
+            <h2 class="page-title">&nbsp<span class="formtitle12">@Resources.Resource.Sale</span> @*<small>manage and receive &nbsp<span class="formtitle12">@Resources.Resource.Sale</span></small>*@</h2>
+        </div>
+    </div>
+
+    <div class="row-fluid" id="masterdetail">
+        <section class="widget">
+            
+
+            <div class="body mainform">
+                <div id="form-info" data-save='Save' class="form-horizontal label-left hide">
+                    <input type="text" id="Id" class="hide" />
+                    <input type="text" data-checktrack='false' value="false" id="IsReceived" class="hide" />
+
+
+                    <fieldset>
+
+                        <legend class="section">@Resources.Resource.AddEdit&nbsp<span class="formtitle12">@Resources.Resource.Sale</span></legend>
+                        <div id="mainform">
+                            <div class="row-fluid">
+                                <div class="span4">
+                                    <label class="control-label" for="prefix">@Resources.Resource.VoucherNumber</label>
+                                    <div class="controls controls-row">
+                                        <label id="lblVoucherNumber" class="label label-info"></label>
+                                        <input type="text" class="span12 hide" id="VoucherNumber" disabled="disabled" readonly="readonly" data-required="required" data-validate="true" data-message="@Resources.Resource.Voucherisrequired"  >
+                                    </div>
+                                </div>
+                                <div class="span4">
+                                    <label class="control-label" for="prefix">@Resources.Resource.BillNumber</label>
+                                    <div class="controls controls-row">
+                                        <input type="text" id="InvoiceNumber" disabled="disabled" data-validate="true" data-required="required" data-message="@Resources.Resource.BillNumberisrequired"  class="number span12">
+                                    </div>
+                                </div>
+                                <div class="span4">
+                                    <label class="control-label datetime" for="prefix">@Resources.Resource.Date</label>
+                                    <div class="controls controls-row">
+                                        <input type="text" id="Date" data-clear-type="date" value="@DateTime.Now.ToString("dd/MM/yyyy")" data-validate="true" data-required="required" data-message="@Resources.Resource.Saledateisrequired" class="date-picker span12" data-hide-dropdown="true" data-fiscal-date="true">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row-fluid">
+                                <div class="span4">
+                                    <label class="control-label" for="prefix">@Resources.Resource.SaleType</label>
+                                    <div class="controls controls-row">
+                                        <select id="SaleType" class="span12" data-trackchange='true' data-required="required" data-placeholder="@Resources.Resource.SaleType" data-message="Voucher is required">
+                                            <option value="RoughReceiving">Rough</option>
+                                            <option value="StoreReceiving">Store</option>
+                                        </select>
+
+                                    </div>
+                                </div>
+
+
+
+                                <div class="span4">
+                                    <label class="control-label" for="prefix">@Resources.Resource.Supplier</label>
+                                    <div class="controls controls-row">
+                                        <select id="AccountId" class="span12" data-trackchange='true' data-required="required" data-placeholder="@Resources.Resource.Supplier" data-message="@Resources.Resource.Supplierisrequired">
+                                            <option></option>
+                                            @foreach (var cat in ViewBag.Suppliers as List<IdName>)
+                                            {
+                                                <option data-custom="@cat.Id" value="@cat.Id">@cat.Name</option>
+                                            }
+                                        </select>
+                                        <input type="hidden" id="SubCategoryId" value="0" />
+
+                                    </div>
+                                </div>
+                                <div class="span4">
+                                    <label class="control-label" for="prefix">@Resources.Resource.Vehicle</label>
+                                    <div class="controls controls-row">
+
+                                        <input type="text" id="Vehicle" data-validate="true" data-required="required" data-message="@Resources.Resource.VehicleNumberisrequired"  class="span12">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row-fluid">
+                                <div class="span4" id="storediv">
+                                    <label class="control-label" for="prefix">@Resources.Resource.PendingVoucher</label>
+                                    <div class="controls controls-row">
+                                        <select id="ReceivingVoucher" class="span12" data-trackchange='true' data-required="required" data-placeholder="@Resources.Resource.PendingVoucher" data-message="@Resources.Resource.PendingVoucher">
+                                        </select>
+                                        <input type="text" id="ReceivingVoucher1" disabled="disabled" class="span12 hide" />
+
+                                    </div>
+                                </div>
+                                <div class="span4 storedata hide">
+                                <label class="control-label" for="prefix">@Resources.Resource.StoreRent</label>
+                                <div class="controls controls-row">
+                                    <input type="text" id="StoreFare" disabled="disabled"  value="1500"  data-message="@Resources.Resource.StoreRent"  class="number span12">
+                                </div>
+                            </div>
+                            <div class="span4 storedata hide">
+                                <label class="control-label datetime" for="prefix">@Resources.Resource.LabourStore</label>
+                                <div class="controls controls-row">
+                                    <input type="text" id="StoreLaboreCharges" disabled="disabled" class="span12">
+                                </div>
+                            </div>
+                            </div>
+
+
+                        </div>
+                        <fieldset>
+                            <legend>@Resources.Resource.AllItemInCurrentVoucher
+
+                            </legend>
+                            <div data-save='false'>
+
+                                <section class="widget">
+
+                                    <table id="VoucherItem" class="table table-striped">
+                                        <thead>
+                                            <tr>
+
+                                                <th>@Resources.Resource.item</th>
+                                                <th>@Resources.Resource.Mark</th>
+                                                <th>@Resources.Resource.Challan</th>
+                                                <th>@Resources.Resource.Quantity</th>
+                                                <th>@Resources.Resource.Rate</th>
+                                                <th>@Resources.Resource.Amount</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+
+                                </section>
+
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>@Resources.Resource.AddItem
+
+                            </legend>
+                            <div data-save='false'>
+
+                                <table id="tbladdSale">
+                                    <tr>
+                                        <td class="label_td">@Resources.Resource.Customer</td>
+                                        <td>
+                                            <select id="Customer" data-trackchange="true" data-validate="true" data-required="required" data-placeholder="@Resources.Resource.Customer" data-message="@Resources.Resource.Customerisrequired" class="choseninner">
+                                                <option></option>
+                                                @foreach (var cat in ViewBag.Customers as List<IdName>)
+                                                {
+                                                    <option data-custom="@cat.Id" value="@cat.Id">@cat.Name</option>
+                                                }
+                                            </select></td>
+                                        <td class="label_td">&nbsp;@Resources.Resource.item</td>
+                                        <td>
+                                            <select id="Item" data-trackchange="true" data-validate="true" data-required="required" data-placeholder="@Resources.Resource.item" data-message="@Resources.Resource.Itemisrequired" class="choseninner">
+                                                <option></option>
+                                                @foreach (var cat in ViewBag.Items as List<IdName>)
+                                                {
+                                                    <option data-custom="@cat.Id" value="@cat.Id">@cat.Name</option>
+                                                }
+                                            </select>
+                                        </td>
+
+                                        <td class="label_td">@Resources.Resource.Mark </td>
+                                        <td>
+                                            <select id="Marka" data-trackchange="true" data-required="required" data-placeholder="@Resources.Resource.Mark" data-message="@Resources.Resource.MarkaIsRequired" class="choseninner">
+                                                <option></option>
+                                                @foreach (var item in ViewBag.Markas as List<IdName>)
+                                                {
+                                                    <option data-custom="@item.Id" value="@item.Id">@item.Name</option>
+                                                }
+                                            </select>
+
+
+                                        </td>
+                                        <td class="label_td">@Resources.Resource.Challan </td>
+                                        <td>
+                                            <select id="Challan" data-trackchange="true" data-required="required" data-placeholder="@Resources.Resource.Challan" data-message="@Resources.Resource.Challanisrequired" class="choseninner">
+                                                <option></option>
+
+                                            </select>
+
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="label_td">
+                                            @Resources.Resource.Quantity</td>
+                                        <td class="label_td">
+                                            <input type="text" placeholder="@Resources.Resource.Quantity" id="qty" data-required="required" data-validate="true" data-message="@Resources.Resource.qtyisrequired" ></td>
+                                        <td class="label_td">
+                                            @Resources.Resource.Rate</td>
+                                        <td>
+                                            <input type="text" placeholder="@Resources.Resource.Rate" id="Rate" data-validate="true" data-required="required" data-message="@Resources.Resource.rateisrequired"  class="number"></td>
+                                        <td>@Resources.Resource.Amount</td>
+                                        <td>
+                                            <input type="text" placeholder="@Resources.Resource.Amount" id="Amount" data-validate="true" data-required="required" data-message="@Resources.Resource.amountisrequired"  class="number"></td>
+                                        <td colspan="2">
+
+                                            <button class="btn btn-primary btn-mini" onclick="AddItem()" type="button"><i class="icon-plus"></i>@Resources.Resource.AddItem</button>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <br />
+
+                                <section class="widget">
+
+                                    <table id="saleitem" class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>@Resources.Resource.Customer</th>
+                                                <th>@Resources.Resource.item</th>
+                                                <th>@Resources.Resource.Mark</th>
+                                                <th>@Resources.Resource.Challan</th>
+                                                <th>@Resources.Resource.Quantity</th>
+                                                <th>@Resources.Resource.Rate</th>
+                                                <th>@Resources.Resource.Amount</th>
+                                                <th>@Resources.Resource.Quantity*10=@Resources.Resource.Laga</th>
+                                                <th>@Resources.Resource.TotalAmount</th>
+                                                <th>@Resources.Resource.Action</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+
+                                </section>
+                            </div>
+                            <div class="row-fluid">
+                                <div class="span8">
+                                    <div class="pull-left">
+                                        <div class="row-fluid">
+                                            <div class="span6">
+                                                <label class="control-label" for="prefix">@Resources.Resource.Commission</label>
+                                                <div class="controls controls-row">
+                                                    <input type="text" onkeyup="CalculateComission()" placeholder="%" class="span6 comm" data-save="false" id="CommissionPercent">
+                                                    <input type="text" placeholder="@Resources.Resource.Commission" class="span6 exp" id="Commission">
+                                                </div>
+                                            </div>
+                                            <div class="span6">
+                                                <label class="control-label" for="prefix">@Resources.Resource.Labour</label>
+                                                <div class="controls controls-row">
+                                                    <input type="text" placeholder="%" onkeyup="CalculateFeeAndLabour(this)" class="span6 comm" data-save="false" id="LabourPercent">
+                                                    <input type="text" id="Labour" placeholder="@Resources.Resource.Labour" class="number span6 exp">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row-fluid">
+                                            <div class="span6">
+                                                <label class="control-label" for="prefix">@Resources.Resource.MarkeetFee</label>
+                                                <div class="controls controls-row">
+                                                    <input type="text" onkeyup="CalculateFeeAndLabour(this)" placeholder="%" class="span6 comm" data-save="false" id="MarkeetPercent">
+                                                    <input type="text" id="Markeet" placeholder="@Resources.Resource.MarkeetFee" class="number span6 exp">
+                                                </div>
+                                            </div>
+                                            <div class="span6">
+                                                <label class="control-label" for="prefix">@Resources.Resource.Fare</label>
+                                                <div class="controls controls-row">
+
+                                                    <input type="text" class="span12 exp" id="Fare">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="row-fluid">
+
+                                            <div class="span6">
+                                                <label class="control-label" for="prefix">@Resources.Resource.Munshyiana</label>
+                                                <div class="controls controls-row">
+                                                    <input type="text" id="Munshyiana" class="number span12 exp">
+                                                </div>
+                                            </div>
+                                            <div class="span6">
+                                                <label class="control-label" for="prefix">@Resources.Resource.Misc</label>
+                                                <div class="controls controls-row">
+                                                    <input type="text" id="Misc" class="number span12 exp">
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="sapn4">
+                                    <table id="tbltotal" class="pull-right mainform">
+                                        <tr>
+                                            <td>@Resources.Resource.QuantityTotal</td>
+                                            <td>
+                                                <input id="qtytotal" type="text" disabled="disabled" readonly="readonly" value="0" /></td>
+                                        </tr>
+                                        <tr>
+
+                                            <td>@Resources.Resource.GrassBikri</td>
+                                            <td>
+                                                <input id="GrassBikri" disabled="disabled" readonly="readonly" type="text" value="0" /></td>
+                                        </tr>
+                                        <tr class="">
+                                            <td>@Resources.Resource.Expenses</td>
+                                            <td>
+                                                <input id="ExpenseTotal" disabled="disabled" readonly="readonly" type="text" /></td>
+                                        </tr>
+                                        <tr class="">
+                                            <td>@Resources.Resource.NetSale</td>
+                                            <td>
+                                                <input id="NetBikri" disabled="disabled" readonly="readonly" type="text" /></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </fieldset>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-primary" onclick="Save()">@Resources.Resource.Save</button>
+                        @*<button type="submit" class="btn btn-primary"  onclick="SaveNClose()">Save & Close</button>*@
+                        <button type="button" class="btn" onclick="Close()">@Resources.Resource.Cancel</button>
+                    </div>
+                </div>
+
+                <div id="div-table">
+
+                    <fieldset>
+                        <legend class="section">&nbsp<span class="formtitle12">@Resources.Resource.Sale</span>
+                            <img src="~/Images/print_32.png" class="print pull-right" onclick="PrintSale()" />
+                            <button type="submit" class="btn btn-danger pull-right" onclick="Add()">
+                                <span class="small-circle"><i class="icon-plus"></i></span>
+                                @Resources.Resource.AddNew
+                            </button>
+
+                        </legend>
+                        <table id="datatable-table" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>@Resources.Resource.VoucherNumber</th>
+                                    <th>@Resources.Resource.BillNumber</th>
+                                    <th>@Resources.Resource.Customer</th>
+                                    <th>@Resources.Resource.GrassBikri</th>
+                                    <th>@Resources.Resource.Expenses</th>
+                                    <th>@Resources.Resource.NetSale</th>
+                                    <th>@Resources.Resource.Date</th>
+                                    <th style="width: 100px;" class="no-sort"></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </fieldset>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="hide">
+        <table>
+            <tbody id="source">
+                <tr>
+                    <td>
+                        <select id="CustomerItemId" data-trackchange="true" class="chooseninner hide">
+                            <option></option>
+                            @foreach (var cust in ViewBag.Customers as List<IdName>)
+                            {
+                                <option data-custom="@cust.Id" value="@cust.Id">@cust.Name</option>
+                            }
+                        </select>
+
+                    </td>
+                    <td>
+                        <select id="ItemItemId" data-trackchange="true" class="chooseninner hide">
+                            <option></option>
+                            @foreach (var cat in ViewBag.Items as List<IdName>)
+                            {
+                                <option data-custom="@cat.Id" value="@cat.Id">@cat.Name</option>
+                            }
+                        </select>
+
+                    </td>
+                    <td>
+                        <select id="MarkaId" data-trackchange="true" class="chz-select12 hide">
+                            <option></option>
+                            @foreach (var item in ViewBag.Markas as List<IdName>)
+                            {
+                                <option data-custom="@item.Id" value="@item.Id">@item.Name</option>
+                            }
+                        </select>
+
+                    </td>
+                    <td>
+                        <input type="text" id="ChallanId" class="number hide" />
+
+                    </td>
+                    <td>
+                        <input type="text" id="QuantityItemId" class="number hide" />
+
+                    </td>
+                    <td>
+                        <input type="text" id="RateItemId" class="number hide" />
+                    </td>
+                    <td>
+                        <input type="text" id="AmountItemId" class="number hide" />
+                    </td>
+                    <td>
+                        <input type="text" id="LagaId" class="number hide" />
+                    </td>
+                    <td>
+                        <input type="text" id="TotalAmountId" class="number hide" />
+                    </td>
+                    <td class="hide">
+                        <input type="text" id="IdItemId" class="number hide" value="0" />
+                    </td>
+                    <td>
+                        <span class="action"><i class='icon-remove' onclick="DeleteRow(this)" data-original-title='Delete Item'></i></span>
+
+                    </td>
+
+                </tr>
+
+
+            </tbody>
+
+        </table>
+
+    </div>
+</div>
+<div id="printdiv" class="row-fluid hide">
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <div class="span2"></div>
+    <div class="span9">
+        <table>
+            <tr>
+                <td>
+                    @Resources.Resource.Date
+                </td>
+                <td>
+                    <label id="lblDate">12-12-2012</label>
+                </td>
+                <td>
+                    @Resources.Resource.BillNumber
+                </td>
+                <td>
+                    <label id="lblInvoiceNumber">1245</label>
+                </td>
+                <td>
+                    @Resources.Resource.Vehicle
+                </td>
+                <td>
+                    <label id="lblVehicle">GTL4512</label>
+                </td>
+            </tr>
+            <tr></tr>
+            <tr></tr>
+            <tr>
+                <td>@Resources.Resource.Supplier</td>
+                <td colspan="2">
+                    <label id="lblAccountId">Mohammad Ali Khan Gonal Warriach</label>
+                </td>
+                <td>
+                  تعداد نگ
+                </td>
+                <td>
+                    <label id="lblmezan">500</label>
+                </td>
+            </tr>
+        </table>
+        <br />
+        <br />
+    </div>
+    <div class="span1"></div>
+    <div class="span5">
+        <table id="tblitemdetail" class="bordertbl">
+            <thead>
+                <tr>
+                    <th>@Resources.Resource.item</th>
+                    <th>@Resources.Resource.Quantity</th>
+                    <th>@Resources.Resource.Rate</th>
+                    <th>@Resources.Resource.Total</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Mango
+                    </td>
+                    <td>40
+                    </td>
+                    <td>50
+                    </td>
+                    <td>1550
+                    </td>
+                </tr>
+                <tr>
+                    <td>Special Mango
+                    </td>
+                    <td>40
+                    </td>
+                    <td>50
+                    </td>
+                    <td>1550
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+            </tfoot>
+        </table>
+
+    </div>
+    <div class="span1"></div>
+    <div class="span4">
+        <table id="tblexpense" class="bordertbl">
+
+            <tr>
+                <td>@Resources.Resource.Commission</td>
+                <td>
+                    <label id="lblCommission">500</label>
+                </td>
+            </tr>
+            @*<tr>
+            <td>@Resources.Resource.Commission</td>
+            <td>
+                <label id="lblcommission"></label>
+            </td>
+        </tr>*@
+
+            <tr>
+                <td>@Resources.Resource.Labour</td>
+                <td>
+                    <label id="lblLabour">700</label>
+                </td>
+            </tr>
+            <tr>
+                <td>@Resources.Resource.MarkeetFee</td>
+                <td>
+                    <label id="lblMarkeet">850</label>
+                </td>
+            </tr>
+            <tr>
+                <td>@Resources.Resource.Fare</td>
+                <td>
+                    <label id="lblFare">600</label>
+                </td>
+            </tr>
+            <tr>
+                <td>@Resources.Resource.Munshyiana</td>
+                <td>
+                    <label id="lblMunshyiana">300</label>
+                </td>
+            </tr>
+            <tr>
+                <td>@Resources.Resource.Misc</td>
+                <td>
+                    <label id="lblMisc">250</label>
+                </td>
+            </tr>
+            <tr>
+                <td>@Resources.Resource.Expenses</td>
+                <td>
+                    <label id="lblExpenseTotal1">88850</label>
+                </td>
+            </tr>
+        </table>
+        <br />
+        <table id="tbltotaldetail" class="bordertbl">
+            <tr>
+                <td>@Resources.Resource.GrassBikri</td>
+                <td>
+                    <label id="lblGrassBikri">9995</label>
+                </td>
+            </tr>
+            <tr>
+                <td>@Resources.Resource.Expenses</td>
+                <td>
+                    <label id="lblExpenseTotal">600</label>
+                </td>
+            </tr>
+            <tr>
+                <td>@Resources.Resource.NetSale</td>
+                <td>
+                    <label id="lblNetBikri">9960</label>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</div>
+<div id="jsondata" class="hide">
+    <input id="FormSetting"  type="text" value="@ViewBag.FormSettings" />
+    <input id="Voucher"  type="text" value="@ViewBag.Voucher" />
+    <input id="PendingVoucher"  type="text" value="@ViewBag.PendingVoucher" />
+    <input id="PVoucherNumber"  type="text" value="@ViewBag.PVoucherNumber" />
+    <input id="PurchaseType"  type="text" value="@ViewBag.PurchaseType" />
+
+
+</div>
+<script src="~/Scripts/app/Sale.js"></script>

@@ -1,0 +1,164 @@
+﻿@using AccountEx.BussinessLogic;
+@using AccountEx.Common;
+@{
+    Layout = "~/Views/Reports/_Layout.cshtml";
+    ViewBag.Title = "Overall Recovery Report";   
+}
+@{ 
+    var monthslist = new List<IdName>();
+    var months = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.MonthNames;
+    for (int i = 0; i < months.Length; i++)
+    {
+        if (i <= 11)
+        {
+            monthslist.Add(new IdName() { Name = months[i], Id = i + 1 });
+        }
+
+    }
+    IList<int> years = Enumerable.Range(DateTime.Now.Year - 2, 10).ToList();
+}
+
+
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">Overall Recovery Report <small id="lblReportDate" class="pull-right small visible-print">Date: 24/10/2014</small></h1>
+}
+<!-- END PAGE HEADER-->
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="row hidden-print" id="form-info">
+            <div class="col-md-12 col-sm-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet light">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-filter"></i>Report Filters
+                        </div>
+
+
+                    </div>
+                    <div class="portlet-body form">
+
+                        <div class="form-horizontal" data-save="Save">
+                            <input type="text" id="Id" class="hide" />
+                            <div class="form-body">
+                                @*   <div class="form-group  row-account">
+                            <label class="col-md-2 control-label" for="prefix">Tenant</label>
+                            <div class="col-md-8">
+                                <select id="TenantAccountId" class="form-control select2" data-required="required" data-message="Tenant is required.">
+                                </select>
+                            </div>
+                        </div>*@
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label" for="prefix">Month</label>
+                                    <div class="col-md-2">
+                                        <select id="Month" class="form-control select2" data-required="required" data-message="Month is required.">
+                                            <option></option>
+                                            @foreach (var item in monthslist)
+                                            {
+                                                <option value="@item.Id">@item.Name</option>
+                                            }
+                                        </select>
+
+                                    </div>
+                                    <label class="col-md-1 control-label" for="prefix">Year</label>
+                                    <div class="col-md-2">
+                                        <select id="Year" class="form-control select2" data-required="required" data-message="year is required.">
+                                            <option></option>
+                                            @foreach (var year in years)
+                                            { 
+                                                <option>@year</option>
+                                            }
+                                        </select>
+
+                                    </div>
+                                    <label class="col-md-1 control-label" for="prefix">Block</label>
+                                    <div class="col-md-2">
+                                        <select id="BlockId" class="form-control select2" data-required="required" data-message="Block is required.">
+                                            <option></option>
+                                            @foreach (var item in (List<IdName>)ViewBag.Blocks)
+                                            {
+                                                <option value="@item.Id" data-BlockName="@item.Name">@item.Name</option>
+                                            }
+
+                                        </select>
+
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+                            <div class="form-actions">
+                                <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+                                <div class="col-md-8">
+                                    <button type="button" id="btnShowReport" class="btn btn-primary">Show Report</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="portlet light">
+            <div class="portlet-title hidden-print">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Report Data
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                    <a href="javascript:;" class="remove hide"></a>
+                </div>
+                <div class="actions">
+                    <button class="btn blue hidden-print" onclick="window.print();"><i class="fa fa-print"></i>&nbsp;Print </button>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="scrollable">
+
+                <table class="table table-bordered report-table" id="mainTable">
+                    <thead>
+                        <tr>
+                            <th colspan="3" style="border-style: none;"></th>
+                            <th colspan="3" style="text-align: center;">Arrears</th>
+                            <th colspan="3" style="text-align: center;">Current</th>
+                            <th style="text-align: center;"></th>
+                            <th colspan="3" style="text-align: center;">Recepits</th>
+                            <th style="text-align: center;"></th>
+                        </tr>
+                        <tr>
+                            <th>Sr.#.</th>
+                            <th style="width:10%">Shop No.</th>
+                            <th style="width:15%">Tenant</th>
+                            <th>Rent+UC+Electriicy</th>
+                            <th>Possession </th>
+                            <th>Security</th>
+                            <th>Rent+UC+Electriicy</th>
+                            <th>Possession </th>
+                            <th>Security</th>
+                            <th>Total</th>
+                            <th>Rent+UC+Electriicy</th>
+                            <th>Possession</th>
+                            <th>Security</th>
+                            <th>Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                    </div>
+            </div>
+    </div>
+</div>
+@section FooterScript
+{  <script src="~/Content/AppJS/RentalSystem/Report/OverallRecoveryReport.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            OverallRecoveryReport.init();
+        });
+    </script>
+}

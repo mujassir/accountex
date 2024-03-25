@@ -1,0 +1,419 @@
+﻿@using AccountEx.Common;
+
+@{
+    ViewBag.Title = "Bill of Lading";
+}
+@section PageTitle
+{
+    <h1 class="font-green-sharp bold hidden-print">Manage @ViewBag.Title</h1>
+}
+
+@using AccountEx.BussinessLogic;
+
+<div class="row hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-edit"></i>Add/Edit @ViewBag.Title
+                </div>
+                <div class="actions hide">
+                    <a href="javascript:;" onclick="BLs.LoadVoucher('previous')" class="btn blue">
+                        <i class="fa fa-angle-left"></i>&nbsp;Back
+                    </a>
+                    <a href="javascript:;" onclick="BLs.LoadVoucher('next')" class="btn blue">
+                        <i class="fa fa-angle-left"></i>&nbsp;Next
+                    </a>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div id="mainform" class="form-horizontal" data-save="save">
+                    <input type="text" id="Id" class="hide" data-include-in-item="true" data-item-id="BLId" />
+                    <input type="text" id="CreatedDate" class="hide ac-date" data-clear-type="date" />
+                    <input type="text" id="IsDeleted" class="hide" />
+                    <input type="text" id="PreVoucherNumber" class="hide" />
+                    <div class="form-body">
+                        <div class="hide alert alert-danger container-message">
+                            <i class="close" onclick="$(this).parent().hide();"></i>
+                            <strong></strong>
+                            <div class="form-body message-content"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">BL #</label>
+                            <div class="col-md-3 container-voucher">
+                                <label id="lblVoucherNumber" class="label label-info label-voucher hide"></label>
+                                <input type="text" class="form-control" id="BLNumber" data-plus-as-tab="false" data-required="required" data-message="BL# is required" data-include-in-item="true">
+                                <input type="text" class="form-control number hide" id="VoucherNumber" data-plus-as-tab="false" data-required="false" data-message="BL# is required" data-include-in-item="true">
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">Date</label>
+                            <div class="col-md-1">
+                                <input id="Date" type="text" class="form-control date-picker input-small" data-clear-type='date' data-validate="true" data-required="required" data-message="Date is required" data-plus-as-tab="false" data-hide-dropdown="true" data-fiscal-date="true">
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">Total Unit</label>
+                            <div class="col-md-1">
+                                <input id="TotalUnits" type="text" class="form-control input-xsmall" data-required="required" data-message="Total Units are required">
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label master-account-label" for="prefix">Supplier</label>
+                            <div class="col-md-1">
+                                <input type="text" class="form-control input-small" id="SupplierCode" data-required="required" data-plus-as-tab="false" data-validate="true" data-message="Supplier Code is required">
+                                <input type="hidden" id="SupplierId" value="0" />
+
+                            </div>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control" id="SupplierName"  readonly>
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">Arrival Date</label>
+                            <div class="col-md-1">
+                                <input id="ArrivalDate" type="text" class="form-control date-picker input-small" data-clear-type='date' data-validate="true" data-required="false" data-message="Date is required" data-plus-as-tab="false" data-hide-dropdown="true" data-fiscal-date="true">
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">Departure Date</label>
+                            <div class="col-md-1">
+                                <input id="DepartureDate" type="text" class="form-control date-picker input-xsmall" data-clear-type='date' data-validate="true" data-required="false" data-message="Date is required" data-plus-as-tab="false" data-hide-dropdown="true" data-fiscal-date="true">
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Shippers</label>
+                            <div class="col-md-3">
+                                <select class="form-control select2" id="ShipperId" data-required="required" data-message="Shipper is required">
+                                    <option></option>
+                                    @foreach (var p in (List<IdName>)ViewBag.Shippers)
+                                    {
+                                        <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                    }
+                                </select>
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">Ships</label>
+                            <div class="col-md-4">
+                                <select class="form-control select2" id="ShipId">
+                                    <option></option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group hide">
+                            <label class="col-md-2 control-label" for="prefix">Shipper Address</label>
+                            <div class="col-md-8">
+                                <input class="form-control" type="text" name="text" id="Address" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Consignee</label>
+                            <div class="col-md-3">
+                                <select class="form-control select2" id="ConsigneeId" data-required="required" data-message="Consignee is required">
+                                    <option></option>
+                                    @foreach (var p in (List<IdName>)ViewBag.Consignees)
+                                    {
+                                        <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        @*                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">Date of Loading</label>
+                                <div class="col-md-3">
+                                    <input id="DateOfLoading" type="text" class="form-control date-picker" data-clear-type='date' data-validate="true" data-required="required" data-message="Date is required" data-plus-as-tab="false" data-hide-dropdown="true" data-fiscal-date="true">
+                                </div>
+                                <label class="col-md-2 control-label" for="prefix">Port of Loading</label>
+                                <div class="col-md-3">
+                                    <input class="form-control" type="text" name="text" id="PortOfLoading" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">Place of Receipt</label>
+                                <div class="col-md-3">
+                                    <input class="form-control" type="text" name="text" id="PlaceOfReceipt" />
+                                </div>
+                                <label class="col-md-2 control-label" for="prefix">Place of Delivery</label>
+                                <div class="col-md-3">
+                                    <input class="form-control" type="text" name="text" id="PlaceOfDelivery" />
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">Date of Issue</label>
+                                <div class="col-md-3">
+                                    <input id="DateOfIssue" type="text" class="form-control date-picker" data-clear-type='date' data-validate="true" data-required="required" data-message="Date is required" data-plus-as-tab="false" data-hide-dropdown="true" data-fiscal-date="true">
+                                </div>
+                                <label class="col-md-2 control-label" for="prefix">Place of Loading</label>
+                                <div class="col-md-3">
+                                    <input class="form-control" type="text" name="text" id="PlaceOfIssue" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">Remarks</label>
+                                <div class="col-md-8">
+                                    <input class="form-control" type="text" name="text" id="Remarks" />
+                                </div>
+                            </div>*@
+                        <div class="row">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-10 saleitem-container scroller12" data-always-visible="1" data-rail-visible1="1" data-save="false">
+                                <div class="portlet">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <i class="fa fa-list"></i>Item List
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <table id="item-container" class="table table-bordered griditem">
+                                    <thead>
+                                        <tr>
+
+                                            <th style="width: 10%;">Chessis No</th>
+                                            <th style="width: 10%;">Reg. No</th>
+                                            <th style="width: 10%;">Manufacturer</th>
+                                            <th>Model No.</th>
+                                            <th>Color</th>
+                                            <th>CC</th>
+                                            <th>Car TYPE</th>
+                                            <th>Engine No.</th>
+                                            <th>Clearing Company</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody data-plus-as-tab="false"></tbody>
+
+
+                                </table>
+                                <button type="button" class="btn green  btn-sm" onclick="BLs.AddItem()" style="margin-top: -25px">
+                                    <i class="fa  fa-plus-circle"></i>
+                                    Add Row
+                                </button>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-10">Added Units</label>
+                                <div class="col-md-2">
+                                    <input id="AddedUnits" class="align-right form-control input-xsmall" disabled="disabled" readonly="readonly" type="text" value="" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-10">Remaining Units</label>
+                                <div class="col-md-2">
+                                    <input id="RemainingUnits" class="align-right form-control input-xsmall" disabled="disabled" readonly="readonly" type="text" value="" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" data-save="false">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-8 saleitem-container scroller12">
+                                <div class="portlet">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <i class="fa fa-list"></i>BL Charges
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <table id="tbl-blcharges" class="table table-bordered griditem">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 30%">Charges</th>
+                                            <th>Amount</th>
+                                            <th>Invoice No</th>
+                                            <th>Invoice Date</th>
+                                            <th style="width: 30%">Supplier</th>
+
+                                        </tr>
+
+                                    </thead>
+                                    <tbody data-plus-as-tab="false"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                    <div class="form-actions">
+                        <div class="btn-set pull-left">
+                            <a href="javascript:;" onclick="BLs.LoadVoucher('first')" class="btn blue tooltips disabled first" data-original-title="First">
+                                <i class="fa fa-angle-double-left"></i>
+                            </a>
+                            <a href="javascript:;" onclick="BLs.LoadVoucher('previous')" class="btn blue tooltips disabled previous" data-original-title="Previous">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a href="javascript:;" onclick="BLs.LoadVoucher('next')" class="btn blue tooltips disabled next" data-original-title="Next">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                            <a href="javascript:;" onclick="BLs.LoadVoucher('last')" class="btn blue tooltips disabled last" data-original-title="Last">
+                                <i class="fa fa-angle-double-right"></i>
+                            </a>
+                        </div>
+                        <div class="btn-set pull-right">
+                            @if (!SiteContext.Current.Fiscal.IsClosed)
+                            {
+                                <button type="button" class="btn red btnFinal hide" onclick="BLs.Final(true)">
+                                    <i class="fa  fa-lock"></i>
+                                    Final
+                                </button>
+                                    <button type="button" class="btn red btnUnFinal hide" onclick="BLs.Final(false)">
+                                        <i class="fa  fa-lock"></i>
+                                        Un Final
+                                    </button>
+                                    <button type="button" class="btn purple-plum" onclick="BLs.New()">
+                                        <i class="fa  fa-plus-circle"></i>
+                                        New
+                                    </button>
+                                    <button type="button" class="btn btn-primary green btnSave" onclick="BLs.Save()">
+                                        <i class="fa fa-check"></i>
+                                        Save
+                                    </button>
+                                    <button id="btndelete" type="button" class="btn red btnDelete" onclick="BLs.Delete()">
+                                        <i class="fa fa-trash-o"></i>
+                                        Delete
+                                    </button>
+                            }
+                            <div class='btn-group'>
+                                <button id="btnprint" type='button' class='btn yellow'>Print</button>
+                            </div>
+                            <button type="button" class="btn blue" onclick="window.location='@(Url.Content(SettingManager.DashBoardUrl))'">
+                                <i class="fa  fa-times-circle"></i>
+
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+<div class="row hidden-print" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet box grey-cascade">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-list"></i>@ViewBag.FormTitle Listing
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover" id="mainTable">
+                    <thead>
+                        <tr>
+                            <th>BL No.</th>
+                            <th>Ship Name</th>
+                            <th>Departure Date</th>
+                            <th>Arrival Date</th>
+                            <th>No. of Units</th>
+                            <th style="width: 75px;" class="no-sort"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="10" class="center">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+<div id="jsondata" class="hide">
+    <p id="data">@ViewBag.FormSetting</p>
+</div>
+
+<script type="text/html" id="template-blcharges">
+    <tr data-toggle="tooltip">
+        <td>
+            {{ChargeName}}
+            <input type="hidden" class="Id hide" data-db-column="Id">
+            <input type="hidden" class="IsPaid hide" data-db-column="IsPaid">
+            <input type="hidden" class="ChargeName hide" data-db-column="ChargeName" data-clear='false'>
+            <input type="hidden" class="ChargeId hide" id="ChargeId" data-db-column="ChargeId" value="0" data-clear='false'>
+        </td>
+        <td>
+            <input type="text" class="Amount form-control num3 input-xsmall" data-db-column="Amount" data-db-type="float">
+        </td>
+        <td>
+            <input type="text" class="InvoiceNo form-control input-small" data-db-column="InvoiceNo">
+        </td>
+        <td>
+            <input type="text" class="InvoiceDate form-control date-picker input-small" data-db-column="InvoiceDate" data-db-type="date">
+        </td>
+
+        <td>
+            <select class="form-control SupplierId" data-db-column="SupplierId" data-db-type="int">
+                <option></option>
+                @foreach (var item in (List<IdName>)ViewBag.Suppliers)
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+            </select>
+        </td>
+    </tr>
+</script>
+<script type="text/html" id="template-item">
+    <tr data-toggle="tooltip">
+        <td>
+            <input type="hidden" class="VehicleId hide" id="VehicleId" data-db-column="VehicleId" value="0">
+            <input type="hidden" class="Id hide" data-db-column="Id">
+            <input type="text" class="ChassisNo form-control " data-db-column="ChassisNo">
+            <span class="hide value-conatiner">{{ChassisNo}}</span>
+        </td>
+        <td>
+            <span class="hide value-conatiner">{{RegNo}}</span>
+            <input type="text" class="RegNo form-control" data-db-column="RegNo" disabled="disabled">
+        </td>
+        <td>
+            <span class="hide value-conatiner">{{Manufacturer}}</span>
+            <input type="text" class="Manufacturer form-control" data-db-column="Manufacturer" disabled="disabled">
+        </td>
+        <td>
+            <span class="hide value-conatiner">{{Model}}</span>
+            <input type="text" class="Model form-control" data-db-column="Model" disabled="disabled">
+        </td>
+        <td>
+            <span class="hide value-conatiner">{{Color}}</span>
+            <input type="text" class="Color form-control" data-db-column="Color" disabled="disabled">
+        </td>
+        <td>
+            <span class="hide value-conatiner">{{EnginePower}}</span>
+            <input type="text" class="EnginePower form-control" data-db-column="EnginePower" disabled="disabled">
+        </td>
+        <td>
+            <span class="hide value-conatiner">{{CarType}}</span>
+            <input type="text" class="CarType form-control" data-db-column="CarType" disabled="disabled">
+        </td>
+        <td>
+            <span class="hide value-conatiner">{{EngineNo}}</span>
+            <input type="text" class="EngineNo form-control" data-db-column="EngineNo" disabled="disabled">
+        </td>
+
+
+
+        <td>
+            <span class="hide value-conatiner">{{ClearingCompany}}</span>
+            <input type="text" class="ClearingCompany form-control input-medium" data-db-column="ClearingCompany" disabled="disabled">
+        </td>
+
+        <td style="width: 8px;">
+            <span class="action"><i class="fa fa-trash-o" onclick="BLs.DeleteRow(this)" data-original-title="Delete Item"></i></span>
+        </td>
+    </tr>
+</script>
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Transaction/BLs.js"></script>
+
+    <script>
+        jQuery(document).ready(function () {
+            BLs.init();
+        });
+    </script>
+}
+

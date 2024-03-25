@@ -1,0 +1,6 @@
+DELETE FROM dbo.RentDetailItems
+DELETE FROM dbo.RentDetails
+DELETE FROM dbo.ChallanItems
+DELETE FROM dbo.Challans
+DELETE FROM dbo.ElectricityUnitItems
+DELETE FROM dbo.ElectricityUnits

@@ -1,0 +1,272 @@
+﻿@model AccountEx.Web.Models.GeneralLedgerModel
+@using AccountEx.Common;
+@{
+    ViewBag.Title = "Fiscal Closing";   
+}
+<style type="text/css">
+    #tbldetail tfoot
+    {
+        font-weight: bold;
+    }
+
+    /*.report-table tbody tr td:nth-last-child(1),
+    .report-table tbody tr td:nth-last-child(2),
+    .report-table tfoot tr td:nth-last-child(1),
+    .report-table tfoot tr td:nth-last-child(2) {
+        text-align: left;
+    }*/
+
+    .report-table tbody tr td:nth-child(2)
+    {
+        text-align: right;
+    }
+
+    /*.sub-head {
+        text-align: left;
+    }*/
+</style>
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold"><span class="main-title">Fiscal Closing</span>
+        <small id="lblReportDate" class="pull-right small visible-print">Date: 24/10/2014</small></h1>
+}
+<div class="row hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+
+              
+                     
+                    <div class="caption">
+                        <i class="fa fa-book"></i> 
+                        <span class="open-fiscal @(SiteContext.Current.Fiscal.IsClosed ? "" : "hide")">Fiscal reopening will do following</span>
+                        <span class="close-fiscal @(SiteContext.Current.Fiscal.IsClosed ? "hide" : "")">Fiscal closing will do following</span>
+                    </div>
+             
+                    
+                
+
+                <div class="actions hide">
+                    <button class="btn blue large pull-right" onclick="window.print();"><i class="fa fa-print"></i>&nbsp;Print </button>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal" data-save="Save">
+                    <input type="text" id="Id" class="hide" />
+
+
+                   
+                        <div id="info-fiscal-open" class="open-fiscal note note-warning note-bordered @(SiteContext.Current.Fiscal.IsClosed ? "" : "hide")">
+                            <div>
+
+                                <ul>
+                                    <li>Fiscal reopening would remove all nill entries against PLS accounts (Sales, Purchases, Stock Value, etc.)</li>
+                                    <li>Fiscal reopening would remove all opening balance added by closing for all Non PLS accounts (Customers, Vendors, etc.)</li>
+                                    <li>Fiscal reopening would remove opening stock for all products added by closing</li>
+                                    <li>After reopening You would be able create/edit/delete any voucher/invoice</li>
+                                    <li>After reopening still you would be able to close fiscal year again after any changes</li>
+                                </ul>
+
+
+                            </div>
+                        </div>
+                   
+                        <div id="info-fiscal-close" class="close-fiscal note note-info note-bordered @(SiteContext.Current.Fiscal.IsClosed ? "hide" : "")">
+                            <div>
+
+                                <ul>
+                                    <li>Fiscal closing would nill all PLS accounts (Sales, Purchases, Stock Value, etc.)</li>
+                                    <li>Fiscal closing would move this fiscal year closing balance to next fiscal year as opening balance for all Non PLS accounts (Customers, Vendors, etc.)</li>
+                                    <li>Fiscal closing would move this fiscal year closing stock to next fiscal year as opening stock for all products</li>
+                                    <li>After closing You couldn't create/edit/delete any voucher/invoice</li>
+                                    <li>After closing still you would be able to open fiscal year again for any changes</li>
+                                </ul>
+
+
+                            </div>
+                        </div>
+                        
+                   
+
+
+                    <div class="form-body hide">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">From Date</label>
+                            <div class="col-md-3">
+                                <div class="input-group input-medium">
+                                    <input class="date-picker form-control date-picker" type="text" id="FromDate" data-validate="true" data-required="required" value="@SiteContext.Current.Fiscal.FromDate.ToString(AppSetting.DateFormat)" data-message="From Date"  data-fiscal-date="true" >
+
+                                    <span class="input-group-btn date-icon">
+                                        <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">To Date</label>
+                            <div class="col-md-3">
+                                <div class="input-group input-medium">
+                                    <input class="date-picker form-control date-picker" type="text" id="ToDate" data-validate="true" data-required="required" value="@SiteContext.Current.Fiscal.ToDate.ToString(AppSetting.DateFormat)" data-message="To Date"  data-fiscal-date="true" >
+
+                                    <span class="input-group-btn date-icon">
+                                        <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            <label class="col-md-2 control-label" for="prefix">Report Type</label>
+                            <div class="col-md-3">
+                                <select id="ReportType" class="select2 form-control">
+                                    <option>Summary</option>
+                                    <option>Detail</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <div class="form-group">
+
+                            <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+                            <div class="col-md-8">
+                                <button id="btnShowReport" type="submit" class="hide btn btn-primary">Show Report</button>
+
+                                <button id="btnOpenFiscalYear" type="submit" class="open-fiscal btn yellow @(SiteContext.Current.Fiscal.IsClosed ? "" : "hide")">Reopen Fiscal Year</button>
+
+                                <button id="btnCloseFiscalYear" type="submit" class="close-fiscal btn btn-primary @(SiteContext.Current.Fiscal.IsClosed ? "hide" : "")">Close Fiscal Year</button>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+
+<div class="row" id="div-table">
+    <div class="col-md-6 col-xs-6">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title hidden-print">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Cost of Goods Sold
+                </div>
+                <div class="tools hide">
+                    <a href="javascript:;" class="collapse"></a>
+                    <a href="javascript:;" class="remove"></a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table id="table-goodsold" class="table table-striped table-bordered report-table">
+                    <thead>
+                        <tr>
+                            <th>Account Heads</th>
+                            <th>Amount</th>
+
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+    <div class="col-md-6 col-xs-6">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title hidden-print">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Expenses Detail
+                </div>
+                <div class="tools hide">
+                    <a href="javascript:;" class="collapse"></a>
+                    <a href="javascript:;" class="remove"></a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table id="table-expense" class="table table-striped table-bordered report-table">
+                    <thead>
+                        <tr>
+                            <th>Account Heads </th>
+                            <th>Amount</th>
+
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-xs-6">
+        </div>
+        <div class="col-md-6 col-xs-6">
+            <div class="well">
+                <div class="row static-info align-reverse">
+                    <div class="col-md-8 col-xs-5 name">
+                        Gross Profit:
+                    </div>
+                    <div class="col-md-3 col-xs-5 value border-bottom" id="div-profit">
+                        0.00
+                    </div>
+                </div>
+                <div class="row static-info align-reverse">
+                    <div class="col-md-8 col-xs-5 name">
+                        Total Expenses:
+                    </div>
+                    <div id="div-expense" class="col-md-3 col-xs-5 value border-bottom">
+                        0.00
+                    </div>
+                </div>
+                <div class="row static-info align-reverse">
+                    <div class="col-md-8 col-xs-5 name">
+                        Net Profit:
+                    </div>
+                    <div class="col-md-3 col-xs-5 value border-bottom" id="div-netprofit">
+                        0.00 
+                    </div>
+                </div>
+                <div class="row static-info align-reverse">
+                    <div class="col-md-8 col-xs-5 name">
+                        Net Profit %:
+                    </div>
+                    <div class="col-md-3 col-xs-5 value border-bottom" id="div-profitpercent">
+                        0.00 
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="jsondata" class="hide">
+    <input id="FormSetting"  type="text" value="@ViewBag.FormSetting" />
+    @* <input id="OpeningBalances"  type="text" value="@ViewBag.OpeningBalances" />*@
+    <input id="Voucher"  type="text" value="@ViewBag.Voucher" />
+</div>
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Transaction/FiscalClosing.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            FiscalClosing.init();
+        });
+    </script>
+}
+

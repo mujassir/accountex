@@ -1,0 +1,882 @@
+﻿@media print {
+    a[href]:after {
+        content: none !important;
+    }
+}
+
+.action i[class*=fa] {
+    line-height: 20px;
+    font-size: 16.25px;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+.offscreen {
+    left: -9999px !important;
+    top: -9999px !important;
+    position: absolute;
+}
+
+table.report-table {
+    border: 1px solid #ddd;
+}
+
+table tr.bold {
+    font-weight: bold;
+}
+
+.align-center {
+    text-align: center;
+}
+
+.align-right, .align-right * {
+    text-align: right;
+}
+
+.align-left {
+    text-align: left;
+}
+
+.underlined {
+    border-bottom: solid #000 1px;
+    padding: 0;
+}
+
+.container-voucher {
+}
+
+.label-voucher {
+    font-size: 25px;
+    padding: 1px 25px;
+    font-weight: bold;
+}
+
+table tr.group td, table tr td.group {
+    font-size: 15px;
+    font-weight: bold;
+    text-align: left !important;
+}
+
+table tr td.subgroup {
+    font-size: 15px;
+    padding-left: 20px !important;
+}
+
+.saleitem-container {
+    min-height: 200px;
+}
+
+.fixedheight-container {
+    min-height: 200px;
+}
+
+.accountfixedheight-container {
+    min-height: 300px;
+}
+
+.ui-autocomplete {
+    max-height: 200px;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+    /* add padding to account for vertical scrollbar */
+    padding-right: 20px;
+}
+
+    .ui-autocomplete .ui-menu-item {
+        font-size: 11px;
+    }
+/*                  Framework overrides                         */
+
+.form-group {
+    margin-bottom: 5px;
+}
+
+.form .form-actions {
+    padding: 10px 10px;
+}
+
+input[type='text'].form-control, input[type='password'].form-control, select.form-control {
+    font-size: 13px;
+    height: 28px;
+    padding: 0px 5px;
+}
+
+.input-group-btn .btn {
+    /*height: 28px;
+    width: 28px;
+    padding: 0;*/
+}
+
+.btn > i {
+    font-size: 13px;
+}
+
+.page-content-wrapper .page-content {
+    padding: 5px 15px;
+}
+
+.form-horizontal .control-label {
+    font-size: 13px;
+}
+
+.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+    padding: 3px 6px;
+}
+
+.logo-default {
+    margin-top: 1px !important;
+    height: 44px;
+}
+
+
+
+/*                  Print page css                      */
+@page {
+    margin: 0.5cm 0.5cm;
+}
+
+
+
+@media print {
+    .portlet > .portlet-title,
+    .dataTables_wrapper .row,
+    span.action {
+        display: none;
+    }
+
+
+
+    .footer {
+        position: fixed;
+        bottom: 1px;
+        display: none;
+    }
+
+    table {
+        page-break-inside: auto;
+    }
+
+    tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
+
+    table {
+        page-break-after: auto;
+    }
+
+    tr {
+        page-break-inside: avoid;
+        page-break-after: always;
+    }
+
+    td {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
+
+    /*table, table td, table th {
+        border-color: #000 !important;
+    }*/
+
+
+    thead {
+        display: table-header-group;
+    }
+
+    tfoot {
+        display: table-footer-group;
+    }
+
+    .portlet.box.green, .portlet.box.red, .portlet.box.purple, .portlet.box.yellow, .portlet.box.gray {
+        border-width: 0;
+        border: none !important;
+    }
+
+    .portlet > .portlet-body {
+        padding: 0 !important;
+    }
+
+    .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+        padding: 3px 8px;
+        font-size: 0.75em;
+    }
+
+    .table-bordered, .table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+        border: 1px solid #AAA !important;
+    }
+
+    thead {
+        display: table-header-group;
+    }
+
+    tfoot {
+        display: table-footer-group;
+    }
+
+    .blockUI, .blockOverlay {
+        display: none;
+    }
+
+    #toast-container {
+        display: none;
+    }
+
+    .hidden-print {
+        display: none;
+    }
+}
+/*DateRenage Picker overrides*/
+.daterangepicker .ranges .input-mini {
+    background-color: #FFF !important;
+}
+
+
+
+table.griditem .form-control[disabled], table.griditem .form-control[readonly] /*, table.griditem .form-control[disabled*/ ] {
+    border: none !important;
+    background-color: #FFF !important;
+}
+
+table.griditem tr.well {
+    background-color: mintcream;
+    border: 1px solid #dae2ea;
+}
+
+table.griditem tr th {
+    font-size: 13px;
+}
+
+table.griditem tr td {
+    padding: 0 !important;
+}
+
+    table.griditem tr td input[type='text'] {
+        border: none !important;
+        width: 100% !important;
+        font-size: 13px;
+        padding: 5px;
+        height: 22px;
+    }
+
+    table.griditem tr td select {
+        border: none !important;
+        font-size: 13px;
+        height: 22px;
+    }
+
+
+.date-icon .btn {
+    padding: 3px 10px;
+}
+
+
+
+/*                  Trans CSS                       */
+.border-black {
+    border: 1px solid #000;
+}
+
+.border-gray {
+    border: 1px solid #CCC;
+}
+
+table.full-width {
+    width: 100%;
+}
+
+.page-logo {
+    max-width: 450px !important;
+    width: auto !important;
+}
+
+.form-control.not-focused:focus {
+    border: 1px solid #e5e5e5;
+}
+
+table.project-container td {
+    padding-top: 15px;
+}
+
+.deduction {
+    padding-top: 20px;
+    padding-left: 10px;
+}
+
+.project-printDiv {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 30px;
+}
+
+.report-links td > a {
+    color: #333333 !important;
+}
+
+@media print {
+    .report-links a:link:after,
+    .report-links a:visited:after {
+        content: "" !important;
+    }
+
+    .page-head {
+        display: block !important;
+    }
+
+        .page-head .page-title {
+            display: block !important;
+            float: none;
+        }
+}
+
+table tr.subtotal td, table tr.subtotal td:hover {
+    background-color: #EEE !important;
+}
+
+table tr.grand-total td, table tr.grand-total td:hover {
+    background-color: #DDD !important;
+}
+
+.lable-balance {
+    font-size: 25px;
+    padding: 1px 25px;
+    font-weight: bold;
+    width: 100%;
+    padding: 6px;
+}
+/*For Full width fluide layout*/
+@media (min-width: 992px) {
+    /* 992px */
+    .container-fluid {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}
+/***
+Select2 Plugin
+***/
+.form-control .select2-choice {
+    border: 1px solid #e5e5e5;
+    background-color: #fff;
+    background-image: none;
+    filter: none;
+    height: 34px;
+    padding: 3px 0 0px 12px;
+}
+
+.select2-container.select2-drop-above .select2-choice {
+    border-bottom-color: #e5e5e5;
+    background-color: #fff;
+    background-image: none;
+    filter: none;
+}
+
+.select2-drop {
+    /* border: 1px solid #e5e5e5; */
+    /* background-color: #fff; */
+    /* background-image: none; */
+    /* -webkit-box-shadow: none; */
+    /* box-shadow: none; */
+    /* filter: none; */
+    /* border-top: 0; */
+}
+
+.select2-drop-auto-width {
+    border-top: 1px solid #e5e5e5;
+}
+
+.select2-drop.select2-drop-above {
+    border-top: 1px solid #e5e5e5;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.select2-drop-active {
+    /* border: 1px solid #999; */
+    /* border-top: 0; */
+}
+
+.select2-container .select2-choice .select2-arrow {
+    background-image: none;
+    background-color: #fff;
+    filter: none;
+    border-left: 1px solid #e5e5e5;
+}
+
+.select2-container.select2-container-active .select2-arrow,
+.select2-container.select2-dropdown-open .select2-arrow {
+    border-left: 0 !important;
+}
+
+.select2-container .select2-choice .select2-arrow b {
+    background-position: 0 1px;
+}
+
+.select2-search input {
+    border: 1px solid #e5e5e5;
+    background-color: #fff !important;
+    filter: none;
+    margin: 0;
+    outline: 0;
+    border: 1px solid #e5e5e5;
+    webkit-appearance: none !important;
+    color: #333333;
+    outline: 0;
+    box-shadow: none;
+    height: auto !important;
+    min-height: 26px;
+    padding: 6px 6px !important;
+    line-height: 20px;
+    font-size: 14px;
+    font-weight: normal;
+    vertical-align: top;
+    background-color: #ffffff;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    margin-top: 5px;
+}
+
+.form-control.select2-container {
+    border: 0;
+    height: auto !important;
+    padding: 0px;
+}
+
+.select2-container-active .select2-choice,
+.select2-container-active .select2-choices {
+    border: 1px solid #999 !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+}
+
+.select2-dropdown-open .select2-choice {
+    border-bottom: 0 !important;
+    background-image: none;
+    background-color: #fff;
+    filter: none;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+}
+
+.select2-dropdown-open.select2-drop-above .select2-choice,
+.select2-dropdown-open.select2-drop-above .select2-choices {
+    border: 1px solid #999 !important;
+    border-top: 0 !important;
+    background-image: none;
+    background-color: #fff;
+    filter: none;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+}
+
+.select2-drop.select2-drop-above.select2-drop-active {
+    border: 1px solid #999 !important;
+    border-bottom: 0 !important;
+}
+
+.select2-dropdown-open .select2-choice .select2-arrow b {
+    background-position: -18px 1px;
+}
+
+.select2-results {
+    margin: 5px 0;
+}
+
+    .select2-results .select2-highlighted {
+        background: #eee;
+        color: #333;
+    }
+
+    .select2-results li em {
+        background: #feffde;
+        font-style: normal;
+    }
+
+    .select2-results .select2-highlighted em {
+        background: transparent;
+    }
+
+    .select2-results .select2-highlighted ul {
+        background: #fff;
+        color: #000;
+    }
+
+    .select2-results .select2-no-results,
+    .select2-results .select2-searching,
+    .select2-results .select2-selection-limit {
+        padding: 3px 7px 4px;
+        background: #f4f4f4;
+        display: list-item;
+    }
+
+.select2-container-multi {
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+    border-radius: 4px;
+}
+
+    .select2-container-multi .select2-choices {
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        -ms-border-radius: 4px;
+        -o-border-radius: 4px;
+        border-radius: 4px;
+    }
+
+    .select2-container-multi.select2-dropdown-open {
+        -webkit-border-radius: 4px 4px 0 0;
+        -moz-border-radius: 4px 4px 0 0;
+        -ms-border-radius: 4px 4px 0 0;
+        -o-border-radius: 4px 4px 0 0;
+        border-radius: 4px 4px 0 0;
+    }
+
+        .select2-container-multi.select2-dropdown-open .select2-choices {
+            -webkit-border-radius: 4px 4px 0 0;
+            -moz-border-radius: 4px 4px 0 0;
+            -ms-border-radius: 4px 4px 0 0;
+            -o-border-radius: 4px 4px 0 0;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .select2-container-multi.select2-dropdown-open.select2-drop-above {
+            -webkit-border-radius: 0 0 4px 4px;
+            -moz-border-radius: 0 0 4px 4px;
+            -ms-border-radius: 0 0 4px 4px;
+            -o-border-radius: 0 0 4px 4px;
+            border-radius: 0 0 4px 4px;
+        }
+
+            .select2-container-multi.select2-dropdown-open.select2-drop-above .select2-choices {
+                -webkit-border-radius: 0 0 4px 4px;
+                -moz-border-radius: 0 0 4px 4px;
+                -ms-border-radius: 0 0 4px 4px;
+                -o-border-radius: 0 0 4px 4px;
+                border-radius: 0 0 4px 4px;
+            }
+
+    .select2-container-multi .select2-choices {
+        padding-left: 6px;
+        min-height: 34px;
+        border: 1px solid #e5e5e5;
+        background-image: none;
+        background-color: #fff;
+        filter: none;
+        -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+    }
+
+    .select2-container-multi.select2-container-active .select2-choices {
+        border: 1px solid #999 !important;
+        background-image: none;
+        background-color: #fff;
+        filter: none;
+        -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+    }
+
+    .select2-container-multi .select2-choices .select2-search-choice {
+        padding: 3px 5px 3px 18px;
+        margin: 5px 0 3px 5px;
+        border: 1px solid #e5e5e5;
+        background-image: none;
+        background-color: #fff;
+        filter: none;
+        -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+    }
+
+/***
+Color variants
+***/
+.has-warning .select2-container .select2-choice,
+.has-warning .select2-container .select2-choices {
+    border-color: #faebcc;
+}
+
+.has-warning .select2-container.select2-dropdown-open .select2-choice,
+.has-warning .select2-container.select2-dropdown-open .select2-choices {
+    border-color: #faebcc;
+}
+
+    .has-warning .select2-container.select2-dropdown-open .select2-choice > span {
+        color: #faebcc;
+    }
+
+.has-error .select2-container .select2-choice,
+.has-error .select2-container .select2-choices {
+    border-color: #ebccd1;
+}
+
+.has-error .select2-container.select2-dropdown-open .select2-choice,
+.has-error .select2-container.select2-dropdown-open .select2-choices {
+    border-color: #ebccd1;
+}
+
+    .has-error .select2-container.select2-dropdown-open .select2-choice > span {
+        color: #ebccd1;
+    }
+
+.has-success .select2-container .select2-choice,
+.has-success .select2-container .select2-choices {
+    border-color: #d6e9c6;
+}
+
+.has-success .select2-container.select2-dropdown-open .select2-choice,
+.has-success .select2-container.select2-dropdown-open .select2-choices {
+    border-color: #d6e9c6;
+}
+
+    .has-success .select2-container.select2-dropdown-open .select2-choice > span {
+        color: #d6e9c6;
+    }
+
+/* Fix z-index when select2 opened in modals*/
+.modal-open .select2-drop-mask {
+    z-index: 10051;
+}
+
+.modal-open .select2-drop {
+    z-index: 10052;
+}
+
+.modal-open .select2-search {
+    z-index: 10053;
+}
+
+.ui-autocomplete {
+    position: absolute;
+}
+/*Fix The conflicting z-index issue with jqury ui autocomplete and date-picker*/
+.portlet.portlet-fullscreen {
+    z-index: 100 !important;
+}
+
+/***/
+
+div.switch-companies {
+    margin-top: 8px;
+    margin-left: 20px;
+}
+
+.search-icon {
+    height: 28px;
+    width: 28px;
+    padding: 5px;
+}
+
+.td-delete {
+    width: 8px;
+}
+
+.notValidated {
+    border: 1px solid #f00;
+}
+
+/*Fix datattable scroll issue*/
+
+.datatable-scroll {
+    overflow-x: auto;
+    overflow-y: visible;
+}
+
+
+
+
+/* Dashboard */
+
+.dashboard-stat2 .display {
+    margin-bottom: 7px;
+}
+
+    .dashboard-stat2 .display .number h3 {
+        font-size: 23px;
+    }
+
+    .dashboard-stat2 .display .number small {
+        font-size: 12px;
+    }
+
+/*Chart of acocunt with balances Reports*/
+
+/*table tr.total-sub-accouont td, table tr.subtotal td:hover {
+    background-color: skyblue !important;
+}*/
+
+table tr.total-control-accouont td, table tr.subtotal td:hover {
+    background-color: #EEE !important;
+}
+
+
+
+table tr.total-main-accouont td, table tr.grand-total td:hover {
+    background-color: #DDD !important;
+}
+
+table tr.sub-head {
+    background-color: #ddd !important;
+    font-size: 17px;
+    /* color: #fff; */
+    text-align: left;
+    font-weight: bold;
+}
+
+table tr.controlheads {
+    background-color: #A0B1B3 !important;
+    font-size: 20px !important;
+    /* color: #fff; */
+    text-align: left;
+    font-weight: bold;
+}
+
+.dataTables_scroll {
+    height: 200px;
+    overflow: auto;
+}
+
+/*Fixed Width issue for file upload*/
+.file-preview-image {
+    width: 100%;
+}
+
+.files .preview img {
+    height: 60px;
+    width: 80px;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #000;
+}
+
+.align-center {
+    text-align: center;
+}
+
+.ui-autocomplete {
+    z-index: 9999990 !important;
+}
+
+.btn-load {
+    padding: 5px;
+}
+
+/*For Datatable row grouping*/
+
+td.collapsed-group {
+    background: url("http://jquery-datatables-row-grouping.googlecode.com/svn/trunk/media/images/plus.jpg") no-repeat scroll left center transparent;
+}
+
+td.expanded-group {
+    background: url("http://jquery-datatables-row-grouping.googlecode.com/svn/trunk/media/images/minus.jpg") no-repeat scroll left center transparent;
+}
+
+tr:hover td.expanded-group {
+    background: url("http://jquery-datatables-row-grouping.googlecode.com/svn/trunk/media/images/minus.jpg") no-repeat scroll left center #c0e1ff !important;
+}
+
+tr:hover td.collapsed-group {
+    background: url("http://jquery-datatables-row-grouping.googlecode.com/svn/trunk/media/images/plus.jpg") no-repeat scroll left center #c0e1ff !important;
+}
+
+tr td.group {
+    padding: 2px 15px !important;
+}
+
+.table-deamndCatgeories tr td, .table-deamndCatgeories tr th {
+    font-size: 9px !important;
+}
+
+@media print {
+    a[href]:after {
+        content: none !important;
+    }
+
+    .table-scrollable {
+        overflow-x: visible !important;
+        overflow-y: visible !important;
+    }
+}
+
+/*CSS for Filter table*/
+.searchtext {
+    border: none;
+    background-color: #f3f6f9;
+    color: #a0a9b4;
+    height: 38px !important;
+    width: 350px !important;
+}
+
+.table-search-highlighted {
+    background-color: Yellow;
+}
+
+.search-filter {
+    margin-bottom: 10px;
+}
+
+.page-head .vehicle-branches-dropdown {
+    display: inline-block;
+    float: right;
+    padding: 13px 0;
+    min-width: 340px;
+}
+
+#lblAmountInWords {
+    text-transform: uppercase;
+}
+
+.report-selected-filter > p {
+    margin: 5px 0px !important;
+}
+
+.btn:not(.btn-sm):not(.btn-lg).date-icon {
+    line-height: 0.44;
+}
+
+.cursor-pointer {
+    cursor: pointer !important;
+}
+
+.top-minus21Margin {
+    margin-top: -21px;
+}
+
+div.dataTables_length {
+    float: left;
+}
+
+table.dataTable thead > tr > th.sorting_asc, table.dataTable thead > tr > th.sorting_desc, table.dataTable thead > tr > th.sorting, table.dataTable thead > tr > td.sorting_asc, table.dataTable thead > tr > td.sorting_desc, table.dataTable thead > tr > td.sorting {
+    padding-right: 15px !important;
+}
+
+.valign-middle {
+    vertical-align: middle;
+}
+
+
+table#item-container-summary tr:nth-child(even) {
+    background-color: Lightgreen;
+}
+
+#sale-forecase-detail #item-container tr:nth-child(even) {
+    background-color: Lightgreen;
+}
+/*#sale-forecase-detail #item-container tr:nth-child(even) input {
+    background-color: Lightgreen;
+}*/
+
+
+.sf [data-next] {
+    background-color: #c3dee6;
+}
+
+.sf [data-prev] {
+    background-color: #ddf9f09e;
+}
+
+thead.tableFloatingHeaderOriginal {
+    background-color: #eee;
+}

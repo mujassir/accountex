@@ -1,0 +1,120 @@
+﻿@using AccountEx.Common
+@{
+    ViewBag.Title = "Manage Products";
+}
+
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">Department Mapping</h1>
+}
+
+
+<!-- END PAGE HEADER-->
+
+<div class="row" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-edit"></i>Add/Edit Department Mapping
+                </div>
+
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal" data-save="save">
+                    <input type="text" id="Id" class="hide" />
+                    <input type="text" id="AccountId" class="hide" />
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label master-account-label" for="prefix">Nexus Department</label>
+                            <div class="col-md-3">
+                                <select class="form-control select2" id="NexusDepartmentId" data-required="required" data-message="Nexus Department is required" placeholder="select Nexus Department">
+                                    <option></option>
+                                    @foreach (var p in (List<IdName>)ViewBag.NexusDepartments)
+                                    {
+                                    <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                    }
+
+                                </select>
+
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label master-account-label" for="prefix">Department</label>
+                            <div class="col-md-3">
+                                <select class="form-control select2" id="DepartmentAccountId" data-required="required" data-message="Department is required" placeholder="select Department">
+                                    <option></option>
+                                    @foreach (var p in (List<IdName>)ViewBag.Departments)
+                                    {
+                                    <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                    }
+
+                                </select>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="form-actions">
+                    <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+
+                    <div class="col-md-8">
+                        <button type="button" id="btn-save" class="btn btn-primary">Save</button>
+                        <button id="btnCancel" type="button" class="btn btn-default">Cancel</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <!-- END EXAMPLE TABLE PORTLET-->
+</div>
+
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Record Listing
+                </div>
+            </div>
+
+            <div class="portlet-body">
+
+                <table class="table table-striped table-bordered table-hover" id="mainTable">
+                    <thead>
+                        <tr>
+                            <th>Nexus Department</th>
+                            <th>Department</th>
+                            <th style="width: 75px;" class="no-sort"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="3">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Nexus/DepartmentMapping.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            DepartmentMapping.init();
+        });
+    </script>
+}

@@ -1,0 +1,1277 @@
+﻿@using AccountEx.BussinessLogic;
+@using AccountEx.Common;
+@{
+    var monthslist = new List<IdName>();
+    var months = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.MonthNames;
+    for (int i = 0; i < months.Length; i++)
+    {
+        if (i <= 11)
+        {
+            monthslist.Add(new IdName() { Name = months[i], Id = i + 1 });
+        }
+
+    }
+    ViewBag.Title = "Electricity Bill";
+    IList<int> years = Enumerable.Range(DateTime.Now.Year - 2, 10).ToList();
+}
+
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold hidden-print">Create Rent Bill</h1>
+}
+
+<style>
+    .tbl-net-billing td, .tbl-net-billing th, table.tbl-net-billing {
+        border-color: #AAAAAA !important;
+    }
+
+    .tbl-net-billing tbody tr.tr-net-billing td, .tbl-net-billing tbody tr.tr-balance td {
+        background-color: #E9E8E7;
+        padding-right: 5px;
+    }
+
+    .tbl-net-billing thead tr th {
+        font-size: 14px;
+    }
+
+    .tbl-net-billing tbody td input {
+        padding: 0;
+        border-radius: 0;
+        border-width: 0;
+    }
+
+    .tbl-net-billing tbody td:first-child {
+        font-weight: bold;
+        height: 24px;
+        padding-left: 5px !important;
+    }
+
+    .tbl-net-billing tbody td:first-child, .tbl-net-billing thead tr th {
+        background-color: #DDD !important;
+    }
+    /*.challan-detail-conatiner th.th-current {
+        background-color: rgba(67, 165, 42, 0.34);
+    }
+
+    .challan-detail-conatiner th.th-arrears {
+        background-color: antiquewhite;
+    }
+
+    .challan-detail-conatiner th.th-net-total {
+        background-color: #e3e1e8;
+    }*/
+
+    /*.challan-detail-conatiner .tbl-net-billing tbody td, .challan-detail-conatiner .tbl-balance tbody td {
+        background-color: rgb(211, 211, 211);
+    }*/
+
+    /*td.td-caption {
+        font-size: 18px;
+        font-weight: bold;
+        width: 20%;
+        padding: 12px !important;
+    }*/
+
+    @@media print {
+        .div-report .mainheader {
+            padding-bottom: 20px;
+        }
+
+        .full-width {
+            margin-top: 2px;
+        }
+
+        .bdetails td, .bdetails th {
+            border: 1px solid;
+        }
+
+        .div-report {
+            font-size: 10px;
+        }
+
+        label, th, span {
+            padding-left: 4px;
+            padding-right: 4px;
+        }
+
+        .tbl-rent {
+            min-height: 116px;
+        }
+
+        .bdetails {
+            min-height: 156px;
+        }
+
+        .lblAmount {
+            /*color: green;*/
+        }
+
+        .lblAmount {
+            /*color: green;*/
+        }
+
+        .lblAfterDueDate, .lblTotal {
+            /*color: red;*/
+        }
+
+        .div-report {
+            font-size: 10px;
+        }
+
+        .barcode {
+            height: 70px;
+        }
+
+        .line-cutter {
+            margin: 0;
+            border-top: dashed 1px;
+            margin-bottom: 40px;
+            margin-top: 40px;
+        }
+
+        .barcode {
+            margin-left: 2px;
+            width: 210px;
+        }
+
+        .advertisement {
+            height: 210px;
+            width: 225px;
+            margin-left: 2px;
+        }
+
+
+        .inline {
+            display: inline-block;
+        }
+
+        .bill-details {
+            text-align: center;
+            border: 1px solid;
+            margin: 0px;
+        }
+
+        .solid {
+            border: 1px solid;
+        }
+
+        .bank {
+            font-weight: bold;
+            font-size: 11px;
+            margin-left: 175px;
+        }
+
+        .copy {
+            font-weight: bold;
+            font-size: 11px;
+            float: right;
+            margin-right: 50px;
+        }
+
+        .lbl-cusID {
+            font-weight: bold;
+            float: right;
+            margin-right: 50px;
+        }
+
+        .div-report .headTopMargin {
+            margin: 0px;
+            margin-top: -8px;
+        }
+
+        .header-container {
+        }
+
+            /*.header-container p {
+            margin: 0px;
+        }*/
+
+            .header-container .div-left {
+                float: left;
+                width: 72%;
+            }
+
+                .header-container .div-left .line {
+                    margin: -8px;
+                }
+
+                .header-container .div-left .line3 {
+                    margin: -14px;
+                }
+
+            .header-container .div-right {
+                float: right;
+                width: 28%;
+            }
+
+                .header-container .div-right p {
+                    margin-top: -8px;
+                }
+
+                .header-container .div-right .copy-text {
+                    margin-top: -10px;
+                }
+
+                .header-container .div-right .cutomerId {
+                    margin-top: 20px !important;
+                }
+
+        .div-report .report-summary-info span.color-green, .div-report .report-summary-info label.color-green, .div-report .report-summary-info label.color-green *, .div-report .report-summary-info span.color-green * {
+            color: green !important;
+        }
+
+        .div-report report-summary-info span.color-red, .div-report .report-summary-info label.color-red, .div-report .report-summary-info label.color-red *, .div-report .report-summary-info span.color-red * {
+            color: red !important;
+        }
+    }
+</style>
+
+<!-- BEGIN PAGE HEADER-->
+
+<div class="row hidden-print" id="form-info">
+
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+
+            <div class="portlet-body form">
+                <div id="mainform" class="form-horizontal" data-save="save">
+                    <div class="form-body">
+
+
+                        <div class="row challan-detail-conatiner">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label" for="prefix">Tenants</label>
+                                    <div class="col-md-7">
+                                        <select id="TenantAccountId" class="form-control select2" data-required="required" data-message="Tenant is required."></select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label id="lblopeningbalance" class="control-label" for="IsLoadAllPrevious">
+                                            <input type="checkbox" id="IsLoadAllPrevious" data-checktrack='false' value="false" />
+                                            Load all Previous Challan
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label" for="prefix">Month</label>
+                                    <div class="col-md-2">
+                                        <select id="Month" class="form-control select2" data-required="required" data-message="Month is required." data-clear="false">
+                                            <option></option>
+                                            @foreach (var item in monthslist)
+                                            {
+                                                <option value="@item.Id">@item.Name</option>
+                                            }
+                                        </select>
+
+                                    </div>
+                                    <label class="col-md-1 control-label" for="prefix">Year</label>
+                                    <div class="col-md-2">
+                                        <select id="Year" class="form-control select2" data-required="required" data-message="year is required." data-clear="false">
+                                            <option></option>
+                                            @foreach (var year in years)
+                                            {
+                                                <option>@year</option>
+                                            }
+                                        </select>
+
+                                    </div>
+                                    <label class="col-md-1 control-label" for="prefix">Date</label>
+                                    <div class="col-md-2">
+                                        <input id="DueDate" type="text" value="@(SettingManager.RentDueDate)" class="form-control date-picker input-xsmall" data-required="required" data-message="Due date is required" data-plus-as-tab="false" data-clear="false">
+                                    </div>
+
+                                    <div class="col-md-1">
+                                        <button type="button" class="btn btn-info" onclick="ElectricityBill.LoadElectricityBill()">
+                                            <i class="fa  fa-plus-circle"></i>
+                                            Load
+                                        </button>
+                                    </div>
+
+                                </div>
+                                <div class="row hide">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="col-md-2 control-label" for="prefix">Meter Reading</label>
+                                            <div class="col-md-9">
+                                                <div class="form-group storeimg">
+                                                    <input id="MeterPic" accept="image/x-png, image/gif, image/jpeg" type="file" name="...">
+                                                    <input id="FileUrl" type="text" class="hide">
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row challan-detail-conatiner">
+
+                                    <table class="table table-bordered griditem tbl-net-billing">
+
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th class="align-center th-current">Current</th>
+                                                <th colspan="2" class="align-center th-arrears">Arrears</th>
+                                                <th class="align-center th-net-total"></th>
+                                            </tr>
+                                            <tr>
+                                                <th></th>
+                                                <th class="align-right th-current">Electricity</th>
+                                                <th class="align-right th-arrears">Electricity</th>
+                                                <th class="align-right th-arrears">Surcharge</th>
+                                                <th class="align-right th-net-total">Net Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="tr-net-billing">
+
+                                                <td class="td-caption" style="width: 200px;">Net Billing</td>
+
+                                                <td class="align-right">
+                                                    <label id="lblElectricityCharges" data-db-type="int" data-formating="true"></label>
+                                                </td>
+
+                                                <td class="align-right">
+                                                    <label id="lblElectricityArrears" data-db-type="int" data-formating="true"></label>
+                                                </td>
+                                                <td class="align-right">
+                                                    <label id="lblSurCharge" data-db-type="int" data-formating="true"></label>
+                                                </td>
+                                                <td class="align-right">
+                                                    <label id="lblNetTotal" data-db-type="int" data-formating="true"></label>
+                                                </td>
+
+                                            </tr>
+                                            <tr class="tr-net-billing">
+
+                                                <td class="td-caption" style="width: 200px;">Already Challaned</td>
+
+                                                <td class="align-right">
+                                                    <label id="lblChallanedElectricityCharges" data-db-type="int" data-formating="true"></label>
+
+                                                </td>
+                                                <td class="align-right">
+                                                    <label id="lblChallanedElectricityArrears" data-db-type="int" data-formating="true"></label>
+                                                </td>
+
+                                                <td class="align-right">
+                                                    <label id="lblChallanedSurCharge" data-db-type="int" data-formating="true"></label>
+                                                </td>
+                                                <td class="align-right">
+                                                    <label id="lblChallanedNetTotal" data-db-type="int" data-formating="true"></label>
+                                                </td>
+
+                                            </tr>
+                                            <tr class="tr-current-challan">
+
+
+                                                <td class="td-caption">Current Challan</td>
+                                                <td class="align-right">
+                                                    <input type="hidden" id="RentAgreementId" disabled="">
+                                                    <input type="hidden" id="ElectricityUnitItemId" disabled="">
+                                                    <input type="hidden" id="ElectricityUnitId" disabled="">
+                                                    <input type="hidden" id="ShopId" disabled="">
+                                                    <input type="hidden" id="ShopNo" disabled="">
+                                                    <input type="hidden" id="TenantAccountName" disabled="">
+                                                    <input type="text" disabled="" class="form-control input-small align-right" id="ElectricityCharges" data-db-type="float" value="0">
+                                                </td>
+
+                                                <td class="align-right">
+                                                    <input type="text" disabled="" class="ElectricityArrears form-control input-small align-right" id="ElectricityArrears" value="0">
+                                                </td>
+                                                <td class="align-right">
+                                                    <input type="text" disabled="" class="SurCharge form-control input-small align-right" id="SurCharge" value="0">
+                                                </td>
+                                                <td>
+
+                                                    <input type="hidden" id="EntryType" value="@((byte)EntryType.Manual)" data-clear="false" />
+                                                    <input type="hidden" id="TransactionType" value="@((byte)VoucherType.RC)" data-clear="false" />
+                                                    <input type="text" disabled="disabled" class="NetAmount form-control input-small align-right" id="NetAmount" value="0" readonly="readonly">
+                                                </td>
+
+                                            </tr>
+                                            <tr class="tr-balance">
+
+                                                <td class="td-caption">Balance</td>
+
+
+                                                <td class="align-right">
+                                                    <label id="lblElectricityChargesBalance" data-db-type="int"></label>
+                                                </td>
+
+                                                <td class="align-right">
+                                                    <label id="lblElectricityArrearsBalance" data-db-type="int"></label>
+                                                </td>
+                                                <td class="align-right">
+                                                    <label id="lblSurChargeBalance" data-db-type="int"></label>
+                                                </td>
+                                                <td class="align-right">
+                                                    <label id="lblNetTotalBalance" data-db-type="int"></label>
+                                                </td>
+
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+
+                                </div>
+                                <div class="form-group adjustment-container">
+                                    <label class="col-md-2 control-label"></label>
+                                    <label class="col-md-2 control-label">Adjustment Type</label>
+                                    <div class="col-md-2">
+                                        <select id="AdjustmentType" class="form-control select2" data-placeholder="select adjustment Type">
+                                            <option></option>
+                                            <option value="1">CR</option>
+                                            <option value="2">DR</option>
+
+                                        </select>
+
+                                    </div>
+                                    <label class="col-md-1 control-label" for="prefix">Amount</label>
+                                    <div class="col-md-1">
+                                        <input type="text" class=" form-control input-xsmall" id="AdjustmentAmount" data-db-type="float" value="0" disabled="disabled" readonly="readonly">
+                                    </div>
+                                    <label class="col-md-2 control-label" for="prefix">Grand Total</label>
+                                    <div class="col-md-1">
+                                        <input type="text" class=" form-control input-xsmall" id="GrandTotal" data-db-type="float" value="0" disabled="disabled" readonly="readonly">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="prefix"></label>
+
+
+
+                                    <div class="btn-set pull-right">
+                                        @if (!SiteContext.Current.Fiscal.IsClosed)
+                                        {
+                                            <button type="button" class="btn purple-plum" onclick="ElectricityBill.New()">
+                                                <i class="fa  fa-plus-circle"></i>
+                                                New
+                                            </button>
+                                            <button type="button" class="btn btn-primary green" onclick="ElectricityBill.Save()">
+                                                <i class="fa fa-check"></i>
+                                                Create Challan
+                                            </button>
+
+                                        }
+                                        <button type="button" class="btn btn-warning" onclick="window.location='@(Url.Content(SettingManager.DashBoardUrl))'">
+                                            <i class="fa  fa-times-circle"></i>
+                                            Close
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-1"></div>
+
+                            <div class="col-md-8">
+                                <div class="row" id="div-table">
+                                    <div class="col-md-12 col-sm-12">
+                                        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                                        <div class="portlet box light">
+                                            <div class="portlet-title">
+                                                <div class="caption">
+                                                    <i class="fa fa-list"></i>Existing Challans
+                                                </div>
+
+                                                <div class="tools">
+                                                    <a href="javascript:;" class="collapse"></a>
+                                                </div>
+                                            </div>
+
+                                            <div class="portlet-body">
+                                                <div class="hide alert alert-danger container-message">
+                                                    <i class="close" onclick="$(this).parent().hide();"></i>
+                                                    <strong></strong>
+                                                    <div class="form-body message-content"></div>
+                                                </div>
+                                                <table class="table table-striped table-bordered table-hover" id="mainTable">
+                                                    <thead>
+                                                        <tr>
+
+                                                            <th>Challan No.</th>
+                                                            <th>Duration</th>
+                                                            <th>Due Date</th>
+                                                            <th>Total Amount</th>
+                                                            <th>Status</th>
+                                                            <th>Rcv. No.</th>
+
+                                                            <th style="width: 150px;" class="no-sort"></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td colspan="7"></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <!-- END EXAMPLE TABLE PORTLET-->
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+
+
+
+<div style="height: 40px;"></div>
+<div class="div-report visible-print">
+    <div class="row mainheader">
+        <div class="align-center header-container">
+            <div class="div-left">
+                <label class="bold hide" style="font-size: 12px">SOLDIERS WELFARE ORGANISATION LAHORE</label>
+                <div class="line">
+                    <label class="bold" style="font-size: 12px; text-transform: uppercase">Fortress Stadium Lahore (SWOL)</label>
+                </div>
+
+                <div class="line">
+
+                    <label class="bold" style="font-size: 12px">Account No.<label class="bold">0111650500850</label></label>
+                </div>
+                <div class="line3">
+
+                    <label class="bold" style="font-size: 12px">Askari Bank Limited, 16-Tufail Road, Lahore Cantt.</label>
+
+                </div>
+            </div>
+            <div class="div-right">
+                <p class="bold copy-text">
+                    Account Branch Copy
+                </p>
+                <p class="bold customerId">
+                    Customer ID:
+                    <label class="lblShopCode bold"></label>
+
+                </p>
+            </div>
+        </div>
+    </div>
+    <div style="float: left; width: 64%; margin-top: -20px">
+        <table class="report-summary-info full-width">
+            <tbody>
+                <tr>
+                    <td colspan="2" class="solid" style="background-color: #E9E8E7;">
+                        <span>
+                            <label><b>Shop/Office No. </b></label>
+                            &nbsp;<span class="lblShopNo label-data inline"></span>
+                        </span>
+
+                        <span style="margin-left: 137px;">
+                            <label><b>Block: </b></label>
+                            &nbsp;<span class="lblBlock label-data inline"></span>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="solid" style="background-color: #E9E8E7;">
+                        <span>
+                            <label><b>Tenant Name: </b></label>
+                            &nbsp;<span class="lblTenantName label-data inline"></span>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="1" class="solid" style="width: 58%">
+                        <span>
+                            <label><b>Business: </b></label>
+                            &nbsp;<span class="lblBusiness label-data inline"></span>
+                        </span>
+                    <td colspan="1" class="solid">
+                        <span>
+                            <label><b>Amount Due: </b></label>
+                            &nbsp;<span class="lblAmountDue label-data inline"></span>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="1" class="solid">
+                        <span>
+                            <label><b>Brand: </b></label>
+                            &nbsp;<span class="lblBrand label-data inline"></span>
+                        </span>
+                    </td>
+                    <td colspan="1" class="solid">
+                        <span class="color-green">
+                            <span class="color-green bold">Due Date: </span>
+                            &nbsp;<span class="lblDueDate label-data inline color-green"></span>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="1" class="solid">
+                        <span>
+                            <label><b>Billing Month:</b></label>&nbsp;<span class="lblBillingMonth label-data inline"></span>
+                        </span>
+                    </td>
+                    <td colspan="1" class="solid">
+                        <span class="color-red bold">
+                            <label>Amount After Due Date:</label>&nbsp;<span class="lblAfterDueDate label-data inline"></span>
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div style="margin-top: 4px;">
+            <p class="bill-details"><b>Rent Bill Details:</b></p>
+            <table class="report-summary-info full-width">
+                <tbody>
+                    <tr>
+                        <!-- This is for Rent -->
+                        <td colspan="2" style="width: 58%">
+                            <table class="full-width bdetails">
+                                <thead>
+                                    <tr>
+                                        <th>Rent</th>
+                                        <th class="align-center">Amount</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <label>Rent</label>&nbsp;
+                                        </td>
+                                        <td class="align-right"><span class="lblMonthlyRent label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>Utility Charges</label>&nbsp;
+                                        </td>
+                                        <td class="align-right"><span class="lblUCPercent label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>Electric Charges</label>&nbsp;
+                                            <span class="lblECharges label-data inline"></span>
+                                        </td>
+                                        <td class="align-right"><span class="lblElectricityCharges label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label class="AdjustmentType bold">Adjustment</label>&nbsp;
+                                        </td>
+                                        <td class="align-right"><span class="lblAdjustmentAmount label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label><b>Amount Due</b></label>&nbsp;
+                                        </td>
+                                        <td class="align-right"><span class="lblAmount label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label><b>Surcharge 5%</b></label>&nbsp;
+                                        </td>
+                                        <td class="align-right"><span class="lblFutureSurcharge label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label><b>Amount After Due Date</b></label>&nbsp;
+                                        </td>
+                                        <td class="align-right"><span class="lblTotal label-data inline"></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                        <td>&nbsp</td>
+                        <!-- This is for Arrears -->
+                        <td colspan="2">
+                            <table class="full-width bdetails">
+                                <thead>
+                                    <tr>
+                                        <th>Arrears</th>
+                                        <th class="align-center">Amount</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <label>Rent</label>&nbsp;
+                                        </td>
+                                        <td class="align-right"><span class="lblRentArrears label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>Utility Charges</label>&nbsp;
+                                        </td>
+                                        <td class="align-right"><span class="lblUCPercentArears label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>Electric Charges</label>&nbsp;
+                                        </td>
+                                        <td class="align-right"><span class="lblElectricityArrears label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>Surcharge</label>&nbsp;
+                                        </td>
+                                        <td class="align-right"><span class="lblSurCharge label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            <label><b>Total</b></label>&nbsp;
+                                        </td>
+                                        <td class="align-right"><span class="lblArrearsTotal label-data inline"></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div style="margin-top: -20.5px;">
+        <img src="@("../upload/" + SiteContext.Current.UploadFolder + "/ApplicationLogo/" + SettingManager.BillLogo)" class="advertisement" /><br />
+        <img class="barcode" />
+    </div>
+</div>
+
+<hr class="visible-print line-cutter" />
+<div class="div-report visible-print">
+    <div class="row mainheader">
+        <div class="align-center header-container">
+            <div class="div-left">
+                <label class="bold hide" style="font-size: 12px">SOLDIERS WELFARE ORGANISATION LAHORE</label>
+                <div class="line">
+                    <label class="bold" style="font-size: 12px; text-transform: uppercase">Fortress Stadium Lahore (SWOL)</label>
+                </div>
+
+                <div class="line">
+
+                    <label class="bold" style="font-size: 12px">Account No.<label class="bold">0111650500850</label></label>
+                </div>
+                <div class="line3">
+
+                    <label class="bold" style="font-size: 12px">Askari Bank Limited, 16-Tufail Road, Lahore Cantt.</label>
+
+                </div>
+            </div>
+            <div class="div-right">
+                <p class="bold copy-text">
+                    Tenant Copy
+                </p>
+                <p class="bold customerId">
+                    Customer ID:
+                    <label class="lblShopCode bold"></label>
+
+                </p>
+            </div>
+        </div>
+    </div>
+    <div style="float: left; width: 64%; margin-top: -20px">
+        <table class="report-summary-info full-width">
+            <tbody>
+                <tr>
+                    <td colspan="2" class="solid" style="background-color: #E9E8E7;">
+                        <span>
+                            <label><b>Shop/Office No. </b></label>
+                            &nbsp;<span class="lblShopNo label-data inline"></span>
+                        </span>
+
+                        <span style="margin-left: 137px;">
+                            <label><b>Block: </b></label>
+                            &nbsp;<span class="lblBlock label-data inline"></span>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="solid" style="background-color: #E9E8E7;">
+                        <span>
+                            <label><b>Tenant Name: </b></label>
+                            &nbsp;<span class="lblTenantName label-data inline"></span>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="1" class="solid" style="width: 58%">
+                        <span>
+                            <label><b>Business: </b></label>
+                            &nbsp;<span class="lblBusiness label-data inline"></span>
+                        </span>
+                    <td colspan="1" class="solid">
+                        <span>
+                            <label><b>Amount Due: </b></label>
+                            &nbsp;<span class="lblAmountDue label-data inline"></span>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="1" class="solid">
+                        <span>
+                            <label><b>Brand: </b></label>
+                            &nbsp;<span class="lblBrand label-data inline"></span>
+                        </span>
+                    </td>
+                    <td colspan="1" class="solid">
+                        <span class="color-green">
+                            <label><b>Due Date: </b></label>
+                            &nbsp;<span class="lblDueDate label-data inline"></span>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="1" class="solid">
+                        <span>
+                            <label><b>Billing Month:</b></label>&nbsp;<span class="lblBillingMonth label-data inline"></span>
+                        </span>
+                    </td>
+                    <td colspan="1" class="solid">
+                        <span class="color-red">
+                            <label><b>Amount After Due Date:</b></label>&nbsp;<span class="lblAfterDueDate label-data inline"></span>
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div style="margin-top: 4px;">
+            <p class="bill-details"><b>Rent Bill Details:</b></p>
+            <table class="report-summary-info full-width">
+                <tbody>
+                    <tr>
+                        <!-- This is for Rent -->
+                        <td colspan="2" style="width: 58%">
+                            <table class="full-width bdetails">
+                                <thead>
+                                    <tr>
+                                        <th>Rent</th>
+                                        <th class="align-center">Amount</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <label>Rent</label>&nbsp;
+                                        </td>
+                                        <td class="align-right"><span class="lblMonthlyRent label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>Utility Charges</label>&nbsp;
+                                        </td>
+                                        <td class="align-right"><span class="lblUCPercent label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>Electric Charges</label>&nbsp;
+                                            <span class="lblECharges label-data inline"></span>
+                                        </td>
+                                        <td class="align-right"><span class="lblElectricityCharges label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label class="AdjustmentType bold">Adjustment</label>&nbsp;
+                                        </td>
+                                        <td class="align-right"><span class="lblAdjustmentAmount label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label><b>Amount Due</b></label>&nbsp;
+                                        </td>
+                                        <td class="align-right"><span class="lblAmount label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label><b>Surcharge 5%</b></label>&nbsp;
+                                        </td>
+                                        <td class="align-right"><span class="lblFutureSurcharge label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label><b>Amount After Due Date</b></label>&nbsp;
+                                        </td>
+                                        <td class="align-right"><span class="lblTotal label-data inline"></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                        <td>&nbsp</td>
+                        <!-- This is for Arrears -->
+                        <td colspan="2">
+                            <table class="full-width bdetails">
+                                <thead>
+                                    <tr>
+                                        <th>Arrears</th>
+                                        <th class="align-center">Amount</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <label>Rent</label>&nbsp;
+                                        </td>
+                                        <td class="align-right"><span class="lblRentArrears label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>Utility Charges</label>&nbsp;
+                                        </td>
+                                        <td class="align-right"><span class="lblUCPercentArears label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>Electric Charges</label>&nbsp;
+                                        </td>
+                                        <td class="align-right"><span class="lblElectricityArrears label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>Surcharge</label>&nbsp;
+                                        </td>
+                                        <td class="align-right"><span class="lblSurCharge label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            <label><b>Total</b></label>&nbsp;
+                                        </td>
+                                        <td class="align-right"><span class="lblArrearsTotal label-data inline"></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div style="margin-top: -20.5px;">
+        <img src="@("../upload/" + SiteContext.Current.UploadFolder + "/ApplicationLogo/" + SettingManager.BillLogo)" class="advertisement" /><br />
+        <img class="barcode" />
+    </div>
+</div>
+<hr class="visible-print line-cutter" />
+<div class="div-report visible-print">
+    <div class="row mainheader">
+        <div class="align-center header-container">
+            <div class="div-left">
+                <label class="bold hide" style="font-size: 12px">SOLDIERS WELFARE ORGANISATION LAHORE</label>
+                <div class="line">
+                    <label class="bold" style="font-size: 12px; text-transform: uppercase">Fortress Stadium Lahore (SWOL)</label>
+                </div>
+
+                <div class="line">
+
+                    <label class="bold" style="font-size: 12px">Account No.<label class="bold">0111650500850</label></label>
+                </div>
+                <div class="line3">
+
+                    <label class="bold" style="font-size: 12px">Askari Bank Limited, 16-Tufail Road, Lahore Cantt.</label>
+
+                </div>
+            </div>
+            <div class="div-right">
+                <p class="bold copy-text">
+                    Bank Copy
+                </p>
+                <p class="bold customerId">
+                    Customer ID:
+                    <label class="lblShopCode bold"></label>
+
+                </p>
+            </div>
+        </div>
+    </div>
+    <div style="margin-top: -20px">
+        <table class="full-width">
+            <tbody>
+                <tr>
+                    <td style="width: 64%">
+                        <table class="report-summary-info full-width">
+                            <tbody>
+                                <tr>
+                                    <td colspan="2" class="solid" style="background-color: #E9E8E7;">
+                                        <span>
+                                            <label><b>Shop/Office No.</b> </label>
+                                            &nbsp;<span class="lblShopNo label-data inline"></span>
+                                        </span>
+                                        <span>
+                                            <label style="margin-left: 50px;"><b>Block:</b></label>&nbsp;<span class="lblBlock label-data inline"></span>
+                                        </span>
+                                        <span>
+                                            <label><b>Billing Month:</b> </label>
+                                            &nbsp;<span class="lblBillingMonth label-data inline"></span>
+                                        </span>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td class="solid" style="background-color: #E9E8E7;">
+                                        <span>
+                                            <label><b>Tenant Name:</b> </label>
+                                            &nbsp;<span class="lblTenantName label-data inline"></span>
+                                        </span>
+                                    </td>
+                                    <td class="solid">
+                                        <span class="color-green">
+                                            <label><b>Due Date:</b> </label>
+                                            &nbsp;<span class="lblDueDate label-data inline"></span>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+
+                                    <td class="solid">
+                                        <span>
+                                            <label><b>Amount Due:</b> </label>
+                                            &nbsp;<span class="lblAmountDue label-data inline"></span>
+                                        </span>
+                                    </td>
+                                    <td class="solid">
+                                        <span class="color-red">
+                                            <label><b>Amount After Due Date:</b> </label>
+                                            &nbsp;<span class="lblAfterDueDate label-data inline"></span>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td>
+                        <div>
+
+                            <img class="barcode" />
+                        </div>
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+        <table class="report-summary-info full-width hide">
+            <tbody>
+                <tr>
+                    <td colspan="2" class="solid" style="background-color: #E9E8E7;">
+                        <span>
+                            <label><b>Shop/Office No. </b></label>
+                            &nbsp;<span class="lblShopNo label-data inline"></span>
+                        </span>
+
+                        <span style="margin-left: 137px;">
+                            <label><b>Block: </b></label>
+                            &nbsp;<span class="lblBlock label-data inline"></span>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="solid" style="background-color: #E9E8E7;">
+                        <span>
+                            <label><b>Tenant Name: </b></label>
+                            &nbsp;<span class="lblTenantName label-data inline"></span>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="1" class="solid" style="width: 58%">
+                        <span>
+                            <label><b>Business: </b></label>
+                            &nbsp;<span class="lblBusiness label-data inline"></span>
+                        </span>
+                    <td colspan="1" class="solid">
+                        <span>
+                            <label><b>Amount Due: </b></label>
+                            &nbsp;<span class="lblAmountDue label-data inline"></span>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="1" class="solid">
+                        <span>
+                            <label><b>Brand: </b></label>
+                            &nbsp;<span class="lblBrand label-data inline"></span>
+                        </span>
+                    </td>
+                    <td colspan="1" class="solid">
+                        <span class="color-green">
+                            <label><b>Due Date: </b></label>
+                            &nbsp;<span class="lblDueDate label-data inline"></span>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="1" class="solid">
+                        <span>
+                            <label><b>Billing Month:</b></label>&nbsp;<span class="lblBillingMonth label-data inline"></span>
+                        </span>
+                    </td>
+                    <td colspan="1" class="solid">
+                        <span>
+                            <label><b>Amount After Due Date:</b></label>&nbsp;<span class="lblAfterDueDate label-data inline"></span>
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+
+
+        <div class="hide" style="margin-top: 4px;">
+            <p class="bill-details"><b>Rent Bill Details:</b></p>
+            <table class="report-summary-info full-width">
+                <tbody>
+                    <tr>
+                        <!-- This is for Rent -->
+                        <td colspan="2" style="width: 58%">
+                            <table class="full-width bdetails">
+                                <thead>
+                                    <tr>
+                                        <th>Rent</th>
+                                        <th class="align-center">Amount</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <label>Rent</label>&nbsp;
+                                        </td>
+                                        <td class="align-right"><span class="lblMonthlyRent label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>Utility Charges</label>&nbsp;
+                                        </td>
+                                        <td class="align-right"><span class="lblUCPercent label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>Electric Charges</label>&nbsp;
+                                            <span class="lblECharges label-data inline"></span>
+                                        </td>
+                                        <td class="align-right"><span class="lblElectricityCharges label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label><b>Amount Due</b></label>&nbsp;
+                                        </td>
+                                        <td class="align-right"><span class="lblAmount label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label><b>Surcharge 5%</b></label>&nbsp;
+                                        </td>
+                                        <td class="align-right"><span class="lblFutureSurcharge label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label><b>Amount After Due Date</b></label>&nbsp;
+                                        </td>
+                                        <td class="align-right"><span class="lblTotal label-data inline color-red"></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                        <td>&nbsp</td>
+                        <!-- This is for Arrears -->
+                        <td colspan="2">
+                            <table class="full-width bdetails">
+                                <thead>
+                                    <tr>
+                                        <th>Arrears</th>
+                                        <th class="align-center">Amount</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <label>Rent</label>&nbsp;
+                                        </td>
+                                        <td class="align-right"><span class="lblRentArrears label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>Utility Charges</label>&nbsp;
+                                        </td>
+                                        <td class="align-right"><span class="lblUCPercentArears label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>Electric Charges</label>&nbsp;
+                                        </td>
+                                        <td class="align-right"><span class="lblElectricityArrears label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>Surcharge</label>&nbsp;
+                                        </td>
+                                        <td class="align-right"><span class="lblSurCharge label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label><b>Total</b></label>&nbsp;
+                                        </td>
+                                        <td class="align-right"><span class="lblArrearsTotal label-data inline"></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+<div id="jsondata" class="hide">
+    <p id="data">@ViewBag.FormSetting</p>
+</div>
+@section FooterScript
+{
+    <script src="~/Content/AppJS/RentalSystem/ElectricityBill.js"></script>
+    <script src="~/Content/AppJS/Global/JsBarcode.all.min.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            ElectricityBill.init();
+        });
+    </script>
+}

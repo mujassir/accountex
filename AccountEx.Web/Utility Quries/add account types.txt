@@ -1,0 +1,80 @@
+DECLARE @CompnayId INT=65,
+@UserId INT=3132
+
+INSERT INTO	dbo.AccountTypes
+        ( Name ,
+          IsDeleted ,
+          CompanyId ,
+          OldId ,
+          CreatedBy ,
+          CreatedAt ,
+          ModifiedBy ,
+          ModifiedAt
+        )
+VALUES  ( 'Assets' , -- Name - nvarchar(50)
+          0, -- IsDeleted - bit
+          @CompnayId, -- CompanyId - int
+          0 , -- OldId - int
+          @UserId, -- CreatedBy - int
+          GETDATE() , -- CreatedAt - datetime
+          0 , -- ModifiedBy - int
+          NULL  -- ModifiedAt - datetime
+        )
+
+		INSERT INTO	dbo.AccountTypes
+        ( Name ,
+          IsDeleted ,
+          CompanyId ,
+          OldId ,
+          CreatedBy ,
+          CreatedAt ,
+          ModifiedBy ,
+          ModifiedAt
+        )
+VALUES  ( 'Liabilites' , -- Name - nvarchar(50)
+          0, -- IsDeleted - bit
+          @CompnayId, -- CompanyId - int
+          0 , -- OldId - int
+          @UserId, -- CreatedBy - int
+          GETDATE() , -- CreatedAt - datetime
+          0 , -- ModifiedBy - int
+          NULL  -- ModifiedAt - datetime
+        )
+		INSERT INTO	dbo.AccountTypes
+        ( Name ,
+          IsDeleted ,
+          CompanyId ,
+          OldId ,
+          CreatedBy ,
+          CreatedAt ,
+          ModifiedBy ,
+          ModifiedAt
+        )
+VALUES  ( 'Revenue' , -- Name - nvarchar(50)
+          0, -- IsDeleted - bit
+          @CompnayId, -- CompanyId - int
+          0 , -- OldId - int
+          @UserId, -- CreatedBy - int
+          GETDATE() , -- CreatedAt - datetime
+          0 , -- ModifiedBy - int
+          NULL  -- ModifiedAt - datetime
+        )
+		INSERT INTO	dbo.AccountTypes
+        ( Name ,
+          IsDeleted ,
+          CompanyId ,
+          OldId ,
+          CreatedBy ,
+          CreatedAt ,
+          ModifiedBy ,
+          ModifiedAt
+        )
+VALUES  ( 'Expenses' , -- Name - nvarchar(50)
+          0, -- IsDeleted - bit
+          @CompnayId, -- CompanyId - int
+          0 , -- OldId - int
+          @UserId, -- CreatedBy - int
+          GETDATE() , -- CreatedAt - datetime
+          0 , -- ModifiedBy - int
+          NULL  -- ModifiedAt - datetime
+        )

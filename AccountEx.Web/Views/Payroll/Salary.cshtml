@@ -1,0 +1,941 @@
+﻿@{
+    ViewBag.Title = "Salary";   
+}
+
+<style type="text/css">
+    #mainTable_wrapper .row:first-child, #mainTable_wrapper .row:last-child {
+        /*display: none;*/
+    }
+
+    .table-salary label {
+        margin: 0;
+        padding: 0;
+        font: inherit;
+    }
+</style>
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">Manage Salaries
+    </h1>
+}
+<div class="row hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-edit"></i>Add/Edit Salary
+                </div>
+                <div class="actions">
+                    <a href="javascript:;" onclick="Salary.ListView()" class="btn blue">
+                        <i class="fa fa-angle-left"></i>&nbsp;Back to list 
+                    </a>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal" data-save="save">
+                    <input type="text" id="Id" class="hide" />
+                    <div class="form-body">
+                        <div class="hide alert alert-danger container-message">
+                            <i class="close" onclick="$(this).parent().hide();"></i>
+                            <strong></strong>
+                            <div class="form-body message-content"></div>
+                        </div>
+
+
+                        <!-- BEGIN ACCORDION PORTLET-->
+
+                        <div class="panel-group accordion" id="accordion3">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a href="#collapse_3_1" data-parent="#accordion3" data-toggle="collapse" class="accordion-toggle accordion-toggle-styled collapsed">Click to show/hide Employee Information</a>
+                                    </h4>
+                                </div>
+                                <div id="collapse_3_1" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="form-group">
+
+
+                                            <label class="col-md-2 control-label" for="prefix">Employee Code</label>
+                                            <div class="col-md-3">
+                                                <label id="Code" class="control-label bold"></label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-2 control-label" for="prefix">Father Name</label>
+                                            <div class="col-md-3">
+                                                <label id="FatherName" class="control-label bold"></label>
+
+                                            </div>
+                                            <label class="col-md-2 control-label" for="prefix">CNIC</label>
+                                            <div class="col-md-3">
+                                                <label id="CNIC" class="control-label bold"></label>
+
+                                            </div>
+
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-2 control-label" for="prefix">Address</label>
+                                            <div class="col-md-8">
+                                                <label id="Address" class="control-label bold"></label>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-md-2 control-label" for="prefix">Contact Number</label>
+                                            <div class="col-md-3">
+                                                <label id="ContactNumber" class="control-label bold"></label>
+                                            </div>
+                                            <label class="col-md-2 control-label" for="prefix">Blood Group</label>
+                                            <div class="col-md-3">
+                                                <label id="BloodGroup" class="control-label bold"></label>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            <label class="col-md-2 control-label" for="prefix">Email</label>
+                                            <div class="col-md-8">
+                                                <label id="Email" class="control-label bold"></label>
+                                            </div>
+
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-2 control-label" for="prefix">Bank:</label>
+                                            <div class="col-md-3">
+                                                <label id="BankName" class="control-label bold"></label>
+                                            </div>
+                                            <label class="col-md-2 control-label" for="prefix">Account #.</label>
+                                            <div class="col-md-3">
+                                                <label id="AccountNumber" class="control-label bold"></label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-2 control-label" for="prefix">A/c Title</label>
+                                            <div class="col-md-8">
+                                                <label id="AccountTitle" class="control-label bold"></label>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <!-- END ACCORDION PORTLET-->
+                        <div class="portlet">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    Salary Info
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Voucher Number</label>
+                            <div class="col-md-3 container-voucher">
+                                <label id="lblVoucherNumber" class="label label-info label-voucher"></label>
+                                <input type="text" class="form-control hide" id="VoucherNumber" disabled="disabled" readonly="readonly">
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+
+                            <label class="col-md-2 control-label" for="prefix">Employee</label>
+                            <div class="col-md-3">
+                                <select id="AccountId" class="form-control select2" data-required="required" data-message="Employee is required">
+                                </select>
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">Basic Salary</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control " id="BasicSalary" placeholder="Basic Salary" data-required="required" data-message="Basic Salary is required">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Payment Date</label>
+                            <div class="col-md-3">
+                                <div class="input-group input-medium">
+                                    <input type="text" class="form-control date-picker" id="PaymentDate" placeholder="Payment Date" data-validate="true" data-message="Payment Date is required"  data-hide-dropdown="true">
+                                    <span class="input-group-btn date-icon">
+                                        <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">Payment for Month</label>
+                            <div class="col-md-3">
+                                <select class="form-control select2" id="Month" data-required="required" data-message="Salary Month is required" placeholder="Salary Month">
+                                    <option></option>
+                                    @for (var i = 1; i <= 12; i++)
+                                    {
+                                        if (DateTime.Now.Month == i)
+                                        {
+                                        <option value="@(i)" selected="selected">@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i)</option>
+                                        }
+                                        else
+                                        {
+                                        <option value="@(i)">@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i)</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+
+                                <div class="portlet">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            Benefit Deductions
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-5 control-label" for="prefix">
+                                        Social Security
+                                    </label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control " id="SocialSecurity" placeholder="SocialSecurity" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-5 control-label" for="prefix">
+                                        EOBI
+                                    </label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control " id="EOBI" placeholder="EOBI" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-5 control-label" for="prefix">
+                                        Insurance
+                                    </label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control " id="Insurance" placeholder="Insurance" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-5 control-label" for="prefix">
+                                        Provident Fund
+
+                                    </label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control " id="ProvidentFund" placeholder="Provident Fund" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-5 control-label" for="prefix">
+                                        Total
+                                    </label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control " id="TotalBD" readonly >
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="portlet">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            Other Deductions
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-5 control-label" for="prefix">
+                                        Advance Balance
+                                    </label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control " id="AdvanceBalance" placeholder="Advance Balance" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-5 control-label" for="prefix">
+                                        Installment
+                                    </label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control " id="Installment" placeholder="Installment" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-5 control-label" for="prefix">
+                                        Net Balance
+                                    </label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control " id="NetBalance" readonly >
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="portlet">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            Allowances
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-5 control-label" for="prefix">
+                                        House Rent
+                                    </label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control " id="HouseRent" placeholder="House Rent" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-5 control-label" for="prefix">
+                                        Medical
+                                    </label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control " id="Medical" placeholder="Medical" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-5 control-label" for="prefix">
+                                        Conveyance
+                                    </label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control " id="Conveyance" placeholder="Conveyance" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-5 control-label" for="prefix">
+                                        Total
+                                    </label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control " id="TotalAllowances" readonly >
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="portlet">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    Overtime
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Basic Salary</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control " id="OTBasicSalary" placeholder="Basic Salary" >
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">
+                                Working day(s)
+                            </label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control " id="OTTotalWorkingDays" >
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">
+                                Per hour cost
+                            </label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control " id="OTPerHourCost" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">OT Hours</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control " id="OTHours" >
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">
+                                Hourly Rate
+                            </label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control " id="OTHourlyRate" >
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">
+                                Cost
+                            </label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control " id="OTCost" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Gazetted Holiday Hours</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control " id="GHHours" >
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">
+                                Hourly Rate
+                            </label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control " id="GHHourlyRate" >
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">
+                                Cost
+                            </label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control " id="GHCost" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Special OT Hours</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control " id="SOTHours" >
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">
+                                Hourly Rate
+                            </label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control " id="SOTHourlyRate" >
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">
+                                Cost
+                            </label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control " id="SOTCost" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">
+                            </label>
+
+                            <label class="col-md-2 control-label" for="prefix">
+                                Total Cost
+                            </label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control " id="TotalOTCost" readonly />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="portlet ">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            Leaves
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label class="col-md-2 control-label" for="prefix">
+                                        Absents
+                                    </label>
+                                    <div class="col-md-2">
+                                        <input type="text" class="form-control number" id="Absents" >
+                                    </div>
+                                    <label class="col-md-2 control-label" for="prefix">
+                                        Cost
+                                    </label>
+                                    <div class="col-md-2">
+                                        <input type="text" class="form-control " id="AbsentsCost" readonly >
+                                    </div>
+                                </div>
+                                <div id="leave-conatiner" class="form-group">
+                                    <div class="col-md-2"></div>
+                                    <div class="col-md-8">
+
+                                        <table class="table table-bordered leaves">
+                                            <thead>
+                                                <tr>
+                                                    <td>Title</td>
+                                                    <td>Allowed</td>
+                                                    <td>Availed</td>
+                                                    <td>Balance</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Casual </td>
+                                                    <td>
+                                                        <input type="text" id="CasualAllowed" class="form-control allowed" readonly="readonly" /></td>
+                                                    <td>
+                                                        <input type="text" id="CasualAvailed" class="form-control availed" /></td>
+                                                    <td>
+                                                        <input type="text" id="CasualBalance" class="form-control balance" readonly="readonly" /></td>
+
+                                                </tr>
+                                                <tr>
+                                                    <td>Sick </td>
+                                                    <td>
+                                                        <input type="text" id="SickAllowed" class="form-control allowed" readonly="readonly" /></td>
+                                                    <td>
+                                                        <input type="text" id="SickAvailed" class="form-control availed" /></td>
+                                                    <td>
+                                                        <input type="text" id="SickBalance" class="form-control balance" readonly="readonly" /></td>
+
+                                                </tr>
+                                                <tr>
+                                                    <td>Annual </td>
+                                                    <td>
+                                                        <input type="text" id="AnnualAllowed" class="form-control allowed" readonly="readonly" /></td>
+                                                    <td>
+                                                        <input type="text" id="AnnualAvailed" class="form-control availed" /></td>
+                                                    <td>
+                                                        <input type="text" id="AnnualBalance" class="form-control balance" readonly="readonly" /></td>
+
+                                                </tr>
+                                                <tr>
+                                                    <td>Compensatery</td>
+                                                    <td>
+                                                        <input type="text" id="CompensateryAllowed" class="form-control allowed" readonly="readonly" /></td>
+                                                    <td>
+                                                        <input type="text" id="CompensateryAvailed" class="form-control availed" /></td>
+                                                    <td>
+                                                        <input type="text" id="CompensateryBalance" class="form-control balance" readonly="readonly" /></td>
+
+                                                </tr>
+                                                <tr class="total">
+                                                    <td>Total </td>
+                                                    <td>
+                                                        <input type="text" class="form-control allowed" readonly="readonly" /></td>
+                                                    <td>
+                                                        <input type="text" class="form-control availed" readonly="readonly" /></td>
+                                                    <td>
+                                                        <input type="text" class="form-control balance" readonly="readonly" /></td>
+
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="portlet">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            Summary
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label class="col-md-5 control-label" for="prefix">
+                                        Current Salary
+                                    </label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control " id="SummaryBasicSalary" readonly />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-5 control-label" for="prefix">
+                                        Allowances
+                                    </label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control " id="SummaryAllowances" readonly />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-5 control-label" for="prefix">
+                                        Over Time
+                                    </label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control " id="SummaryOT" readonly />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-5 control-label" for="prefix">
+                                        Deductions
+                                    </label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control " id="SummaryDeductions" readonly />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-5 control-label bold" for="prefix">
+                                        Salary
+                                    </label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control " id="SummarySalary" readonly />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-5 control-label" for="prefix">
+                                        Income Tax
+                                    </label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control " id="IncomeTax" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-5 control-label" for="prefix">
+                                        Instalment Total
+                                    </label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control " id="InstallmentTotal" readonly="readonly" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-5 control-label bold" for="prefix">
+                                        Net Salary
+                                    </label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control " id="NetSalary" readonly />
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="col-md-1 control-label" for="prefix">
+                                        Comments
+                                    </label>
+                                    <div class="col-md-11">
+                                        <input type="text" class="form-control " id="Comments" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-actions">
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+
+                                <div class="col-md-8">
+                                    <button type="button" class="btn btn-primary green" onclick="Salary.Save()">
+                                        <i class="fa fa-check"></i>&nbsp;
+                                        Save</button>
+                                    <button type="button" class="btn btn-primary " onclick="Salary.SaveAndPrint()">
+                                        <i class="fa fa-print"></i>&nbsp;
+                                        Save & Print</button>
+                                    <button id="btnCancel" type="button" class="btn btn-default" onclick="Salary.ListView()">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @*  <hr />*@
+                @* <table class="table table-striped table-bordered table-hover hide" id="mainTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 8px;" class="no-sort">
+                                <input type="checkbox" class="group-checkable" data-set="#mainTable .checkboxes" />
+                            </th>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Month</th>
+                            <th>Paid At</th>
+                            <th>Salary</th>
+                            <th>Allowances</th>
+                            <th>Overtime</th>
+                            <th>Deductions</th>
+                            <th>Income Tax</th>
+                            <th>Net Salary</th>
+                            <th style="width: 75px;" class="no-sort"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="11">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>*@
+
+                <div class="form-actions hide">
+
+
+                    <label class="col-md-2 control-label" for="prefix"></label>
+                    <div class="col-md-2">
+                        <button class="btn green" onclick="Salary.Process()">
+                            <i class="fa fa-check"></i>
+                            &nbsp;Process Salaries</button>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+<!-- END EXAMPLE TABLE PORTLET-->
+
+<div class="row hide hidden-print" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Salaries Listing
+                </div>
+                <div class="actions">
+                    <button id="btnEdit" type="button" class="btn blue" onclick="Salary.Add()"><i class="fa fa-plus"></i>&nbsp;Add New</button>
+                </div>
+            </div>
+            <div class="portlet-body">
+
+                <div class="form-horizontal" data-save="save">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="prefix">Month:</label>
+                        <div class="col-md-3">
+                            <select class="form-control select2" id="Filter_Month">
+                                <option value="0">All</option>
+                                @for (var i = 1; i <= 12; i++)
+                                {
+                                    if (DateTime.Now.Month == i)
+                                    {
+                                    <option value="@(i)" selected="selected">@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i)</option>
+
+                                    }
+                                    else
+                                    {
+                                    <option value="@(i)">@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i)</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <label class="col-md-2 control-label" for="prefix">Year:</label>
+                        <div class="col-md-3">
+                            <select class="form-control select2" id="Filter_Year">
+                                <option value="0">All</option>
+                                @for (var i = DateTime.Now.AddYears(-2).Year; i <= DateTime.Now.AddYears(1).Year; i++)
+                                {
+                                    if (i == DateTime.Now.Year)
+                                    {
+                                    <option value="@i" selected="selected">@i</option>
+                                    }
+                                    else
+                                    {
+                                    <option value="@i">@i</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-primary" onclick="Salary.Filter()">
+                                <i class="fa fa-filter"></i>
+                                Search</button>
+                        </div>
+                    </div>
+                    <hr />
+
+                </div>
+                <table class="table table-striped table-bordered table-hover" id="mainTable">
+                    <thead>
+                        <tr>
+
+                            <th>Voucher No.</th>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Month</th>
+                            <th>Paid At</th>
+                            <th>Salary</th>
+                            <th>Allowances</th>
+                            <th>Overtime</th>
+                            <th>Deductions</th>
+                            <th>Income Tax</th>
+                            <th>Net Salary</th>
+                            <th style="width: 75px;" class="no-sort"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="12">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+<div class="row visible-print">
+    <div class="col-md-12 col-sm-12">
+        <div class="salary-print">
+            <div class="row invoice-logo">
+                <div class="form-group">
+                    <div class="col-xs-5 ">
+                        <h3>Salary Slip</h3>
+                        <table class="table table-salary">
+                            <tr>
+
+                                <td style="width: 30%;">Code:</td>
+                                <td>
+                                    <label id="lblCode">001-DH</label>
+                                </td>
+                            </tr>
+                            <tr>
+
+                                <td>Name:</td>
+                                <td>
+                                    <label id="lblName">001-DH</label>
+                                </td>
+                            </tr>
+                            <tr>
+
+                                <td>Designation:</td>
+                                <td>
+                                    <label id="lblDesignation">001-DH</label>
+                                </td>
+                            </tr>
+                            <tr>
+
+                                <td>Bank:</td>
+                                <td>
+                                    <label id="lblBankName">001-DH</label>
+                                </td>
+                            </tr>
+                            <tr>
+
+                                <td>Account Title:</td>
+                                <td>
+                                    <label id="lblAccountTitle">001-DH</label>
+                                </td>
+                            </tr>
+                            <tr>
+
+                                <td>Account #:</td>
+                                <td>
+                                    <label id="lblAccountNumber">001-DH</label>
+                                </td>
+                            </tr>
+
+                        </table>
+                        <table id="tblsalarydetail" class="table table-striped table-bordered table-salary">
+                            <thead>
+                                <tr>
+                                    <th>Description
+                                    </th>
+                                    <th>Credit</th>
+                                    <th>Debit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Basic Salary
+                                    </td>
+                                    <td>
+                                        <label id="lblSummaryBasicSalary">
+                                            4124112
+                                        </label>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Absents
+                                    </td>
+                                    <td></td>
+                                    <td>
+                                        <label id="lblAbsentsCost">
+                                            4124112
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Over Time
+                                    </td>
+                                    <td>
+                                        <label id="lblTotalOTCost">
+                                            4124112
+                                        </label>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Allownce
+                                    </td>
+                                    <td>
+                                        <label id="lblTotalAllowances">
+                                            4124112
+                                        </label>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Deductions
+                                    </td>
+                                    <td></td>
+                                    <td>
+                                        <label id="lblSummaryDeductions">
+                                            4124112
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Income Tax
+                                    </td>
+                                    <td></td>
+                                    <td>
+                                        <label id="lblIncomeTax">
+                                            4124112
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Installment
+                                    </td>
+                                    <td></td>
+                                    <td>
+                                        <label id="lblInstallment">
+                                            4124112
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Total
+                                    </td>
+                                    <td>4512,12
+                                    </td>
+                                    <td>41412,22</td>
+                                </tr>
+                                <tr>
+                                    <td>Net Salary
+                                    </td>
+                                    <td colspan="2">
+                                        <label id="lblNetSalary" class="bold">
+                                            4124112
+                                        </label>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                            <tfoot></tfoot>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row hide">
+                <div class="col-xs-6">
+                    <label class="col-xs-3 bold">Signature:</label>
+                    <label class="col-xs-6 underlined">
+                        &nbsp;
+                    </label>
+                </div>
+
+            </div>
+            <div class="row">
+
+                <div class="col-xs-6">
+                    <i>This is computer generated Salary Slip.</i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+@section FooterScript
+{
+    <script type="text/javascript" src="~/Content/metronic/assets/global/plugins/jquery-multi-select/js/jquery.multi-select.js"></script>
+    <script type="text/javascript" src="~/Content/AppJS/Payroll/Salary.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            Salary.init();
+        });
+    </script>
+}

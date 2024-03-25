@@ -1,0 +1,128 @@
+﻿
+
+
+.hidden {
+    display: none;
+}
+
+
+.action i[class*=fa] {
+    line-height: 20px;
+    font-size: 16.25px;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.display-inline {
+    display: inline;
+}
+
+.valign-top {
+    vertical-align: top;
+}
+
+.btn.btn-small[data-wysihtml5-command="insertImage"] {
+    display: none;
+}
+
+input[type='radio'].qa, input[type='checkbox'].qa {
+    margin-top: -6px;
+    margin-right: 5px;
+}
+
+.mon {
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+    padding: 10px;
+    background-color: #6CA86C;
+    margin-right: 5px;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 10px;
+    font-family: Calibri,Verdana;
+}
+
+    .mon:hover {
+        background-color: #8CD18C;
+    }
+
+.timer label {
+    display: inline;
+    font-size: 18px;
+}
+
+.answer-media-upload {
+    margin-top: -10px;
+}
+
+.answer-media-url {
+    display: block;
+    margin-left: 20px;
+    margin-top: -10px;
+    margin-bottom: 5px;
+}
+
+.answer-media-img {
+    display: block;
+    margin: 10px auto;
+}
+
+.answer-media-video {
+    display: block;
+    cursor: pointer;
+    margin: 10px auto;
+}
+
+.row-fluid {
+    margin-bottom: 20px;
+}
+
+#lblVoucherNumber {
+    padding: 8px 32px;
+}
+
+.offscreen {
+    left: -9999px !important;
+    top: -9999px !important;
+    position: absolute;
+}
+
+/*                  Ajax loader                              */
+
+
+.loader {
+    display: none;
+}
+
+body.loading .loader {
+    border: 1px solid #666;
+    background: #FFF;
+    opacity: 0.6;
+    position: fixed;
+    width: 260px;
+    display: block;
+    text-align: center;
+    margin: 1px auto;
+    left: 50%;
+    margin-left: -130px;
+    height: 40px;
+    padding-top: 10px;
+    top: 0;
+    z-index: 5;
+}
+
+.report-container {
+    overflow: auto;
+}
+.hover1 {
+    color:red;
+}
+.span8 > #acimg {
+    height: 232px;
+    width: 100%;
+}

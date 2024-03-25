@@ -1,0 +1,175 @@
+﻿@using AccountEx.BussinessLogic;
+@using AccountEx.Common;
+@{
+    
+    var items = MenuManager.GetMenuItems().ToList();
+    var menus = items.CloneWithJson();
+    menus.ForEach(x =>
+    {
+        x.SubMenues = x.SubMenues.Where(p => p.IsVisible).ToList();
+    });
+    if (!string.IsNullOrWhiteSpace(SettingManager.MenuType) && SettingManager.MenuType == "Vertical")
+    {
+        foreach (var item in menus)
+        {
+    @Html.Partial("_MenuItem", item)
+        }
+    }
+    else
+    {
+        foreach (var item in menus)
+        {
+            ViewData["Level"] = 0;
+            var dic = new ViewDataDictionary();
+            dic.Add("Level", 0);
+    @Html.Partial("Horizontal_MenuItem", item, dic)
+        }
+
+    }
+}
+
+
+@*<li class="active">
+
+    <a href="~/account/dashboard">
+        <i class="icon-home"></i><span class="title">Dashboard</span><span class="selected"></span></a>
+</li>
+<li>
+    <a href="javascript:;">
+        <i class="icon-wrench"></i>
+        <span class="title">Add Account
+        </span>
+        <span class="arrow "></span>
+    </a>
+    <ul class="sub-menu">
+
+        <li><a href="~/account/chartofaccounts">
+            <span class="title">Chart of Account</span></a><//li>
+        <li><a href="~/account/COA">
+            <span class="title">COA</span></a></li>
+          <li>
+            <a href="~/manage/Customers">Customers
+            </a>
+        </li>
+           <li>
+            <a href="~/manage/Transporters">Transporters
+            </a>
+        </li>
+        <li>
+            <a href="~/manage/Vendors">Vendors
+            </a>
+        </li>
+        <li>
+            <a href="~/manage/Banks">Banks
+            </a>
+        </li>
+        <li>
+            <a href="~/manage/Assets">Assets
+            </a>
+        </li>
+    </ul>
+
+</li>
+
+
+<li>
+    <a href="javascript:;">
+        <i class="icon-wrench"></i>
+        <span class="title">Manage
+        </span>
+        <span class="arrow "></span>
+    </a>
+    <ul class="sub-menu">
+        <li>
+            <a href="~/manage/ContainerSizes">Container Sizes
+            </a>
+        </li>
+      
+        <li>
+            <a href="~/manage/Shippers">Shippers</a>
+        </li>
+     
+        <li>
+            <a href="~/manage/ContainerTypes">Container Types
+            </a>
+        </li>
+        <li>
+            <a href="~/manage/CargoTypes">Cargo Types
+            </a>
+        </li>
+        <li>
+            <a href="~/manage/JobTypes">Job Types
+            </a>
+        </li>
+         <li>
+            <a href="~/manage/Packages">Packages
+            </a>
+        </li>
+        <li>
+            <a href="~/manage/JobStatus">Job Status
+            </a>
+        </li>
+        <li>
+            <a href="~/manage/Documents">Documnets
+            </a>
+        </li>
+        <li>
+            <a href="~/manage/Charges">Charges
+            </a>
+        </li>
+        <li>
+            <a href="~/manage/ExpenseTypes">Expense Type
+            </a>
+        </li>
+        <li>
+            <a href="~/manage/ClearingAgents">Clearing Agents
+            </a>
+        </li>
+        <li>
+            <a href="~/manage/ShippingAgents">Shipping Agents
+            </a>
+        </li>
+        <li>
+            <a href="~/manage/Modes">Mode
+            </a>
+        </li>
+        <li>
+            <a href="~/manage/Wessels">Vessel 
+            </a>
+        </li>
+        <li>
+            <a href="~/manage/Airlines">Airlines
+            </a>
+        </li>
+        <li>
+            <a href="~/manage/Forwarders">Forwarders 
+            </a>
+        </li>
+      
+    </ul>
+</li>
+
+<li>
+   
+    <a href="javascript:;">
+        <i class="icon-wrench"></i>
+        <span class="title">Manage Job
+        </span>
+        <span class="arrow "></span>
+    </a>
+    <ul class="sub-menu">
+         <li>
+            <a href="~/Job/Jobs?mode=air&type=import">New Job
+            </a>
+        </li>
+          <li>
+            <a href="~/Job/AllJobs">Job Listing
+            </a>
+        </li>
+      
+    </ul>
+</li>
+
+
+
+*@

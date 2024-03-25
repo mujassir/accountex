@@ -1,0 +1,974 @@
+﻿@section PageStyle
+{
+    <link href="~/Content/deliverychallan.css" rel="stylesheet" />
+}
+@{
+    ViewBag.Title = "Delivery Challan";
+}
+@using AccountEx.Common;
+@{
+    var type = Request.QueryString["type"] + "";
+    var label = "";
+    switch (type.ToLower())
+    {
+        case "goodissue":
+            ViewBag.FormTitle = "GIN";
+            label = "GIN";
+            break;
+        case "goodreceive":
+            ViewBag.FormTitle = "GRN";
+            label = "GRN";
+            break;
+    }
+    ViewBag.Title = ViewBag.FormTitle;
+}
+@section PageTitle
+{
+    <h1 class="font-green-sharp bold hidden-print">Manage @ViewBag.Title</h1>
+}
+@using AccountEx.BussinessLogic;
+@{
+    type = Request["type"].ToLower();
+    var vouchertype = ((VoucherType)Enum.Parse(typeof(VoucherType), type, true));
+    var roleHideRateAmount = true;
+    var error = "";
+    switch (type)
+    {
+        case "goodissue":
+            roleHideRateAmount = ActionManager.HideGINAmount;
+            if (SettingManager.CustomerHeadId == 0 && SettingManager.CashAccountId == 0)
+            {
+                error += "<li>Customer or cash account is missing.</li>";
+
+            }
+            break;
+        case "goodreceive":
+            if (SettingManager.SupplierHeadId == 0)
+            {
+                error += "<li>Supplier account is missing.</li>";
+
+            }
+            break;
+
+    }
+    if (SettingManager.ProductHeadId == 0)
+    {
+        error += "<li>Product Account is Missing.</li>";
+
+    }
+    if (SiteContext.Current.Fiscal == null)
+    {
+        error += "<li>No Fiscal year found.</li>";
+    }
+
+    var settingAllowRate = false;
+    if (vouchertype == VoucherType.GoodIssue && SettingManager.IsGINAllowRate)
+    {
+        settingAllowRate = true;
+    }
+    else if (vouchertype == VoucherType.GoodReceive && SettingManager.IsGRNAllowRate)
+    {
+        settingAllowRate = true;
+    }
+
+}
+@if (!string.IsNullOrWhiteSpace(error))
+{
+    <div class="note note-danger note-bordered">
+        <h4 class="block">Head Account Missing</h4>
+        <div>
+            <i class="fa-lg fa fa-warning"></i>Head Account is missing in the application settings.In order to complete current transaction head accounts must be added in settings.<br />
+            <ul>
+                @Html.Raw(error)
+            </ul>
+            Add missing head accounts in settings and then try again by <a href="@Request.Url"><i class="fa fa-refresh"></i>&nbsp;Relaoding</a>&nbsp;the current page.
+        </div>
+    </div>
+}
+else
+{
+    //hide
+    <div class="row  hidden-print" id="form-info">
+        <div class="col-md-12 col-sm-12">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <div class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-edit"></i>Add/Edit @ViewBag.FormTitle
+                    </div>
+                    <div class="actions hide">
+                        <a href="javascript:;" onclick="DeliveryChallan.LoadVoucher('previous')" class="btn blue">
+                            <i class="fa fa-angle-left"></i>&nbsp;Back
+                        </a>
+                        <a href="javascript:;" onclick="DeliveryChallan.LoadVoucher('next')" class="btn blue">
+                            <i class="fa fa-angle-left"></i>&nbsp;Next
+                        </a>
+
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div id="mainform" class="form-horizontal" data-save="save">
+                        <input type="text" id="Id" class="hide" data-include-in-item="true" data-item-id="DeliveryChallanId" />
+                        <input type="text" id="CreatedDate" class="hide ac-date" data-clear-type="date" />
+                        <input type="text" id="IsDeleted" class="hide" />
+                        <input type="text" id="PreVoucherNumber" class="hide" />
+                        <input type="text" id="TransactionType" class="hide" value="@((byte)vouchertype)" data-clear="false" data-include-in-item="true" />
+                        <div class="form-body">
+                            <div class="hide alert alert-danger container-message">
+                                <i class="close" onclick="$(this).parent().hide();"></i>
+                                <strong></strong>
+                                <div class="form-body message-content"></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">@label No.</label>
+                                <div class="col-md-1 container-voucher">
+                                    <input type="text" class="form-control number input-small" id="VoucherNumber" data-required="required" data-plus-as-tab="false" data-validate="true" data-message="@(label + " is required")" data-include-in-item="true" />
+                                </div>
+                                <label class="col-md-2 control-label" for="prefix">@label Date</label>
+                                <div class="col-md-2">
+                                    <input id="Date" type="text" class="form-control date-picker" data-clear-type='date' data-required="required" data-message="@(label + " date is required")" data-hide-dropdown="true" data-include-in-item="true" data-fiscal-date="true" />
+                                </div>
+                                <label class="col-md-2 control-label" for="prefix">Order No</label>
+                                <div class="col-md-2">
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="input-group input-small">
+                                        <input type="text" class="form-control number" id="OrderNo" data-plus-as-tab="false" data-required="required" data-validate="true" data-message="Order Number is required" data-include-in-item="true">
+                                        <input type="hidden" id="OrderId" />
+                                        <span class="input-group-btn">
+                                            <button id="SearchIconOrder" onclick="DeliveryChallan.GetOrders()" class="btn green search-icon" data-toggle="tooltip" data-original-title="View Orders" type="button">
+                                                <i class="icon-magnifier"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">@label Book No.</label>
+                                <div class="col-md-1">
+                                    <input type="text" id="InvoiceNumber" data-validate="true" data-required="required" data-message="@(label + " Book Number is required")" class="number form-control input-small" data-include-in-item="true" />
+                                </div>
+                                @{
+                                    type = Request.QueryString["type"] + "";
+                                    if (type.ToLower() == "goodreceive")
+                                    {
+                                        <label class="col-md-2 control-label" for="prefix">Bilty Number</label>
+                                        <div class="col-md-2">
+                                            <input type="text" id="GatePassNo" class="number form-control">
+                                        </div>
+                                    }
+
+                                    else
+                                    {
+                                        <label class="col-md-2 control-label" for="prefix">Party PO Number</label>
+                                        <div class="col-md-2">
+                                            <input type="text" id="PartyPONumber" class="number form-control">
+                                        </div>
+                                    }
+                                }
+                                <label class="col-md-2 control-label" for="prefix">Order Date</label>
+                                <div class="col-md-2">
+                                    <input id="OrderDate" type="text" class="form-control date-picker input-small" disabled="disabled" />
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label master-account-label" for="prefix">Vehicle No.</label>
+                                <div class="col-md-1">
+                                    <input type="text" class="form-control input-small" id="VehicleNo" data-validate="true">
+                                </div>
+                                <label class="col-md-2 control-label master-account-label" for="prefix">Driver</label>
+                                <div class="col-md-2">
+                                    <input type="text" class="form-control" id="DriverName" data-validate="true">
+                                </div>
+
+                                @{
+                                    if (type.ToLower() == "goodreceive")
+                                    {
+                                        <label class="col-md-2 control-label" for="prefix">GD No</label>
+                                        <div class="col-md-2">
+                                            <input type="text" class="form-control number input-small" id="OBNo">
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <label class="col-md-2 control-label" for="prefix">Driver Contact</label>
+                                        <div class="col-md-2">
+                                            <input type="text" class="form-control number input-small" id="DriverContact">
+                                        </div>
+                                    }
+                                }
+
+                                @* <label class="col-md-2 control-label" for="prefix">Order Date</label>
+                                    <div class="col-md-2">
+                                        <input id="OrderDate" type="text" class="form-control date-picker input-small" disabled="disabled" />
+                                    </div>*@
+                            </div>
+
+                            @{
+                                type = Request.QueryString["type"] + "";
+                                if (type.ToLower() == "goodissue")
+                                {
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label" for="prefix">Ordered by</label>
+                                        <div class="col-md-2">
+                                            <input id="OrderedBy" type="text" class="form-control input-small" />
+                                        </div>
+                                        <label class="col-md-1 control-label" for="prefix">Contact</label>
+                                        <div class="col-md-2">
+                                            <input id="OrderedByContact" type="text" class="form-control " />
+                                        </div>
+                                        <label class="col-md-2 control-label" for="prefix">Mode Of Transortation</label>
+                                        <div class="col-md-2">
+                                            <input type="text" class="form-control  input-small" id="MOT">
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            <div class="form-group">
+                                @{
+                                    type = Request.QueryString["type"] + "";
+                                    if (type.ToLower() == "goodreceive")
+                                    {
+                                        <label class="col-md-2 control-label master-account-label" for="prefix">Supplier</label>
+                                    }
+                                    else
+                                    {
+                                        <label class="col-md-2 control-label master-account-label" for="prefix">Customer</label>
+                                    }
+                                }
+
+                                <div class="col-md-1">
+                                    <input type="text" class="form-control input-small" id="AccountCode" data-required="required" data-plus-as-tab="false" data-validate="true" data-message="Party Code is required">
+                                    <input type="hidden" id="AccountId" value="0" />
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" id="AccountName" disabled="disabled">
+                                </div>
+
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">Address</label>
+                                <div class="col-md-5">
+                                    <textarea class="form-control" id="PartyAddress" data-plus-as-tab="false"></textarea>
+                                    @*<input class="form-control" type="text" name="text" id="PartyAddress" readonly="readonly" disabled="disabled" style="height: 60px" />*@
+                                </div>
+                            </div>
+                            @{
+                                type = Request.QueryString["type"] + "";
+                                if (type.ToLower() == "goodissue")
+                                {
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label master-account-label" for="prefix">Order Taken By</label>
+                                        <div class="col-md-1">
+                                            <input type="text" class="form-control input-small" id="SalesmanCode" data-required="required" data-plus-as-tab="false" data-validate="true" data-message="Salesman Code is required">
+                                            <input type="hidden" id="SalesmanId" value="0" />
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" id="SalesmanName" disabled="disabled">
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">Remarks</label>
+                                <div class="col-md-5">
+                                    <input class="form-control" type="text" name="text" id="Comments" />
+                                </div>
+                            </div>
+                            <div class="col-md-2"></div>
+                            <div class="form-group" data-save="false">
+                                <div class="col-md-6 saleitem-container">
+                                    <table id="item-container" class="table table-bordered griditem">
+                                        <thead>
+                                            <tr>
+                                                <th>Code</th>
+                                                <th style="width: 30%;">Name</th>
+                                                <th style="width: 15%;">Article</th>
+                                                <th style="width: 20%;" colspan="2" class="align-center">Unit</th>
+                                                @if (settingAllowRate && !roleHideRateAmount)
+                                                {
+                                                    <th class="align-right">Rate</th>
+                                                    <th class="align-right">Amount</th>
+                                                }
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody data-plus-as-tab="false"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            @*<div class="col-md-4"></div>  *@
+                            <div class="form-group">
+
+
+                                <label class="control-label col-md-2">Special Instructions</label>
+                                <div class="col-md-5">
+                                    <textarea id="Instructions" class="form-control" style="height: 80px" data-plus-as-tab="false"></textarea>
+
+                                </div>
+
+
+                                <label class="control-label col-md-3">Qty Total</label>
+                                <div class="col-md-2">
+                                    <input id="QuantityTotal" class="form-control align-right" type="text" disabled="disabled" readonly="readonly" data-required="required" data-message="Please add atleast one item" />
+
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <div class="btn-set pull-left">
+                                <a href="javascript:;" onclick="DeliveryChallan.LoadVoucher('first')" class="btn blue tooltips disabled first" data-original-title="First">
+                                    <i class="fa fa-angle-double-left"></i>
+                                </a>
+                                <a href="javascript:;" onclick="DeliveryChallan.LoadVoucher('previous')" class="btn blue tooltips disabled previous" data-original-title="Previous">
+                                    <i class="fa fa-angle-left"></i>
+                                </a>
+                                <a href="javascript:;" onclick="DeliveryChallan.LoadVoucher('next')" class="btn blue tooltips disabled next" data-original-title="Next">
+                                    <i class="fa fa-angle-right"></i>
+                                </a>
+                                <a href="javascript:;" onclick="DeliveryChallan.LoadVoucher('last')" class="btn blue tooltips disabled last" data-original-title="Last">
+                                    <i class="fa fa-angle-double-right"></i>
+                                </a>
+                            </div>
+                            <div class="btn-set pull-right">
+                                @if (!SiteContext.Current.Fiscal.IsClosed)
+                                {
+                                    <button type="button" class="btn purple-plum" onclick="DeliveryChallan.New()">
+                                        <i class="fa  fa-plus-circle"></i>
+                                        New
+                                    </button>
+                                    <button type="button" class="btn btn-primary green" onclick="DeliveryChallan.Save()">
+                                        <i class="fa fa-check"></i>
+                                        Save
+                                    </button>
+                                        <button type="button" id="btndelete" class="btn red" onclick="DeliveryChallan.Delete()">
+                                            <i class="fa fa-trash-o"></i>
+                                            Delete
+                                        </button>
+                                }
+                                <button type="button" id="btnprint" class="btn yellow" onclick="DeliveryChallan.Print()">
+                                    <i class="fa fa-print"></i>
+
+                                    Print
+                                </button>
+                                <button type="button" class="btn blue" onclick="window.location='@(Url.Content(SettingManager.DashBoardUrl))'">
+                                    <i class="fa  fa-times-circle"></i>
+
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END EXAMPLE TABLE PORTLET-->
+        </div>
+
+    </div>
+    <div class="row hide" id="div-table">
+        <div class="col-md-12 col-sm-12">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <div class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-list"></i>Delivery Challan Listing
+                    </div>
+                    <div class="actions">
+                        <a href="javascript:;" onclick="DeliveryChallan.Add()" class="btn blue">
+                            <i class="fa fa-plus"></i>&nbsp;New
+                        </a>
+
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="hide alert alert-danger container-message">
+                        <i class="close" onclick="$(this).parent().hide();"></i>
+                        <strong></strong>
+                        <div class="form-body message-content"></div>
+                    </div>
+
+                    <table class="table table-striped table-bordered table-hover" id="mainTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 8px;" class="no-sort">
+                                    <input type="checkbox" class="group-checkable" data-set="#mainTable .checkboxes" />
+                                </th>
+                                <th>
+                                    Vou #
+                                </th>
+                                <th>Book #</th>
+                                <th>Party</th>
+                                <th>Total</th>
+                                <th>Date</th>
+                                <th>Remarks</th>
+                                <th style="width: 75px;" class="no-sort"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="8">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- END EXAMPLE TABLE PORTLET-->
+        </div>
+    </div>
+    <div id="Orders-Container" class="modal fade hidden-print bs-modal-lg" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title"><span class='caption-subject font-green-sharp bold'>Search Orders</span> </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table id="OrderTable" style="border: 1px solid #DDD; width: 100%" class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Order Number</th>
+                                        <th>Party Name</th>
+                                        <th>Salesman Name</th>
+                                        <th>Order Date</th>
+                                        <th>Delivery Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn" id="btnOrderClose">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="jsondata" class="hide">
+        <input id="FormSetting" type="text" value="@ViewBag.FormSetting" />
+    </div>
+                                }
+
+<div id="div-report" class="hide">
+    <div class=" row form-group">
+        <div class="col-md-4 col-xs-4 " id="img-container">
+            @* <span style="font-size:8px"><img alt="" src="../Upload/ApplicationLogo/1583086699logomain.png" style="height: 76px;width: 350px;"></span>*@
+            @if (!string.IsNullOrWhiteSpace(SettingManager.ReportHeader))
+            {
+                @(new HtmlString(SettingManager.ReportHeader))
+            }
+        </div>
+        <div class="col-xs-1">
+        </div>
+        <div class="col-xs-7" style="margin-top: 80px;">
+
+            @{
+                type = Request.QueryString["type"] + "";
+                if (type.ToLower() == "goodreceive")
+                {
+
+                    <b style="font-size: 25px; float: right; margin-right: 20px;">GOOD RECEIVED NOTE</b>
+
+                }
+                else
+                {
+                    <b style="font-size: 25px; float: right; margin-right: 60px;">GOOD ISSUE NOTE</b>
+                }
+            }
+        </div>
+    </div>
+    <div class="form-group"></div>
+    <div class="PoHead">
+    </div>
+    <table class="report-summary-infor information full-width" style="margin-top: 30px;">
+        <tbody>
+            <tr>
+                <td style="width: 60%; vertical-align: top;">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td class="PoAddress">@SettingManager.Address </td>
+                            </tr>
+                            <tr>
+                                <td class="PoAddress">@SettingManager.CityState</td>
+                            <tr>
+                                <td class="PoAddress">
+                                    @SettingManager.Phone
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="PoAddress">@SettingManager.Fax</td>
+                            </tr>
+                            <tr>
+                                <td class="PoAddress">@SettingManager.Email</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-11">
+                    </div>
+                </td>
+                <td style="width: 2%; border-top-width: 0;"></td>
+                <td>
+                    <table>
+
+                        <tr>
+                            <td class="font-size"><b>Date :</b></td>
+                            <td>
+                                <span class="lblDate"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            @{
+                                type = Request.QueryString["type"] + "";
+                                if (type.ToLower() == "goodreceive")
+                                {
+                                    <td class="font-size"><b>GRN # :</b></td>
+
+                                }
+                                else
+                                {
+                                    <td class="font-size"><b>GIN # :</b></td>
+                                }
+                            }
+
+                            <td>
+                                <span id="lblVoucherNumber"></span>
+                            </td>
+                        </tr>
+
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <br />
+    <br />
+
+    <div class="col-md-6 col-xs-6">
+        <table>
+            <tr>
+                <td class="font-size"><b>Vendor:</b></td>
+                <td class="address-company-vendor">
+                    <span id="lblAccountName"></span>
+                </td>
+
+            </tr>
+            <tr>
+                <td></td>
+                <td class="address-company-vendor">
+                    <span id="lblPartyAddress"></span>
+                </td>
+
+            </tr>
+        </table>
+    </div>
+
+    <div class="col-md-12 col-xs-12" style="margin-top: 30px;">
+        <table id="report-saleitem" class="table table-bordered full-width">
+            <thead>
+                <tr>
+                    <th>Item #</th>
+                    <th>Article #</th>
+                    <th>Description</th>
+                    <th>Quantity</th>
+                    @*                  <th>Unit Price</th>
+                        <th>Line Total</th>*@
+                </tr>
+            </thead>
+            <tbody></tbody>
+            @*            <tfoot>
+                    <tr>
+                        <td colspan="5" class="align-right" style="border-bottom: 0px;">Total</td>
+                        <td><span id="lblTotalAmount"></span></td>
+                    </tr>
+                </tfoot>*@
+        </table>
+    </div>
+
+    <div class="col-md-6 col-xs-6">
+        <b class="font-size">Special Instructions:</b>
+        <p><span id="lblDescription"></span></p>
+    </div>
+
+    <div class="col-md-6 col-xs-6">
+    </div>
+    <div class="col-md-6 col-xs-6">
+    </div>
+    <div class="row-bottom" style="position: fixed; border-top: 1px #000; width: 420px; right: 0px; bottom: 100px; padding-top: 5px;">
+        <table class="full-width">
+            <tr>
+                <td style="width: 0px;"></td>
+                <td>
+                    <div class="authorized-by"><span>Authorized by</span></div>
+                </td>
+                <td>
+                    <div class="authorized-date"><span>Date</span></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="row-bottom" style="position: fixed; border-top: 1px #000; bottom: 45px; padding-top: 5px; font-size: 10px; padding-left: 190px;">
+        For any discrepancy please contact us at info@ultratecpak.com
+    </div>
+
+</div>
+
+<div id="div-report2" class="visible-print">
+
+    <div class=" row">
+        <div style="float: right; font-size: 10px; margin-right: 30px;">
+            <div class="form-group">
+                <label style="float: right; margin-top: -30px"><span class="lblISODocNum">UI-DN-03 | REV # 00 | ISSUE # 01</span></label>
+                <br />
+                <br />
+                <span style="vertical-align: 3px; margin-right: 10px;">Customer Copy</span><span class="copycheckbox"></span>
+                <br />
+                <span style="vertical-align: 3px; margin-right: 29px;">Office Copy</span><span class="copycheckbox"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class=" row form-group">
+        <div class="col-md-4 col-xs-4 " id="img-container">
+            @* <span style="font-size:8px"><img alt="" src="../Upload/ApplicationLogo/1583086699logomain.png" style="height: 76px;width: 350px;"></span>*@
+            @if (!string.IsNullOrWhiteSpace(SettingManager.ReportHeader))
+            {
+                @(new HtmlString(SettingManager.ReportHeader))
+            }
+        </div>
+        <div class="col-xs-1">
+        </div>
+        <div class="col-xs-7" style="margin-top: 36px;">
+
+            @{
+                type = Request.QueryString["type"] + "";
+                if (type.ToLower() == "goodreceive")
+                {
+
+                    <b style="font-size: 25px; float: right; margin-right: 20px;">GOOD RECEIVED NOTE</b>
+
+                }
+                else
+                {
+                    <b style="font-size: 30px; float: right; margin-right: 140px; color: #1f497d;">Delivery Note</b>
+                }
+            }
+        </div>
+    </div>
+    <div class="form-group"></div>
+    <div class="PoHead">
+    </div>
+    <table class="report-summary-infor information full-width" style="margin-top: 10px;">
+        <tbody>
+            <tr>
+                <td style="width: 60%; vertical-align: top;">
+                    <table class="table-adresss">
+                        <tbody>
+                            <tr>
+                                <td class="PoAddress">@SettingManager.Address </td>
+                            </tr>
+                            <tr>
+                                <td class="PoAddress">@SettingManager.CityState</td>
+                            <tr>
+                                <td class="PoAddress">
+                                    @SettingManager.Phone
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="PoAddress">@SettingManager.Fax</td>
+                            </tr>
+                            <tr>
+                                <td class="PoAddress">@SettingManager.Email</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-11">
+                    </div>
+                </td>
+                <td style="width: 3%; border-top-width: 0;"></td>
+                <td>
+                    <table class="font-size" id="tbl-topRight">
+
+                        <tr>
+                            <td class="font-size"><b>Date</b></td>
+                            <td>
+                                <span class="lblDate"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            @{
+                                type = Request.QueryString["type"] + "";
+                                if (type.ToLower() == "goodreceive")
+                                {
+                                    <td class="font-size"><b>GRN # :</b></td>
+
+                                }
+                                else
+                                {
+                                    <td class="font-size"><b>Delivery Note #</b></td>
+                                }
+                            }
+
+                            <td>
+                                <span id="lblInvoiceNumber"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="font-size"><b>Customer #</b></td>
+                            <td>
+                                <span id="lblAccountCode"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="font-size"><b>PO #</b></td>
+                            <td>
+                                <span id="lblPartyPONumber"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="font-size"><b>PO Date #</b></td>
+                            <td>
+                                <span id="lblOrderDate"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="font-size"><b>Order Taken by</b></td>
+                            <td>
+                                <span id="lblSalesmanName"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="font-size"><b>Contact</b></td>
+                            <td>
+                                <span id="lblSalesmanContact"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="font-size"><b>Ordered By</b></td>
+                            <td>
+                                <span id="lblOrderedBy"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="font-size"><b>Contact</b></td>
+                            <td>
+                                <span id="lblOrderedByContact"></span>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <br />
+    <br />
+
+    <div class="col-md-6 col-xs-11">
+        <table id="tbl-topCenter">
+            <tr>
+                <td class="font-size"><b>Customer</b></td>
+                <td class="address-company-vendor">
+                    <span id="lblAccountName"></span>
+                </td>
+
+            </tr>
+            <tr>
+                <td class="font-size"><span><b>Shipping Details</b></span></td>
+                <td id="tdEmail" class="address-company-vendor">
+                    <span id="lblEmail"></span>
+                </td>
+
+            </tr>
+            <tr>
+                <td></td>
+                <td class="address-company-vendor">
+                    <span id="lblCustomerAddress"></span>
+                </td>
+
+            </tr>
+            <tr>
+                <td></td>
+                <td class="address-company-vendor">
+                    <span id="lblCustomerContactNumber"></span>
+                </td>
+
+            </tr>
+        </table>
+    </div>
+
+    <div class="col-md-12 col-xs-12" style="margin-top: 30px;">
+        <span style="font-size: 11px;">Goods Delivered are as follows </span>
+        <div style="margin-bottom: 5px"></div>
+        <table id="report-saleitem" class="table table-bordered full-width">
+            <thead>
+                <tr>
+                    <th style="width: 8%">Item #</th>
+                    <th style="width: 14%">Article #</th>
+                    <th>Description</th>
+                    <th>Qty</th>
+                    <th>Units</th>
+                    @* <th>Unit Price</th>
+                        <th>Line Total</th>*@
+                </tr>
+            </thead>
+            <tbody></tbody>
+            @*            <tfoot>
+                    <tr>
+                        <td colspan="5" class="align-right" style="border-bottom: 0px;">Total</td>
+                        <td><span id="lblTotalAmount"></span></td>
+                    </tr>
+                </tfoot>*@
+        </table>
+
+        <table id="report-transportInfo" class="table table-bordered full-width">
+            <thead>
+                <tr>
+                    <th style="width: 22%">Mode of Transportation</th>
+                    <th style="width: 30%">Name of the Driver</th>
+                    <th style="width: 20.6%">Contact</th>
+                    <th>Vehicle #</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+    </div>
+
+    <div class="col-md-6 col-xs-6">
+    </div>
+    <div class="col-md-6 col-xs-6">
+        <div class="form-group">
+
+            <span style="font-size: 11px;"><b>To be filled by the customer </b></span>
+            <br />
+            <span style="font-size: 10px;">Goods received in good condition <i>(please tick)</i><span class="checkbox"></span></span>
+
+
+
+
+        </div>
+        <div class="" style="border-top: 1px #000; width: 340px; right: 40px; bottom: 100px; padding-top: 5px;">
+            <table class="full-width">
+                <tr>
+                    <td style="width: 0px;"></td>
+                    <td>
+                        <div class="customerinfo"><span>Name</span></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 0px;"></td>
+                    <td>
+                        <div class="customerinfo"><span>Contact</span></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 0px;"></td>
+                    <td>
+                        <div class="customerinfo"><span>Signature</span></div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        @*        <p><span id="lblDescription"></span></p>*@
+    </div>
+
+    <div class="col-md-6 col-xs-6" style="font-size: 10px">
+        <b>Important Notice </b>
+        <br />
+        1. Any shortage or damage must be notified within 24hrs<br />
+        2. The liability is transferred to the customer at the time of unloading
+        <span style="margin-left: 12px">thus the goods must be checked before unloading and this</span>
+        <span style="margin-left: 12px">document signed</span>
+
+    </div>
+    <div class="col-md-6 col-xs-6">
+    </div>
+    <div class="row-bottom" style="position: fixed; border-top: 1px #000; width: 340px; right: 40px; bottom: 100px; padding-top: 5px; font-size: 10px;">
+        <table class="full-width">
+            <tr>
+                <td style="width: 0px;"></td>
+                <td>
+                    <div class="authorized-by"><span>Authorized by</span></div>
+                </td>
+                <td>
+                    <div class="authorized-date"><span>Date</span></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="row-bottom hide12" style="position: fixed; border-top: 1px #000; bottom: 45px; padding-top: 5px; font-size: 10px; padding-left: 230px; text-align: center">
+        For any discrepancy please contact us at&nbsp;@SettingManager.Email
+        <br />
+        <b>Thank you for your Business</b>
+    </div>
+
+</div>
+
+<script type="text/html" id="template-item-print">
+    <tr>
+        <td>
+            {{ItemName}}
+        </td>
+        <td>
+            {{Quantity}}
+        </td>
+    </tr>
+</script>
+
+<script type="text/html" id="template-item">
+    <tr>
+        <td>
+            <input type="hidden" class="ItemId" id="ItemId" data-db-column="ItemId">
+            <input type="hidden" class="Id" data-db-column="Id">
+            <input type="hidden" class="EntryType" id="EntryType" data-db-column="EntryType" value="@((int)EntryType.Item)">
+            <input type="text" class="Code form-control typeahead input-small ui-autocomplete-input" data-db-column="ItemCode" autocomplete="off">
+        </td>
+        <td>
+            <input type="text" disabled="disabled" class="Name form-control input-medium" data-db-column="ItemName">
+        </td>
+        <td>
+            <input type="text" disabled="disabled" class="Article form-control input-medium" data-db-column="Article">
+        </td>
+        <td class="align-right">
+            <input type="text" class="Quantity form-control input-small num3" data-db-column="Quantity" data-db-type="decimal">
+        </td>
+        <td>
+            <input type="text" class="Unit form-control input-small" data-db-column="Unit" disabled>
+        </td>
+        @if (settingAllowRate && !roleHideRateAmount)
+        {
+            <td class="align-right">
+                <input type="text" class="Rate form-control input-small num3" data-db-column="Rate" data-db-type="decimal">
+            </td>
+            <td class="align-right">
+                <input type="text" class="Amount form-control input-small num3" data-db-column="Amount" data-db-type="decimal" disabled>
+            </td>
+        }
+
+        <td class="td-delete">
+            <span class="action"><i class="fa fa-trash-o" onclick="DeliveryChallan.DeleteRow(this)" data-original-title="Delete Item"></i></span>
+        </td>
+    </tr>
+</script>
+
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Transaction/DeliveryChallan.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            DeliveryChallan.init();
+        });
+    </script>
+}
+

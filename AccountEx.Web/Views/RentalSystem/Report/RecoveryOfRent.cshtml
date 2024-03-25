@@ -1,0 +1,192 @@
+﻿@using AccountEx.BussinessLogic;
+@using AccountEx.Common;
+@{
+    Layout = "~/Views/Reports/_Layout.cshtml";
+    ViewBag.Title = "Recovery Of Rent";
+}
+@{
+    var monthslist = new List<IdName>();
+    var months = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.MonthNames;
+    for (int i = 0; i < months.Length; i++)
+    {
+        if (i <= 11)
+        {
+            monthslist.Add(new IdName() { Name = months[i], Id = i + 1 });
+        }
+
+    }
+    ViewBag.Title = "Rent Recovery";
+    IList<int> years = Enumerable.Range(DateTime.Now.Year - 2, 10).ToList();
+}
+
+
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">
+        Rent Recovery
+        <div id="lblReportDate" class="pull-right small visible-print report-selected-filter">
+            <p><b>Priod: <span id="lblperiod"></span></b></p>
+            <p><b>Block: <span id="lblblock"></span></b></p>
+            <p><b>Printed Date: @DateTime.Now.ToString("dd-MMM-yy")</b></p>
+            <p><b>Printed by: @SiteContext.Current.User.Username</b></p>
+        </div>
+
+    </h1>
+}
+<!-- END PAGE HEADER-->
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="row hidden-print" id="form-info">
+            <div class="col-md-12 col-sm-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet light">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-filter"></i>Report Filters
+                        </div>
+
+
+                    </div>
+                    <div class="portlet-body form">
+
+                        <div class="form-horizontal" data-save="Save">
+                            <input type="text" id="Id" class="hide" />
+                            <div class="form-body">
+                                @*   <div class="form-group  row-account">
+                                        <label class="col-md-2 control-label" for="prefix">Tenant</label>
+                                        <div class="col-md-8">
+                                            <select id="TenantAccountId" class="form-control select2" data-required="required" data-message="Tenant is required.">
+                                            </select>
+                                        </div>
+                                    </div>*@
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label" for="prefix">Month</label>
+                                    <div class="col-md-2">
+                                        <select id="Month" class="form-control select2" data-required="required" data-message="Month is required.">
+                                            <option></option>
+                                            @foreach (var item in monthslist)
+                                            {
+                                                <option value="@item.Id">@item.Name</option>
+                                            }
+                                        </select>
+
+                                    </div>
+                                    <label class="col-md-1 control-label" for="prefix">Year</label>
+                                    <div class="col-md-2">
+                                        <select id="Year" class="form-control select2" data-required="required" data-message="year is required.">
+                                            <option></option>
+                                            @foreach (var year in years)
+                                            {
+                                                <option>@year</option>
+                                            }
+                                        </select>
+
+                                    </div>
+                                    <label class="col-md-1 control-label" for="prefix">Block</label>
+                                    <div class="col-md-2">
+                                        <select id="BlockId" class="form-control select2">
+                                            <option></option>
+                                            @foreach (var item in (List<IdName>)ViewBag.Blocks)
+                                            {
+                                                <option value="@item.Id" data-BlockName="@item.Name">@item.Name</option>
+                                            }
+                                        </select>
+
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+                            <div class="form-actions">
+                                <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+                                <div class="col-md-8">
+                                    <button type="button" id="btnShowReport" class="btn btn-primary">Show Report</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="portlet light">
+            <div class="portlet-title hidden-print">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Report Data
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                    <a href="javascript:;" class="remove hide"></a>
+                </div>
+                <div class="actions">
+                    <button class="btn blue hidden-print" onclick="window.print();"><i class="fa fa-print"></i>&nbsp;Print </button>
+                </div>
+            </div>
+            <div class="portlet-body">
+
+                <div class="table-responsive">
+
+                    <table class="table table-bordered report-table" id="mainTable">
+                        <thead>
+                            <tr>
+                                <th style="width:16%" colspan="3"></th>
+                                <th colspan="4" style="text-align:center;">Arrears</th>
+                                <th colspan="4" style="text-align:center;">Current</th>
+                                <th colspan="3" style="text-align:center;">Total</th>
+                                <th colspan="4" style="text-align:center;">Received arrears</th>
+                                <th colspan="4" style="text-align:center;">Received Current</th>
+                                <th colspan="4" style="text-align:center;">Balance</th>
+
+                            </tr>
+                            <tr>
+                                <th>Sr.#.</th>
+                                <th style="width:5%">Shop No.</th>
+                                <th style="width:10%">Tenant</th>
+                                <th>Rent</th>
+                                <th>UC </th>
+                                <th>Elec</th>
+                                <th>Sur</th>
+                                <th>Rent</th>
+                                <th>UC </th>
+                                <th>Elec</th>
+                                <th>Sur</th>
+                                <th>Rent</th>
+                                <th>UC </th>
+                                <th>Elec</th>
+                                <th>Rent</th>
+                                <th>UC </th>
+                                <th>Elec</th>
+                                <th>Sur</th>
+                                <th>Rent</th>
+                                <th>UC </th>
+                                <th>Elec</th>
+                                <th>Surcharge</th>
+                                <th>Rent</th>
+                                <th>UC </th>
+                                <th>Elec</th>
+                                <th>Sur</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- END EXAMPLE TABLE PORTLET-->
+        </div>
+    </div>
+    @section FooterScript
+{
+        <script src="~/Content/AppJS/RentalSystem/Report/RecoveryOfRent.js"></script>
+
+
+        <script>
+            jQuery(document).ready(function () {
+
+                RecoveryOfRent.init();
+            });
+        </script>
+    }
+

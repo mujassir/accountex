@@ -1,0 +1,559 @@
+﻿@using AccountEx.Common;
+@using AccountEx.BussinessLogic;
+
+@{
+    ViewBag.Title = "IGRN";
+}
+@section PageTitle
+{
+
+
+    <h1 class="font-green-sharp bold hidden-print">Manage @ViewBag.Title</h1>
+}
+
+<div class="row hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-edit"></i>Add/Edit @ViewBag.FormTitle
+                </div>
+                <div class="actions hide">
+                    <a href="javascript:;" onclick="IGRN.LoadVoucher('previous')" class="btn blue">
+                        <i class="fa fa-angle-left"></i>&nbsp;Back
+                    </a>
+                    <a href="javascript:;" onclick="IGRN.LoadVoucher('next')" class="btn blue">
+                        <i class="fa fa-angle-left"></i>&nbsp;Next
+                    </a>
+
+                </div>
+            </div>
+            <div class="portlet-body form">
+
+                <div id="mainform" class="form-horizontal" data-save="save">
+                    <div class="form-body">
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">PI #</label>
+                            <div class="col-md-1 container-voucher">
+                                <input type="text" class="form-control input-small" id="PINumber" data-include-in-item="true">
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">PI Date</label>
+                            <div class="col-md-1">
+
+                                <input id="PIDate" type="text" class="form-control date-picker" data-clear-type='date' data-validate="true" data-required="required" data-message="Date is required" data-plus-as-tab="false" data-include-in-item="true">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label master-account-label" for="prefix">Customers</label>
+                            <div class="col-md-4">
+                                <select class="form-control select2" id="CustomerId" data-required="false" data-message="Customer is required" placeholder="select customer" data-include-in-item="true">
+                                    <option></option>
+                                    @foreach (var p in (List<IdName>)ViewBag.Customers)
+                                    {
+                                        <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                    }
+
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Remarks</label>
+                            <div class="col-md-4">
+                                <input class="form-control" type="text" name="text" id="Remarks" data-include-in-item="true" />
+                            </div>
+                        </div>
+                        <div class="row" data-save="false">
+                            <div class="col-md-2"></div>
+
+                            <div class="col-md-10 saleitem-container scroller12" data-always-visible="1" data-rail-visible1="1">
+                                <div class="portlet">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <i class="fa fa-list"></i>Item List
+                                        </div>
+                                    </div>
+                                </div>
+                                <table id="item-container" class="table table-bordered griditem">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:5%">SR #</th>
+                                            <th style="width:20%">Item</th>
+                                            <th style="width:5%">Currency</th>
+                                            <th style="width:5%">Ex Rate</th>
+                                            <th style="width:5%">LC Rate</th>
+                                            <th style="width:5%">Qty</th>
+                                            <th style="width:5%">Total</th>
+                                            <th style="width:7%">Sale Type</th>
+                                            <th style="width:10%">Sale Person</th>
+                                            <th style="width:10%">Project</th>
+                                            <th style="width:5%">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody data-plus-as-tab="false"></tbody>
+                                    <tfoot data-plus-as-tab="false">
+                                        <tr class="bold well">
+                                            <td colspan="4" class="bold align-right">Total &nbsp;</td>
+
+                                            <td class="bold well">
+                                                <input type="text" class="Quantity form-control input-small" disabled="disabled" readonly="readonly">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="Amount form-control input-small" disabled="disabled" readonly="readonly">
+                                            </td>
+                                            <td colspan="5"></td>
+
+
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                                <a id="btn-add-item" class="btn btn-xs green top-minus21Margin" href="javascript:;">Add Row</a>
+                            </div>
+
+                        </div>
+                        <div class="form-group ">
+                            <div class="col-md-4">
+
+
+                            </div>
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4 align-right">
+                                <div class="row">
+                                </div>
+
+                                <div class="row">
+                                    <label class="control-label col-md-7">Total Value</label>
+                                    <div class="col-md-5">
+                                        <input id="GrossTotal" class="form-control" type="text" disabled="disabled" readonly="readonly" data-required="FALSE" data-message="Please add atleast one item" />
+
+                                    </div>
+                                </div>
+                                <div class="row hide">
+                                    <label class="control-label col-md-7">Tax %</label>
+                                    <div class="col-md-5">
+                                        <input id="Tax" class="form-control num2" type="text" value="0" />
+
+
+                                    </div>
+                                </div>
+
+                                <div class="row hide">
+                                    <label class="control-label col-md-7">Grand Total</label>
+                                    <div class="col-md-5">
+                                        <input id="NetTotal" class="form-control" disabled="disabled" readonly="readonly" type="text" value="" />
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <div class="btn-set pull-right">
+                            @if (!SiteContext.Current.Fiscal.IsClosed)
+                            {
+                                <button type="button" class="btn purple-plum" onclick="IGRN.New()">
+                                    <i class="fa  fa-plus-circle"></i>
+                                    New
+                                </button>
+                                <button type="button" class="btn btn-primary green" onclick="IGRN.Save()">
+                                    <i class="fa fa-check"></i>
+                                    Save
+                                </button>
+                                @*<button id="btndelete" type="button" class="btn red" onclick="IGRN.Delete()">
+                                        <i class="fa fa-trash-o"></i>
+                                        Delete
+                                    </button>*@
+                            }
+                            <div class='btn-group'>
+                                <button id="btnprint" type='button' class='btn yellow dropdown-toggle' data-toggle='dropdown' data-hover='dropdown12' data-delay='1000' data-close-others='true' aria-expanded='false'>Print <i class='fa fa-angle-up'></i></button>
+                                <ul class='dropdown-menu bottom-up' role='menu'>
+                                    <li><a href='javascript:IGRN.Print(true)'>With Aging</a></li>
+                                    <li><a href='javascript:IGRN.Print(false)'>Without Aging</a></li>
+
+                                </ul>
+                            </div>
+                            <button type="button" class="btn blue" onclick="window.location='@(Url.Content(SettingManager.DashBoardUrl))'">
+                                <i class="fa  fa-times-circle"></i>
+
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+
+<div id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Record Listing
+                </div>
+                <div class="actions">
+                    @*<a href="javascript:;" onclick="IGRN.Add()" class="btn blue">
+                            <i class="fa fa-plus"></i>&nbsp;New
+                        </a>*@
+                    <a href="javascript:;" onclick="IGRN.OpenImportModal()" class="btn green-dark">
+                        <i class="fa fa-upload"></i>&nbsp;Import
+                    </a>
+                    @{ Html.RenderPartial("_Export_Button_DataTable");  }
+
+                </div>
+            </div>
+            <div class="form-horizontal" data-save='save' id="filters-container">
+                <div class="col-md-12 col-sm-12">
+                    <div class="portlet light">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <i class="fa fa-edit"></i>Filter
+                            </div>
+                            <div class="actions hide">
+                                <a id="actionBackList" href="javascript:;" class="btn blue ">
+                                    <i class="fa fa-angle-left"></i>&nbsp;Back to list
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="form-body" data-querystring="true">
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-md-1 control-label" for="prefix">From</label>
+                                        <div class="col-md-1">
+                                            <input id="FromDate" name="FromDate" type="text" class="form-control ac-date date-picker" data-custum-disabled='false' />
+                                        </div>
+                                        <label class="col-md-1 control-label" for="prefix">To</label>
+                                        <div class="col-md-1">
+                                            <input id="ToDate" name="ToDate" type="text" class="form-control ac-date date-picker" data-custum-disabled='false' />
+
+                                        </div>
+                                        <label class="col-md-1 control-label" for="prefix">Invoice #</label>
+                                        <div class="col-md-1 container-voucher">
+                                            <input type="text" class="form-control number input-small" id="FilterInvoiceNumber" data-custum-disabled='false'>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+
+                                        <label class="col-md-1 control-label" for="prefix">Customer</label>
+                                        <div class="col-md-6">
+                                            <select id="FilterCustomer" class="form-control Filterselect2" placeholder="All" data-custum-disabled='false'>
+                                                <option></option>
+                                                @foreach (var p in (List<IdName>)ViewBag.Customers)
+                                                {
+                                                    <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                                }
+                                            </select>
+                                        </div>
+
+
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-1 control-label" for="prefix">Product</label>
+                                        <div class="col-md-3">
+                                            <select id="FilterProduct" class="form-control select2" placeholder="All" data-custum-disabled='false'>
+                                                <option></option>
+                                                @foreach (var p in (List<IdName>)ViewBag.Products)
+                                                {
+                                                    <option value="@p.Id">@p.Name</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <label class="col-md-1 control-label" for="prefix">Region</label>
+                                        <div class="col-md-2">
+                                            <select id="FilterRegion" class="form-control select2" placeholder="All" data-custum-disabled='false'>
+                                                <option></option>
+                                                @foreach (var p in (List<IdName>)ViewBag.Regions)
+                                                {
+                                                    <option value="@p.Id">@p.Name</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button id="btnSearch" type="button" class="btn btn-primary btnSearch"><i class="fa fa-filter"></i>&nbsp;Search</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @if (SiteContext.Current.UserTypeId != CRMUserType.SalesExecutive)
+                                        {
+                                            <label class="col-md-1 control-label master-account-label" for="prefix">Sale Person</label>
+                                            <div class="col-md-3">
+                                                <select id="FilterSalePersonId" class="form-control select2" placeholder="Select sale person" data-clear='true' data-custum-disabled='false'>
+                                                    <option></option>
+                                                    @foreach (var p in (List<IdName>)ViewBag.SalePersons)
+                                                    {
+                                                        <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                                    }
+                                                </select>
+
+
+                                            </div>
+                                        }
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover" id="mainTable" data-export='true'>
+                    <thead>
+                        <tr>
+                            <th>PI No</th>
+                            <th>PI Date</th>
+                            <th>Customer</th>
+                            <th>Product</th>
+                            <th>Qty</th>
+                            <th>Cur</th>
+                            <th>Exc Rate</th>
+                            <th>LC Rate</th>
+                            <th>LC Value(F)</th>
+                            <th>LC Value</th>
+                            <th>Sale Type</th>
+                            <th>Project</th>
+                            <th>Sale Person</th>
+                            <th style="width: 150px;" class="no-sort"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="16">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+<div id="modal-import-conatiner">
+    <div id="modal-import-invoices" class="modal fade hidden-print bs-modal-lg full-screen">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span class='caption-subject font-green-sharp bold'>Import IGRN</span>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-horizontal" data-save="save">
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="prefix">
+                                    Choose delimited text file to parse.
+                                </label>
+
+                                <div class="col-md-3">
+                                    <input type="file" id="csv-file" class="form-control">
+                                </div>
+                                <div class="col-md-3">
+                                    <button id="btnparse" type="button" class="btn" aria-hidden="true">
+                                        <span data-localize="Buttons.Save">Upload</span>&nbsp;<i class="fa fa-upload"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="portlet light data-container hide">
+                                <div class="portlet-title hidden-print">
+                                    <div class="caption">
+                                        <i class="fa fa-list"></i>Invoice&nbsp;<span id="total-import-invoice-count" class="badge badge-info"></span>
+                                    </div>
+                                    <div class="actions">
+                                        <a id="btn-import-error" href="javascript:;" onclick="IGRN.ShowImportError()" class="btn red hide">
+                                            <i class="fa fa-times-circle"></i>&nbsp;<span>Error</span>
+                                        </a>
+                                        <a href="javascript:;" onclick="IGRN.StartImport(false)" class="btn green">
+                                            <i class="fa fa-upload"></i>&nbsp;Start Import
+                                        </a>
+                                        <a href="javascript:;" onclick="IGRN.StartImport(true)" class="btn blue">
+                                            <i class="fa fa-upload"></i>&nbsp;Validate Before Import
+                                        </a>
+
+
+                                    </div>
+
+                                </div>
+                                <div class="portlet-body import-data-container panel panel-default">
+                                    <div class="table-responsive panel-body">
+                                        <table id="tbl-data-import" class="table table-striped table-bordered table-hover report-table">
+                                            <thead>
+                                            </thead>
+                                            <tbody id="importtbody"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix"></label>
+                            <button type="button" data-dismiss="modal" class="btn btnclose-model">Close</button>
+                        </div>
+                    </div>
+
+
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-import-error-container">
+    <div id="modal-import-invoices-error" class="modal fade hidden-print bs-modal-lg full-screen" tabindex="-1" data-backdrop="static" data-keyboard="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span class='caption-subject font-green-sharp bold'>Import Error &nbsp;<button type="button" data-dismiss="modal" class="btn btnclose-model">Close</button></span>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-horizontal" data-save="save">
+
+                            <div class="portlet light">
+
+                                <div class="portlet-body import-error-container panel panel-default">
+                                    <div class="table-responsive panel-body">
+                                        <table id="tbl-error-import" class="table table-striped table-bordered table-hover report-table">
+                                            <thead>
+                                            </thead>
+                                            <tbody id="importerrortbody"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix"></label>
+
+                        </div>
+                    </div>
+
+
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/html" id="template-item">
+    <tr>
+
+        <td>
+
+
+            <input type="hidden" class="Id" data-db-column="Id">
+            <input type="hidden" class="Date" data-db-column="Date" data-db-type="date">
+            <input type="hidden" class="SalePersonId" data-db-column="SalePersonId">
+            <input type="hidden" class="CategoryId" data-db-column="CategoryId">
+            <input type="hidden" class="DivisionId" data-db-column="DivisionId">
+            <input type="hidden" class="ProjectId" data-db-column="ProjectId">
+            <input type="hidden" class="ProductId" data-db-column="ProductId">
+            <input type="text" class="SRNo form-control input-xsmall number" data-db-column="SRNo">
+        </td>
+        <td>
+            <input type="text" class="ItemName form-control input-medium" data-db-column="ItemName">
+        </td>
+        <td>
+            <select class="form-control select2 CurrencyId" placeholder="select currency" data-db-column="CurrencyId">
+                <option></option>
+                @foreach (var p in (List<IdName>)ViewBag.Currencies)
+                {
+                    <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                }
+
+            </select>
+
+        </td>
+        <td>
+            <input type="text" class="ExcRate form-control input-small num3" data-db-column="ExcRate" data-db-type="decimal" disabled="disabled" readonly="readonly">
+        </td>
+        <td>
+            <input type="text" class="Price form-control input-small num3" data-db-column="Price" data-db-type="decimal">
+        </td>
+        <td>
+            <input type="text" class="Quantity form-control input-small num3" data-db-column="Quantity" data-db-type="decimal">
+        </td>
+
+        <td>
+            <input type="text" class="NetTotal form-control input-small num3" data-db-column="NetTotal" data-db-type="int" disabled="disabled" readonly="readonly">
+        </td>
+        <td>
+            <select class="form-control select2 SaleType" placeholder="select currency" data-db-column="SaleType" disabled="disabled" readonly="readonly">
+                <option value="@((byte)CRMSaleType.Reguler)">Regular Sales</option>
+                <option value="@((byte)CRMSaleType.Project)">Project Sales</option>
+            </select>
+        </td>
+        <td>
+            <input type="text" class="form-control SalePerson" data-plus-as-tab="false" data-db-column="SalePerson" disabled="disabled" readonly="readonly">
+
+        </td>
+        <td>
+            <input type="text" class="form-control Project" data-plus-as-tab="false" data-db-column="Project" disabled="disabled" readonly="readonly">
+
+        </td>
+        <td class="td-delete">
+            <span class="action"><i class="fa fa-trash-o action-delete" data-original-title="Delete Item"></i></span>
+        </td>
+    </tr>
+</script>
+
+@section FooterScript
+{
+    <script src="~/Content/metronic/assets/global/plugins/PapaParse-4.6.0/papaparse.min.js"></script>
+    <script src="~/Content/AppJS/CRM/IGRN.js"></script>
+    <style type="text/css">
+        #modal-import-conatiner .modal-dialog {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #modal-import-conatiner .modal-content {
+            height: auto;
+            min-height: 100%;
+            border-radius: 0;
+        }
+
+        .td-status i {
+            font-size: 20px;
+        }
+    </style>
+    <script>
+        jQuery(document).ready(function () {
+            IGRN.init();
+        });
+    </script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+}
+

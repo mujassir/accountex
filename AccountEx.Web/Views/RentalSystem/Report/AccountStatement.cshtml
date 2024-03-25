@@ -1,0 +1,137 @@
+﻿@{
+    Layout = "~/Views/Reports/_Layout.cshtml";
+    ViewBag.Title = "Account Statement";   
+}
+@using AccountEx.Common;
+@using AccountEx.BussinessLogic;
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">Account Statement (<span id="lbltype">Security Money</span> )</h1>
+}
+<!-- END PAGE HEADER-->
+
+<style type="text/css">
+
+</style>
+<div class="row hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-filter"></i>Report Filters
+                </div>
+
+
+            </div>
+            <div class="portlet-body form">
+
+                <div class="form-horizontal" data-save="Save">
+                    <input type="text" id="Id" class="hide" />
+                    <div class="form-body">
+                        <div class="form-group  row-account">
+                            <label class="col-md-2 control-label" for="prefix">Tenant</label>
+                            <div class="col-md-6">
+                                <select id="TenantAccountId" class="form-control select2" data-required="required" data-message="Tenant is required.">
+                                </select>
+                            </div>
+
+                        </div>
+                        <div class="form-group  row-account">
+                            <label class="col-md-2 control-label" for="prefix">Type</label>
+                            <div class="col-md-6">
+                                <select id="TransactionType" class="form-control select2" data-required="required" data-message="Type is required.">
+                                    <option value="@((byte)VoucherType.SecurityMoney)">Security Money</option>
+                                    <option value="@((byte)VoucherType.PossessionCharges)">Possession Charges</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="form-actions">
+                        <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+                        <div class="col-md-8">
+                            <button type="button" id="btnShowReport" class="btn btn-primary">Show Report</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title hidden-print">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Report Data
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                    <a href="javascript:;" class="remove hide"></a>
+                </div>
+                <div class="actions">
+                    <button class="btn blue hidden-print" onclick="window.print();"><i class="fa fa-print"></i>&nbsp;Print </button>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="row tenant-info hide">
+                    <div class="col-md-12 align-center">
+                        <h4><b>ACCOUNT STATEMENT (Security Money)</b></h4>
+                        <h4>@SettingManager.ApplicationPrintTitle</h4>
+
+                    </div>
+                    <div class="clear"></div>
+                    <div class="col-md-6 col-xs-6 pull-left">
+                        <h4><b>Tenant Info:</b></h4>
+                        <h5><b><span id="lblTenantName"></span></b></h5>
+                        <h5><b><span id="lblContactNumber"></span></b></h5>
+
+                        <h5><b>Shop No.<span id="lblShopNo"></span>&nbsp;&nbsp;&nbsp;Block:&nbsp;<span id="lblBlock"></span>&nbsp;</b></h5>
+                        <h5><b>Security Money:</b></h5>
+                    </div>
+                    <div class="col-md-3 col-xs-4 pull-right">
+                        @* <h5><b>Account No: <span id="lblShopCode"></span></b></h5>
+                        <h5><b>From Date: @DateTime.Now.ToString("dd-MMM-yy")</b></h5>
+                        <h5><b>Due Date: @DateTime.Now.ToString("dd-MMM-yy")</b></h5>
+                        <h5><b>Printed Date: @DateTime.Now.ToString("dd-MMM-yy")</b></h5>
+                        <h5><b>Printed by: @SiteContext.Current.User.Username</b></h5>*@
+
+                    </div>
+
+                </div>
+                <table class="table table-bordered report-table" id="mainTable">
+                    <thead>
+                        <tr>
+                            <th>No. Instalment</th>
+                            <th>Due Amount</th>
+                            <th>Due Date</th>
+                            <th>Paid On</th>
+                            <th>RV-No </th>
+                            <th>Bill No.</th>
+                            <th>Out Standing</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+@section FooterScript
+{
+
+    <script src="~/Content/AppJS/RentalSystem/Report/AccountStatements.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            AccountStatement.init();
+        });
+    </script>
+}

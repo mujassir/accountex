@@ -1,0 +1,465 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{103F5C0F-7829-427E-9181-408FA16A57CF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AccountEx.CodeFirst</RootNamespace>
+    <AssemblyName>AccountEx.CodeFirst</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.BulkInsert, Version=6.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.BulkInsert-ef6-ext.6.0.3.1\lib\net45\EntityFramework.BulkInsert.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.MappingAPI, Version=6.1.0.10, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.MappingAPI.6.1.0.10\lib\net45\EntityFramework.MappingAPI.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Context\AccountExContext-Config.cs" />
+    <Compile Include="Context\AccountExContext-Views.cs" />
+    <Compile Include="Context\AccountExContext-Lab.cs" />
+    <Compile Include="Context\AccountExContext-Nexus.cs" />
+    <Compile Include="Context\AccountExContext-CRM.cs" />
+    <Compile Include="Context\AccountExContext.cs" />
+    <Compile Include="Mapping\Copy of ServiceItemMap.cs" />
+    <Compile Include="Models\COA\Block.cs" />
+    <Compile Include="Models\COA\Brand.cs" />
+    <Compile Include="Models\COA\Challan.cs" />
+    <Compile Include="Models\COA\ChallanItem.cs" />
+    <Compile Include="Models\COA\vw_ProductGroup.cs" />
+    <Compile Include="Models\COA\vw_PharmacyProduct.cs" />
+    <Compile Include="Models\COA\Ship.cs" />
+    <Compile Include="Models\COA\VehicleFollowUp.cs" />
+    <Compile Include="Models\COA\vw_VehicleSendRequests.cs" />
+    <Compile Include="Models\COA\VehicleBranch.cs" />
+    <Compile Include="Models\Config\TemplateTag.cs" />
+    <Compile Include="Models\Config\Template.cs" />
+    <Compile Include="Models\Config\ContractType.cs" />
+    <Compile Include="Models\Config\DeliveryTerm.cs" />
+    <Compile Include="Models\Config\Vessel.cs" />
+    <Compile Include="Models\Config\MonthName.cs" />
+    <Compile Include="Models\Config\PortOfDischarge.cs" />
+    <Compile Include="Models\Config\Destination.cs" />
+    <Compile Include="Models\Config\PortofLoading.cs" />
+    <Compile Include="Models\Config\vw_CurrencyRates.cs" />
+    <Compile Include="Models\Config\CurrencyRate.cs" />
+    <Compile Include="Models\Config\CostCenter.cs" />
+    <Compile Include="Models\Config\Document.cs" />
+    <Compile Include="Models\CRM\CalendarEvent.cs" />
+    <Compile Include="Models\CRM\Class1.cs" />
+    <Compile Include="Models\CRM\CRMImportGRN.cs" />
+    <Compile Include="Models\CRM\CRMOwnershipTransfer.cs" />
+    <Compile Include="Models\CRM\CRMCaseType.cs" />
+    <Compile Include="Models\CRM\ComplaintStatus.cs" />
+    <Compile Include="Models\CRM\ComplaintTestType.cs" />
+    <Compile Include="Models\CRM\ComplaintLabTest.cs" />
+    <Compile Include="Models\CRM\CRMComplaint.cs" />
+    <Compile Include="Models\CRM\CRMComplaintFile.cs" />
+    <Compile Include="Models\CRM\Priority.cs" />
+    <Compile Include="Models\CRM\CRMCustomerSalePerson.cs" />
+    <Compile Include="Models\CRM\CRMSaleForecast.cs" />
+    <Compile Include="Models\CRM\ClusterType.cs" />
+    <Compile Include="Models\CRM\ProductSecCategory.cs" />
+    <Compile Include="Models\CRM\vw_CRMCompliants.cs" />
+    <Compile Include="Models\CRM\vw_CRMCalendarEvents.cs" />
+    <Compile Include="Models\CRM\vw_CRMImportIGRN.cs" />
+    <Compile Include="Models\CRM\vw_CRMSaleInvoiceItems.cs" />
+    <Compile Include="Models\CRM\vw_CRMSaleInvoices.cs" />
+    <Compile Include="Models\CRM\vw_CRMImportRequisition.cs" />
+    <Compile Include="Models\CRM\CRMImportRequisition.cs" />
+    <Compile Include="Models\CRM\CRMSaleInvoice.cs" />
+    <Compile Include="Models\CRM\CRMSaleInvoiceItem.cs" />
+    <Compile Include="Models\CRM\CRMVendor.cs" />
+    <Compile Include="Models\CRM\CRMCustomer.cs" />
+    <Compile Include="Models\CRM\Contact.cs" />
+    <Compile Include="Models\CRM\ContactGroup.cs" />
+    <Compile Include="Models\CRM\CRMProduct.cs" />
+    <Compile Include="Models\CRM\CRMProject.cs" />
+    <Compile Include="Models\CRM\EventMode.cs" />
+    <Compile Include="Models\CRM\EventStatus.cs" />
+    <Compile Include="Models\CRM\CRMImportRequisitionItem.cs" />
+    <Compile Include="Models\CRM\Province.cs" />
+    <Compile Include="Models\CRM\SaleType.cs" />
+    <Compile Include="Models\CRM\UOM.cs" />
+    <Compile Include="Models\CRM\Division.cs" />
+    <Compile Include="Models\CRM\Domain.cs" />
+    <Compile Include="Models\CRM\PMC.cs" />
+    <Compile Include="Models\CRM\PMCItem.cs" />
+    <Compile Include="Models\CRM\ProductCategory.cs" />
+    <Compile Include="Models\CRM\ProductLostReason.cs" />
+    <Compile Include="Models\CRM\ProductSubGroup.cs" />
+    <Compile Include="Models\CRM\ProductStatus.cs" />
+    <Compile Include="Models\CRM\Region.cs" />
+    <Compile Include="Models\CRM\UserType.cs" />
+    <Compile Include="Models\CRM\vw_CRMCustomers.cs" />
+    <Compile Include="Models\CRM\vw_CRMPMCS.cs" />
+    <Compile Include="Models\CRM\vw_CRMPMCItems.cs" />
+    <Compile Include="Models\CRM\vw_CRMPRoducts.cs" />
+    <Compile Include="Models\CRM\vw_CRMProjects.cs" />
+    <Compile Include="Models\CRM\vw_ProductSubGroups.cs" />
+    <Compile Include="Models\CRM\vw_Divisions.cs" />
+    <Compile Include="Models\CRM\vw_CRMUsers.cs" />
+    <Compile Include="Models\Dashboard\CompanyDashboard.cs" />
+    <Compile Include="Models\Integrations\UserToken.cs" />
+    <Compile Include="Models\Lab\Class1.cs" />
+    <Compile Include="Models\Lab\Parameter.cs" />
+    <Compile Include="Models\Lab\Test.cs" />
+    <Compile Include="Models\Lab\TestCategory.cs" />
+    <Compile Include="Models\Lab\TestParameter.cs" />
+    <Compile Include="Models\Lab\vw_Investigations.cs" />
+    <Compile Include="Models\Nexus\Class1.cs" />
+    <Compile Include="Models\Nexus\DepartmentRateList.cs" />
+    <Compile Include="Models\Nexus\DepartmentRateListItem.cs" />
+    <Compile Include="Models\Nexus\Nexus_PostedCases.cs" />
+    <Compile Include="Models\Nexus\Nexus_PostedCasesItems.cs" />
+    <Compile Include="Models\Nexus\Nexus_Vw_Cases.cs" />
+    <Compile Include="Models\Nexus\Nexus_Case.cs" />
+    <Compile Include="Models\Nexus\Nexus_CaseDetail.cs" />
+    <Compile Include="Models\Nexus\Nexus_City.cs" />
+    <Compile Include="Models\Nexus\Nexus_Consultant.cs" />
+    <Compile Include="Models\Nexus\Nexus_Country.cs" />
+    <Compile Include="Models\Nexus\Nexus_Patient.cs" />
+    <Compile Include="Models\Nexus\Nexus_RateType.cs" />
+    <Compile Include="Models\Nexus\Nexus_Reference.cs" />
+    <Compile Include="Models\Nexus\Nexus_Test.cs" />
+    <Compile Include="Models\Nexus\Nexus_TestDepartment.cs" />
+    <Compile Include="Models\Nexus\Nexus_TestDoctor.cs" />
+    <Compile Include="Models\Nexus\Nexus_TestGroup.cs" />
+    <Compile Include="Models\Nexus\Nexus_TestNormalValues.cs" />
+    <Compile Include="Models\Nexus\Nexus_TestSpecimen.cs" />
+    <Compile Include="Models\Nexus\NexusDepartmentMapping.cs" />
+    <Compile Include="Models\Nexus\DepartmentTest.cs" />
+    <Compile Include="Models\Nexus\vw_NexusDepartmentMapping.cs" />
+    <Compile Include="Models\Pharmaceutical\Doctor.cs" />
+    <Compile Include="Models\Production\ProdcutReceipeitem.cs" />
+    <Compile Include="Models\Production\vw_ProductReceipes.cs" />
+    <Compile Include="Models\Production\ProductReceipe.cs" />
+    <Compile Include="Models\Production\WPItemWithParentDetail.cs" />
+    <Compile Include="Models\System\FiscalSetting.cs" />
+    <Compile Include="Models\Transactions\PayablePayment.cs" />
+    <Compile Include="Models\Vehicles\SupplierCurrency.cs" />
+    <Compile Include="Models\Vehicles\VehiclePostDatedCheque.cs" />
+    <Compile Include="Models\Vehicles\VehicleSaleDeposit.cs" />
+    <Compile Include="Models\Vehicles\UserVehicleBranch.cs" />
+    <Compile Include="Models\Vehicles\VehicleFile.cs" />
+    <Compile Include="Models\Vehicles\Vehicle.cs" />
+    <Compile Include="Models\COA\Generic.cs" />
+    <Compile Include="Models\COA\Manufacture.cs" />
+    <Compile Include="Models\COA\ProductMapping.cs" />
+    <Compile Include="Models\COA\ShopDocument.cs" />
+    <Compile Include="Models\COA\SupplierProduct.cs" />
+    <Compile Include="Models\COA\TenantPartner.cs" />
+    <Compile Include="Models\COA\Currency.cs" />
+    <Compile Include="Models\COA\ElectricityUnitItem.cs" />
+    <Compile Include="Models\COA\ElectricityUnit.cs" />
+    <Compile Include="Models\COA\ItemGroup.cs" />
+    <Compile Include="Models\COA\ItemGroupItem.cs" />
+    <Compile Include="Mapping\AccountAttributeMap.cs" />
+    <Compile Include="Mapping\AccountDetailFormMap.cs" />
+    <Compile Include="Mapping\AccountDetailMap.cs" />
+    <Compile Include="Mapping\AccountMap.cs" />
+    <Compile Include="Mapping\AccountTypeMap.cs" />
+    <Compile Include="Mapping\AssetMap.cs" />
+    <Compile Include="Mapping\AttributeMap.cs" />
+    <Compile Include="Mapping\AttributeTypeMap.cs" />
+    <Compile Include="Mapping\BankMap.cs" />
+    <Compile Include="Mapping\ConfigMap.cs" />
+    <Compile Include="Mapping\ServiceItemMap.cs" />
+    <Compile Include="Mapping\CustomerDiscountMap.cs" />
+    <Compile Include="Mapping\CustomerMap.cs" />
+    <Compile Include="Mapping\DCMap.cs" />
+    <Compile Include="Mapping\EmployeeMap.cs" />
+    <Compile Include="Mapping\FormSettingMap.cs" />
+    <Compile Include="Mapping\MarkaMap.cs" />
+    <Compile Include="Mapping\MenuItemMap.cs" />
+    <Compile Include="Mapping\ProductMap.cs" />
+    <Compile Include="Mapping\ProjectMap.cs" />
+    <Compile Include="Mapping\ProjectReceiptMap.cs" />
+    <Compile Include="Mapping\PurchaseMap.cs" />
+    <Compile Include="Mapping\PurchaseTotalItemMap.cs" />
+    <Compile Include="Mapping\ReportColumnMap.cs" />
+    <Compile Include="Mapping\ReportMap.cs" />
+    <Compile Include="Mapping\ReportParameterMap.cs" />
+    <Compile Include="Mapping\SalaryMap.cs" />
+    <Compile Include="Mapping\SaleItemMap.cs" />
+    <Compile Include="Mapping\SaleMap.cs" />
+    <Compile Include="Mapping\SettingMap.cs" />
+    <Compile Include="Mapping\StoreMap.cs" />
+    <Compile Include="Mapping\StorePurchaseTotalItemMap.cs" />
+    <Compile Include="Mapping\StoreTransactionMap.cs" />
+    <Compile Include="Mapping\SupplierMap.cs" />
+    <Compile Include="Mapping\TransactionMap.cs" />
+    <Compile Include="Mapping\TransactionTypeMap.cs" />
+    <Compile Include="Mapping\UserMap.cs" />
+    <Compile Include="Mapping\UserProfileMap.cs" />
+    <Compile Include="Mapping\vw_TransactionMap.cs" />
+    <Compile Include="Mapping\vw_VouchersMap.cs" />
+    <Compile Include="Mapping\webpages_MembershipMap.cs" />
+    <Compile Include="Mapping\webpages_OAuthMembershipMap.cs" />
+    <Compile Include="Mapping\webpages_RolesMap.cs" />
+    <Compile Include="Mapping\webpages_UsersInRolesMap.cs" />
+    <Compile Include="Models\COA\Account.cs" />
+    <Compile Include="Models\COA\AccountAttribute.cs" />
+    <Compile Include="Models\COA\AccountDetail.cs" />
+    <Compile Include="Models\COA\AccountDetailForm.cs" />
+    <Compile Include="Models\COA\AccountType.cs" />
+    <Compile Include="Models\COA\CompanyPartner.cs" />
+    <Compile Include="Models\COA\RentAgreement.cs" />
+    <Compile Include="Models\COA\RentAgreementSchedule.cs" />
+    <Compile Include="Models\COA\Shop.cs" />
+    <Compile Include="Models\COA\Transfer.cs" />
+    <Compile Include="Models\COA\VehicleRequest.cs" />
+    <Compile Include="Models\COA\VehicleStatus.cs" />
+    <Compile Include="Models\Config\Color.cs" />
+    <Compile Include="Models\Config\CarType.cs" />
+    <Compile Include="Models\Config\Consignee.cs" />
+    <Compile Include="Models\Config\ClearingCompany.cs" />
+    <Compile Include="Models\Config\Country.cs" />
+    <Compile Include="Models\Config\Industry.cs" />
+    <Compile Include="Models\Config\Manufacturer.cs" />
+    <Compile Include="Models\Config\Month.cs" />
+    <Compile Include="Models\Config\Shipeer.cs" />
+    <Compile Include="Models\Config\Fuel.cs" />
+    <Compile Include="Models\Config\EnginePower.cs" />
+    <Compile Include="Models\Config\Model.cs" />
+    <Compile Include="Models\Config\WorkingSector.cs" />
+    <Compile Include="Models\Config\Year.cs" />
+    <Compile Include="Models\CRM\vw_GetNextFollowUps.cs" />
+    <Compile Include="Models\CRM\LeadActivitiy.cs" />
+    <Compile Include="Models\CRM\LeadExpectedItem.cs" />
+    <Compile Include="Models\CRM\LeadConcernedItem.cs" />
+    <Compile Include="Models\CRM\Lead.cs" />
+    <Compile Include="Models\COA\GroupItemCustomerLess.cs" />
+    <Compile Include="Models\HRM\Fiscal.cs" />
+    <Compile Include="Models\HRM\SalaryItem.cs" />
+    <Compile Include="Models\HRM\ESalary.cs" />
+    <Compile Include="Models\HRM\SalaryConfig.cs" />
+    <Compile Include="Models\HRM\SalaryConfigItem.cs" />
+    <Compile Include="Models\Notifications\NotificationJobActor.cs" />
+    <Compile Include="Models\Notifications\Notification.cs" />
+    <Compile Include="Models\Notifications\NotificationAction.cs" />
+    <Compile Include="Models\Notifications\NotificationJob.cs" />
+    <Compile Include="Models\Notifications\NotificationJobAction.cs" />
+    <Compile Include="Models\Notifications\NotificationJobContact.cs" />
+    <Compile Include="Models\Notifications\NotificationJobTrigger.cs" />
+    <Compile Include="Models\Notifications\NotificationJobType.cs" />
+    <Compile Include="Models\Notifications\NotificationRecipient.cs" />
+    <Compile Include="Models\Order\OrderServicesItem.cs" />
+    <Compile Include="Models\RentalSysytem\vw_RentOpeningBalances.cs" />
+    <Compile Include="Models\RentalSysytem\RentOpeningBalance.cs" />
+    <Compile Include="Models\Transactions\BankReceipt.cs" />
+    <Compile Include="Models\Transactions\BankReceiptItem.cs" />
+    <Compile Include="Models\Transactions\Sale\SaleDocument.cs" />
+    <Compile Include="Models\Vehicles\BL.cs" />
+    <Compile Include="Models\Vehicles\BLItem.cs" />
+    <Compile Include="Models\Vehicles\BLStatusHistory.cs" />
+    <Compile Include="Models\Transactions\RentDetail.cs" />
+    <Compile Include="Models\Transactions\RentDetailItems.cs" />
+    <Compile Include="Models\Transactions\MiscChargeItems.cs" />
+    <Compile Include="Models\Transactions\MiscCharge.cs" />
+    <Compile Include="Models\Vehicles\Class1.cs" />
+    <Compile Include="Models\Vehicles\VehicleLogBookScane.cs" />
+    <Compile Include="Models\Vehicles\VehiclePayment.cs" />
+    <Compile Include="Models\Vehicles\VehicleVoucher.cs" />
+    <Compile Include="Models\Vehicles\vw_BLS.cs" />
+    <Compile Include="Models\Vehicles\VehicleInstallmentPayment.cs" />
+    <Compile Include="Models\Transactions\Sale\InvoiceDc.cs" />
+    <Compile Include="Models\Transactions\Sale\InvoiceClearing.cs" />
+    <Compile Include="Models\Production\WorkInProgress.cs" />
+    <Compile Include="Models\Production\WPItem.cs" />
+    <Compile Include="Models\COA\ProductVersion.cs" />
+    <Compile Include="Models\COA\Promotion.cs" />
+    <Compile Include="Models\COA\PromotionItem.cs" />
+    <Compile Include="Models\System\GlobalBaseEntity.cs" />
+    <Compile Include="Models\System\IEntity.cs" />
+    <Compile Include="Models\System\NeverUpdateAttribute.cs" />
+    <Compile Include="Models\Transactions\Discounts\SaleDiscount.cs" />
+    <Compile Include="Models\Transactions\Discounts\SaleDiscountItem.cs" />
+    <Compile Include="Models\Transactions\OpeningBalance.cs" />
+    <Compile Include="Models\COA\UnitType.cs" />
+    <Compile Include="Models\Transactions\Sale\ServiceExpense.cs" />
+    <Compile Include="Models\Vehicles\VehicleSale.cs" />
+    <Compile Include="Models\Vehicles\VehicleSaleDetail.cs" />
+    <Compile Include="Models\UserRoles\Action.cs" />
+    <Compile Include="Models\COA\Asset.cs" />
+    <Compile Include="Models\COA\Attribute.cs" />
+    <Compile Include="Models\COA\AttributeType.cs" />
+    <Compile Include="Models\COA\Bank.cs" />
+    <Compile Include="Models\System\BaseEntity.cs" />
+    <Compile Include="Models\COA\City.cs" />
+    <Compile Include="Models\System\Company.cs" />
+    <Compile Include="Models\System\Config.cs" />
+    <Compile Include="Models\COA\AssetType.cs" />
+    <Compile Include="Models\HRM\OverTimeType.cs" />
+    <Compile Include="Models\HRM\LeaveType.cs" />
+    <Compile Include="Models\Dashboard\DashboardWidget.cs" />
+    <Compile Include="Models\Production\Requisition.cs" />
+    <Compile Include="Models\Production\RequisitionItem.cs" />
+    <Compile Include="Models\Dashboard\Widgets\WidgetParameter.cs" />
+    <Compile Include="Models\Dashboard\Widgets\WidgetColumn.cs" />
+    <Compile Include="Models\Dashboard\Widgets\Widget.cs" />
+    <Compile Include="Models\Dashboard\Dashboard.cs" />
+    <Compile Include="Models\COA\Designation.cs" />
+    <Compile Include="Models\COA\Department.cs" />
+    <Compile Include="Models\HRM\EmployeeIncomeConfig.cs" />
+    <Compile Include="Models\HRM\EmployeeLeave.cs" />
+    <Compile Include="Models\HRM\EmployeeOTHour.cs" />
+    <Compile Include="Models\System\DomainMapping.cs" />
+    <Compile Include="Models\System\LogData.cs" />
+    <Compile Include="Models\System\LogMapping.cs" />
+    <Compile Include="Models\Stock\StockRequisition.cs" />
+    <Compile Include="Models\Stock\StockRequisitionItem.cs" />
+    <Compile Include="Models\Transactions\Sale\SaleServicesItem.cs" />
+    <Compile Include="Models\Transactions\Sale\ServiceItems.cs" />
+    <Compile Include="Models\System\SystemLog.cs" />
+    <Compile Include="Models\COA\Customer.cs" />
+    <Compile Include="Models\COA\CustomerDiscount.cs" />
+    <Compile Include="Models\COA\CustomerGroup.cs" />
+    <Compile Include="Models\Order\DCItem.cs" />
+    <Compile Include="Models\Order\DeliveryChallan.cs" />
+    <Compile Include="Models\COA\Employee.cs" />
+    <Compile Include="Models\System\FormSetting.cs" />
+    <Compile Include="Models\COA\Marka.cs" />
+    <Compile Include="Models\COA\MedicineItem.cs" />
+    <Compile Include="Models\System\MenuItem.cs" />
+    <Compile Include="Models\Order\Order.cs" />
+    <Compile Include="Models\Order\OrderItem.cs" />
+    <Compile Include="Models\COA\PackagingType.cs" />
+    <Compile Include="Models\COA\Product.cs" />
+    <Compile Include="Models\COA\ProductGroup.cs" />
+    <Compile Include="Models\Project\Project.cs" />
+    <Compile Include="Models\Project\ProjectReceipt.cs" />
+    <Compile Include="Models\Transactions\Purchase\Purchase.cs" />
+    <Compile Include="Models\Transactions\Purchase\PurchaseTotalItem.cs" />
+    <Compile Include="Models\Reports\Report.cs" />
+    <Compile Include="Models\Reports\ReportColumn.cs" />
+    <Compile Include="Models\Reports\ReportParameter.cs" />
+    <Compile Include="Models\UserRoles\UserBranch.cs" />
+    <Compile Include="Models\UserRoles\Role.cs" />
+    <Compile Include="Models\UserRoles\RoleAccess.cs" />
+    <Compile Include="Models\UserRoles\RoleAction.cs" />
+    <Compile Include="Models\HRM\Salary.cs" />
+    <Compile Include="Models\Transactions\Sale\Sale.cs" />
+    <Compile Include="Models\Transactions\Sale\SaleItem.cs" />
+    <Compile Include="Models\System\Setting.cs" />
+    <Compile Include="Models\Store\Store.cs" />
+    <Compile Include="Models\Store\StorePurchaseTotalItem.cs" />
+    <Compile Include="Models\Store\StoreTransaction.cs" />
+    <Compile Include="Models\COA\Supplier.cs" />
+    <Compile Include="Models\COA\SupplierGroup.cs" />
+    <Compile Include="Models\Transactions\Transaction.cs" />
+    <Compile Include="Models\COA\TransactionType.cs" />
+    <Compile Include="Models\COA\Transporter.cs" />
+    <Compile Include="Models\UserRoles\User.cs" />
+    <Compile Include="Models\UserRoles\UserProfile.cs" />
+    <Compile Include="Models\UserRoles\UserRole.cs" />
+    <Compile Include="Models\Transactions\Voucher\Voucher.cs" />
+    <Compile Include="Models\Transactions\Voucher\VoucherItem.cs" />
+    <Compile Include="Models\Vehicles\Auctioneer.cs" />
+    <Compile Include="Models\Vehicles\BLCharge.cs" />
+    <Compile Include="Models\Vehicles\VehicleAcution.cs" />
+    <Compile Include="Models\Vehicles\VehiclePenalty.cs" />
+    <Compile Include="Models\Vehicles\vw_SupplierCurrency.cs" />
+    <Compile Include="Models\Vehicles\vw_VehiclePostDateCheques.cs" />
+    <Compile Include="Models\Vehicles\vw_VehicleStock.cs" />
+    <Compile Include="Models\Views\vw_JVVouchers.cs" />
+    <Compile Include="Models\Views\vw_VehicleVouchers.cs" />
+    <Compile Include="Models\Views\vw_TenantAgreements.cs" />
+    <Compile Include="Models\Views\vw_GetRentAgreementsWithTenants.cs" />
+    <Compile Include="Models\Views\vw_PendingDeliveryChallan.cs" />
+    <Compile Include="Models\Views\vw_SupplierProducts.cs" />
+    <Compile Include="Models\Views\vw_Transaction.cs" />
+    <Compile Include="Models\Views\vw_Vehicles.cs" />
+    <Compile Include="Models\Views\vw_VehicleSales.cs" />
+    <Compile Include="Models\Views\vw_Vouchers.cs" />
+    <Compile Include="Models\Views\vw_Vouchers1.cs" />
+    <Compile Include="Models\Membership\webpages_Membership.cs" />
+    <Compile Include="Models\Membership\webpages_OAuthMembership.cs" />
+    <Compile Include="Models\Membership\webpages_Roles.cs" />
+    <Compile Include="Models\Membership\webpages_UsersInRoles.cs" />
+    <Compile Include="Models\Views\vw_RentAgreements.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Models\Transactions\Purchase\WheatPurchase.cs" />
+    <Compile Include="Models\Transactions\Purchase\WheatPurchaseItem.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AccountEx.Common\AccountEx.Common.csproj">
+      <Project>{2ac11c97-c09e-4023-ab64-122f899e2a1e}</Project>
+      <Name>AccountEx.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\Integrations\Google\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

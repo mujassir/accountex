@@ -1,0 +1,234 @@
+﻿@using AccountEx.Common
+@{
+    ViewBag.Title = "Manage Users";
+}
+
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">Manage Users</h1>
+}
+
+
+<!-- END PAGE HEADER-->
+
+<div class="row" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-edit"></i>Add/Edit User
+                </div>
+
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal" data-save="save">
+                    <input type="text" id="Id" class="hide" />
+                    <input type="text" id="AccountId" class="hide" />
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Username</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control " id="Username" placeholder="Username" data-required="required" data-validate="true" data-message="Username is required" >
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">Password</label>
+                            <div class="col-md-2">
+                                <input type="password" class="form-control " id="Hash" placeholder="Password" data-required="required" data-validate="true" data-message="Password is required" >
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">First Name</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control" id="FirstName" data-required="required" data-message="First Name is required" />
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">Last Name</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control" id="LastName" data-required="required" data-message="Last Name is required" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Cell No.</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control" id="CellNo" data-required="required" data-message="Cell No is required" />
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">Office No.</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control" id="OfficeNo" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Email</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control" id="Email" />
+                            </div>
+                            <label class="col-md-2 control-label master-account-label" for="prefix">Domain</label>
+                            <div class="col-md-2">
+                                <select class="form-control select2" id="DomainId" data-required="required" data-message="domain is required" placeholder="select domain">
+                                    <option></option>
+                                    @foreach (var p in (List<IdName>)ViewBag.Domains)
+                                    {
+                                        <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                    }
+
+                                </select>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Role</label>
+                            <div class="col-md-4">
+                                <select id="RoleId" class="form-control select2" placeholder="Select Role" data-required="required" data-message="Role is required" data-clear='true'>
+                                    <option></option>
+                                    @foreach (var item in (List<IdName>)ViewBag.Roles)
+                                    {
+                                        <option data-custom="@item.Name" value="@item.Id">@item.Name</option>
+                                    }
+                                </select>
+                                <input type="hidden" id="Role" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label master-account-label" for="prefix">User Type</label>
+                            <div class="col-md-4">
+                                <select class="form-control select2" id="UserTypeId" data-required="required" data-message="User Type is required" placeholder="select user type">
+                                    <option></option>
+                                    @foreach (var p in (List<IdName>)ViewBag.UserTypes)
+                                    {
+                                        <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                    }
+
+                                </select>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group hide user-type">
+                            <label class="col-md-2 control-label master-account-label" for="prefix">Division</label>
+                            <div class="col-md-4">
+                                <select class="form-control select2" id="DivisionId" data-required="false" data-message="Division is required" placeholder="select division">
+                                    <option></option>
+                                    @foreach (var p in (List<IdName>)ViewBag.Divisions)
+                                    {
+                                        <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                    }
+
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="form-group hide user-type">
+                            <label class="col-md-2 control-label master-account-label" for="prefix">Region</label>
+                            <div class="col-md-4">
+                                <select class="form-control select2" id="RegionId" data-required="false" data-message="Region is required" placeholder="select region">
+                                    <option></option>
+                                    @foreach (var p in (List<IdName>)ViewBag.Regions)
+                                    {
+                                        <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                    }
+
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="form-group hide user-type">
+                            <label class="col-md-2 control-label master-account-label" for="prefix">RSM</label>
+                            <div class="col-md-4">
+                                <select class="form-control select2" id="RSMId" data-required="false" data-message="RSM is required" placeholder="select RSM">
+                                    <option></option>
+                                    @foreach (var p in (List<IdName>)ViewBag.RSM)
+                                    {
+                                        <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                    }
+
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+                            <div class="col-md-3">
+                                <label id="LableActive" class="control-label" for="IsLive">
+                                    <input type="checkbox" id="IsAdmin" data-checktrack='false' />
+                                    Admin
+                                </label>
+                            </div>
+                            <div class="col-md-3">
+                                <label id="ChangeFiscal" class=" control-label" for="IsLive">
+                                    <input type="checkbox" id="CanChangeFiscal" data-checktrack='false' />
+                                    Change Fiscal
+                                </label>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="form-actions">
+                    <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+
+                    <div class="col-md-8">
+                        <button type="button" id="btn-save" class="btn btn-primary">Save</button>
+                        <button id="btnCancel" type="button" class="btn btn-default">Cancel</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <!-- END EXAMPLE TABLE PORTLET-->
+</div>
+
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Record Listing
+                </div>
+            </div>
+
+            <div class="portlet-body">
+
+                <table class="table table-striped table-bordered table-hover" id="mainTable">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>User Type</th>
+                            <th>Domain</th>
+                            <th>Division</th>
+                            <th>Region</th>
+                            <th>RSM</th>
+                            <th style="width: 75px;" class="no-sort"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="9">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+@section FooterScript
+{
+    <script src="~/Content/AppJS/CRM/Users.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            User.init();
+        });
+    </script>
+}

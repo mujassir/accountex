@@ -1,0 +1,334 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BA6BAC4C-BAC4-4F6F-89D7-D75FB15B8311}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AccountEx.Repositories</RootNamespace>
+    <AssemblyName>AccountEx.Repositories</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AutoMapper">
+      <HintPath>..\packages\AutoMapper.4.2.1\lib\net45\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.BulkInsert, Version=6.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.BulkInsert-ef6-ext.6.0.3.1\lib\net45\EntityFramework.BulkInsert.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.Extended">
+      <HintPath>..\AccountEx.Web\Include\EntityFramework.Extended.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.MappingAPI, Version=6.1.0.10, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.MappingAPI.6.1.0.10\lib\net45\EntityFramework.MappingAPI.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity.Design" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="COA\AccountAttributeRepository.cs" />
+    <Compile Include="COA\AccountDetailFormRepository.cs" />
+    <Compile Include="COA\AccountDetailRepository.cs" />
+    <Compile Include="COA\AccountRepository.cs" />
+    <Compile Include="COA\AccountTypeRepository.cs" />
+    <Compile Include="COA\BlockRepository.cs" />
+    <Compile Include="COA\ChallanItemRepository.cs" />
+    <Compile Include="COA\ChallanRepository.cs" />
+    <Compile Include="COA\RentAgreementScheduleRepository.cs" />
+    <Compile Include="COA\ManufactureRepository.cs" />
+    <Compile Include="COA\ProductMappingRepository.cs" />
+    <Compile Include="COA\ElectricityUnitItemRepository.cs" />
+    <Compile Include="COA\RentAgreementRepository.cs" />
+    <Compile Include="COA\ShipRepository.cs" />
+    <Compile Include="COA\SupplierProductRepository.cs" />
+    <Compile Include="COA\TransferRepository.cs" />
+    <Compile Include="COA\VehicleRequestRepository.cs" />
+    <Compile Include="COA\VehicleStatusRepository.cs" />
+    <Compile Include="COA\vw_GetRentAgreementsWithTenantsRepository.cs" />
+    <Compile Include="COA\vw_RentAgreementsRepository.cs" />
+    <Compile Include="COA\ElectricityUnitRepository.cs" />
+    <Compile Include="COA\vw_TenantAgreemntRepository.cs" />
+    <Compile Include="COA\TenantPartnerRepository.cs" />
+    <Compile Include="COA\vw_SupplierProductsRepository.cs" />
+    <Compile Include="COA\vw_VehiclesRepository.cs" />
+    <Compile Include="Common\VehicleBranchRepository.cs" />
+    <Compile Include="Common\VehicleRepository.cs" />
+    <Compile Include="Config\TemplateRepository.cs" />
+    <Compile Include="Config\TemplateTagRepository.cs" />
+    <Compile Include="Config\ProductStatusRepository.cs" />
+    <Compile Include="Config\ColorRepository.cs" />
+    <Compile Include="Config\CarTypeRepository.cs" />
+    <Compile Include="Config\ConsigneeRepository.cs" />
+    <Compile Include="Config\ClearingCompanyRepository.cs" />
+    <Compile Include="Config\CityRepository.cs" />
+    <Compile Include="Config\CurrencyRateRepository.cs" />
+    <Compile Include="Config\CostCenterRepository.cs" />
+    <Compile Include="Config\DocumentRepository.cs" />
+    <Compile Include="Config\WorkingSectorRepository.cs" />
+    <Compile Include="Config\IndustryRepository.cs" />
+    <Compile Include="Config\ManufacturerRepository.cs" />
+    <Compile Include="Config\ProductGroupRepository.cs" />
+    <Compile Include="Config\YearRepository.cs" />
+    <Compile Include="Config\CountryRepository.cs" />
+    <Compile Include="Config\MonthRepository.cs" />
+    <Compile Include="Config\ShipeerRepository.cs" />
+    <Compile Include="Config\FuelRepository.cs" />
+    <Compile Include="Config\EnginePowerRepository.cs" />
+    <Compile Include="Config\ModelRepository.cs" />
+    <Compile Include="CRM\AdminTaskRepository.cs" />
+    <Compile Include="CRM\CRMCompliantFileRepository.cs" />
+    <Compile Include="CRM\CRMCompliantRepository.cs" />
+    <Compile Include="CRM\CRMSaleForecastRepository .cs" />
+    <Compile Include="CRM\CRMImportIGRNRepository.cs" />
+    <Compile Include="CRM\CRMVendorRepository.cs" />
+    <Compile Include="CRM\CRMProductRepository.cs" />
+    <Compile Include="CRM\CRMCustomerSalePersonRepository.cs" />
+    <Compile Include="CRM\CRMImportRequisitionItemRepository.cs" />
+    <Compile Include="CRM\CRMSaleInvoiceItemRepository.cs" />
+    <Compile Include="CRM\CRMImportRequisitionRepository.cs" />
+    <Compile Include="CRM\ProductSubGroupRepository.cs" />
+    <Compile Include="CRM\PMCItemRepository.cs" />
+    <Compile Include="CRM\CRMProjectRepository.cs" />
+    <Compile Include="CRM\CalendarEventRepository.cs" />
+    <Compile Include="CRM\CRMCustomerRepository.cs" />
+    <Compile Include="CRM\CRMSaleInvoiceRepository.cs" />
+    <Compile Include="CRM\DivisionRepository.cs" />
+    <Compile Include="CRM\PMCRepository.cs" />
+    <Compile Include="Dashboard\CompanyDashboardRepository.cs" />
+    <Compile Include="Dashboard\WidgetColumnRepository.cs" />
+    <Compile Include="Integrations\UserTokenRepository.cs" />
+    <Compile Include="Lab\Class1.cs" />
+    <Compile Include="Lab\DepartmentRateListItemRepository.cs" />
+    <Compile Include="Lab\DepartmentRateListRepository.cs" />
+    <Compile Include="Lab\ParameterRepository.cs" />
+    <Compile Include="Lab\TestCategoryRepository.cs" />
+    <Compile Include="Lab\DepartmentTestRepository.cs" />
+    <Compile Include="Lab\TestParameterRepository.cs" />
+    <Compile Include="Lab\TestRepository.cs" />
+    <Compile Include="Lab\vw_InvestigationsRepository.cs" />
+    <Compile Include="Nexus\NexusCaseRepository.cs" />
+    <Compile Include="Nexus\NexusReportRepository.cs" />
+    <Compile Include="Nexus\PostedCaseItemRepository.cs" />
+    <Compile Include="Notifications\NotificationJobActorRepository.cs" />
+    <Compile Include="Common\BaseRepository.cs" />
+    <Compile Include="HRM\SalaryItemRepository.cs" />
+    <Compile Include="Notifications\NotificationJobTriggerRepository.cs" />
+    <Compile Include="Notifications\NotificationRecipientRepository.cs" />
+    <Compile Include="Notifications\NotificationJobContactRepository.cs" />
+    <Compile Include="Notifications\NotificationJobActionRepository.cs" />
+    <Compile Include="Notifications\NotificationJobRepository.cs" />
+    <Compile Include="Notifications\NotificationActionRepository.cs" />
+    <Compile Include="Notifications\NotificationRepository.cs" />
+    <Compile Include="Order\OrderServiceItemRepository.cs" />
+    <Compile Include="Pharmaceutical\DoctorRepository.cs" />
+    <Compile Include="Production\RequisitionItemRepository.cs" />
+    <Compile Include="Production\ProductReceipeRepository .cs" />
+    <Compile Include="Production\ProductReceipeitemRepository.cs" />
+    <Compile Include="RentalSystem\RentOpeningBalanceRepository.cs" />
+    <Compile Include="Stock\StockRequisitionItemRepository.cs" />
+    <Compile Include="System\Configuration\FiscalSettingRepository.cs" />
+    <Compile Include="Transactions\BankReceiptItemRepository.cs" />
+    <Compile Include="Vehicles\BLChargeRepository.cs" />
+    <Compile Include="Vehicles\CurrecnyRateRepository.cs" />
+    <Compile Include="Vehicles\BLRepository.cs" />
+    <Compile Include="Transactions\BLStatusHistoryRepository.cs" />
+    <Compile Include="Transactions\PayablePaymentRepository.cs" />
+    <Compile Include="Transactions\RentDetailItemRepository.cs" />
+    <Compile Include="Transactions\VehicleInstallmentPaymentRepository.cs" />
+    <Compile Include="Transactions\RentMonthlyLiabilityRepository.cs" />
+    <Compile Include="Transactions\BankReceiptRepository.cs" />
+    <Compile Include="Transactions\VehicleSaleDepositRepository.cs" />
+    <Compile Include="Transactions\VehicleSaleDetailRepository.cs" />
+    <Compile Include="Transactions\VehicleSaleRepository.cs" />
+    <Compile Include="Transactions\VoucherItemRepository.cs" />
+    <Compile Include="Transactions\OrderItemRepository.cs" />
+    <Compile Include="Transactions\MiscChargeItemRepository.cs" />
+    <Compile Include="Transactions\MiscChargesRepository.cs" />
+    <Compile Include="Transactions\InvoiceDcsRepository.cs" />
+    <Compile Include="Transactions\vw_VehicleSalesRepository.cs" />
+    <Compile Include="UserRoles\ActionRepository.cs" />
+    <Compile Include="COA\AssetRepository.cs" />
+    <Compile Include="COA\AttributeRepository.cs" />
+    <Compile Include="COA\AttributeTypeRepository.cs" />
+    <Compile Include="COA\BankRepository.cs" />
+    <Compile Include="COA\BrandsRepository.cs" />
+    <Compile Include="System\CompanyPartnerRepository.cs" />
+    <Compile Include="System\CompanyRepository.cs" />
+    <Compile Include="Connection.cs" />
+    <Compile Include="COA\ShopRepository.cs" />
+    <Compile Include="Order\InvoiceDcRepository.cs" />
+    <Compile Include="Common\CurrencyRepository.cs" />
+    <Compile Include="CRM\FollowUpRepository.cs" />
+    <Compile Include="Order\InvoiceClearingRepository.cs" />
+    <Compile Include="CRM\LeadRepository.cs" />
+    <Compile Include="System\Configuration\LessAssignmentToCustomerRepository.cs" />
+    <Compile Include="System\Configuration\PromotionItemRepository.cs" />
+    <Compile Include="Transactions\SaleDiscountRepository.cs" />
+    <Compile Include="Order\ItemGroupRepository.cs" />
+    <Compile Include="CRM\LeadActivityRepository.cs" />
+    <Compile Include="CRM\LeadExpectedItemRepository.cs" />
+    <Compile Include="CRM\LeadConcernedItemRepository.cs" />
+    <Compile Include="System\Configuration\PromotionRepository.cs" />
+    <Compile Include="HRM\SalaryConfigItemRepository.cs" />
+    <Compile Include="Transactions\OpeningBalancesRepository.cs" />
+    <Compile Include="HRM\ESalaryRepository.cs" />
+    <Compile Include="Production\DCItemRepository.cs" />
+    <Compile Include="Fiscal\FiscalRepository.cs" />
+    <Compile Include="Common\GlobalGenericRepository.cs" />
+    <Compile Include="Production\FGRNRepository.cs" />
+    <Compile Include="Production\GINPRepository.cs" />
+    <Compile Include="Dashboard\DashboardRepository.cs" />
+    <Compile Include="Common\DomainMappingRepository.cs" />
+    <Compile Include="HRM\EmployeeIncomeConfigRepository.cs" />
+    <Compile Include="HRM\EmployeeLeaveRepository.cs" />
+    <Compile Include="HRM\EmployeeOTHourRepository.cs" />
+    <Compile Include="System\Logging\LogMappingRepository.cs" />
+    <Compile Include="Production\JobOrderRequisitionRepository.cs" />
+    <Compile Include="Production\ProductVersionRepository.cs" />
+    <Compile Include="HRM\SalaryConfigRepository.cs" />
+    <Compile Include="Transactions\SaleServicesItemRepository.cs" />
+    <Compile Include="Transactions\ServiceExpensesRepository.cs" />
+    <Compile Include="Transactions\ServiceItemRepository.cs" />
+    <Compile Include="Production\ProductionItemRepository.cs" />
+    <Compile Include="Stock\StockRequisitionRepository.cs" />
+    <Compile Include="Transactions\WheatPurchaseItemRepository.cs" />
+    <Compile Include="Transactions\WheatPurchaseRepository.cs" />
+    <Compile Include="COA\CustomerDiscountRepository.cs" />
+    <Compile Include="COA\CustomerRepository.cs" />
+    <Compile Include="Production\DeliveryChallanRepository.cs" />
+    <Compile Include="HRM\EmployeeRepository.cs" />
+    <Compile Include="System\Configuration\FormSettingRepository.cs" />
+    <Compile Include="Common\GenericRepository.cs" />
+    <Compile Include="System\Logging\LogRepository.cs" />
+    <Compile Include="Common\MarkaRepository.cs" />
+    <Compile Include="Common\MenuItemRepository.cs" />
+    <Compile Include="Transactions\OpeningBalanceRepository.cs" />
+    <Compile Include="Transactions\OrderBookingRepository.cs" />
+    <Compile Include="Production\ProductRepository.cs" />
+    <Compile Include="Project\ProjectReceiptRepository.cs" />
+    <Compile Include="Project\ProjectRepository.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Transactions\PurchaseRepository.cs" />
+    <Compile Include="Transactions\PurchaseTotalItemRepository.cs" />
+    <Compile Include="Transactions\RecoveryRepository.cs" />
+    <Compile Include="Reports\ReportColumnRepository.cs" />
+    <Compile Include="Reports\ReportParameterRepository.cs" />
+    <Compile Include="Reports\ReportRepository.cs" />
+    <Compile Include="UserRoles\RoleAccessRepository.cs" />
+    <Compile Include="UserRoles\RoleActionRepository.cs" />
+    <Compile Include="UserRoles\RoleRepository.cs" />
+    <Compile Include="HRM\SalaryRepository.cs" />
+    <Compile Include="Transactions\SaleItemRepository.cs" />
+    <Compile Include="Transactions\SaleRepository.cs" />
+    <Compile Include="System\Configuration\SettingRepository.cs" />
+    <Compile Include="System\SqlRepository.cs" />
+    <Compile Include="Stock\StockOBRepository.cs" />
+    <Compile Include="Stock\StorePurchaseTotalItemRepository.cs" />
+    <Compile Include="Store\StoreRepository.cs" />
+    <Compile Include="Store\StoreTransactionRepository.cs" />
+    <Compile Include="COA\SupplierRepository.cs" />
+    <Compile Include="Transactions\TransactionRepository.cs" />
+    <Compile Include="COA\TransporterRepository.cs" />
+    <Compile Include="Transactions\TransRepository.cs" />
+    <Compile Include="UserRoles\UserRepository.cs" />
+    <Compile Include="UserRoles\UserRoleRepository.cs" />
+    <Compile Include="Transactions\VoucherRepository.cs" />
+    <Compile Include="Transactions\VoucherTransRepository.cs" />
+    <Compile Include="Transactions\VW_TransactionRepository.cs" />
+    <Compile Include="Dashboard\WidgetRepository.cs" />
+    <Compile Include="Production\WorkInProgressRepository.cs" />
+    <Compile Include="Production\WPItemsRepository.cs" />
+    <Compile Include="Vehicles\AcutionerRepository.cs" />
+    <Compile Include="Vehicles\BLItemRepository.cs" />
+    <Compile Include="Vehicles\SupplierCurrencyRepository.cs" />
+    <Compile Include="Vehicles\VehiclePostDatedChequeRepository.cs" />
+    <Compile Include="Vehicles\VehicleSaleDocumentRepository.cs" />
+    <Compile Include="Vehicles\UserVehicleBranchesRepository.cs" />
+    <Compile Include="Vehicles\VehicleLogBookScanRepository.cs" />
+    <Compile Include="Vehicles\VehiclePaymentRepository.cs" />
+    <Compile Include="Vehicles\VehiclePenaltyRepository.cs" />
+    <Compile Include="Vehicles\VehicleAcutionRepository.cs" />
+    <Compile Include="Vehicles\VehicleFollowUpRepository.cs" />
+    <Compile Include="Vehicles\VehicleTransferRepository.cs" />
+    <Compile Include="Vehicles\VehicleVoucherRepository.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AccountEx.CodeFirst\AccountEx.CodeFirst.csproj">
+      <Project>{103f5c0f-7829-427e-9181-408fa16a57cf}</Project>
+      <Name>AccountEx.CodeFirst</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AccountEx.Common\AccountEx.Common.csproj">
+      <Project>{2ac11c97-c09e-4023-ab64-122f899e2a1e}</Project>
+      <Name>AccountEx.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AccountEx.DbMapping\AccountEx.DbMapping.csproj">
+      <Project>{28a952c4-830f-4912-b627-383777bf8661}</Project>
+      <Name>AccountEx.DbMapping</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Currency\" />
+    <Folder Include="Membership\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

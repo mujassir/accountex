@@ -1,0 +1,164 @@
+﻿@{
+    Layout = "_Layout.cshtml";
+    ViewBag.Title = "Order Listing";
+}
+<style type="text/css">
+    .report-table tbody tr td:nth-last-child(1),
+    .report-table tbody tr td:nth-last-child(2) {
+        text-align: right;
+    }
+
+    .report-table tbody tr.order td {
+    }
+
+    .report-table tbody tr.dc td {
+        background-color: #FF8F45;
+        border-bottom: 1px solid #FFF;
+    }
+
+    .report-table tbody tr.invoice td {
+        background-color: #80E680;
+        border-bottom: 1px solid #FFF;
+    }
+</style>
+
+
+@section PageTitle
+{
+    <h1 class="font-green-sharp bold">Manage Order Listing</h1>
+}
+<div class="row hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-filter"></i>Report Filters
+                </div>
+                <div class="tools hide">
+                    <a href="javascript:;" class="collapse"></a>
+                    <a href="javascript:;" class="remove"></a>
+                </div>
+                <div class="action">
+                    <button class="btn blue btn-small pull-right hidden-print" onclick="window.print();"><i class="fa fa-print"></i>&nbsp;Print </button>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal" data-save="Save">
+                    <input type="text" id="Id" class="hide" />
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Date</label>
+                            <div class="col-md-3">
+                                <div class="input-group input-medium">
+                                    <input class="date-picker form-control date-picker" type="text" id="FromDate" data-validate="true" data-required="required" value="@DateTime.Now.ToString(AppSetting.DateFormat)" data-message="From Date"  data-fiscal-date="true" >
+
+                                    <span class="input-group-btn date-icon">
+                                        <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-2" id="account-type-conatiner">
+                                <div class="radio-list">
+                                    <label class="radio-inline">
+
+                                        <input type="radio" name="all-product" value="all" checked="checked">
+                                        All Parties
+                                    </label>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label master-account-label" for="prefix">Code</label>
+                            <div class="col-md-1">
+                                <input type="text" class="form-control input-small" id="AccountCode" data-required="required" data-plus-as-tab="false" data-validate="true" data-message="Party Code is required" >
+                                <input type="hidden" id="AccountId" value="0" />
+
+                            </div>
+                            <div class="col-md-5">
+
+                                <input type="text" class="form-control" id="AccountName"  disabled="disabled">
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <div class="form-group">
+
+                            <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+                            <div class="col-md-8">
+                                <button id="btnShowReport" type="submit" class="btn btn-primary">Show Report</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title hidden-print">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Report Data
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                    <a href="javascript:;" class="remove"></a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="table-responsive">
+                    <table id="mainTable" class="table report-table">
+                        <thead>
+                            <tr>
+                                <th>Order No</th>
+                                <th>Order Date</th>
+                                <th>DC No</th>
+                                <th>DC Date</th>
+                                <th>Sale No </th>
+                                <th>Sale Date</th>
+                                <th>GP No</th>
+                                <th>Customer</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+<input type="hidden" id="txtFromDate" value="" />
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Reports/OrderListing.js"></script>
+
+    <script>
+        jQuery(document).ready(function () {
+            OrderListing.init();
+        });
+    </script>
+}
+
+
+
+
+
+

@@ -1,0 +1,711 @@
+﻿@using AccountEx.Common;
+@using AccountEx.BussinessLogic;
+@section PageTitle
+{
+    <h1 class="font-green-sharp bold hidden-print">Manage Approve Salary</h1>
+}
+@{
+    var error = "";
+    if (SiteContext.Current.Fiscal == null)
+    {
+        error += "<li>No fiscal year found.</li>";
+    }
+    if (SettingManager.SalaryExpenseId == 0)
+    {
+        error += "<li>Salary expense account is missing.</li>";
+    }
+    if (SettingManager.CashAccountId == 0)
+    {
+        error += "<li>Cash account is missing.</li>";
+    }
+    if (SettingManager.PFAccountId == 0)
+    {
+        error += "<li>Provident fund account is missing.</li>";
+    }
+    if (SettingManager.EOBIId == 0)
+    {
+        error += "<li>EOBI account is missing.</li>";
+    }
+    if (SettingManager.SSTId == 0)
+    {
+        error += "<li>Social Security account is missing.</li>";
+    }
+    if (SettingManager.SSTId == 0)
+    {
+        error += "<li>Social Security account is missing.</li>";
+    }
+    if (SettingManager.IncomeTaxId == 0)
+    {
+        error += "<li>Income tax account is missing.</li>";
+    }
+}
+<style>
+    #item-container {
+    }
+
+    table#item-container tr td {
+        padding: 2px 6px;
+    }
+
+        table#item-container tr td select {
+            border-width: 0;
+            background-color: transparent;
+            padding: 0;
+            margin: 0;
+            height: 20px;
+        }
+
+        table#item-container tr td input[type='text'] {
+            padding: 0;
+            margin: 0;
+            border-width: 0;
+            height: 20px;
+            background-color: transparent;
+            width: 100%;
+        }
+
+        table#item-container tr td input[type='text'] {
+            width: 100% !important;
+        }
+
+    .txt-align {
+        text-align: center;
+    }
+</style>
+<div class="row hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-edit"></i>Monthly Approve Salary
+                </div>
+                @*  <div class="actions">
+                    <a href="javascript:;" onclick="EmployeeSalary.ListView()" class="btn blue">
+                        <i class="fa fa-angle-left"></i>&nbsp;Back to list 
+                    </a>
+                </div>*@
+            </div>
+            <div class="portlet-body form">
+                <div id="mainform" class="form-horizontal" data-save="save">
+                    <input type="text" id="Id" class="hide" data-include-in-item="true" data-item-id="ESalaryId" />
+                    <input type="text" id="CreatedDate" class="hide ac-date" data-clear-type="date" />
+                    <input type="text" id="IsDeleted" class="hide" />
+                    <input type="text" id="PreVoucherNumber" class="hide" />
+                    <div class="form-body">
+                        <div class="hide alert alert-danger container-message">
+                            <i class="close" onclick="$(this).parent().hide();"></i>
+                            <strong></strong>
+                            <div class="form-body message-content"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Month</label>
+                            <div class="col-md-2 ">
+                                <select id="Month" class="form-control select input-small" data-clear="false" data-include-in-item="true" data-db-column="Month">
+                                    <option value="1">January</option>
+                                    <option value="2">February</option>
+                                    <option value="3">March</option>
+                                    <option value="4">April</option>
+                                    <option value="5">May</option>
+                                    <option value="6">June</option>
+                                    <option value="7">July</option>
+                                    <option value="8">August</option>
+                                    <option value="9">September</option>
+                                    <option value="10">October</option>
+                                    <option value="11">November</option>
+                                    <option value="12">December</option>
+                                </select>
+                            </div>
+
+                            <label class="col-md-2 control-label " for="prefix">Year</label>
+                            <div class="col-md-2 ">
+                                <select id="Year" class="form-control select input-small" data-clear="false" data-include-in-item="true" data-db-column="Year">
+                                    <option value="2015">2015</option>
+                                    <option value="2016">2016</option>
+                                    <option value="2017">2017</option>
+                                    <option value="2018">2018</option>
+                                    <option value="2019">2019</option>
+                                    <option value="2020">2020</option>
+                                    <option value="2021">2021</option>
+                                    <option value="2022">2022</option>
+                                    <option value="2023">2023</option>
+                                </select>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Approve By</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control input-small" id="ApproveBy" disabled="disabled" value="@SiteContext.Current.User.FirstName" data-clear="false"  />
+                            </div>
+
+                            <label class="col-md-2 control-label" for="prefix">Approve Date</label>
+                            <div class="col-md-2">
+                                <input type="text" class="PaymentDate form-control date-picker input-small" data-clear-type="date" id="PaymentDate" data-message="PaymentDate Date is required" disabled="disabled" data-include-in-item="true" data-db-column="PaymentDate" value="@SiteContext.Current.Fiscal.FromDate.ToString("dd/MM/yyyy")" data-validate="true"  data-required="required" data-fiscal-date="true"/>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group" data-save="false">
+                            <table id="unapprovesalary-container" class="table table-bordered table-striped griditem ">
+                                <thead>
+                                    <tr>
+                                        <th rowspan="2">
+                                            <input type="checkbox" id="chkAll"></th>
+                                        <th style="width: 90px;" rowspan="2">Code</th>
+                                        <th style="width: 10%;" rowspan="2">Name</th>
+                                        <th rowspan="2">Department</th>
+                                        <th rowspan="2">Designation</th>
+                                        <th rowspan="2" class="align-right">Gross Salary</th>
+                                        <th colspan="3" class="txt-align">Allowances</th>
+                                        <th colspan="3" class="txt-align">Deductions</th>
+                                        @* <th rowspan="2" class="align-right">Gross Salary</th>*@
+                                        <th rowspan="2" class="align-right">Bonus</th>
+                                        <th colspan="2" class="txt-align">Over Time Details</th>
+                                        <th colspan="2" class="txt-align">Leaves</th>
+                                        <th colspan="2" class="txt-align">Other Deductions</th>
+                                        <th rowspan="2" class="align-right">Net Salary</th>
+                                    </tr>
+                                    <tr>
+
+                                        <th class="align-right">House</th>
+                                        <th class="align-right">Convey.</th>
+                                        <th class="align-right">Medical</th>
+                                        @*  <th>Total Allow.</th>*@
+                                        <th class="align-right">PFund</th>
+                                        <th class="align-right">EOBI</th>
+                                        <th class="align-right">SST</th>
+                                        @*   <th>TDeduction</th>*@
+                                        <th class="align-right">Hours</th>
+                                        @* <th>Rate</th>*@
+                                        <th class="align-right">Amount</th>
+                                        <th class="align-right">Total Absents</th>
+                                        <th class="align-right">Absent Deduc.</th>
+                                        <th class="align-right">Install.</th>
+                                        <th class="align-right">Income Tax</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody data-plus-as-tab="false">
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="form-group">
+                            <h2>Salaries Processed</h2>
+                        </div>
+                        <div class="form-group" data-save="false">
+                            <div class="table-scrollable">
+                                <table id="approvesalary-container" class="table table-bordered table-striped griditem ">
+                                    <thead>
+                                        <tr>
+                                            <th rowspan="2"></th>
+                                            <th rowspan="2"></th>
+                                            <th rowspan="2" class="align-right">Vou#</th>
+                                            <th rowspan="2">Date</th>
+                                            <th style="width: 90px;" rowspan="2">Code</th>
+                                            <th style="width: 10%;" rowspan="2">Name</th>
+                                            <th rowspan="2">Department</th>
+                                            <th rowspan="2">Designation</th>
+                                            <th rowspan="2" class="align-right">Gross Salary</th>
+                                            <th colspan="3" class="txt-align">Allowances</th>
+                                            <th colspan="3" class="txt-align">Deductions</th>
+                                            @*    <th rowspan="2" class="align-right">G.Salary</th>*@
+                                            <th rowspan="2" class="align-right">Bonus</th>
+                                            <th colspan="2" class="txt-align">Over Time Details</th>
+                                            <th colspan="2" class="txt-align">Leaves</th>
+                                            <th colspan="2" class="txt-align">Other Deductions</th>
+                                            <th rowspan="2" class="align-right">Net Salary</th>
+                                            <th rowspan="2">Approved</th>
+
+                                        </tr>
+                                        <tr>
+
+                                            <th class="align-right">House</th>
+                                            <th class="align-right">Convey.</th>
+                                            <th class="align-right">Medical</th>
+                                            @* <th>Total Allow.</th>*@
+                                            <th class="align-right">PFund</th>
+                                            <th class="align-right">EOBI</th>
+                                            <th class="align-right">SST</th>
+                                            @*<th>TDeduction</th>*@
+                                            <th class="align-right">Hours</th>
+                                            @*<th>Rate</th>*@
+                                            <th class="align-right">Amount</th>
+                                            <th class="align-right">Total Absents</th>
+                                            <th class="align-right">Absent Deduc.</th>
+                                            <th class="align-right">Install.</th>
+                                            <th class="align-right">Income Tax</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody data-plus-as-tab="false">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <div class="btn-set pull-right">
+                            <button type="button" class="btn btn-primary green" onclick="ApproveSalary.ReviewAgain()">
+                                <i class="fa fa-check"></i>
+                                Review Again Salary</button>
+                            <button type="button" class="btn btn-primary green" onclick="ApproveSalary.Save()">
+                                <i class="fa fa-check"></i>
+                                Approve Salary</button>
+                            @*  <button id="btndelete" type="button" class="btn red" onclick="ApproveSalary.Delete()">
+                                <i class="fa fa-trash-o"></i>
+                                Delete</button>
+                            <button id="btnprint" type="button" class="btn yellow" onclick="ApproveSalary.Print()">
+                                <i class="fa fa-print"></i>
+
+                                Print</button>*@
+                            <button type="button" class="btn btn-primary green" onclick="ApproveSalary.SendEmail()">
+                                <i class="fa fa-check"></i>
+                                Post</button>
+                            <button type="button" class="btn blue" onclick="window.location='@(Url.Content(SettingManager.DashBoardUrl))'">
+                                <i class="fa  fa-times-circle"></i>
+
+                                Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+
+    </div>
+
+</div>
+
+<div class="row hide" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Record Listing
+                </div>
+                @*  <div class="actions">
+                    <button type="button" class="btn blue" onclick="ApproveSalary.Add()"><i class="fa fa-plus"></i>&nbsp;New</button>
+                    <button type="button" class="btn blue hide" onclick="ApproveSalary.Save()"><i class="fa fa-check"></i>&nbsp;Save Changes</button>
+
+                </div>*@
+            </div>
+            <div class="portlet-body">
+                <div class="hide alert alert-danger container-message">
+                    <i class="close" onclick="$(this).parent().hide();"></i>
+                    <strong></strong>
+                    <div class="form-body message-content"></div>
+                </div>
+                <table class="table table-striped table-bordered table-hover" id="mainTable">
+                    <thead>
+                        <tr>
+                            <th>Voucher No</th>
+                            <th>Month</th>
+                            <th>Year</th>
+                            <th>Date</th>
+                            <th style="width: 75px;" class="no-sort"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="2">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+
+<div class="row visible-print">
+    <div class="col-md-12 col-sm-12">
+        <div class="salary-print">
+            <div class="row invoice-logo">
+                <div>
+
+                    @if (!string.IsNullOrWhiteSpace(SettingManager.ReportHeader))
+                    {
+                        @(new HtmlString(SettingManager.ReportHeader))
+                    }
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-5 ">
+                        <h3>Salary Slip</h3>
+                        <table class="table table-salary">
+                            <tr>
+
+                                <td style="width: 30%;">Code:</td>
+                                <td>
+                                    <label id="lblCode">001-DH</label>
+                                </td>
+                            </tr>
+                            <tr>
+
+                                <td>Name:</td>
+                                <td>
+                                    <label id="lblName"></label>
+                                </td>
+                            </tr>
+                            <tr>
+
+                                <td>Designation:</td>
+                                <td>
+                                    <label id="lblDesignation"></label>
+                                </td>
+                            </tr>
+                            <tr>
+
+                                <td>Bank:</td>
+                                <td>
+                                    <label id="lblBankName"></label>
+                                </td>
+                            </tr>
+                            <tr>
+
+                                <td>Account Title:</td>
+                                <td>
+                                    <label id="lblAccountTitle"></label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Account #:</td>
+                                <td>
+                                    <label id="lblAccountNumber"></label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Voucher #:</td>
+                                <td>
+                                    <label id="lblVoucherNumber"></label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Payment Date:</td>
+                                <td>
+                                    <label id="lblPaymentDate"></label>
+                                </td>
+                            </tr>
+
+                        </table>
+                        <table id="tblsalarydetail" class="table table-striped table-bordered table-salary">
+                            <thead>
+                                <tr>
+                                    <th>Description
+                                    </th>
+                                    <th>Credit</th>
+                                    <th>Debit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Basic Salary
+                                    </td>
+                                    <td>
+                                        <label id="lblSummaryBasicSalary">
+                                        </label>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Absents
+                                    </td>
+                                    <td></td>
+                                    <td>
+                                        <label id="lblAbsentsCost">
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Over Time
+                                    </td>
+                                    <td>
+                                        <label id="lblTotalOTCost">
+                                        </label>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Allownce
+                                    </td>
+                                    <td>
+                                        <label id="lblTotalAllowances">
+                                        </label>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Bonus
+                                    </td>
+                                    <td>
+                                        <label id="lblBonus">
+                                        </label>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Deductions
+                                    </td>
+                                    <td></td>
+                                    <td>
+                                        <label id="lblSummaryDeductions">
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Income Tax
+                                    </td>
+                                    <td></td>
+                                    <td>
+                                        <label id="lblIncomeTax">
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Installment
+                                    </td>
+                                    <td></td>
+                                    <td>
+                                        <label id="lblInstallment">
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Total
+                                    </td>
+                                    <td>
+                                        <label id="lblTotalCredit">
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label id="lblTotalDebit">
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Net Salary
+                                    </td>
+                                    <td colspan="2">
+                                        <label id="lblNetSalary" class="bold">
+                                        </label>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                            <tfoot></tfoot>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row hide">
+                <div class="col-xs-6">
+                    <label class="col-xs-3 bold">Signature:</label>
+                    <label class="col-xs-6 underlined">
+                        &nbsp;
+                    </label>
+                </div>
+
+            </div>
+            <div class="row">
+
+                <div class="col-xs-6">
+                    <i>This is computer generated Salary Slip.</i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="jsondata" class="hide">
+    <p id="data">@ViewBag.FormSetting</p>
+</div>
+
+
+
+
+<script type="text/template" id="template-unapprovesalary">
+      <tr>
+             <td>
+            <input type="checkbox" >
+             </td>
+        <td> 
+            <input type='text' class='Id hide' id='Id' data-db-column="Id" >
+            <input type='text' class='AccountId hide' id='AccountId' data-db-column="AccountId" >
+          <input type='hidden' id='BasicSalary' class="BasicSalary" data-db-column="BasicSalary"  >
+            <input type="text" class="AccountCode form-control typeahead input-small" disabled="disabled" readonly="readonly" value="" autocomplete="off" data-db-column="AccountCode">
+
+        </td>
+        <td>
+            <input type="text" class="Name form-control input-medium" data-db-column="Name" readonly="readonly"></td>
+         <td>
+            <input type='hidden' id='DepartmentId' data-db-column="DepartmentId" >
+            {{DepartmentName}}
+         </td>
+         <td>
+            <input type='hidden' id='DesignationId' data-db-column="DesignationId" >
+            {{DesignationName}}
+        
+       </td>
+      @* <td class="align-right">
+            <input type="text" class="BasicSalary form-control input-small" data-db-column="BasicSalary" data-db-type="float" readonly="readonly">
+      </td>*@
+      <td class="align-right">
+            <input type="text" class="GrossSalary form-control input-small" disabled="disabled" readonly="readonly" data-db-column="GrossSalary" data-db-type="float" readonly="readonly">
+        </td>
+        <td class="align-right">
+            <input type="text" class="HouseAllowance form-control input-small" data-db-column="HouseAllowance" data-db-type="float" readonly="readonly">
+        </td>
+        <td class="align-right">
+            <input type="text" class="ConveyanceAllowance form-control input-small" data-db-column="ConveyanceAllowance" data-db-type="float" readonly="readonly">
+        </td>
+        <td class="align-right">
+            <input type="text" class="MedicalAllowance form-control input-small" data-db-column="MedicalAllowance" data-db-type="float" readonly="readonly">
+        </td>
+   @*  <td>
+            <input type="text" class="TotalAllowances form-control input-small" data-db-column="TotalAllowances" data-db-type="float">
+        </td>*@
+        <td class="align-right">
+            <input type="text" class="ProvidentFund form-control input-small" data-db-column="ProvidentFund" data-db-type="float" readonly="readonly">
+        </td>
+        <td class="align-right">
+            <input type="text" class="EOBI form-control input-small" data-db-column="EOBI" data-db-type="float" readonly="readonly">
+        </td>
+        <td class="align-right">
+            <input type="text" class="SST form-control input-small" data-db-column="SST" data-db-type="float" readonly="readonly">
+         </td>
+        @* <td>
+            <input type="text" class="TotalDeductions form-control input-small" data-db-column="TotalDeductions" data-db-type="float">
+         </td>*@
+      
+      <td class="align-right">
+            <input type="text" class="Bonus form-control input-small" data-db-column="Bonus" data-db-type="float" readonly="readonly">
+        </td>
+        <td class="align-right">
+            <input type="text" class="OTHours form-control input-small" data-db-column="OTHours" data-db-type="float" readonly="readonly">
+         </td>
+     @*  <td>
+            <input type="text" class="OverTimeRate form-control input-small" data-db-column="OverTimeRate" data-db-type="float" readonly="readonly">
+         </td>*@
+            <td class="align-right">
+            <input type="text" class="OTAmount form-control input-small" data-db-column="OTAmount" data-db-type="float" readonly="readonly">
+         </td>
+        <td class="align-right">
+            <input type="text" class="NoOfAbsents form-control input-small" data-db-column="NoOfAbsents" data-db-type="int" readonly="readonly"></td>
+       <td class="align-right">
+            <input type="text" class="AbsentDeduction form-control input-small" data-db-column="AbsentDeduction" data-db-type="int" readonly="readonly"></td>
+           <td class="align-right">
+            <input type="text" class="Installment form-control input-small" data-db-column="Installment" data-db-type="float" readonly="readonly"></td>
+           <td class="align-right">
+            <input type="text" class="IncomeTax form-control input-small" data-db-column="IncomeTax" data-db-type="float" readonly="readonly"></td>
+           <td class="align-right">
+            <input type="text" class="NetSalary form-control input-small" data-db-column="NetSalary" data-db-type="float" readonly="readonly"></td>
+      @* <td class="align-right">
+            <input type="text" class="WorkingDays form-control input-small hide" data-db-column="WorkingDays" data-db-type="int" readonly="readonly"></td>*@
+
+    </tr>
+</script>
+
+<script type="text/template" id="template-approvesalary">
+      <tr>
+    <td>
+    
+    <a href="javascript:void(0)" onclick="ApproveSalary.Print(this)" class="btn default btn-xs green-stripe">Print</a>
+     </td>
+    <td>
+    <i class='fa fa-trash-o' style='cursor:pointer' onclick="ApproveSalary.Delete(this)" ></i>
+    </td>
+     <td class="align-right">
+            <input type="text" class="VoucherNumber form-control input-small" data-db-column="VoucherNumber" readonly="readonly"></td>
+     <td>
+            <input type="text" class="PaymentDate form-control input-small" data-db-column="PaymentDate" readonly="readonly"></td>
+        <td> 
+            <input type='hidden' id='Id' class='Id' data-db-column="Id" >
+            <input type='hidden' id='AccountId' class='AccountId' data-db-column="AccountId" >
+             <input type='hidden' id='BasicSalary' data-db-column="BasicSalary" >
+            <input type="text" class="AccountCode form-control typeahead input-small"  readonly="readonly" value="" autocomplete="off" data-db-column="AccountCode">
+        </td>
+        <td>
+            <input type="text" class="Name form-control input-medium" data-db-column="Name" readonly="readonly"></td>
+          <td>
+            <input type='hidden' id='DepartmentId' data-db-column="DepartmentId">
+            {{DepartmentName}}
+         </td>
+         <td>
+            <input type='hidden' id='DesignationId' data-db-column="DesignationId" >
+            {{DesignationName}}
+        
+       </td>
+     @*  <td class="align-right">
+            <input type="text" class="BasicSalary form-control input-small" data-db-column="BasicSalary" data-db-type="float" readonly="readonly">
+      </td>*@
+            <td class="align-right">
+  
+            <input type="text" class="GrossSalary form-control input-small" disabled="disabled" readonly="readonly" data-db-column="GrossSalary" data-db-type="float" readonly="readonly">
+        </td>
+        <td class="align-right">
+            <input type="text" class="HouseAllowance form-control input-small" data-db-column="HouseAllowance" data-db-type="float" readonly="readonly">
+        </td>
+        <td  class="align-right">
+            <input type="text" class="ConveyanceAllowance form-control input-small" data-db-column="ConveyanceAllowance" data-db-type="float" readonly="readonly">
+        </td>
+        <td class="align-right">
+            <input type="text" class="MedicalAllowance form-control input-small" data-db-column="MedicalAllowance" data-db-type="float" readonly="readonly">
+        </td>
+  @*   <td>
+            <input type="text" class="TotalAllowances form-control input-small" data-db-column="TotalAllowances" data-db-type="float">
+        </td>*@
+        <td  class="align-right">
+            <input type="text" class="ProvidentFund form-control input-small" data-db-column="ProvidentFund" data-db-type="float" readonly="readonly">
+        </td>
+        <td class="align-right">
+            <input type="text" class="EOBI form-control input-small" data-db-column="EOBI" data-db-type="float" readonly="readonly">
+        </td>
+        <td class="align-right">
+            <input type="text" class="SST form-control input-small" data-db-column="SST" data-db-type="float" readonly="readonly">
+         </td>
+       @*  <td>
+            <input type="text" class="TotalDeductions form-control input-small" data-db-column="TotalDeductions" data-db-type="float">
+         </td>*@
+
+      <td class="align-right">
+            <input type="text" class="Bonus form-control input-small" data-db-column="Bonus" data-db-type="float" readonly="readonly">
+        </td>
+        <td class="align-right">
+            <input type="text" class="OTHours form-control input-small" data-db-column="OTHours" data-db-type="float" readonly="readonly">
+         </td>
+       @*<td>
+            <input type="text" class="OverTimeRate form-control input-small" data-db-column="OverTimeRate" data-db-type="float" readonly="readonly">
+         </td>*@
+            <td class="align-right">
+            <input type="text" class="OTAmount form-control input-small" data-db-column="OTAmount" data-db-type="float" readonly="readonly">
+         </td>
+        <td class="align-right">
+            <input type="text" class="NoOfAbsents form-control input-small" data-db-column="NoOfAbsents" data-db-type="int" readonly="readonly"></td>
+       <td class="align-right">
+            <input type="text" class="AbsentDeduction form-control input-small" data-db-column="AbsentDeduction" data-db-type="int" readonly="readonly"></td>
+           <td class="align-right">
+            <input type="text" class="Installment form-control input-small" data-db-column="Installment" data-db-type="float" readonly="readonly"></td>
+           <td class="align-right">
+            <input type="text" class="IncomeTax form-control input-small" data-db-column="IncomeTax" data-db-type="float" readonly="readonly"></td>
+           <td class="align-right">
+            <input type="text" class="NetSalary form-control input-small" data-db-column="NetSalary" data-db-type="float" readonly="readonly"></td>
+     <td>
+            <input type="text" class="Status form-control input-small" data-db-column="Status" data-db-type="bit" readonly="readonly"></td>
+
+    </tr>
+</script>
+
+@section FooterScript
+{
+    <script src="~/Content/AppJS/HRM/ApproveSalary.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            ApproveSalary.init();
+        });
+    </script>
+}

@@ -1,0 +1,38 @@
+DBCC CHECKIDENT ('[Transactions]', RESEED, 0);
+GO
+
+DBCC CHECKIDENT ('[Sales]', RESEED, 0);
+GO
+DBCC CHECKIDENT ('[SaleItems]', RESEED, 0);
+GO
+
+DBCC CHECKIDENT ('[Vouchers]', RESEED, 0);
+GO
+
+DBCC CHECKIDENT ('[VoucherItems]', RESEED, 0);
+GO
+
+DBCC CHECKIDENT ('[Challans]', RESEED, 0);
+GO
+
+DBCC CHECKIDENT ('[RentDetails]', RESEED, 0);
+GO
+
+DBCC CHECKIDENT ('[RentDetailItems]', RESEED, 0);
+GO
+
+DBCC CHECKIDENT ('[ElectricityUnits]', RESEED, 0);
+GO
+
+DBCC CHECKIDENT ('[ElectricityUnitItems]', RESEED, 0);
+GO
+
+
+DBCC CHECKIDENT ('[ChallanItems]', RESEED, 0);
+GO
+
+DBCC CHECKIDENT ('[WheatPurchases]', RESEED, 0);
+GO
+
+DBCC CHECKIDENT ('[WheatPurchaseItems]', RESEED, 0);
+GO

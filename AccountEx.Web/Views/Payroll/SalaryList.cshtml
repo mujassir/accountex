@@ -1,0 +1,109 @@
+﻿@{
+    ViewBag.Title = "Salary List";   
+}
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">Salary List
+    </h1>
+}
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Record Listing
+                </div>
+            </div>
+            <div class="portlet-body">
+
+                <div class="form-horizontal" data-save="save">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="prefix">Month:</label>
+                        <div class="col-md-3">
+                            <select class="form-control select2" id="Filter_Month">
+                                <option value="0">All</option>
+                                @for (var i = 1; i <= 12; i++)
+                                {
+                                    if (DateTime.Now.Month == i)
+                                    {
+                                    <option value="@(i)" selected="selected">@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i)</option>
+
+                                    }
+                                    else
+                                    {
+                                    <option value="@(i)">@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i)</option>
+                                         
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <label class="col-md-2 control-label" for="prefix">Year:</label>
+                        <div class="col-md-3">
+                            <select class="form-control select2" id="Filter_Year">
+                                <option value="0">All</option>
+                                @for (var i = DateTime.Now.AddYears(-2).Year; i <= DateTime.Now.AddYears(1).Year; i++)
+                                {
+                                    if (i == DateTime.Now.Year)
+                                    {
+                                    <option value="@i" selected="selected">@i</option>
+                                    }
+                                    else
+                                    {
+
+                                    <option value="@i">@i</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-primary" onclick="Salary.Filter()">
+                                <i class="fa fa-filter"></i>
+                                Search</button>
+                        </div>
+                    </div>
+                    <hr />
+
+                </div>
+                <table class="table table-striped table-bordered table-hover" id="mainTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 8px;" class="no-sort">
+                                <input type="checkbox" class="group-checkable" data-set="#mainTable .checkboxes" />
+                            </th>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Month</th>
+                            <th>Paid At</th>
+                            <th>Salary</th>
+                            <th>Allowances</th>
+                            <th>Overtime</th>
+                            <th>Deductions</th>
+                            <th>Income Tax</th>
+                            <th>Net Salary</th>
+                            <th style="width: 75px;" class="no-sort"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="11">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+@section FooterScript
+{
+    <script type="text/javascript" src="~/Content/metronic/assets/global/plugins/jquery-multi-select/js/jquery.multi-select.js"></script>
+    <script type="text/javascript" src="~/Content/AppJS/Payroll/SalaryList.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            SalaryList.init();
+        });
+    </script>
+}

@@ -1,0 +1,147 @@
+﻿/*
+table.report-summary-info > tbody > tr > td {
+    padding: 5px;
+    border: 1px solid #AAA;
+}*/
+
+#report-saleitem thead tr th {
+    vertical-align: middle;
+}
+#tblgstAgingItems thead tr th:first-child {
+    width: 72%;
+}
+#div-gstreport {
+    margin-top: 70px;
+}
+#gstinvoicetitle {
+    float: right;
+    font-weight: bold;
+    color: white;
+    background-color: black;
+    font-size: 18px !important;
+}
+table.report-summary-info td table tr td:first-child {
+    font-size: 9.8px !important;  
+}
+#report-saleitem {
+    font-size: 12.8px !important;  
+}
+table.report-summary-info td table tr td {
+    padding-right: 10px;
+    padding-top: -5px;
+}
+#div-report strong {
+    font-size: 9.8px !important;
+}
+#div-gstreport strong {
+    font-size: 12px !important;
+}
+#div-report span, #div-report label{
+        font-size: 9.8px !important;
+}
+#div-gstreport span {
+    font-weight: normal;
+    font-size: 11px !important;
+}
+
+#div-report .table-bordered td, #div-report .table-bordered th {
+    border: 1px solid #AAA !important;
+}
+
+#tblgstAgingItems {
+    border: 1px solid #AAA;
+    font-size: 12px;
+}
+
+     #tblgstAgingItems thead th {
+        border: 1px solid #AAA;
+        padding: 5px;
+    }
+/*--------------------------------CSS for  New Design---------------------------------*/
+
+#div-report #invoicetitle {
+    /*border-bottom: 1px solid #AAA;*/
+    text-align: center;
+    font-weight: bold;
+    color: white;
+    background-color: black;
+}
+
+#div-report .invInfo {
+    float: left;
+}
+
+#div-report label {
+    font-size: 9.8px;
+}
+
+#report-saleitem thead tr th {
+    text-align: center;
+}
+
+#report-saleitem tbody tr td:not(:nth-child(2)) {
+    text-align: right;
+}
+
+#report-saleitem tfoot tr td {
+    text-align: right;
+}
+
+#tblAgingItems thead th:nth-child(2) {
+    width: 65px;
+    text-align: right;
+}
+/*--------------------------------CSS for 2nd Print---------------------------------*/
+#div-gstreport #invoicetitle {
+    float: right;
+    font-weight: bold;
+    color: white;
+    background-color: black;
+}
+
+#div-gstreport .invInfo {
+    float: left;
+}
+
+#div-gstreport label {
+    font-size: 12px;
+}
+
+#report-gstsaleitem thead tr th {
+    text-align: center;
+}
+
+#report-gstsaleitem tbody tr td:not(:nth-child(2)) {
+    text-align: right;
+}
+
+#report-gstsaleitem tfoot tr td {
+    text-align: right;
+}
+
+#tblgstAgingItems thead th:nth-child(2) {
+    text-align: right;
+}
+
+#div-gstreport .table-bordered td, #div-gstreport .table-bordered th {
+    border: 1px solid #AAA !important;
+}
+
+#img-container {
+    width: 240px !important;
+    height: 90px !important;
+}
+
+    #img-container p, #img-container span, #img-container img {
+        height: 100% !important;
+        width: 100% !important;
+    }
+
+
+/*@media print {
+    #div-report #invoicetitle {
+        color: white !important;
+        background-color: black !important;
+        -webkit-print-color-adjust: exact;
+    }
+}*/

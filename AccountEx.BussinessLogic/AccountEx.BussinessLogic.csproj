@@ -1,0 +1,231 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{735FC16D-34FA-4813-9D44-5BC28F969B4C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AccountEx.BussinessLogic</RootNamespace>
+    <AssemblyName>AccountEx.BussinessLogic</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BarcodeLib, Version=1.0.0.22, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\BarcodeLib.1.0.0.22\lib\net20\BarcodeLib.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.BulkInsert, Version=6.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.BulkInsert-ef6-ext.6.0.3.1\lib\net45\EntityFramework.BulkInsert.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.MappingAPI, Version=6.1.0.10, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.MappingAPI.6.1.0.10\lib\net45\EntityFramework.MappingAPI.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EPPlus">
+      <HintPath>..\packages\EPPlus.4.1.0\lib\net40\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.5.13.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.13\lib\itextsharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net45\RestSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Scriban, Version=2.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scriban.2.1.1\lib\net45\Scriban.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Select.HtmlToPdf, Version=18.2.0.0, Culture=neutral, PublicKeyToken=e0ae9f6e27a97018, processorArchitecture=MSIL">
+      <HintPath>..\packages\Select.HtmlToPdf.18.2.0\lib\net40\Select.HtmlToPdf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.0\lib\netstandard1.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.1\lib\portable-net45+win8+wp8+wpa81\System.Threading.Tasks.Extensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="COA\AccountManager.cs" />
+    <Compile Include="COA\ProductMappingManager.cs" />
+    <Compile Include="Common\TemplateManager.cs" />
+    <Compile Include="Common\BarCodeManager.cs" />
+    <Compile Include="Common\ErrorManager.cs" />
+    <Compile Include="Common\PDFMerge.cs" />
+    <Compile Include="Common\ReportParametrManager.cs" />
+    <Compile Include="Common\UtilityFunctionManager.cs" />
+    <Compile Include="CRM\CRMComplaintManager.cs" />
+    <Compile Include="CRM\AdminTaskManager.cs" />
+    <Compile Include="CRM\CRMSaleForecastManager.cs" />
+    <Compile Include="CRM\CRMProjectManager.cs" />
+    <Compile Include="CRM\CalendarEventManager.cs" />
+    <Compile Include="CRM\CRMImportRequisitionManager.cs" />
+    <Compile Include="CRM\CRMIGRNManager.cs" />
+    <Compile Include="CRM\CRMSaleInvoiceManager.cs" />
+    <Compile Include="CRM\OwnershipTransferManager.cs" />
+    <Compile Include="CRM\PMCManager.cs" />
+    <Compile Include="CRM\LeadsManager.cs" />
+    <Compile Include="CRM\CRMReportManager.cs" />
+    <Compile Include="DeliveryChallan\DCManager.cs" />
+    <Compile Include="Common\ExcelFileManager.cs" />
+    <Compile Include="Config\CurrencyRateManager.cs" />
+    <Compile Include="Integrations\Google\Calendar\AccessToken.cs" />
+    <Compile Include="Integrations\Google\Calendar\GoogleCalendarManager.cs" />
+    <Compile Include="Integrations\Google\Calendar\OAuth2Helper.cs" />
+    <Compile Include="Lab\TestManager.cs" />
+    <Compile Include="Nexus\NexusCaseManager.cs" />
+    <Compile Include="Production\LaboursManager.cs" />
+    <Compile Include="Production\StockRequisitionManager.cs" />
+    <Compile Include="RentalSystem\RentOpeningBalanceManager.cs" />
+    <Compile Include="Security\Class1.cs" />
+    <Compile Include="Security\RsaCrypto.cs" />
+    <Compile Include="SQL\NexusSyncManager.cs" />
+    <Compile Include="SQL\SqlHelper.cs" />
+    <Compile Include="System\FiscalSettingManager.cs" />
+    <Compile Include="Transaction\BankReceiptManager.cs" />
+    <Compile Include="Transaction\CGSManager.cs" />
+    <Compile Include="Transaction\BLManager.cs" />
+    <Compile Include="Transaction\BLStatusManager.cs" />
+    <Compile Include="Transaction\ChallanManager.cs" />
+    <Compile Include="Transaction\PayablePaymentManager.cs" />
+    <Compile Include="Transaction\RentMonthlyLiabilityManager.cs" />
+    <Compile Include="Transaction\MiscChargesManager.cs" />
+    <Compile Include="Transaction\OrderBookingManager.cs" />
+    <Compile Include="Production\RequisitionManager.cs" />
+    <Compile Include="Discount\DiscountManager.cs" />
+    <Compile Include="Transaction\RentAgreementManager.cs" />
+    <Compile Include="Transaction\ServiceManager.cs" />
+    <Compile Include="Transaction\KlassTransactionManager.cs" />
+    <Compile Include="Transaction\VatTransManager.cs" />
+    <Compile Include="Transaction\VehicleSaleManager.cs" />
+    <Compile Include="UserRoles\ActionManager.cs" />
+    <Compile Include="Stock\AdjustmentManager.cs" />
+    <Compile Include="System\BusinessRuleException.cs" />
+    <Compile Include="Common\CommonHelper.cs" />
+    <Compile Include="Notifications\NotificationManager.cs" />
+    <Compile Include="Transaction\ServiceOrderManager.cs" />
+    <Compile Include="Common\PdfFileManager.cs" />
+    <Compile Include="Notifications\EmailManager.cs" />
+    <Compile Include="Order\JobCardManager.cs" />
+    <Compile Include="Dashboard\DashboardManager.cs" />
+    <Compile Include="Fiscal\FiscalYearManager.cs" />
+    <Compile Include="Transaction\IrisManager.cs" />
+    <Compile Include="HRM\SalaryManager.cs" />
+    <Compile Include="Transaction\TradeSaleTransactionManager.cs" />
+    <Compile Include="Transaction\UltraTechSaleManager.cs" />
+    <Compile Include="Transaction\UltratechPurchaseManager.cs" />
+    <Compile Include="Transaction\IronTransactionManager.cs" />
+    <Compile Include="Transaction\WheatPurchaseManager.cs" />
+    <Compile Include="Transaction\GSTTransactionManager.cs" />
+    <Compile Include="System\MenuManager.cs" />
+    <Compile Include="Order\OrderManager.cs" />
+    <Compile Include="HRM\PayrollManager.cs" />
+    <Compile Include="Production\ProductionManager.cs" />
+    <Compile Include="Common\ProjectManager.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="System\ReportManager.cs" />
+    <Compile Include="System\SettingManager.cs" />
+    <Compile Include="System\SiteConfig.cs" />
+    <Compile Include="Transaction\TransactionManager.cs" />
+    <Compile Include="Transaction\VoucherManager.cs" />
+    <Compile Include="UserRoles\RoleManager.cs" />
+    <Compile Include="Vehicles\SupplierCurrencyManager.cs" />
+    <Compile Include="Vehicles\VehicleManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AccountEx.CodeFirst\AccountEx.CodeFirst.csproj">
+      <Project>{103f5c0f-7829-427e-9181-408fa16a57cf}</Project>
+      <Name>AccountEx.CodeFirst</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AccountEx.Common\AccountEx.Common.csproj">
+      <Project>{2ac11c97-c09e-4023-ab64-122f899e2a1e}</Project>
+      <Name>AccountEx.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AccountEx.DbMapping\AccountEx.DbMapping.csproj">
+      <Project>{28a952c4-830f-4912-b627-383777bf8661}</Project>
+      <Name>AccountEx.DbMapping</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AccountEx.Repositories\AccountEx.Repositories.csproj">
+      <Project>{ba6bac4c-bac4-4f6f-89d7-d75fb15b8311}</Project>
+      <Name>AccountEx.Repositories</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Readme\Elmah.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

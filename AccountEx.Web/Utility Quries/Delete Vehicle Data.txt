@@ -1,0 +1,12 @@
+DELETE FROM dbo.BLStatusHistories
+DELETE FROM dbo.BLItems
+DELETE FROM dbo.Vehicles
+DELETE FROM dbo.VehicleSales
+DELETE FROM dbo.VehicleAcutions
+DELETE FROM dbo.VehiclePayments
+DELETE FROM dbo.VehicleInstallmentPayments
+DELETE FROM dbo.VehiclePenalties
+DELETE FROM dbo.VehicleRequests
+DELETE FROM dbo.VehicleFollowUps
+
+DELETE FROM dbo.VehicleBranches WHERE Id NOT IN	(3,1)

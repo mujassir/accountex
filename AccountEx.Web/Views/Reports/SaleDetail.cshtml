@@ -1,0 +1,111 @@
+﻿@model AccountEx.CodeFirst.Models.Sale
+@{
+    Layout = "_Layout.cshtml";
+    ViewBag.Title = "Sale Detail";  
+}
+<div class="row-fluid">
+    <div class="span12">
+        <h2 class="page-title">&nbsp<span class="formtitle">بکری تفصیل					</span></h2>
+    </div>
+</div>
+
+<div class="row-fluid" id="masterdetail">
+    <section class="widget">
+        <div class="body">
+
+            @using (Html.BeginForm())
+            {
+                <div id="form-info" data-save='Save' class="form-horizontal label-left ">
+                    <div class="span2">
+                        <input type="submit" value="ڈسپلے رپورٹ" class="btn btn-primary btn-large" />
+
+                    </div>
+                    <div class="span5">
+                        <label class="control-label" for="prefix">وائچر نمبر</label>
+                        <div class="controls controls-row">
+                            <input type="text" name="VoucherNumber" id="VoucherNumber" />
+                        </div>
+
+                    </div>
+                </div>
+            }
+            <br />
+            <br />
+            <br />
+
+            @if (Model != null)
+            {
+                <div class="body">
+                    <div data-save='Save' class="form-horizontal label-left ">
+                        <div class="span3"></div>
+                        <div class="span3">
+                            <label class="control-label">
+                                @Model.Vehicle          :گاڑی ںمبر
+                            </label>
+
+                        </div>
+                        <div class="span3">
+                            <label class="control-label">
+                                @Model.Date.Value.ToString("dd/MM/yyyy")      :تاریخ 
+                            </label>
+
+                        </div>
+                        <div class="span3">
+                            <label class="control-label">
+                                @Model.AccountTitle      :بیوپاری 
+                            </label>
+
+                        </div>
+                    </div>
+
+                    <br />
+                    <br />
+                    <br />
+                    <div class="tools pull-right">
+                        @{ Html.RenderPartial("_Export_Button");  }
+                    </div>
+
+                    <table class="table table-striped" data-export='true'>
+                        <thead>
+                            <tr>
+                                <th>ٹوٹل رقم
+                                </th>
+                                <th>لاگا
+                                </th>
+                                <th>رقم
+                                </th>
+                                <th>نرخ
+                                </th>
+                                <th>تعداد نگ</th>
+                                <th>پارٹی فروخت
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var item in Model.SaleItems)
+                            {
+                                <tr>
+                                    <td>@(item.Quantity * item.Price + item.Laga) </td>
+                                    <td>@item.Laga </td>
+                                    <td>@(item.Quantity * item.Price) </td>
+                                    <td>@item.Price  </td>
+                                    <td>@item.Quantity  </td>
+                                    <td>@item.AccountTitle</td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            }
+            <br />
+            <br />
+            <br />
+        </div>
+
+    </section>
+</div>
+

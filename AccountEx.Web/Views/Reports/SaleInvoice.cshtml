@@ -1,0 +1,102 @@
+﻿@model AccountEx.Web.Models.GeneralLedgerModel
+@{
+    Layout = "_Layout.cshtml";
+    ViewBag.Title = "Sale Invoice";  
+}
+<style type="text/css">
+    .report-table tbody tr td:nth-last-child(1),
+    .report-table tbody tr td:nth-last-child(2),
+    .report-table tbody tr td:nth-last-child(3) {
+        text-align: right;
+    }
+</style>
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">Sale Invoice</h1>
+}
+
+<div class="row" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-filter"></i>Report Filters
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                    <a href="javascript:;" class="remove"></a>
+                </div>
+            </div>
+            <div class="portlet-body form">
+
+                <div class="form-horizontal" data-save="Save">
+                    <input type="text" id="Id" class="hide" />
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Voucher Number</label>
+                            <div class="col-md-3">
+                                <input type="text" id="VoucherNumber" class="form-control number" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+                        <div class="col-md-8">
+                            <button type="submit" class="btn btn-primary" onclick="PortraitInvoice()">
+                                <i class="fa fa-book"></i>&nbsp;Show Invoice</button>
+                            <button type="submit" class="btn btn-primary" onclick="PortraitGstInvoice()">
+                                <i class="fa fa-book"></i>&nbsp;Show GST Invoice</button>
+                            <button type="submit" class="btn btn-primary" onclick="LandscapeInvoice()">
+                                <i class="fa fa-columns"></i>&nbsp;Double Copy Invoice</button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+
+
+
+
+
+
+@section FooterScript
+{
+    <script>
+        jQuery(document).ready(function () {
+
+        });
+        function LandscapeInvoice() {
+            var vou = parseInt($("#VoucherNumber").val());
+            if (vou > 0) {
+                Common.OpenInNewTab("invoice2?type=sale&voucher-number=" + vou);
+            }
+        }
+        function PortraitInvoice() {
+            var vou = parseInt($("#VoucherNumber").val());
+            if (vou > 0) {
+                Common.OpenInNewTab("invoice?type=sale&voucher-number=" + vou);
+            }
+        }
+        function PortraitGstInvoice() {
+            var vou = parseInt($("#VoucherNumber").val());
+            if (vou > 0) {
+                Common.OpenInNewTab("Gstinvoice?type=sale&voucher-number=" + vou);
+            }
+        }
+
+    </script>
+}
+
+
+
+
+
+

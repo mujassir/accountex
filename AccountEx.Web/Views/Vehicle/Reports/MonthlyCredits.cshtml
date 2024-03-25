@@ -1,0 +1,185 @@
+﻿@using AccountEx.Common;
+
+@{ 
+    Layout = "~/Views/Reports/_Layout.cshtml";
+    ViewBag.Title = "Monthly Credits";
+    var monthslist = new List<IdName>();
+    var months = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.MonthNames;
+    for (int i = 0; i < months.Length; i++)
+    {
+        if (i <= 11)
+        {
+            monthslist.Add(new IdName() { Name = months[i], Id = i + 1 });
+        }
+
+    }
+    IList<int> years = Enumerable.Range(DateTime.Now.Year - 2, 10).ToList();
+}
+<style type="text/css">
+</style>
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">
+
+        <span class="main-title">@ViewBag.Title</span>
+
+
+    </h1>
+}
+@section VehicleBranchesDropdown
+{
+
+    @Html.Partial("../Vehicle/_UserBranches_Dropdown", new ViewDataDictionary { { "Labelcolspan", 2 }, { "Divcolspan", 12 }, { "showLabel", false } })
+}
+<div class="row hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-filter"></i>Report Filters
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                    @*<a href="javascript:;" class="remove"></a>*@
+                </div>
+                <div class="actions">
+                    <button class="btn blue hidden-print" onclick="window.print();"><i class="fa fa-print"></i>&nbsp;Print </button>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal" data-save="Save">
+                    <input type="text" id="Id" class="hide" />
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Month</label>
+                            <div class="col-md-2">
+                                <select id="Month" class="form-control select2" data-required="required" data-message="Month is required.">
+                                    <option></option>
+                                    @foreach (var item in monthslist)
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
+                                </select>
+
+                            </div>
+                            <label class="col-md-1 control-label" for="prefix">Year</label>
+                            <div class="col-md-2">
+                                <select id="Year" class="form-control select2" data-required="required" data-message="year is required.">
+                                    <option></option>
+                                    @foreach (var year in years)
+                                    { 
+                                        <option>@year</option>
+                                    }
+                                </select>
+
+                            </div>
+                            <div class="col-md-3">
+                                <label id="labe-bad-debts" class="control-label" for="IsLive">
+                                    <input type="checkbox" id="IsBadDebit" data-checktrack='false' />
+                                    Include Bad Debts
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="form-actions">
+                    <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+                    <div class="col-md-8">
+                        <button type="button" id="btnShowReport" class="btn btn-primary">Show Report</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- END EXAMPLE TABLE PORTLET-->
+</div>
+
+</div>
+
+
+
+
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title hidden-print">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Report Data
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                    @*<a href="javascript:;" class="remove"></a>*@
+                </div>
+                <div class="tools pull-right">
+                    @{ Html.RenderPartial("_Export_Button");  }
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover report-table tablesorter" data-export='true'>
+                        <thead>
+                            <tr>
+                                <th>SN</th>
+                                <th>Sold Date</th>
+                                <th>Chassies no#,Reg</th>
+                                <th class="text-right">Sold Price</th>
+                                <th class="text-right">Deposit</th>
+                                <th class="text-right">TRACKER,INSURANCE,LOG BOOK</th>
+                                <th class="text-right">Balance</th>
+                                <th>Monthly Payment Date</th>
+                                <th class="text-right">Per Month Installment</th>
+                                <th>NO. OF MONTHS</th>
+                                <th class="text-right">Total Due</th>
+                                <th class="text-right">Total Cash Received</th>
+                                <th class="text-right" @*data-sorter="currency" data-string="min"*@>Total Over Due</th>
+                                <th class="text-right">PENALTY</th>
+                                <th class="text-right">Total Balance</th>
+                                <th class="text-right">Monthly Due</th>
+                                <th class="text-right">Monthly Receving</th>
+                                <th class="text-right">Monthly Over Due </th>
+                                <th>Customer</th>
+                                <th>Contact</th>
+                                <th>P.O.Box,Street Address / Town</th>
+                                <th>Remarks</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+                        </tbody>
+                        <tfoot></tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+@section FooterScript
+{
+    <script src="~/Content/metronic/assets/global/plugins/tablesorter/js/jquery.tablesorter.js"></script>
+    <script src="~/Content/metronic/assets/global/plugins/tablesorter/js/widgets/widget-filter.js"></script>
+    <script src="~/Content/metronic/assets/global/plugins/tablesorter/js/widgets/widget-stickyHeaders.js"></script>
+    <link href="~/Content/metronic/assets/global/plugins/tablesorter/css/theme.dropbox.css" rel="stylesheet" />
+    <script src="~/Content/AppJS/Vehicle/Reports/MonthlyCredits.js"></script>
+
+
+    <script>
+        jQuery(document).ready(function () {
+            MonthlyCredits.init();
+        });
+    </script>
+}
+
+
+
+
+
+

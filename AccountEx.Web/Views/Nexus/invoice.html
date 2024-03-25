@@ -1,0 +1,339 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+    <style>
+        .align-center {
+            text-align: center;
+        }
+
+
+        .challanNo {
+            margin-top: 0px;
+            margin-top: 0px;
+        }
+
+        .lastPayment {
+            padding-top: 10px;
+        }
+
+        .align-right {
+            text-align: right;
+        }
+
+        .upper-case {
+            text-transform: uppercase;
+        }
+
+        .align-left {
+            text-align: left;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        .font-size {
+            font-size: 15px;
+        }
+
+        .font18 {
+            font-size: 18px;
+        }
+
+        .font14 {
+            font-size: 14px;
+        }
+
+        .font12 {
+            font-size: 12px;
+        }
+
+        .scil-label {
+            border: 1px solid;
+            background: rgba(158, 158, 158, 0.44);
+        }
+
+        .heading-left-width {
+            width: 30%;
+        }
+
+        .table-width {
+            width: 100%;
+        }
+
+        .font-size2 {
+            font-size: 9px;
+            text-align: justify;
+        }
+
+        .marchant {
+            border-top: 1px solid;
+        }
+
+        .term-label {
+            padding-bottom: -22px;
+            margin-bottom: 4px;
+            margin-top: -14px;
+            padding-top: 22px;
+        }
+
+        .label-sliptype {
+            /*border: 1px solid #E7ECF1;*/
+            border: 1px solid black;
+            text-align: center;
+            background: rgba(158, 158, 158, 0.44);
+        }
+
+        .padding-top {
+            /*padding-top: 2px;*/
+        }
+
+        .margin-top {
+            margin-top: 2px;
+        }
+
+        .dot-border {
+            border-right: dotted;
+            height: 100%;
+        }
+
+        .table > thead:first-child > tr:first-child > th {
+            border-top: 0;
+        }
+
+        .table.table-bordered thead > tr > th {
+            border-bottom: 0;
+        }
+
+        .border-bottom td {
+            border-bottom: 1px solid #808080 !important;
+        }
+
+        .width40 {
+            width: 40%;
+        }
+
+        .width20 {
+            width: 20%;
+        }
+
+        .span-label {
+            margin-right: 20px;
+        }
+
+        .col-xs-3 {
+            width: 23%;
+            position: relative;
+            min-height: 1px;
+            padding-left: 5px;
+            padding-right: 5px;
+            float: left;
+        }
+
+        .table td,
+        .table th {
+            font-size: 10px;
+        }
+
+        .table {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+            .table > tbody > tr > td, .table > tfoot > tr > td {
+                padding: 1px 6px;
+            }
+
+        .table {
+            /*display: table;
+           border-collapse: separate;
+           border-spacing: 2px;
+           border-color: grey;*/
+            border-spacing: 0;
+            border-collapse: collapse;
+        }
+
+        .table-bordered, .table-bordered > tbody > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > td, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > thead > tr > th {
+            /*border: 1px solid #e7ecf1;*/
+            border: 1px solid black;
+        }
+
+        body {
+            color: #34495e;
+            font-family: "Open Sans", sans-serif;
+            padding: 0px !important;
+            margin: 0px !important;
+            direction: "ltr";
+            font-size: 14px;
+        }
+
+        tr.tr-subtotal td {
+            font-size: 17px;
+        }
+
+        tr.tr-subtotal {
+            border: 2px solid;
+        }
+
+        tr.tr-grandtotal td {
+            font-size: 17px;
+        }
+
+        .challan-table {
+            /*padding-left: 7px;
+           padding-right: 7px;*/
+        }
+
+        .barcode-container img {
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+
+        .pull-right {
+            float: right;
+        }
+
+        .section-name {
+            float: right;
+            padding-left: 7px;
+        }
+
+        .tbl-tests {
+            border-collapse: collapse;
+            padding: 5px 8px;
+        }
+
+            .tbl-tests tr td, .tbl-tests tr th {
+                padding: 5px;
+                border: 1px solid #000;
+            }
+
+            .tbl-tests tr th {
+                font-weight: bold;
+            }
+
+        .tbl-total {
+            border-collapse: collapse;
+            padding: 5px 8px;
+        }
+
+            .tbl-total tr td, .tbl-total tr th {
+                padding: 5px;
+                border: 1px solid #000;
+            }
+
+
+        #div-report {
+            margin-top: 100px;
+        }
+
+        div.hr {
+        }
+
+            div.hr hr {
+                color: #000;
+                background-color: #000;
+                height: 2px;
+            }
+
+        div.amount-in-wrod p {
+            border-bottom: 1px solid #34495e;
+            width: 400px;
+            float: left;
+            padding: 0px 5px !important;
+            margin: 0px !important;
+        }
+
+        div.amount-in-wrod span.label {
+            float: left;
+        }
+    </style>
+</head>
+<body>
+    <div id="div-report" class="visible-print12">
+        <div class="row visible-print report-header">
+           
+            {ReportHeader}
+            
+        </div>
+        <!--@*1. First table*@-->
+        <div class="col-xs-12 challan-table">
+            <div class="hr"><hr /></div>
+            <h1 class="align-center">{Department}</h1>
+            <h3 class="align-center upper-case">{Date2}</h3>
+            <div class="hr"><hr /></div>
+            <table class="font-size table-width">
+                <tbody>
+                    <tr class="font14">
+                        <td class="align-left"><span class="bold span-label">Employee Name:</span>{EmployeeName}</td>
+                        <td class="align-right"><span class="bold span-label">Voucher Date:</span>{Date1}</td>
+                    </tr>
+                    <tr class="font14">
+
+                        <td class="align-left"><span class="bold span-label">Patient Name:</span>{PatientName}</td>
+                        <td class="align-right"><span class="bold span-label">Reference No:</span>{EmployeeId}</td>
+
+
+                    </tr>
+                    <tr class="font14">
+
+                        <td class="align-left"><span class="bold span-label">Relation:</span>{Relationship}</td>
+                        <td class="align-right"><span class="bold span-label">Other Info:</span>{CaseNumber}</td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+            <div style="margin-bottom:20px"></div>
+            <table class="font-size table-width tbl-tests">
+                <thead>
+                    <tr>
+                        <th class="align-center" style="width:10%">Sr. No.</th>
+                        <th class="align-left">Test Name</th>
+                        <th class="align-right" style="width:10%">Rates</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {TestHtml}
+
+                </tbody>
+
+            </table>
+            <br /><br /><br />
+            <table class="font-size table-width tbl-total">
+                <tr class="bold">
+                    <td style="width:85%" class="align-center">
+                        Sub Total
+
+                    </td>
+                    <td style="border:2px solid" class="align-right">
+
+                        <span class="align-right">{TotalAmount}</span>
+                    </td>
+                </tr>
+            </table>
+            <br /><br />
+            <div class="amount-in-wrod">
+                <span class="label"> AMOUNT IN WORDS:</span>
+                <p>{AmountInWord}</p>
+            </div>
+            <div style="position: relative; width:100%; height: 800px;">
+
+                <div style="position: absolute;bottom: 40px;width:100%">
+                    <table class="table-width">
+                        <tr class="col-xs-4 col-md-4">
+                            <td class="bold align-left">{UserName}</td>
+                            <td class="bold align-left">Checkd by</td>
+                            <td class="bold align-center">Verified by</td>
+                            <td class="bold align-right">Approved by</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

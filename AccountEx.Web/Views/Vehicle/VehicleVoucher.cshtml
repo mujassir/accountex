@@ -1,0 +1,519 @@
+﻿@using AccountEx.BussinessLogic;
+@using AccountEx.Common;
+@{
+    ViewBag.Title = "Vehicle Voucher";
+
+    var type = Request.QueryString["type"] + "";
+    var vouchertype = Numerics.GetInt(((VoucherType)Enum.Parse(typeof(VoucherType), type, true)));
+    var error = "";
+    switch (type.ToLower())
+    {
+        case "advancereceipts":
+            ViewBag.Title = "Commitment";
+            if (SettingManager.CashAccountId == 0)
+            {
+                error += "<li>Cash account is missing.</li>";
+
+            }
+            if (SettingManager.BankHeadId == 0)
+            {
+                error += "<li>Bank account is missing.</li>";
+
+            }
+
+            break;
+        case "penaltypayments":
+            ViewBag.Title = "Penalty Receipts";
+            if (SettingManager.CashAccountId == 0)
+            {
+                error += "<li>Cash account is missing.</li>";
+
+            }
+            if (SettingManager.BankHeadId == 0)
+            {
+                error += "<li>Bank account is missing.</li>";
+
+            }
+
+            break;
+        case "auctionnerpayments":
+            ViewBag.Title = "Auctionner Receipts";
+            if (SettingManager.BankHeadId == 0)
+            {
+                error += "<li>Bank account is missing.</li>";
+
+            }
+
+            if (SettingManager.CashAccountId == 0)
+            {
+                error += "<li>Cash account is missing.</li>";
+
+            }
+
+            break;
+
+    }
+    // var error = "";
+
+    if (SiteContext.Current.Fiscal == null)
+    {
+        error += "<li>No fiscal year found.</li>";
+
+    }
+   
+}
+
+
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold hidden-print">@ViewBag.Title</h1>
+}
+@if (!string.IsNullOrWhiteSpace(error))
+{
+    <div class="note note-danger note-bordered">
+        <h4 class="block">Head Account Missing</h4>
+        <div>
+            <i class="fa-lg fa fa-warning"></i>Head Account is missing in the application settings.In order to complete current transaction head accounts must be added in settings.<br />
+
+
+            <ul>
+                @Html.Raw(error)
+            </ul>
+
+
+            Add missing head accounts in settings and then try again by <a href="@Request.Url"><i class="fa fa-refresh"></i>&nbsp;Relaoding</a>&nbsp;the current page.
+        </div>
+    </div>
+}
+else
+{
+    <div class="row hidden-print" id="form-info">
+
+        <div class="col-md-12 col-sm-12">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <div class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption ">
+                        <i class="fa fa-edit"></i><span class="voucher-title">Add/Edit @ViewBag.Title </span>
+                    </div>
+                    <div class="actions hide">
+                        <a href="javascript:;" onclick="BLPayments.LoadVoucher('previous')" class="btn blue">
+                            <i class="fa fa-angle-left"></i>&nbsp;Back
+                        </a>
+                        <a href="javascript:;" onclick="BLPayments.LoadVoucher('next')" class="btn blue">
+                            <i class="fa fa-angle-left"></i>&nbsp;Next 
+                        </a>
+
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div id="mainform" class="form-horizontal" data-save="save">
+                        <input type="text" id="Id" class="hide" data-include-in-item="true" data-item-id="VoucherId" />
+                        @* <input type="text" id="Id" class="hide"  data-include-in-item="true" data-item-id="VoucherId"/>*@
+
+                        <input type="text" id="CreatedDate" class="hide ac-date" data-clear-type="date" />
+                        <input type="text" id="IsDeleted" class="hide" />
+                        <input type="text" id="PreVoucherNumber" class="hide" />
+                         <input type="text" id="TransactionType" class="hide" value="@((byte)vouchertype)" data-clear="false" />
+                        <div class="form-body">
+                            
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">Vou #</label>
+                                <div class="col-md-2 container-voucher">
+
+                                    <input type="text" class="form-control input-small" id="VoucherNumber" data-required="required" data-validate="true" data-message="Voucher Number is required" data-plus-as-tab="false" data-include-in-item="true">
+                                </div>
+                                <label class="col-md-1 control-label" for="prefix">Date</label>
+                                <div class="col-md-2">
+                                    <input id="Date" type="text" class="form-control date-picker input-small" data-clear-type='date' data-required="required" data-message="Date is required" data-hide-dropdown="true" data-plus-as-tab="false" data-include-in-item="true" data-fiscal-date="true" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label master-account-label" for="prefix">Account Code</label>
+                                <div class="col-md-1">
+
+                                    <input type="text" class="form-control input-small not-focused" id="AccountCode" data-required="required" data-required="required" data-message="Account Code is required"  data-plus-as-tab="false" />
+
+
+                                    <input type="hidden" id="AccountId" value="0" />
+
+                                </div>
+                                <div class="col-md-4">
+
+                                    <input type="text" class="form-control" id="AccountName"  disabled="disabled" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label master-account-label" for="prefix">Amount</label>
+                                <div class="col-md-2">
+
+                                    <input type="text" class="form-control input-small num3" id="Amount" data-required="required" data-message="Amount is required"  data-plus-as-tab="false" />
+                                </div>
+                                <div class="form-group PaymentOptions">
+                                    <label class="col-md-1 control-label" for="prefix">Mode</label>
+                                    <div class="col-md-2">
+                                        <select class="form-control select2" id="PaymentMode" data-required="required" data-message="Payment Option is required">
+                                            <option value="Cash">Cash</option>
+                                            <option value="Bank">Bank</option>
+                                            <option value="M Paisa">M Paisa</option>
+                                            <option value="LIPA NA MPESA">LIPA NA MPESA</option>
+                                            <option value="Mobile Money">Mobile Money</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="form-group banks-options hide">
+                                <label class="col-md-2 control-label" for="prefix">Cheque #</label>
+                                <div class="col-md-2 container-voucher">
+
+                                    <input type="text" class="form-control input-small" id="ChequeNumber" data-required="false" data-validate="true" data-message="Cheque Number is required" data-plus-as-tab="false" data-include-in-item="true">
+                                </div>
+                                <label class="col-md-1 control-label" for="prefix">Cheque Date</label>
+                                <div class="col-md-2">
+                                    <input id="ChequeDate" type="text" class="form-control date-picker input-small" data-clear-type='date' data-required="false" data-message="Cheque Date is required" data-hide-dropdown="true" data-plus-as-tab="false" data-include-in-item="true" data-fiscal-date="true" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">Customer</label>
+                                <div class="col-md-5">
+                                    <select id="AccountId1" class="form-control select2 customers" data-required="required" data-placeholder="Customer" data-message="Customer is required">
+                                        <option></option>
+
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">Vehicle</label>
+                                <div class="col-md-5">
+                                    <select class="form-control select2" id="VehicleId" data-required="required" data-message="Vehicle is required">
+                                        <option></option>
+                                        @foreach (var item in (List<IdName>)ViewBag.Vehicles)
+                                        {
+                                            <option data-custom="@item.Id" value="@item.Id">@item.Name</option>
+                                        }
+                                    </select>
+                                    @* <input type="hidden" id="CompanyPartnerId" />*@
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">Remarks</label>
+                                <div class="col-md-5">
+                                    <input class="form-control " type="text" name="text" id="Comments" />
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-actions">
+                            <div class="btn-set pull-left">
+
+                                @*<button class="btn tooltips" data-container="body" data-placement="top" data-original-title="Tooltip in top">Top</button>*@
+                                <a href="javascript:;" onclick="VehicleVoucher.LoadVoucher('first')" class="btn blue tooltips disabled first" data-original-title="First">
+                                    <i class="fa fa-angle-double-left"></i>
+                                </a>
+                                <a href="javascript:;" onclick="VehicleVoucher.LoadVoucher('previous')" class="btn blue tooltips disabled previous" data-original-title="Previous">
+                                    <i class="fa fa-angle-left"></i>
+                                </a>
+                                <a href="javascript:;" onclick="VehicleVoucher.LoadVoucher('next')" class="btn blue tooltips disabled next" data-original-title="Next">
+                                    <i class="fa fa-angle-right"></i>
+                                </a>
+                                <a href="javascript:;" onclick="VehicleVoucher.LoadVoucher('last')" class="btn blue tooltips disabled last" data-original-title="Last">
+                                    <i class="fa fa-angle-double-right"></i>
+                                </a>
+                            </div>
+                            <div class="btn-set pull-right">
+                                @if (!SiteContext.Current.Fiscal.IsClosed)
+                                {
+                                    <button type="button" class="btn red btnFinal hide" onclick="VehicleVoucher.Final(true)">
+                                        <i class="fa  fa-lock"></i>
+                                        Post</button>
+                                    <button type="button" class="btn red btnUnFinal hide" onclick="VehicleVoucher.Final(false)">
+                                        <i class="fa  fa-unlock-alt"></i>
+                                        Un-Post</button>
+                                    <button type="button" class="btn purple-plum" onclick="VehicleVoucher.New()">
+                                        <i class="fa  fa-plus-circle"></i>
+                                        New</button>
+                                    <button type="button" id="btnsaverecord" class="btn btn-primary green" onclick="VehicleVoucher.Save()">
+                                        <i class="fa fa-check"></i>
+                                        Save</button>
+                                    <button id="btndelete" type="button" class="btn red" onclick="VehicleVoucher.Delete()">
+                                        <i class="fa fa-trash-o"></i>
+                                        Delete</button>
+                                }
+                                <button id="btnprint" type="button" class="btn yellow" onclick="VehicleVoucher.PrintReceipt()">
+                                    <i class="fa fa-print"></i>
+
+                                    Print</button>
+                                <button type="button" class="btn blue" onclick="window.location='@(Url.Content(SettingManager.DashBoardUrl))'">
+                                    <i class="fa  fa-times-circle"></i>
+
+                                    Close</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <table class="table table-striped table-bordered table-hover" id="mainTable">
+                            <thead>
+                                <tr>
+                                    <th>VoucherNumber</th>
+                                    <th>Voucher Date</th>
+                                    <th>Account</th>
+                                    <th>Amount</th>
+                                    <th>User Name</th>
+                                    <th style="width: 30px;" class="no-sort"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="6" class="center">Loading...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- END EXAMPLE TABLE PORTLET-->
+        </div>
+    </div>
+    
+   
+    <div id="jsondata" class="hide">
+        <p id="data">@ViewBag.Settings</p>
+    </div>
+}
+<style>
+    table.report-summary-info > tbody > tr > td {
+        padding: 5px;
+        /*border: 1px solid #AAA;*/
+    }
+
+    table.report-summary-info td table tr td:first-child {
+        font-size: 9px !important;
+        text-align: right;
+        font-weight: bold;
+    }
+
+    table.report-summary-info td table tr td {
+        padding: 2px 5px;
+    }
+
+    #div-report strong {
+        font-size: 9px !important;
+    }
+
+    #div-report span {
+        font-weight: normal;
+        font-size: 11px !important;
+    }
+
+    /*#div-report .table-bordered td, #div-report .table-bordered th {
+        border: 1px solid #AAA !important;
+    }*/
+    #tblAgingItems tbody td:nth-child(1) {
+        text-align: left;
+    }
+
+    .border1 {
+        border-bottom: 1px solid;
+        display: inline-block;
+    }
+
+    .border2 {
+        border-bottom: 1px solid;
+        display: inline-block;
+    }
+
+    .border3 {
+        border-bottom: 1px solid;
+        display: inline-block;
+    }
+
+    .width-1 {
+        width: 70%;
+    }
+
+    .width-2 {
+        width: 98%;
+    }
+
+    .width-3 {
+        width: 80%;
+    }
+
+    .width-4 {
+        width: 60%;
+    }
+
+    .width-5 {
+        width: 40%;
+    }
+
+    .width-6 {
+        width: 30%;
+    }
+</style>
+<div class="row"></div>
+
+
+<div id="cashreceipt-print-container" class="print-container visible-print">
+    <div class="col-md-12 col-xs-12">
+        <div class="col-md-3 col-xs-4 pull-left">
+            <h3><strong>ALI CARS LTD.</strong></h3>
+            <br />
+        </div>
+        <div class="col-md-3 col-xs-4 pull-left">
+            <span>P.O. BOX: <span>99945-80107, Mombasa-Kenya </span></span>
+            <br />
+            <span>Tel: <span>0711 382393</span></span><br />
+            <span>PIN No. <span><strong></strong>P051439082P</span></span>
+        </div>
+        <div class="col-md-3 col-xs-4 pul-left" style="border-left: 1px solid">
+            <br />
+            <br />
+            <span><strong>Date:</strong></span><span style="border-bottom: 1px dotted"><span class="lblcrpDate" data-db-type="date"></span></span>
+            <br />
+
+        </div>
+    </div>
+    <div class="col-xs-12">
+
+        <div class="col-xs-4 pull-let">
+            <span><strong>No. A</strong></span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                <span class="lblcrpVoucherNumber"></span>
+        </div>
+        <div class="col-xs-4 pull-left text-center">
+            <h4><strong><span class="lbldcrvptitle text-uppercase"></span></strong></h4>
+        </div>
+        <span class="col-xs-4 pull-left"></span>
+    </div>
+    <div class="col-xs-12">
+        <div class="col-xs-12">
+            <label><strong>Received with thanks from</strong></label>
+            <span class="border1 width-1"><span class="lblcrpCustomerName"></span></span>
+            <br />
+        </div>
+        <div class="col-xs-12">
+            <div class="border2 width-2"></div>
+            <br />
+        </div>
+        <div class="col-xs-12">
+            <label><strong>The sum of shillings/dollars</strong></label>&nbsp;
+                <span class="border1 width-1"><span class="lbldcrvpamountinword text-uppercase"></span></span>
+            <br />
+        </div>
+        <div class="col-xs-12">
+            <div class="border2 width-2"></div>
+            <br />
+        </div>
+        <div class="col-xs-12">
+            <label><strong>Being payment of</strong></label>
+            <span class="border1 width-1"><span class="lblcrpManufacturer"></span>&nbsp;<span class="lblcrpModel"></span></span>
+            <br />
+        </div>
+        <div class="col-xs-12">
+            <div class="border2 width-2"></div>
+            <br />
+        </div>
+        <div class="col-xs-12">
+            <div class="pull-left col-xs-6">
+                <label><strong>Reg. No.</strong> </label>
+                <span class="border3 width-3"><span class="lblcrpRegNo"></span></span>
+            </div>
+            <div class="pull-left col-xs-6">
+                <label><strong>Chassis No.</strong></label>
+                <div class="border3 width-4"><span class="lblcrpChassisNo"></span></div>
+            </div>
+
+        </div>
+        <div class="col-xs-12" style="margin-top: 20px">
+            <label><strong>Cash Receipt</strong></label>
+            <span class="border1 width-1"><span class="lblcrpPaymentMode"></span></span>
+            <br />
+        </div>
+        <div class="col-xs-12">
+            <div class="col-xs-5 pull-left">
+                <div class="pull-left col-xs-5" style="margin-top: 50px;">
+                    <label><strong>KSHS./US$</strong></label>
+                </div>
+                <span class="col-xs-7 lblcrpAmount" style="border: 1px solid; height: 100px" data-db-type="int" data-format="ture"></span>
+            </div>
+            <div class="col-xs-7 pull-left">
+
+                <div class="col-xs-12" style="border: 1px solid; height: 100px">
+                    <div style="margin-top: 10px">
+                        <label><strong>Received By:</strong><span class="lbldnEngineNo"></span></label>
+                        <span class="border3 width-5"></span>
+                        <br />
+                        <label><strong>Sign:</strong></label>
+                        <span class="border3 width-5"></span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="text-center col-xs-12">
+                <h4 class="notes"></h4>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="template-item">
+    <tr>
+        <td>
+            <input type="hidden" class="Id" data-db-column="Id">
+            <input type="hidden" class="AccountId" data-db-column="AccountId">
+            @*  <input type="hidden"  class="EntryType" id="EntryType" data-db-column="EntryType" value="@((int)EntryType.Item)">*@
+            <input type="text" class="AccountCode form-control typeahead input-small ui-autocomplete-input" data-db-column="AccountCode">
+        </td>
+        <td>
+            <input type="text" disabled="disabled" readonly="readonly" class="AccountName form-control input-medium" data-db-column="AccountName">
+        </td>
+        <td>
+
+            <input type="hidden" class="BLId" data-db-column="BLId">
+            <input type="hidden" class="BLChargeId" data-db-column="BLChargeId">
+            <select class="BLNo form-control input-medium" data-db-column="BLNo"></select>
+        </td>
+        <td>
+            <input type="text" disabled="disabled" readonly="readonly" class="InvoiceNo form-control input-medium" data-db-column="InvoiceNo">
+        </td>
+        <td>
+            <input type="text" class="Description form-control input-large" data-db-column="Description">
+        </td>
+        <td class="align-right">
+            <input type="text" class="Amount form-control input-small num3" data-db-column="Amount">
+        </td>
+        <td class="td-delete">
+            <span class="action"><i class="fa fa-trash-o" onclick="PayablePayments.DeleteRow(this)" data-original-title="Delete Item"></i></span>
+        </td>
+    </tr>
+</script>
+
+
+<script type="text/html" id="template-item-print">
+    <tr>
+        <td>{{AccountName}}
+        </td>
+        <td>{{Description}}
+        </td>
+        <td class="align-right">{{Amount}}
+        </td>
+    </tr>
+</script>
+@section FooterScript
+{
+
+    <script src="~/Content/AppJS/Vehicle/VehicleVoucher.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            VehicleVoucher.init();
+        });
+    </script>
+}
+

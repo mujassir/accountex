@@ -1,0 +1,163 @@
+﻿@{
+    Layout = "_Layout.cshtml";
+    ViewBag.Title = "Daily Profit Loss";   
+}
+@using AccountEx.Common;
+
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">
+        <span class="main-title">Daily Profit Loss</span>
+        <small id="lblReportDate" class="pull-right small visible-print">Date: 24/10/2014</small>
+
+    </h1>
+}
+
+<!-- END PAGE HEADER-->
+
+<div class="row hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-filter"></i>Report Filters
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                </div>
+                <div class="actions">
+                    <button class="btn blue hidden-print" onclick="window.print();"><i class="fa fa-print"></i>&nbsp;Print </button>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal" data-save="Save">
+                    <input type="text" id="Id" class="hide" />
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">From Date</label>
+                            <div class="col-md-3">
+                                <div class="input-group input-medium">
+                                    <input class="date-picker form-control date-picker" type="text" id="FromDate" data-validate="true" data-required="required"  value="@SiteContext.Current.Fiscal.FromDate.ToString(AppSetting.DateFormat)" data-message="From Date"  data-fiscal-date="true" >
+
+                                    <span class="input-group-btn date-icon">
+                                        <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">To Date</label>
+                            <div class="col-md-3">
+                                <div class="input-group input-medium">
+                                    <input class="date-picker form-control date-picker" type="text" id="ToDate" data-validate="true" data-required="required"  value="@SiteContext.Current.Fiscal.ToDate.ToString(AppSetting.DateFormat)" data-message="To Date"  data-fiscal-date="true" >
+
+                                    <span class="input-group-btn date-icon">
+                                        <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Type</label>
+                            <div class="col-md-2">
+                                <select id="Type" class="select2 form-control">
+                                    <option value="Report">Report</option>
+                                    <option value="Summary">Summary</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <div class="form-group">
+
+                        <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+                        <div class="col-md-8">
+                            <button id="btnShowReport" type="submit" class="btn btn-primary">Show Report</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <!-- END EXAMPLE TABLE PORTLET-->
+</div>
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title hidden-print">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Report Data
+                </div>
+                 <div class="tools pull-right">
+                    @{ Html.RenderPartial("_Export_Button");  }
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table id="mainTable" class="table table-striped table-bordered table-hover report-table" data-export='true'>
+                    <thead>
+                        <tr>
+                            <th>Sale Date</th>
+                            <th>Item</th>
+                            <th class="align-right">Sale Rate</th>
+                            <th class="align-right">Purchase Rate</th>
+                            <th class="align-right">GrossProfit</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+
+<div class="row hide" id="div-summary">
+    @*<div class="col-md-9 col-sm-12"></div>*@
+    <div class="col-md-12 col-sm-12">
+        <div class="portlet light">
+            <div class="portlet-title hidden-print">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Report Summary
+                </div>
+            </div>
+            <table class="table table-striped">
+                <tr class="head">
+                    <td colspan="4" style="float: left; border: none">Total Sale Amount</td>
+                    <td style="border: none" class="align-right num3"><span id="lblTotalSaleAmount">0</span></td>
+                </tr>
+                <tr class="head">
+                    <td colspan="4" style="float: left; border: none">Purchase Cost Amount</td>
+                    <td style="border: none" class="align-right num3"><span id="lblPurchaseCostAmount">0</span></td>
+                </tr>
+                <tr class="head">
+                    <td colspan="4" style="float: left; border: none">Gross Profit</td>
+                    <td style="border: none" class="align-right num3"><span id="lblGrossProfit">0</span></td>
+                </tr>
+                <tr class="head">
+                    <td colspan="4" style="float: left; border: none">Daily Expense</td>
+                    <td style="border: none" class="align-right num3"><span id="lblDailyExpense">0</span></td>
+                </tr>
+                <tr class="head bold" style="border-top: 1px solid">
+                    <td colspan="4" style="float: left; border: none">Net Profit</td>
+                    <td style="border: none" class="align-right num3"><span id="lblNetProfit">0</span></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Reports/DailyProfitLoss.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            DailyProfitLoss.init();
+        });
+    </script>
+}

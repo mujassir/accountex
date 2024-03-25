@@ -1,0 +1,68 @@
+﻿@{
+    Layout = null;
+}
+@using AccountEx.CodeFirst.Models
+@using AccountEx.Common
+@using AccountEx.Repositories;
+@{
+    var ParentAcc = new Account();
+    ParentAcc = new AccountRepository().GetById(Numerics.GetInt(ViewData["HeadId"]));
+    var LableColSpan = Numerics.GetInt(ViewData["Labelcolspan"]);
+    LableColSpan = LableColSpan == 0 ? 2 : LableColSpan;
+    var DivColSpan = Numerics.GetInt(ViewData["Divcolspan"]);
+    DivColSpan = DivColSpan == 0 ? 4 : DivColSpan;
+}
+@if (ParentAcc != null && ParentAcc.Level < 3)
+{
+    var Accounts = new AccountRepository().GetChildrenTo3RdLevelDetail(ParentAcc.Id);
+    var SettingLevel = ParentAcc.Level;
+  
+                                    
+    <div class="form-group">
+        <label class='@("col-md-" + LableColSpan) control-label' for="prefix">Parent Account</label>
+        <div class='@("col-md-" + DivColSpan)'>
+            <input type="hidden" class="hide" id="AccountId" data-clear-type="0" />
+            <select id="ParentId" class="form-control select2" data-required="required" data-message="Parent Account is required" placeholder="Select Parent Account">
+
+                @if (SettingLevel == 2)
+                {
+                    <option></option>
+                    <optgroup label='@(ParentAcc.Name)'>
+                        @foreach (var item in Accounts)
+                        {
+                                                   
+                            <option value="@item.Id">@(item.Name)</option>
+                        }
+                    </optgroup>
+                }
+                else
+                {
+                    var SecondLevelAccounts = Accounts.Where(p => p.Level == 2).ToList();
+                    <option></option>
+                    <optgroup label='@(ParentAcc.Name)'>
+
+                        @foreach (var item in SecondLevelAccounts)
+                        {
+                            var ThirdLevelAccounts = Accounts.Where(p => p.Level == 3 && p.ParentId == item.Id).ToList();
+                            <optgroup label='@(item.Name)'>
+
+                                @foreach (var acc in ThirdLevelAccounts)
+                                {
+                                    <option value="@acc.Id">@(acc.Name)</option>
+                                }
+                            </optgroup>
+
+
+
+                        }
+                    </optgroup>
+
+                }
+            </select>
+        </div>
+    </div>
+}
+else
+{
+    <input type="hidden" class="hide" id="AccountId" data-clear-type="0" />
+}

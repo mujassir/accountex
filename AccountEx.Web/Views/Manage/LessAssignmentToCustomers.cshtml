@@ -1,0 +1,167 @@
+﻿@using AccountEx.Common
+@using AccountEx.CodeFirst.Models;
+@{
+    ViewBag.Title = "Less Assignment";   
+}
+
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">Manage Less Assignment</h1>
+}
+
+
+<!-- END PAGE HEADER-->
+
+<div class="row" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-edit"></i>Add/Edit Less Assignment
+                </div>
+                <div class="actions hide">
+                    <a href="javascript:;" onclick="LessAssignmentToCustomers.ListView()" class="btn blue">
+                        <i class="fa fa-angle-left"></i>&nbsp;Back to list 
+                    </a>
+                </div>
+                <div class="tools hide">
+                    <a href="javascript:;" class="collapse"></a>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div id="mainform" class="form-horizontal" data-save="save">
+                    <input type="text" id="Id" class="hide" />
+                    <input type="text" id="Promotion" class="hide" />
+                    <input type="text" id="Group" class="hide" />
+                  
+                    <div class="form-body">
+                        <div class="hide alert alert-danger container-message">
+                            <i class="close" onclick="$(this).parent().hide();"></i>
+                            <strong></strong>
+                            <div class="form-body message-content"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Customer Less Group</label>
+                            <div class="col-md-5">
+                                <select id="CustomerGroupId" class="form-control select2" placeholder="Select Customer Group" data-required="required" data-message="Customer Group is required" data-clear='true'>
+                                    <option></option>
+                                    @foreach (var item in (List<ItemGroup>)ViewBag.LessCustomerGroups)
+                                    {
+                                        <option data-custom="@item.Id" value="@item.Id">@item.Name</option>
+                                    }
+                                </select>
+                                <div id="CustomerGroupLabel" class="hide">
+                                    <label class="col-md-4 control-label" for="prefix"></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Item Less Group</label>
+                            <div class="col-md-5">
+                                <select id="ItemGroupId" class="form-control select2" placeholder="Select Item Group" data-required="required" data-message="Promotion is required" data-clear='true'>
+                                    <option></option>
+                                </select>
+
+                                <div id="ItemGroupLabel" class="hide">
+                                    <label class="col-md-4 control-label" for="prefix"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" data-save="false">
+                            <div class="col-md-12 saleitem-container" style="min-height: 80px;">
+
+                                <table id="CustomerItemTable" class="hide table table-bordered griditem">
+                                    <thead>
+                                    </thead>
+                                    <tbody data-plus-as-tab="false">
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                    @if (SiteContext.Current.RoleAccess.CanCreate)
+                    {
+                        <div class="form-actions">
+                            <label class="col-md-4 control-label" for="prefix">&nbsp;</label>
+
+                            <div class="col-md-8">
+                                <button type="button" class="btn btn-primary" onclick="LessAssignmentToCustomers.Save()">Save</button>
+                                <button id="btnCancel" type="button" class="btn btn-default" onclick="LessAssignmentToCustomers.ListView()">Cancel</button>
+                            </div>
+                        </div>
+                    }
+
+
+                </div>
+
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet box grey-cascade">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Less Assignment To Customers Listing
+                </div>
+                <div class="actions hide">
+                    <button id="btnEdit" type="button" class="btn blue" onclick="LessAssignmentToCustomers.Add()"><i class="fa fa-plus"></i>&nbsp;New</button>
+                    <button id="btnSave" type="button" class="btn blue hide" onclick="LessAssignmentToCustomers.Save()"><i class="fa fa-check"></i>&nbsp;Save Changes</button>
+
+                </div>
+                <div class="tools hide">
+                    <a href="javascript:;" class="collapse"></a>
+                </div>
+            </div>
+
+            <div class="portlet-body">
+                <div class="hide alert alert-danger container-message">
+                    <i class="close" onclick="$(this).parent().hide();"></i>
+                    <strong></strong>
+                    <div class="form-body message-content"></div>
+                </div>
+                <table class="table table-striped table-bordered table-hover" id="mainTable">
+                    <thead>
+                        <tr>
+                            <th>Customer Group</th>
+                            <th>Item Group</th>
+                            <th style="width: 75px;" class="no-sort"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="11">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+
+<div id="jsondata" class="hide">
+    <p id="data">@ViewBag.FormSetting</p>
+</div>
+
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Manage/LessAssignmentToCustomers.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            LessAssignmentToCustomers.init();
+        });
+    </script>
+}
+

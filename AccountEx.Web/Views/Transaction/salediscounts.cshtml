@@ -1,0 +1,412 @@
+﻿@using AccountEx.BussinessLogic;
+@using AccountEx.Common;
+@{
+    ViewBag.Title = "Sale Discounts";
+    var error = "";
+
+    if (SiteContext.Current.Fiscal == null)
+    {
+        error += "<li>No fiscal year found.</li>";
+
+    }
+    
+}
+
+
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold hidden-print">@ViewBag.Title</h1>
+}
+@if (!string.IsNullOrWhiteSpace(error))
+{
+    <div class="note note-danger note-bordered">
+        <h4 class="block">Head Account Missing</h4>
+        <div>
+            <i class="fa-lg fa fa-warning"></i>Head Account is missing in the application settings.In order to complete current transaction head accounts must be added in settings.<br />
+
+
+            <ul>
+                @Html.Raw(error)
+            </ul>
+
+
+            Add missing head accounts in settings and then try again by <a href="@Request.Url"><i class="fa fa-refresh"></i>&nbsp;Relaoding</a>&nbsp;the current page.
+        </div>
+    </div>
+}
+else
+{
+    <div class="row hidden-print" id="form-info">
+
+        <div class="col-md-12 col-sm-12">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <div class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption ">
+                        <i class="fa fa-edit"></i><span class="voucher-title">Add/Edit @ViewBag.Title </span>
+                    </div>
+                    <div class="actions hide">
+                        <a href="javascript:;" onclick="VoucherTrans.LoadVoucher('previous')" class="btn blue">
+                            <i class="fa fa-angle-left"></i>&nbsp;Back
+                        </a>
+                        <a href="javascript:;" onclick="VoucherTrans.LoadVoucher('next')" class="btn blue">
+                            <i class="fa fa-angle-left"></i>&nbsp;Next 
+                        </a>
+
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div id="mainform" class="form-horizontal" data-save="save">
+                        <input type="text" id="Id" class="hide" data-include-in-item="true" data-item-id="VoucherId" />
+                        @* <input type="text" id="Id" class="hide"  data-include-in-item="true" data-item-id="VoucherId"/>*@
+                        <input type="text" id="TransactionType" class="hide" value="@((byte)VoucherType.SaleDiscounts)" data-clear="false" />
+                        <input type="text" id="CreatedDate" class="hide ac-date" data-clear-type="date" />
+                        <input type="text" id="IsDeleted" class="hide" />
+                        <input type="text" id="PreVoucherNumber" class="hide" />
+                        <div class="form-body">
+                            <div class="hide alert alert-danger container-message">
+                                <i class="close" onclick="$(this).parent().hide();"></i>
+                                <strong></strong>
+                                <div class="form-body message-content"></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">Vou #</label>
+                                <div class="col-md-2 container-voucher">
+
+                                    <input type="text" class="form-control input-small" id="VoucherNumber" data-required="required" data-validate="true" data-message="Voucher Number is required" data-plus-as-tab="false" data-include-in-item="true">
+                                </div>
+                                <label class="col-md-1 control-label" for="prefix">Date</label>
+                                <div class="col-md-2">
+                                    <input id="Date" type="text" class="form-control date-picker input-small" data-clear-type='date' data-required="required" data-message="Date is required" data-hide-dropdown="true" data-plus-as-tab="false" data-include-in-item="true" data-fiscal-date="true" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label master-account-label" for="prefix">Account Code</label>
+                                <div class="col-md-1">
+
+                                    <input type="text" class="form-control input-small not-focused" id="AccountCode" data-required="required" data-required="required" data-message="Account Code is required"  data-plus-as-tab="false">
+
+
+                                    <input type="hidden" id="AccountId" value="0" />
+
+                                </div>
+                                <div class="col-md-5">
+
+                                    <input type="text" class="form-control" id="AccountName"  disabled="disabled">
+                                </div>
+                            </div>
+                            <div class="form-group hide">
+                                <label class="col-md-2 control-label" for="prefix">Remarks</label>
+                                <div class="col-md-6">
+                                    <input class="form-control " type="text" name="text" id="Comments" />
+
+                                </div>
+                            </div>
+                            <div class="form-group fixedheight-container" data-save="false" data-plus-as-tab="false">
+                                <div class="col-md-12">
+
+                                    <table id="item-container" class="table table-bordered griditem">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 10%">Code</th>
+                                                <th style="width: 30%">Name</th>
+                                                <th style="width: 50%">Description</th>
+                                                <th id="thamount" style="width: 10%">Amount</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                        <tfoot class="hide12">
+                                            <tr>
+                                                <td colspan="3" class="align-right">
+                                                    <strong>Total
+                                                    &nbsp;
+                                                    </strong>
+
+                                                </td>
+                                                <td colspan="2">
+                                                    <input id="NetTotal" type="text" class="form-control input-small bold" readonly="readonly" disabled="disabled" /></td>
+
+
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <div class="btn-set pull-left">
+
+                                @*<button class="btn tooltips" data-container="body" data-placement="top" data-original-title="Tooltip in top">Top</button>*@
+                                <a href="javascript:;" onclick="VoucherTrans.LoadVoucher('first')" class="btn blue tooltips disabled first" data-original-title="First">
+                                    <i class="fa fa-angle-double-left"></i>
+                                </a>
+                                <a href="javascript:;" onclick="VoucherTrans.LoadVoucher('previous')" class="btn blue tooltips disabled previous" data-original-title="Previous">
+                                    <i class="fa fa-angle-left"></i>
+                                </a>
+                                <a href="javascript:;" onclick="VoucherTrans.LoadVoucher('next')" class="btn blue tooltips disabled next" data-original-title="Next">
+                                    <i class="fa fa-angle-right"></i>
+                                </a>
+                                <a href="javascript:;" onclick="VoucherTrans.LoadVoucher('last')" class="btn blue tooltips disabled last" data-original-title="Last">
+                                    <i class="fa fa-angle-double-right"></i>
+                                </a>
+                            </div>
+                            <div class="btn-set pull-right">
+                                @if (!SiteContext.Current.Fiscal.IsClosed)
+                                {
+                                    <button type="button" class="btn purple-plum" onclick="VoucherTrans.New()">
+                                        <i class="fa  fa-plus-circle"></i>
+                                        New</button>
+                                    <button type="button" class="btn btn-primary green" onclick="VoucherTrans.Save()">
+                                        <i class="fa fa-check"></i>
+                                        Save</button>
+                                    <button id="btndelete" type="button" class="btn red" onclick="VoucherTrans.Delete()">
+                                        <i class="fa fa-trash-o"></i>
+                                        Delete</button>
+                                }
+                                <button id="btnprint" type="button" class="btn yellow" onclick="VoucherTrans.Print()">
+                                    <i class="fa fa-print"></i>
+
+                                    Print</button>
+                                <button type="button" class="btn blue" onclick="window.location='../account/dashboard2'">
+                                    <i class="fa  fa-times-circle"></i>
+
+                                    Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END EXAMPLE TABLE PORTLET-->
+        </div>
+    </div>
+    
+    <div id="jsondata" class="hide">
+        <input id="FormSetting"  type="text" value="@ViewBag.FormSettings" />
+        @*<input id="AccountType"  type="text" value="@ViewBag.AccountType" />
+    <input id="Accounts"  type="text" value="@ViewBag.Account" />*@
+
+    </div>
+}
+<style>
+    table.report-summary-info > tbody > tr > td {
+        padding: 5px;
+        /*border: 1px solid #AAA;*/
+    }
+
+    table.report-summary-info td table tr td:first-child {
+        font-size: 9px !important;
+        text-align: right;
+        font-weight: bold;
+    }
+
+    table.report-summary-info td table tr td {
+        padding: 2px 5px;
+    }
+
+    #div-report strong {
+        font-size: 9px !important;
+    }
+
+    #div-report span {
+        font-weight: normal;
+        font-size: 11px !important;
+    }
+
+    /*#div-report .table-bordered td, #div-report .table-bordered th {
+        border: 1px solid #AAA !important;
+    }*/
+    #tblAgingItems tbody td:nth-child(1) {
+        text-align: left;
+    }
+</style>
+<div class="row"></div>
+<div id="div-report" class="visible-print">
+    @* @if (!string.IsNullOrWhiteSpace(SettingManager.ApplicationLogo) && File.Exists(Server.MapPath("../Upload/ApplicationLogo/" + (SettingManager.ApplicationLogo))))
+    {
+        <div class="align-center">
+
+
+            <img style="height:90px !important" src="../Upload/ApplicationLogo/@(SettingManager.ApplicationLogo)" alt="logo" class="logo-default" />
+
+        </div>
+    }
+    else
+    {
+        *@<div style="font-size: 18px; padding: 5px; font-weight: bold; margin-bottom: 3px" class="border-black align-center">
+            @(!string.IsNullOrWhiteSpace(SettingManager.ApplicationPrintTitle) ? SettingManager.ApplicationPrintTitle : !string.IsNullOrWhiteSpace(SettingManager.ApplicationTitle) ? SettingManager.ApplicationTitle : "Management System")
+        </div>
+    @*}*@
+    <div style="font-size: 16px; padding: 5px;" class="border-black align-center"><u id="lblReportTitle">@ViewBag.Title</u></div>
+    <div class="form-group"></div>
+
+    <table class="report-summary-info full-width">
+        <tbody>
+            <tr>
+                <td style="width: 60%; vertical-align: top;">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td style="width: 70px;">Voucher No. </td>
+                                <td>
+                                    <div style="border-bottom: 1px solid #AAA; font-weight: normal; text-align: center;">
+                                        <span id="lblVoucherNumber"></span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-11">
+                    </div>
+                </td>
+                <td style="width: 2%; border-top-width: 0;"></td>
+                <td>
+                    <table>
+                        <tr>
+                            <td>Date :</td>
+                            <td>
+                                <div style="border-bottom: 1px solid #AAA; font-weight: normal; text-align: center;">
+                                    <span id="lblDate"></span>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="clearfix"></div>
+    <table id="report-saleitem" class="table table-bordered full-width" style="margin-top: -1px;">
+        <thead>
+            <tr>
+                @*<th style="width: 30px;">Sr#</th>*@
+                <th>Account Head</th>
+                <th>Description</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+
+    <div class="row-bottom" style="position: fixed; border-top: 1px solid #000; width: 720px; bottom: 10px; padding-top: 5px;">
+        <table class=" report-summary-info full-width">
+            <tbody>
+                <tr>
+                    <td style="width: 60%; vertical-align: top; padding-top: 0; border-width: 0;" rowspan="3">
+                        <div style="min-height: 180px; padding: 0 10px; margin-top: 50px;">
+                            <table id="tblAgingItems" class="full-width">
+                                <tbody>
+                                    <tr>
+                                        <td>In Words:</td>
+                                        <td style="width: 85%; text-align: right;">
+                                            <div style="border-bottom: 1px solid #AAA; font-weight: normal; text-align: center;">
+                                                <span id="lblAmountInWords"></span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <table class="full-width">
+                            <tr>
+                                <td style="width: 0px;"></td>
+                                <td>
+                                    <div style="font-weight: normal; text-align: center; padding: 0 2px; border-bottom: 1px solid #AAA;"><span>Accountant</span></div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: normal; text-align: center; padding: 0 2px; border-bottom: 1px solid #AAA;"><span>Approved By</span></div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: normal; text-align: center; padding: 0 2px; border-bottom: 1px solid #AAA;"><span>Recieved By</span></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    @*<td style="width: 5%; border-width: 0;"></td>*@
+                    <td style="width: 35%">
+                        <div style="margin-top: -90px">
+                            <table class="full-width">
+                                <tbody>
+                                    <tr>
+                                        <td>Total Amount :</td>
+                                        @*<td rowspan="3" style="width: 15%"></td>*@
+                                        <td style="width: 35%; text-align: right;">
+                                            <div style="border-bottom: 1px solid #AAA; font-weight: normal; text-align: center;">
+                                                <span id="lblNetTotal"></span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="margin-top: 5px;">
+            <table>
+                <tr>
+                    <td style="width: 20%"><span>@DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt")</span></td>
+                    <td style="width: 70%; text-align: center;"><strong id="lblFooterNotes" style="border-bottom: 1px solid #000;"></strong></td>
+                    <td style="width: 10%"></td>
+                </tr>
+            </table>
+
+
+        </div>
+    </div>
+
+</div>
+
+
+<script type="text/html" id="template-item">
+    <tr>
+        <td>
+            <input type="hidden" class="AccountId" data-db-column="AccountId">
+            @*  <input type="hidden"  class="EntryType" id="EntryType" data-db-column="EntryType" value="@((int)EntryType.Item)">*@
+            <input type="text" class="AccountCode form-control typeahead input-small ui-autocomplete-input" data-db-column="AccountCode">
+        </td>
+        <td>
+            <input type="text" disabled="disabled" class="AccountName form-control input-medium" data-db-column="AccountName">
+        </td>
+        <td>
+            <input type="text" class="Description form-control input-large" data-db-column="Description">
+        </td>
+        <td>
+            <input type="text" class="Amount form-control input-small" data-db-column="Amount">
+        </td>
+        <td class="td-delete">
+            <span class="action"><i class="fa fa-trash-o" onclick="VoucherTrans.DeleteRow(this)" data-original-title="Delete Item"></i></span>
+        </td>
+    </tr>
+</script>
+
+
+<script type="text/html" id="template-item-print">
+    <tr>
+        <td>{{AccountName}}
+        </td>
+        <td>{{Description}}
+        </td>
+        <td>{{Amount}}
+        </td>
+    </tr>
+</script>
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Transaction/VoucherTrans.js"></script>
+    <link href="~/Content/print.css" rel="stylesheet" />
+    <script>
+        jQuery(document).ready(function () {
+            VoucherTrans.init();
+        });
+    </script>
+}
+

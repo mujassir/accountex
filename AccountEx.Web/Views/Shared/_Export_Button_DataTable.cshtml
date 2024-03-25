@@ -1,0 +1,16 @@
+﻿@using AccountEx.BussinessLogic;
+@if (SettingManager.ReportExportEnabled)
+{
+    <div class="dropdown pull-right" style="margin-left:10px">
+        <button class="btn green dropdown-toggle btn-sm" type="button" data-toggle="dropdown">
+            Export
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu data-table-export-buttons">
+            <li><a onclick="Common.DoExport(this, 'excel')" href="javascript:void(0)"><i class="fa fa-file-excel-o" aria-hidden="true"></i>&nbsp;Excel</a></li>
+            @*<li><a onclick="Common.DoExport(this, 'csv')" href="javascript:void(0)"><i class="fa fa fa-file-o" aria-hidden="true"></i>&nbsp;CSV</a></li>*@
+            <li><a onclick="Common.DoExport(this, 'pdf')" href="javascript:void(0)"><i class="fa fa-file-pdf-o" aria-hidden="true"></i>&nbsp;Pdf</a></li>
+            @* <li><a onclick="Common.DoExport(this, 'doc')" href="javascript:void(0)">Word</a></li>*@
+        </ul>
+    </div>
+}

@@ -1,0 +1,227 @@
+﻿@using AccountEx.Common
+@{
+    ViewBag.Title = "Customer Incentive Groups";   
+}
+
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">Manage Customer Incentive Groups</h1>
+}
+@using AccountEx.Common;
+@using AccountEx.BussinessLogic;
+@{
+    var type = Request.QueryString["type"] + "";
+    type = Request["type"].ToLower();
+    var grouptype = Numerics.GetInt(((GroupSubType)Enum.Parse(typeof(GroupSubType), type, true)));
+    var error = "";
+    if (SettingManager.CustomerHeadId == 0)
+    {
+        error += "<li>Customer Account is Missing.</li>";
+    }
+    
+}
+@if (!string.IsNullOrWhiteSpace(error))
+{
+    <div class="note note-danger note-bordered">
+        <h4 class="block">Head Account Missing</h4>
+        <div>
+            <i class="fa-lg fa fa-warning"></i>Head Account is missing in the application settings.In order to complete current transaction head accounts must be added in settings.<br />
+
+
+            <ul>
+                @Html.Raw(error)
+            </ul>
+
+
+            Add missing head accounts in settings and then try again by <a href="@Request.Url"><i class="fa fa-refresh"></i>&nbsp;Relaoding</a>&nbsp;the current page.
+        </div>
+    </div>
+}
+else
+{
+
+<!-- END PAGE HEADER-->
+
+<div class="row" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-edit"></i>Add/Edit Customer Incentive Groups
+                </div>
+                <div class="actions hide">
+                    <a href="javascript:;" onclick="CustomerIncentiveGroups.ListView()" class="btn blue">
+                        <i class="fa fa-angle-left"></i>&nbsp;Back to list 
+                    </a>
+                </div>
+                <div class="tools hide">
+                    <a href="javascript:;" class="collapse"></a>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div id="mainform" class="form-horizontal" data-save="save">
+                    <input type="text" id="Id" class="hide" data-include-in-item="true" data-item-id="CustomerIncentiveGroupId" />
+                    <input type="text" id="GroupType" class="hide" value="@grouptype" />
+                    @*<input type="text" id="AccountId" class="hide" />*@
+                    <div class="form-body">
+                        <div class="hide alert alert-danger container-message">
+                            <i class="close" onclick="$(this).parent().hide();"></i>
+                            <strong></strong>
+                            <div class="form-body message-content"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Name</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control" placeholder="Name" id="Name" data-plus-as-tab="true" data-required="required" data-message="Group Name is required" />
+                            </div>
+                        </div>
+                        <div class="form-group" data-save="false">
+                            <div class="col-md-6 saleitem-container" style="min-height:80px;">
+
+                                <table id="item-container" class="table table-bordered griditem">
+                                    <thead>
+                                        <tr>
+                                            <th>Code</th>
+                                            <th style="width: 40%;">Name</th>
+                                           @* @if(type=="less")
+                                            {
+                                            <th>Less Rate</th>
+                                            }*@
+
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody data-plus-as-tab="false">
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+
+                   @*     <div class="form-group hide">
+                            <div class="col-md-7">
+                            </div>
+                            <div class="col-md-5 align-right">
+                                <div class="row">
+                                </div>
+                                <div class="row">
+                                    <label class="control-label col-md-7">Qty Total</label>
+                                    <div class="col-md-5">
+                                        <input id="QuantityTotal" class="form-control" type="text" disabled="disabled" readonly="readonly" data-required="required" data-message="Please add atleast one item" />
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>*@
+
+
+                    </div>
+                    @if (SiteContext.Current.RoleAccess.CanCreate)
+                    {
+                        <div class="form-actions">
+                            <label class="col-md-4 control-label" for="prefix">&nbsp;</label>
+
+                            <div class="col-md-8">
+                                <button type="button" class="btn btn-primary" onclick="CustomerIncentiveGroups.Save()">Save</button>
+                                <button id="btnCancel" type="button" class="btn btn-default" onclick="CustomerIncentiveGroups.ListView()">Cancel</button>
+                            </div>
+                        </div>
+                    }
+
+
+                </div>
+
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet box grey-cascade">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Customer Incentive Groups Listing
+                </div>
+                <div class="actions hide">
+                    <button id="btnEdit" type="button" class="btn blue" onclick="CustomerIncentiveGroups.Add()"><i class="fa fa-plus"></i>&nbsp;New</button>
+                    <button id="btnSave" type="button" class="btn blue hide" onclick="CustomerIncentiveGroups.Save()"><i class="fa fa-check"></i>&nbsp;Save Changes</button>
+
+                </div>
+                <div class="tools hide">
+                    <a href="javascript:;" class="collapse"></a>
+                </div>
+            </div>
+
+            <div class="portlet-body">
+                <div class="hide alert alert-danger container-message">
+                    <i class="close" onclick="$(this).parent().hide();"></i>
+                    <strong></strong>
+                    <div class="form-body message-content"></div>
+                </div>
+                <table class="table table-striped table-bordered table-hover" id="mainTable">
+                    <thead>
+                        <tr>
+                            @* <th style="width: 8px;" class="no-sort">
+                                <input type="checkbox" class="group-checkable" data-set="#mainTable .checkboxes" />
+                            </th>*@
+                            <th>Name</th>
+
+                            <th style="width: 75px;" class="no-sort"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="11">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+
+<div id="jsondata" class="hide">
+    <p id="data">@ViewBag.FormSetting</p>
+</div>
+}
+
+<script type="text/html" id="template-item">
+    <tr>
+
+        <td>
+            <input type="hidden" class="CustomerId" id="CustomerId" data-db-column="CustomerId">
+            <input type="hidden"  class="EntryType" id="EntryType" data-db-column="EntryType" value="@((int)EntryType.Item)"><input type="hidden">
+            <input type="text" class="Code form-control typeahead input-small ui-autocomplete-input" data-db-column="CustomerCode" autocomplete="off">
+        </td>
+        <td>
+            <input type="text" disabled="disabled" class="Name form-control input-medium" data-db-column="CustomerName"></td>
+      @*  @if(type=="less")
+        {
+        <td>
+            <input type="text" class="SaleLessRate form-control input-small" data-db-column="SaleLessRate" data-db-type="decimal"></td>
+        }*@
+        <td style="width: 8px;">
+            <span class="action"><i class="fa fa-trash-o" onclick="CustomerIncentiveGroups.DeleteRow(this)" data-original-title="Delete Item"></i></span>
+
+        </td>
+    </tr>
+</script>
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Manage/CustomerIncentiveGroups.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            CustomerIncentiveGroups.init();
+        });
+    </script>
+}
+

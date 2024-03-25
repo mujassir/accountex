@@ -1,0 +1,209 @@
+﻿@using AccountEx.Common;
+@{
+    ViewBag.Title = "Department Test";
+}
+<style type="text/css">
+    #tbldetail tfoot {
+        font-weight: bold;
+    }
+
+    .report-table tbody tr td:nth-last-child(1),
+    .report-table tbody tr td:nth-last-child(2),
+    .report-table tfoot tr td:nth-last-child(1),
+    .report-table tfoot tr td:nth-last-child(2) {
+        /*text-align: right;*/
+    }
+</style>
+
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold"><span class="main-title">Department Test</span></h1>
+
+}
+
+<div class="row hide" id="form-info">
+    <div class="col-md-12 col-sm-12" id="Doctors">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+
+                <div class="caption">
+                    <i class="fa fa-edit"></i>Add/Edit Department Test
+
+                </div>
+                <div class="actions">
+                    <a href="javascript:;" class="btn green" onclick="Test.ListView();">
+                        <i class="fa fa-angle-left"></i>&nbsp;Back to list
+                    </a>
+                </div>
+            </div>
+            <div class="portlet-body form">
+
+                <div id="mainform" class="form-horizontal" data-save="save">
+
+                    <input type="text" id="Id" class="hide" />
+
+                    <div class="form-body">
+
+                       
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="prefix">Sub Category</label>
+                            <div class="col-md-3">
+                                <select id="SubCategoryId" class="form-control select2" data-required="required" data-message="Sub Category is required" data-clear='true'>
+                                    <option></option>
+                                    @foreach (var item in (List<IdName>)ViewBag.TestGroup)
+                                    {
+                                        <option data-custom="@item.Id" value="@item.Id">@(item.Name)</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="prefix">Department</label>
+                            <div class="col-md-5">
+                                @*@Html.DropDownListFor(p => p.AccountId, new SelectList(Model.Accounts, "Id", "Name"), new { @class = "form-control select2" })*@
+                                <select id="DepartmentAccountId" class="form-control select2" data-required="required" data-message="Department is required"></select>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="prefix">Name</label>
+                            <div class="col-md-3">
+
+                                <input type="text" class="form-control" id="Name" data-plus-as-tab="false"  data-required="required" data-message="Name is required">
+                            </div>
+                        </div>
+                        @*  <div class="form-group">
+                                <label class="col-md-3 control-label" for="prefix">Test Type</label>
+                                <div class="col-md-3">
+                                    <select id="Type" class="form-control select2" data-required="required" data-message="Test type is required" >
+                                        <option value="@((byte)TestType.Pathology))">Pathology</option>
+                                        <option value="@((byte)TestType.Radiology))">Radiology</option>
+                                    </select>
+                                </div>
+                            </div>*@
+                        <div class="form-group" data-save="false">
+                            <div class="col-md-3"></div>
+                            <div class="col-md-7 saleitem-container scroller" style="height: 200px; padding: 10px !important" data-always-visible="1" data-rail-visible1="1">
+
+                                <table id="Investitem" class="table table-bordered griditem">
+                                    <thead>
+                                        <tr>
+                                            <th>Parameter Name</th>
+                                            <th class='td-width'>Unit</th>
+                                            <th class='td-width'>Min Val</th>
+                                            <th class='td-width'>Max Val</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody data-plus-as-tab="false"></tbody>
+
+                                </table>
+                                <a href="javascript:;" onclick="Test.AddItem()" style="position: absolute; margin-top: -20px;">Add Row</a>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="form-actions">
+                        <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+                        <div class="col-md-8">
+                            <button id="btnSave" type="button" onclick="Test.Save();" class="btn btn-primary green" data-plus-as-tab="false">Save</button>
+                            <button id="btnSaveClose" type="button" onclick="Test.SaveClose();" class="btn btn-primary green">Save & Close</button>
+                            <button id="btnCancel" type="button" onclick="Test.CustomClear();" class="btn btn-default">Cancel</button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Record Listing
+                </div>
+            </div>
+
+            <div class="portlet-body">
+
+                <table class="table table-striped table-bordered table-hover" id="mainTable">
+                    <thead>
+                        <tr>
+
+                            <th>Case Number</th>
+                            <th>Patient Name</th>
+                            <th>Registration Date</th>
+                            <th>Reporting Date</th>
+                            <th>Reference Name</th>
+                            <th>Consultant Name</th>
+                            <th>Total Amount</th>
+                            <th>Discount %</th>
+                            <th>Less</th>
+                            <th>Net Amount</th>
+                            <th>Paid Amount</th>
+                            <th>Due</th>
+                            <th style="width: 75px;" class="no-sort"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="2">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+<script type="text/html" id="template-item">
+    <tr>
+        <td>
+            <input type="hidden" class="Id" data-db-column="Id">
+            <input type="hidden" class="TestId" data-db-column="TestId">
+            <input type="text" class="TestName form-control input-small ui-autocomplete-input" data-db-column="TestName">
+        </td>
+        <td class="align-right">
+            <input type="text" class="Price form-control input-small num3" data-db-column="Price" disabled12="disabled" readonly12="readonly">
+        </td>
+        <td class="td-delete">
+            <span class="action"><i class="fa fa-trash-o" onclick="Cases.DeleteRow(this)" data-original-title="Delete Item"></i></span>
+        </td>
+    </tr>
+</script>
+<script type="text/html" id="template-nexus-item">
+    <tr>
+        <td>
+            <input type="hidden" class="Id" data-db-column="Id">
+            <input type="hidden" class="TestID" data-db-column="TestID">
+            <input type="text" class="TestName form-control input-small ui-autocomplete-input" data-db-column="TestName" disabled="disabled" readonly="readonly">
+        </td>
+        <td class="align-right">
+            <input type="text" class="Rate form-control input-small num3" data-db-column="Rate" disabled="disabled" readonly="readonly">
+        </td>
+    </tr>
+</script>
+
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Nexus/Cases.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            Cases.init();
+        });
+    </script>
+}
+
+

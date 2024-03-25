@@ -1,0 +1,76 @@
+﻿@model AccountEx.Common.SiteContextMenuItemExtra
+@using AccountEx.Common;
+@functions {
+
+    public string GetDataType()
+    {
+        return Model.DataType + "" == "" ? "" : "data-type=" + Model.DataType + "";
+    }
+    public int GetLevel()
+    {
+        return AccountEx.Common.Numerics.GetInt(ViewData["Level"]);
+    }
+    public int Level { get; set; }
+    
+}
+@{
+    var parentMenuCount = Model.SubMenues.Where(p => p.IsVisible).ToList().Where(p => p.SubMenues.Where(q => q.IsVisible).ToList().Count() > 0).Count();
+    var rootMenuCount = Model.SubMenues.Where(p => p.IsVisible).ToList().Any(p => p.SubMenues.Where(q =>q.IsVisible).ToList().Count() == 0) ? 1 : 0;
+    var total = parentMenuCount + rootMenuCount;
+    total = total == 0 ? 1 : total;
+    var colSpan = Numerics.GetInt(12 / total);
+}
+@if (Model.SubMenues.Where(p => p.IsVisible).ToList().Count > 0)
+{
+      
+    <li class="menu-dropdown mega-menu-dropdown">
+
+        <a href="javascript:;">@Model.Title
+            <span class="arrow"></span>
+        </a>
+        <ul class="dropdown-menu" style="min-width: 710px">
+
+            <li>
+                <div class="mega-menu-content">
+                    <div class="row">
+                        @if (Model.SubMenues.Where(p => p.IsVisible).ToList().Any(p => p.SubMenues.Where(q => q.IsVisible).ToList().Count() == 0))
+                        {
+                            <div class="col-md-@(colSpan)">
+                                <ul class="mega-menu-submenu">
+                                    @foreach (var item in Model.SubMenues.Where(p => p.IsVisible).ToList().Where(p => p.SubMenues.Where(q => q.IsVisible).ToList().Count() == 0))
+                                    {
+                                        <li>
+                                            <a href='@(Url.Content(string.IsNullOrWhiteSpace(item.Url) ? "javascript:void(0);" : item.Url))'>@item.Title </a>
+                                        </li>
+                                    }
+
+
+                                </ul>
+                            </div>
+                        }
+                        @foreach (var parent in Model.SubMenues.Where(p => p.IsVisible).ToList().Where(p => p.SubMenues.Where(q => q.IsVisible).ToList().Count() > 0))
+                        {
+                            <div class="col-md-@(colSpan)">
+                                <ul class="mega-menu-submenu">
+
+                                    <li>
+                                        <h3>@parent.Title</h3>
+                                    </li>
+                                    @foreach (var child in parent.SubMenues.Where(p => p.IsVisible).ToList())
+                                    {
+                                        <li>
+                                            <a href='@(Url.Content(string.IsNullOrWhiteSpace(child.Url) ? "javascript:void(0);" : child.Url))'>@child.Title </a>
+                                        </li>
+                                    }
+
+                                </ul>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </li>
+
+        </ul>
+    </li>
+}

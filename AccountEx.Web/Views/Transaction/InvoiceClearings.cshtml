@@ -1,0 +1,157 @@
+﻿@using AccountEx.Common
+@{
+    ViewBag.Title = "Invoice Clearings";   
+}
+
+@using AccountEx.Common;
+
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">Manage Invoice Clearings</h1>
+}
+
+<style>
+    #item-container thead th {
+        padding: 7px 20px;
+    }
+
+    #item-container tbody td {
+        padding: 5px 20px !important;
+    }
+</style>
+
+<!-- END PAGE HEADER-->
+
+<div class="row" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-edit"></i>Add/Edit Invoice Clearings
+                </div>
+                <div class="actions hide">
+                    <a href="javascript:;" onclick="InvoiceClearings.ListView()" class="btn blue">
+                        <i class="fa fa-angle-left"></i>&nbsp;Back to list 
+                    </a>
+                </div>
+                <div class="tools hide">
+                    <a href="javascript:;" class="collapse"></a>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal" data-save="save">
+                    <input type="text" id="Id" class="hide" />
+                    @*<input type="text" id="AccountId" class="hide" />*@
+                    <div class="form-body">
+                        <div class="hide alert alert-danger container-message">
+                            <i class="close" onclick="$(this).parent().hide();"></i>
+                            <strong></strong>
+                            <div class="form-body message-content"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Type</label>
+                            <div class="col-md-3">
+                                <select id="Types" class="form-control select2" data-trackchange="true" data-required="required" data-message="Type is Required">
+                                    <option></option>
+                                    <option value="@((byte)VoucherType.Sale)">Sale</option>
+                                    <option value="@((byte)VoucherType.Purchase)">Purchase</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Customers</label>
+                            <div class="col-md-3">
+                                <select id="AccountId" class="form-control select2" data-trackchange="true" data-required="required" data-message="Customer is Required">
+                                   @* <option></option>
+                                    @foreach (var customer in ViewBag.Customers as List<IdName>)
+                                    {
+                                        <option data-custom="@customer.Id" value="@customer.Name">@customer.Name</option>
+                                    }*@
+                                </select>
+                                @*<input type="hidden" id="AccountId" />*@
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Date</label>
+                            <div class="col-md-2">
+                                <input id="Date" type="text" class="form-control date-picker input-small" data-required="required" data-message="Date is required" data-hide-dropdown="true" data-plus-as-tab="false" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-2"></div>
+                        <div class="form-group" data-save="false">
+                            <div class="col-md-8 saleitem-container">
+
+                                <table id="item-container" class="table table-bordered griditem">
+                                    <thead>
+                                        <tr>
+                                            <th>Voucher Number</th>
+                                            <th>Invoice Type</th>
+                                            <th>Date</th>
+                                            <th class="align-right">Invoice Amount</th>
+                                            <th class="align-right">Total Paid</th>
+                                            <th class="align-right">Balance</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody data-plus-as-tab="false">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    @if (SiteContext.Current.RoleAccess.CanCreate)
+                    {
+                        <div class="form-actions">
+                            <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+
+                            <div class="col-md-8">
+                                <button type="button" class="btn btn-primary" onclick="InvoiceClearings.Save()">Save</button>
+                                <button id="btnCancel" type="button" class="btn btn-default" onclick="InvoiceClearings.CustomClear()">Cancel</button>
+                            </div>
+                        </div>
+                    }
+
+
+                </div>
+
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+<div id="jsondata" class="hide">
+    <input id="FormSetting"  type="text" value="@ViewBag.FormSetting" />
+</div>
+<script type="text/html" id="template-item">
+    <tr>
+        <td>
+            <input type="hidden" class="AccountId" data-db-column="AccountId">
+            <input type="hidden" class="Id" data-db-column="Id">
+            <input type="text" disabled="disabled" class="VoucherNumber form-control typeahead input-small ui-autocomplete-input" data-db-column="VoucherNumber" autocomplete="off">
+        </td>
+
+        <td>
+            <input type="text" disabled="disabled" class="TransactionType form-control input-small" data-db-column="TransactionType"></td>
+
+        <td>
+            <input type="text" disabled="disabled" class="Date form-control input-small" data-db-column="Date"></td>
+
+        <td class="align-right">
+            <input type="text" disabled="disabled" class="NetTotal form-control input-small num3" data-db-column="NetTotal" data-db-type="decimal"></td>
+        <td class="align-right">
+            <input type="text" disabled="disabled" class="TotalPaid form-control input-small num3" data-db-column="TotalPaid"></td>
+        <td class="align-right">
+            <input type="text" class="Amount form-control input-small num3" data-db-column="Amount" data-db-type="decimal"></td>
+    </tr>
+</script>
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Transaction/InvoiceClearings.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            InvoiceClearings.init();
+        });
+    </script>
+}

@@ -1,0 +1,595 @@
+﻿@using AccountEx.Common;
+@using AccountEx.BussinessLogic;
+@using system.Linq;
+@using AccountEx.Repositories;
+@using AccountEx.CodeFirst.Models;
+@section PageTitle
+{
+    <h1 class="font-green-sharp bold">Manage Lead Activities</h1>
+}
+@{
+    
+    var leadid = Request["leadid"];
+    ViewBag.Title = ViewBag.FormTitle = "Lead Activities";
+
+    var type = Request.QueryString["leadid"] + "";
+    var id = Numerics.GetInt(type);
+    var record = new GenericRepository<Lead>().GetById(id);
+   // var LArecord = new LeadActivityRepository().GetByLeadId(id);    
+}
+<style>
+    .control-label2 {
+        /*text-align: right;*/
+        margin-bottom: 0;
+        padding-top: 7px;
+        margin-top: 1px;
+        font-weight: normal;
+    }
+</style>
+
+<div class="row hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-edit"></i>@ViewBag.FormTitle
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div id="mainform" class="form-horizontal" data-save="save">
+                    <div class="form-body">
+                        <div class="hide alert alert-danger container-message">
+                            <i class="close" onclick="$(this).parent().hide();"></i>
+                            <strong></strong>
+                            <div class="form-body message-content"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Sales Person/Owner :</label>
+                                    <label class="col-md-3 control-label2" for="prefix">@record.LeadOwner</label>
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Phone :</label>
+                                    <label class="col-md-3 control-label2" for="prefix">@record.Tel1</label>
+                                  @*<label class="col-md-2 control-label" for="prefix">Interest Level:</label>
+                                    @foreach(var i in LArecord){
+                                    <label class="col-md-3 control-label2" for="prefix">@i.InterestLevel</label>
+                                    }*@
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Email:</label>
+                                    <label class="col-md-3 control-label2" for="prefix">@record.Email</label>
+                                 @* <label class="col-md-2 control-label" for="prefix">Meeting Status:</label>
+                                     @foreach(var i in LArecord){
+                                    <label class="col-md-3 control-label2" for="prefix">@LArecord.MeetingStatus</label>
+                                     }*@
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Mobile :</label>
+                                    <label class="col-md-3 control-label2" for="prefix">@record.Mobile</label>
+                                </div>
+
+                            </div>
+                            <div class="col-md-4">
+                                <div class="portlet">
+                                    <div class="portlet-title">
+                                        <div class="actions">
+                                            <a href="javascript:;" id="btn-task" onclick="LeadActivities.AddLeadActivity('Task')" class="btn blue">Add New Meeting
+                                            </a>
+                                            @*<a href="javascript:;" id="btn-event" onclick="LeadActivities.AddLeadActivity('Event')" class="btn blue">Add New Event
+                                            </a>
+                                            <a href="javascript:;" id="btn-call" onclick="LeadActivities.AddLeadActivity('Call')" class="btn blue">Add New Call
+                                            </a>*@
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" data-save="false">
+                            <div class="portlet">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        Open Activities
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table id="tblhtml-meetings" style="border: 1px solid #DDD" class="table table-bordered table-hover hide">
+                                    <thead>
+                                        <tr>
+                                            <th>Subject</th>
+                                            @*<th>Activity</th>*@
+                                            <th>Meeting Status</th>
+                                            <th>Interest Level</th>
+                                            <th>Next Follow Up</th>
+                                            @*<th>From</th>
+                                            <th>To</th>*@
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="form-group" data-save="false">
+                            <div class="portlet">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        Lead Concerned Items
+                                    </div>
+                                    <div class="actions">
+                                        <a href="javascript:;" id="btn-concern-edit" onclick="LeadActivities.EditConcernedItems(0,false)" class="btn blue hide">Edit Concerned Items
+                                        </a>
+                                        <a href="javascript:;" id="btn-concerned" onclick="LeadActivities.AddConcernedItems()" class="btn blue hide">Add Concerned Items
+                                        </a>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table id="tblhtml-concerneditems" style="border: 1px solid #DDD" class="table table-bordered  table-hover hide">
+                                    <thead>
+                                        <tr>
+                                            <th>Item Code</th>
+                                            <th>Item Name</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="form-group" data-save="false">
+                            <div class="portlet">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        Expected Volume
+                                    </div>
+                                    <div class="actions">
+                                        <a href="javascript:;" id="btn-expc-edit" onclick="LeadActivities.EditExpectedItems(0,false)" class="btn blue hide">Edit Expected Items
+                                        </a>
+                                        <a href="javascript:;" id="btn-expected" onclick="LeadActivities.AddExpectedVolume()" class="btn blue hide">Add Expected Items
+                                        </a>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table id="tblhtml-expecteditems" style="border: 1px solid #DDD" class="table table-bordered table-hover hide">
+                                    <thead>
+                                        <tr>
+                                            <th>Item Code</th>
+                                            <th>Item Name</th>
+                                            <th>Quantity</th>
+                                            <th>Rate</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+
+<div id="ConcernedItem-Container" class="modal fade hidden-print bs-modal-lg" tabindex="-1">
+    <div class="modal-dialog modal-lg1">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title"><span class='caption-subject font-green-sharp bold'>Add Concerned Items</span> </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table id="tbl-concerneditems" style="border: 1px solid #DDD" class="table table-bordered griditem table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="width: 20%;">Item Code</th>
+                                    <th>Item Name</th>
+                                    <th></th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="LeadActivities.SaveConcernedItems()">Save</button>
+                <button type="button" data-dismiss="modal" class="btn btn-close-model">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="ExpectedVolume-Container" class="modal fade hidden-print bs-modal-lg" tabindex="-1">
+    <div class="modal-dialog modal-lg1">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title"><span class='caption-subject font-green-sharp bold'>Add Expected Sale Volume </span></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table id="tbl-expecteditems" style="border: 1px solid #DDD" class="table griditem table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Item Code</th>
+                                    <th style="width: 38%;">Item Name</th>
+                                    <th class="align-right">Quantity</th>
+                                    <th class="align-right">Rate</th>
+                                    <th class="align-right">Amount</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                            <tfoot data-plus-as-tab="false">
+                                <tr class="bold ">
+                                    <td colspan="2" class="bold align-right">Total &nbsp;</td>
+
+                                    <td colspan="2" class="bold ">
+                                        <input type="text" class="Quantity form-control input-small" disabled="disabled" readonly="readonly"></td>
+                                    <td colspan="2">
+                                        <input type="text" class="Amount form-control input-small" disabled="disabled" readonly="readonly"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="LeadActivities.SaveExpectedItems()">Save</button>
+                <button type="button" data-dismiss="modal" class="btn btn-close-model">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="Meeting-Container" class="modal fade hidden-print bs-modal-lg" tabindex="-1">
+    <div class="modal-dialog modal-sm1">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title"><span class='caption-subject font-green-sharp bold'>Add New <span id="model-title"></span></span></h4>
+            </div>
+            <div class="modal-body form-horizontal ">
+                <div class="row" data-save="save">
+                    <input type="hidden" id="ActivityType" />
+                    <input type="hidden" id="Id" />
+                    @* ////////////////////////////starts////////////////////////////*@
+                    <div class="form-group  call-row task-row">
+                        <label class="col-md-3 control-label" for="prefix">Subject</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control " id="Subject" placeholder="Subject" data-validate="true" data-message="Subject is required" >
+                        </div>
+
+                    </div>
+                    <div class="form-group task-row">
+                        <label class="col-md-3 control-label master-account-label" for="prefix">Meeting Status</label>
+                        <div class="col-md-7">
+                            <select class="form-control select2" id="MeetingStatus">
+                                <option></option>
+                                <option>Initial Conversation</option>
+                                <option>Products Offered</option>
+                                <option>Agreed</option>
+                                <option>Quote Sent</option>
+                                <option>Mature</option>
+                                <option>Not Interested</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group task-row">
+                        <label class="col-md-3 control-label master-account-label" for="prefix">Interest Level</label>
+                        <div class="col-md-7">
+                            <select class="form-control select2" id="InterestLevel">
+                                <option></option>
+                                <option>High</option>
+                                <option>Medium</option>
+                                <option>Low</option>
+                                <option>Negative</option>
+                            </select>
+                        </div>
+                    </div>
+@*                    <div class="form-group task-row">
+                        <label class="col-md-3 control-label master-account-label" for="prefix">FollowUp Status</label>
+                        <div class="col-md-7">
+                            <select class="form-control select2" id="FollowUpStatus">
+                                <option></option>
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+                        </div>
+                    </div>*@
+
+                    @*                                <label class="col-md-3 control-label master-account-label" for="prefix">Next FollowUp</label>
+                                <div class="input-group date form_datetime col-md-8">
+                                    <input type="text" size="16" readonly="" class="form-control ">
+                                    <span class="input-group-btn">
+                                        <button class="btn default date-set" type="button">
+                                            <i class="fa fa-calendar"></i>
+                                        </button>
+                                    </span>
+                                </div>*@
+@*                    <div class="form-group task-row">
+                        <label class="col-md-3 control-label master-account-label" for="prefix">Next FollowUp</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control date-picker" id="NextFollowUp" />
+                        </div>
+                    </div>*@
+@*                    <div class="form-group task-row">
+                        <label class="col-md-3 control-label master-account-label" for="prefix">Expected Maturity Level</label>
+                        <div class="col-md-7">
+                            <select class="form-control select2" id="ExpectedMaturityLevel">
+                                <option></option>
+                                <option>15 Days</option>
+                                <option>30 Days</option>
+                                <option>45 Days</option>
+
+                            </select>
+
+                        </div>
+                    </div>*@
+
+                    @*////////////////////////////ends/////////////////////////*@
+
+                    @*                    <div class="form-group task-row">
+                        <label class="col-md-3 control-label" for="prefix">Status</label>
+                        <div class="col-md-7">
+                            <select class="form-control select2" id="Status" placeholder="Status" >
+                                <option></option>
+                                <option>NotStarted</option>
+                                <option>Deferred</option>
+                                <option>InProgress</option>
+                                <option>Completed</option>
+                                <option>Waiting On SomeOne Else</option>
+                            </select>
+                        </div>
+                    </div>*@
+                    <div class="form-group call-row">
+                        <label class="col-md-3 control-label" for="prefix">Call Type</label>
+                        <div class="col-md-7">
+                            <select class="form-control select2" id="CallType" placeholder="Call Type" >
+                                <option></option>
+                                <option>Outbound</option>
+                                <option>Inbound</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group call-row">
+                        <label class="col-md-3 control-label" for="prefix">Call Purpose</label>
+                        <div class="col-md-7">
+                            <select class="form-control select2" id="CallPurpose" placeholder="Call Purpose" >
+                                <option></option>
+                                <option>Prospecting</option>
+                                <option>Administrative</option>
+                                <option>Negotiation</option>
+                                <option>Demo</option>
+                                <option>Project</option>
+                                <option>Support</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group call-row">
+                        <label class="col-md-3 control-label" for="prefix">Contact Name</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control " id="ContactName" placeholder="Contact Name" >
+                        </div>
+                    </div>
+                    <div class="form-group call-row">
+                        <label class="col-md-3 control-label" for="prefix">Call Result</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control " id="CallResult" placeholder="Call Result" >
+                        </div>
+                    </div>
+                    <div class="form-group event-row">
+                        <label class="col-md-3 control-label" for="prefix">Location</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control " id="Location" placeholder="Location" data-validate="true" data-message="Location is required" >
+                        </div>
+                    </div>
+                    <div class="form-group event-row">
+                        <label class="col-md-3 control-label" for="prefix">From Date</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control date-picker" id="FromDate" data-validate="true" data-message="DueDate is required" >
+                        </div>
+
+                    </div>
+                    <div class="form-group event-row">
+                        <label class="col-md-3 control-label" for="prefix">To Date</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control date-picker" id="ToDate" data-validate="true" data-message="DueDate is required" >
+                        </div>
+                    </div>
+                    <div class="hide form-group task-row DueDate">
+                        <label class="col-md-3 control-label" for="prefix">Next Follow Up</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control date-picker" id="DueDate" data-validate="true" data-message="DueDate is required" >
+                        </div>
+                    </div>
+                    <div class="form-group task-row">
+                        <label class="col-md-3 control-label" for="prefix">Priority</label>
+                        <div class="col-md-7">
+                            <select class="form-control select2" id="Priority" placeholder="Priority" data-validate="true" data-message="Username is required" >
+                                <option></option>
+                                <option>High</option>
+                                <option>Highest</option>
+                                <option>Low</option>
+                                <option>Lowest</option>
+                                <option>Normal</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group event-row">
+                        <label class="col-md-3 control-label" for="prefix">Related To</label>
+                        <div class="col-md-7">
+                            <select class="form-control select2" id="RelatedTo" placeholder="RelatedTo" >
+                                <option></option>
+                                <option>None</option>
+                                <option>Lead</option>
+                                <option>Contact</option>
+                                <option>Others</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="prefix">Description</label>
+                        <div class="col-md-7">
+                            <textarea id="Description" class="form-control"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="LeadActivities.SaveLeadActivity()">Save</button>
+                <button type="button" data-dismiss="modal" class="btn btn-close-model">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="jsondata" class="hide">
+    <p id="data">@ViewBag.FormSetting</p>
+</div>
+
+
+<div class="row"></div>
+
+<script type="text/html" id="template-itemhtml">
+    <tr>
+
+        <td>{{ItemCode}}
+        </td>
+        <td>{{ItemName}}
+        </td>
+
+    </tr>
+
+</script>
+
+<script type="text/html" id="template-item">
+    <tr>
+
+        <td>
+            <input type="hidden"  data-db-column="LeadId" value="@leadid">
+            <input type="hidden" class="ItemId" data-db-column="ItemId">
+            <input type="hidden"  class="EntryType"  data-db-column="EntryType" value="@((int)EntryType.Item)">
+            <input type="text" class="Code form-control typeahead  ui-autocomplete-input" data-db-column="ItemCode" autocomplete="off">
+        </td>
+        <td>
+            <input type="text" disabled="disabled" class="Name form-control " data-db-column="ItemName"></td>
+        <td style="width: 8px;">
+            <span class="action"><i class="fa fa-trash-o" onclick="LeadActivities.DeleteRow(this)" data-original-title="Delete Item"></i></span>
+
+        </td>
+    </tr>
+
+</script>
+
+
+<script type="text/html" id="expected-template-itemhtml">
+    <tr>
+        <td>{{ItemCode}}
+        </td>
+        <td>{{ItemName}}
+        </td>
+
+        <td>{{Quantity}}
+        </td>
+        <td>{{Rate}}
+        </td>
+        <td>{{Amount}}
+        </td>
+    </tr>
+
+</script>
+<script type="text/html" id="expected-template-item">
+    <tr>
+        <td>
+            <input type="hidden"  data-db-column="LeadId" value="@leadid">
+            <input type="hidden" class="ItemId" data-db-column="ItemId">
+            <input type="hidden"  class="EntryType"  data-db-column="EntryType" value="@((int)EntryType.Item)">
+            <input type="text" class="Code form-control typeahead  ui-autocomplete-input" data-db-column="ItemCode" autocomplete="off">
+        </td>
+        <td>
+            <input type="text" disabled="disabled" class="Name form-control " data-db-column="ItemName"></td>
+
+        <td class="align-right">
+            <input type="text" class="Quantity form-control input-small num3" data-db-column="Quantity" data-db-type="float"></td>
+        <td class="align-right">
+            <input type="text" class="Rate form-control input-small num3" data-db-column="Rate" data-db-type="float"></td>
+        <td class="align-right">
+            <input type="text" class="Amount form-control input-small num3" disabled="disabled" readonly="readonly" data-db-column="Amount" data-db-type="float"></td>
+        <td style="width: 8px;">
+            <span class="action"><i class="fa fa-trash-o" onclick="LeadActivities.DeleteRow(this)" data-original-title="Delete Item"></i></span>
+        </td>
+    </tr>
+
+</script>
+
+
+
+<script type="text/html" id="meeting-template">
+    <tr>
+        <td>{{Subject}}
+        </td>
+@*      <td>{{ActivityTypeName}}
+        </td>*@
+        <td>{{MeetingStatus}}
+        </td>
+        <td>{{InterestLevel}}
+        </td>
+        <td>{{DueDate}} 
+        </td>@*DueDate.HasValue ? DueDate : "None"*@
+@*      <td>{{FromDate}}
+        </td>
+        <td>{{ToDate}}
+        </td>*@
+
+        <td style="width: 8px;">
+            <input type="hidden" id="row-record" data-db-column="RecordObject" />
+            <span class="action"><i class="fa fa-edit" onclick="LeadActivities.EditLeadActivities(this)" data-original-title="Delete Item"></i></span>
+        </td>
+    </tr>
+
+</script>
+@section FooterScript
+{
+
+    <script src="~/Content/AppJS/CRM/LeadActivities.js"></script>
+
+    <script>
+        jQuery(document).ready(function () {
+            LeadActivities.init();
+        });
+    </script>
+}
+

@@ -1,0 +1,1 @@
+<add name="AccountEx" connectionString="data source=89.163.132.246;initial catalog=xameer_accountex;User ID=kashif.hanif;Password=tQPBleb1zl@o8KP;MultipleActiveResultSets=True;App=EntityFramework" providerName="System.Data.SqlClient"/>

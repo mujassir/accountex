@@ -1,0 +1,21 @@
+﻿@using AccountEx.BussinessLogic;
+@{
+    var items = MenuManager.GetMenuItems().ToList();
+    var menus = items.CloneWithJson();
+    menus.ForEach(x =>
+    {
+        x.SubMenues = x.SubMenues.Where(p => p.IsVisible).ToList();
+    });
+    foreach (var item in menus)
+    {
+        if (item.IsMegaMenu)
+        {
+    @Html.Partial("_Mega_Menu", item);
+        }
+        else
+        {
+    @Html.Partial("Horizontal_MenuItem", item)
+        }
+    }
+}
+

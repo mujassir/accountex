@@ -1,0 +1,64 @@
+﻿@section PageTitle
+{
+    <h1 class="font-green-sharp bold">Manage Follow Ups</h1>
+}
+@{
+    ViewBag.Title = "FollowUp";
+}
+
+<div class="row hidden-print" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Follow Up Details
+                </div>
+
+@*                <div class="actions">
+                    <button id="btnEdit" type="button" class="btn blue" onclick="Leads.Add()"><i class="fa fa-plus"></i>&nbsp;New</button>
+                </div
+                <div class="tools hide">
+                    <a href="javascript:;" class="collapse"></a>
+                </div>>*@
+            </div>
+            <div class="portlet-body">
+                <div class="hide alert alert-danger container-message">
+                    <i class="close" onclick="$(this).parent().hide();"></i>
+                    <strong></strong>
+                    <div class="form-body message-content"></div>
+                </div>
+                <table class="table table-striped table-bordered table-hover" id="mainTable">
+                    <thead>
+                        <tr>
+                            <th>Sales Person/Owner</th>
+                            <th>Company</th>
+                            <th>No Of Meetings</th>
+                            <th>Mobile</th>
+                            <th>Next Follow Up</th>
+                            @*<th style="width: 75px;" class="no-sort"></th>*@
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="7">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+@section FooterScript
+{
+
+    <script src="~/Content/AppJS/CRM/FollowUp.js"></script>
+
+    <script>
+        jQuery(document).ready(function () {
+            FollowUp.init();
+        });
+    </script>
+}

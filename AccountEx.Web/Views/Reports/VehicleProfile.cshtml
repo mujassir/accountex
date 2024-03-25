@@ -1,0 +1,240 @@
+﻿@model AccountEx.Web.Models.GeneralLedgerModel
+@using AccountEx.Common;
+
+@{
+    Layout = "_Layout.cshtml";
+    //ViewBag.Title = "General Ledger";
+    var type = Request.QueryString["type"] + "";
+    ViewBag.Title = "Vehicle Costing Ledger";
+    ViewBag.FormTitle = "Vehicle Costing Ledger";
+       
+}
+
+<style type="text/css">
+    
+</style>
+
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">
+
+        <span class="main-title">@ViewBag.FormTitle</span>
+        <small id="lblReportDate" class="pull-right small visible-print">Date: @Model.FromDate.ToString(AppSetting.DateFormat) to @Model.ToDate.ToString(AppSetting.DateFormat)
+
+        </small>
+        <br />
+        <small id="lblVehicleTitle" class="pull-right small visible-print">Vehicle:
+        <a href="javascript:void(0);"></a>
+        </small>
+
+    </h1>
+}
+<div class="row hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-filter"></i>Report Filters
+                </div>
+                <div class="actions">
+                    <button class="btn blue hidden-print" onclick="window.print();"><i class="fa fa-print"></i>&nbsp;Print </button>
+                </div>
+
+            </div>
+            <div class="portlet-body form">
+                @using (Html.BeginForm())
+                {
+
+                    <div class="form-horizontal" data-save="Save">
+                        <input type="text" id="Id" class="hide" />
+                        <div class="form-body">
+                            <div class="form-group hide">
+                                <label class="col-md-2 control-label" for="prefix">From Date</label>
+                                <div class="col-md-3">
+                                    <div class="input-group input-medium">
+                                        @Html.TextBoxFor(model => model.FromDate, new { @class = "form-control date-picker", @Value = Model.FromDate.ToString("dd/MM/yyyy"), data_fiscal_date = "true" })
+
+                                        <span class="input-group-btn date-icon">
+                                            <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                        </span>
+                                    </div>
+
+                                </div>
+                                <label class="col-md-2 control-label" for="prefix">To Date</label>
+                                <div class="col-md-3">
+                                    <div class="input-group input-medium">
+                                        @Html.TextBoxFor(model => model.ToDate, new { @class = "form-control date-picker", @Value = Model.ToDate.ToString("dd/MM/yyyy"), data_fiscal_date = "true" })
+                                        <span class="input-group-btn date-icon">
+                                            <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="form-group  row-account hide">
+                                <label class="col-md-2 control-label" for="prefix">Vehicle</label>
+                                <div class="col-md-8">
+                                    <select id="VehicleId" class="form-control select2">
+                                        @foreach (var item in Model.Accounts)
+                                        {
+                                            <option value="@item.Id">@item.Name </option>
+                                        }
+                                    </select>
+
+                                </div>
+                            </div>
+                            <div class="form-group row-info hide">
+                                <label class="col-md-2 control-label" for="prefix"><strong>Account/Party:</strong></label>
+                                <div class="col-md-8">
+                                    <strong>
+                                        <label id="lblvehicle" class="label label-info"></label>
+                                    </strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+                            <div class="col-md-8">
+                                <button type="button" id="btnShowReport" class="btn btn-primary">Show Report</button>
+                            </div>
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+
+
+
+
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title hidden-print">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Report Data
+                </div>
+                <div class="tools pull-right">
+                    @{ Html.RenderPartial("_Export_Button");  }
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered tbl-vehicle-detail hide">
+                        <tbody>
+                            <tr>
+                                <td class="align-left"><strong>Make:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong><span class="text-uppercase"><span class="lblManufacturer"></span>&nbsp;<span class="lblBrandName"></span>&nbsp;(<span class="lblModel"></span>)</span></td>
+                                <td class="align-center"><strong>Chassis:&nbsp;&nbsp;</strong><span class="lblChassisNo text-uppercase"></span></td>
+                                <td class="align-right"><strong>Registration No:&nbsp;&nbsp;&nbsp;</strong><span class="lblRegNo text-uppercase"></span></td>
+                            </tr>
+                            <tr class="align-center">
+                                <td colspan="3">
+                                    <span><strong>File No:&nbsp;</strong><span class="lblFileNo"></span><span class="spn-line">&nbsp;|&nbsp;</span></span>
+                                    <span><strong>Color:&nbsp;</strong><span class="lblColor text-uppercase"></span><span class="spn-line">&nbsp;|&nbsp;</span></span>
+                                    <span><strong>Model:&nbsp;</strong><span class="lblYear"></span><span class="spn-line">&nbsp;|&nbsp;</span></span>
+                                    <span><strong>Total Days:&nbsp;</strong><span class="lblId"></span><span class="spn-line">&nbsp;|&nbsp;</span></span>
+                                    <span><strong>Status:&nbsp;</strong><span class="lbl text-uppercase lblDeliveryStatus"></span><span class="spn-line">&nbsp;|&nbsp;</span></span>
+                                    <span><strong>Log Book:&nbsp;</strong><span class="lblLogBookStatus text-uppercase"></span><span class="spn-line">&nbsp;|&nbsp;</span></span>
+                                    <span><strong>Date:&nbsp;</strong><span class="lblLogBookDate" data-db-type="date"></span></span>
+
+                                </td>
+
+                            </tr>
+                            <tr class="align-center">
+                                <td colspan="3">
+                                    <span><strong>Arrival Date:&nbsp;</strong><span class="lblArrivalDate" data-db-type="date"></span><span class="spn-line">&nbsp;|&nbsp;</span></span>
+                                    <span><strong>Purchase Price:&nbsp;</strong><span class="lblPurchasePrice" data-db-type="int" data-formating="true"></span><span class="spn-line">&nbsp;|&nbsp;</span></span>
+                                    <span><strong>Sold Date:&nbsp;</strong><span class="lblSoldDate" data-db-type="date"></span><span class="spn-line">&nbsp;|&nbsp;</span></span>
+                                    <span><strong>Deliver Date:&nbsp;</strong><span class="lblDeliverDate" data-db-type="date"></span></span>
+
+
+                                </td>
+
+                            </tr>
+                            <tr class="align-center">
+                                <td colspan="3">
+                                    <span><strong>Ship Name:&nbsp;</strong><span class="lblShipName text-uppercase"></span><span class="spn-line">&nbsp;|&nbsp;</span></span>
+                                    <span><strong>BL:&nbsp;</strong><span class="lblBLNumber text-uppercase"></span><span class="spn-line"></span></span>
+                                    @* <span><strong>Sale Person:&nbsp;</strong><span class="lblId text-uppercase">Riasat Khan</span></span>*@
+                                </td>
+
+                            </tr>
+                            <tr class="align-center">
+                                <td colspan="3">
+                                    <span><strong>Purchase Name:&nbsp;</strong><span class="lblCustomerName text-uppercase"></span><span class="spn-line">&nbsp;|&nbsp;</span></span>
+                                    <span><strong>Phone No:&nbsp;</strong><span class="lblContactNumber"></span><span class="spn-line">&nbsp;&nbsp;</span></span>
+
+
+
+                                </td>
+
+                            </tr>
+                            <tr class="align-center">
+                                <td colspan="3">
+                                    <span><strong>Sold Price:&nbsp;</strong><span class="lblSalePrice text-uppercase" data-db-type="int" data-formating="true"></span><span class="spn-line">&nbsp;|&nbsp;</span></span>
+                                    <span><strong>Tracker Balance:&nbsp;</strong><span class="lblTrackerBalanceAmount text-uppercase" data-db-type="int" data-formating="true"></span><span class="spn-line">&nbsp;|&nbsp;</span></span>
+                                    <span><strong>Insurance Balance:&nbsp;</strong><span class="lblInsurenceBalanceAmount text-uppercase" data-db-type="int" data-formating="true"></span><span class="spn-line">&nbsp;|&nbsp;</span></span>
+                                    <span><strong>Log Book Fee:&nbsp;</strong><span class="lblLogBookFee text-uppercase" data-db-type="int" data-formating="true"></span><span class="spn-line">&nbsp;|&nbsp;</span></span>
+                                    <span><strong>Total:&nbsp;</strong><span class="lblTotal text-uppercase" data-db-type="int" data-formating="true"></span><span class="spn-line">&nbsp;|&nbsp;</span></span>
+                                    <span><strong>Deposit Cash:&nbsp;</strong><span class="lblReceived text-uppercase" data-db-type="int" data-formating="true"></span><span class="spn-line">&nbsp;|&nbsp;</span></span>
+                                    <span><strong>Trade Price:&nbsp;</strong><span class="lblTradeInPrice text-uppercase" data-db-type="int" data-formating="true"></span><span class="spn-line">&nbsp;|&nbsp;</span></span>
+                                    <span><strong>Balance:&nbsp;</strong><span class="lblBalance text-uppercase" data-db-type="int" data-formating="true"></span><span class="spn-line"></span></span>
+
+
+
+
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+                    <table class="table table-striped table-bordered table-hover report-table" data-export='true'>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Description(Expense)</th>
+                                <th>Narration</th>
+                                <th class='align-right'>Amount</th>
+
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+<input type="hidden" id="txtFromDate" value="@Model.FromDate.ToString(AppSetting.DateFormat)" />
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Reports/VehicleProfile.js"></script>
+
+    <script>
+        jQuery(document).ready(function () {
+            VehicleProfile.init();
+        });
+    </script>
+}
+
+
+
+
+
+

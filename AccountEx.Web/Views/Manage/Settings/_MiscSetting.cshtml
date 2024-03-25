@@ -1,0 +1,210 @@
+﻿@{
+    Layout = null;
+}
+<div class="form-horizontal" data-save="save">
+
+    <div class="form-body">
+        <div class="portlet">
+            <div class="portlet-title">
+                <div class="caption">
+                    Taxes
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">GST (%) </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Taxes.GST">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Discount (%) </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Taxes.Discount">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">GST Account </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Taxes.GSTAC">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">GST Services Account </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Taxes.GSTServicesAC">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Advance Tax (%) </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Taxes.AdvanceTax">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Advance Tax Account </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Taxes.AdvanceTaxAC">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">GST On Sale Batch Wise (%) </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Taxes.GSTOnSaleInvoice">
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">WHT (%) </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Taxes.WHT">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Import Multiple %</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Taxes.ImportMultiple">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Income Tax</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="COA.IncomeTax">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Comission (%)</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Attendee.Comission">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Accounts Hidden From COA</label>
+                    <div class="col-md-6">
+                        <textarea class="form-control " name="COA.HiddenAccounts" data-plus-as-tab="false"></textarea>
+                        <span class="help-inline">one per line</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="portlet">
+            <div class="portlet-title">
+                <div class="caption">
+                    Rent
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Rent/Sqft </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Rent.RentPerSqft">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">UC %</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Rent.UCPercent">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Possession Charges/Sqft </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Rent.PossessionChargesPerSqft">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Security/Possession Due Date </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control date-picker" name="Rent.SecurityPossessionDueDate">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Security Money Month </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Rent.SecurityMoneyMonths">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Transfer Charges </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Rent.TransferCharges">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Electriciy Unit Charges </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Rent.ElectricityUnit">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Due Date </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control date-picker" name="Rent.DueDate">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="portlet">
+            <div class="portlet-title">
+                <div class="caption">
+                    Vehicles
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Delivery Order</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" name="COA.Vehicle.DeliveryOrderCharges" data-coa="coa">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Port Charges</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" name="COA.Vehicle.PortCharges" data-coa="coa">
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Fare</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" name="COA.Vehicle.FareCharge" data-coa="coa">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Storage</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" name="COA.Vehicle.StorageCharge" data-coa="coa">
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="portlet">
+            <div class="portlet-title">
+                <div class="caption">
+                    Report Header
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-12">
+                <textarea class="ckeditor form-control" id="ReportHeader" name="Report.Header" rows="6"></textarea>
+            </div>
+        </div>
+    </div>
+
+</div>

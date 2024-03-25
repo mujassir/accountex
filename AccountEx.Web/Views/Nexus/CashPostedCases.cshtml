@@ -1,0 +1,185 @@
+﻿@using AccountEx.Common
+@{
+    ViewBag.Title = "Post Cases for Cash";
+}
+
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">Manage Cash Post Cases</h1>
+}
+
+<style type="text/css">
+    table#tbl-cases tr td input[type='text'] {
+        border: none !important;
+        width: 100% !important;
+        font-size: 13px;
+        padding: 5px;
+        height: 22px;
+    }
+</style>
+<!-- END PAGE HEADER-->
+
+<div class="row hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-filter"></i>Report Filters
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                    @* <a href="javascript:;" class="remove"></a>*@
+                </div>
+                <div class="actions">
+                    <button class="btn blue hidden-print" onclick="window.print();"><i class="fa fa-print"></i>&nbsp;Print </button>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal" data-save="Save">
+                    <input type="text" id="Id" class="hide" />
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">From Date</label>
+                            <div class="col-md-2">
+                                <div class="input-group input-medium">
+                                    <input class="date-picker form-control date-picker" type="text" id="FromDate" data-required="required" value="@DateTime.Now.ToString(AppSetting.DateFormat)" data-message="From Date is required"  data-fiscal-date="true">
+
+                                    <span class="input-group-btn date-icon">
+                                        <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                            <label class="col-md-1 control-label" for="prefix">To Date</label>
+                            <div class="col-md-2">
+                                <div class="input-group input-medium">
+                                    <input class="date-picker form-control date-picker" type="text" id="ToDate" data-required="required" value="@DateTime.Now.ToString(AppSetting.DateFormat)" data-message="To Date is required"  data-fiscal-date="true">
+
+                                    <span class="input-group-btn date-icon">
+                                        <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <div class="form-group">
+
+                            <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+                            <div class="col-md-8">
+                                <button id="btnShowReport" type="submit" class="btn btn-primary">Show Recrod</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Record Listing
+                </div>
+                <div class="actions">
+                    <a href="javascript:;" onclick="CashPostedCases.LoadData(true, true)" class="btn red button-applicaion-info btn-sm pull-left hide" title="Refresh all data">
+                        <i class="fa fa-refresh"></i>&nbsp;Refresh
+                    </a>
+                    <button id="btnSave" type="button" class="btn green" onclick="CashPostedCases.Save()"><i class="fa fa-check"></i>&nbsp;Post Cases</button>
+
+                </div>
+            </div>
+
+            <div class="portlet-body">
+
+                <table class="table table-bordered griditem table-advance" id="tbl-cases">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th width="5%">Case Number</th>
+                            <th width="10%">Patient Name</th>
+                            <th>Registration Date</th>
+                            <th>Reference Name</th>
+                            <th>Consultant Name</th>
+                            <th width="10%">Test</th>
+                            <th>Price</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="8">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+<script type="text/html" id="template-item">
+    <tr>
+        <td>
+            <input type="hidden" class="Id" data-db-column="Id">
+            <input type="hidden" class="TestId" data-db-column="TestId">
+            <input type="text" class="TestName form-control input-small ui-autocomplete-input" data-db-column="TestName">
+        </td>
+        <td class="align-right">
+            <input type="text" class="Price form-control input-small num3" data-db-column="Price" disabled12="disabled" readonly12="readonly">
+        </td>
+        <td class="td-delete">
+            <span class="action"><i class="fa fa-trash-o" onclick="Cases.DeleteRow(this)" data-original-title="Delete Item"></i></span>
+        </td>
+    </tr>
+</script>
+<script type="text/html" id="template-nexus-item">
+    <tr>
+        <td>
+            <input type="hidden" class="Id" data-db-column="Id">
+            <input type="hidden" class="TestID" data-db-column="TestID">
+            <input type="text" class="TestName form-control input-small ui-autocomplete-input" data-db-column="TestName" disabled="disabled" readonly="readonly">
+        </td>
+        <td class="align-right">
+            <input type="text" class="Rate form-control input-small num3" data-db-column="Rate" disabled="disabled" readonly="readonly">
+        </td>
+    </tr>
+</script>
+
+<div id="jsondata" class="hide">
+    <p id="data">@ViewBag.FormSetting</p>
+</div>
+<script type="text/html" id="template-item-1">
+    <tr>
+        <td>
+            <input type="hidden" class="Id" data-db-column="Id">
+            <input type="hidden" class="TestId" data-db-column="TestId">
+            {{CaseNumber}}
+        </td>
+        <td class="align-right">
+            <input type="text" class="Price form-control input-small num3" data-db-column="Price" disabled12="disabled" readonly12="readonly">
+        </td>
+        <td class="td-delete">
+            <span class="action"><i class="fa fa-trash-o" onclick="Cases.DeleteRow(this)" data-original-title="Delete Item"></i></span>
+        </td>
+    </tr>
+</script>
+
+@section FooterScript
+{
+<script src="~/Content/AppJS/Nexus/CashPostedCases.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            CashPostedCases.init();
+        });
+    </script>
+}

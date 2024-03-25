@@ -1,0 +1,103 @@
+USE xameer_accountex
+
+
+
+
+
+
+
+SELECT * FROM dbo.Companies WHERE Name LIKE	'%kan%'
+
+USE xameer_accountex
+SELECT * FROM dbo.Users WHERE Username='raheel@liquimolly'
+
+DECLARE @CompanyId INT=97
+
+
+--SELECT * FROM dbo.AccountDetails WHERE CompanyId=36 AND AccountDetailFormId=5
+
+SELECT * FROM dbo.Fiscals WHERE CompanyId=@CompanyId
+SELECT DISTINCT(FiscalId) FROM dbo.Transactions WHERE CompanyId=@CompanyId 
+
+
+
+--UPDATE dbo.Fiscals SET FromDate='2013-07-01' WHERE Id=38
+
+
+SELECT tt.Name,t.TransactionType,SUM(t.Debit) AS Debit,SUM(t.Credit) AS Credit,SUM(t.Debit)-SUM(t.Credit) AS DifferenceAmount FROM dbo.Transactions t
+
+INNER JOIN dbo.TransactionTypes tt ON tt.Id=t.TransactionType
+
+WHERE t.FiscalId=1218
+
+GROUP BY t.CompanyId,t.FiscalId,tt.Name,t.TransactionType
+
+
+
+
+
+SELECT t.VoucherNumber,SUM(t.Debit) AS Debit,SUM(t.Credit) AS Credit,SUM(t.Debit)-SUM(t.Credit) AS DifferenceAmount FROM dbo.Transactions t
+
+
+WHERE t.FiscalId=1218
+
+GROUP BY t.CompanyId,t.FiscalId,t.VoucherNumber,t.TransactionType
+
+HAVING SUM(t.Debit)-SUM(t.Credit)<>0
+
+SELECT * FROM dbo.Sales WHERE FiscalId=1 AND VoucherNumber=207 AND TransactionType=24
+
+SELECT * FROM dbo.Transactions WHERE FiscalId=1 AND VoucherNumber=208 AND TransactionType=2
+
+SELECT *  FROM dbo.Transactions WHERE FiscalId=1218 AND VoucherNumber=0 AND TransactionType=29
+AND Debit>0
+
+UPDATE dbo.Transactions SET Debit=Debit+0.0001 WHERE FiscalId=1218 AND VoucherNumber=0 AND TransactionType=29
+AND Id=2225552
+
+
+
+SELECT SUM(Debit) debit,SUM(Credit) Credit FROM dbo.Transactions WHERE FiscalId=1218 AND VoucherNumber=0 AND TransactionType=29
+
+
+--DELETE FROM dbo.Transactions WHERE FiscalId=1 AND VoucherNumber=208 AND TransactionType=2 AND CompanyId=@CompanyId
+
+SELECT * FROM dbo.Transactions WHERE VoucherNumber=133 AND FiscalId=9 AND TransactionType=6
+
+
+SELECT * FROM dbo.Vouchers WHERE VoucherNumber=133 AND FiscalId=9 AND TransactionType=6
+
+SELECT * FROM dbo.VoucherItems WHERE VoucherId=6270
+
+
+
+
+
+
+SELECT a.Name,t.AccountId,tt.Name,t.Debit,t.Credit FROM dbo.Transactions t 
+ INNER JOIN dbo.TransactionTypes tt
+ ON tt.Id=t.TransactionType
+INNER JOIN dbo.Accounts a ON a.Id=t.AccountId 
+ WHERE t.CompanyId=97 AND t.AccountId 
+ IN(SELECT AccountId FROM dbo.AccountDetails WHERE CompanyId=97 AND AccountDetailFormId=5)
+
+
+
+ SELECT a.Name,t.AccountId,tt.Name,t.Debit,t.Credit FROM dbo.Transactions t 
+ INNER JOIN dbo.TransactionTypes tt
+ ON tt.Id=t.TransactionType
+INNER JOIN dbo.Accounts a ON a.Id=t.AccountId 
+ WHERE t.CompanyId=97 AND a.Level<>4
+
+
+SELECT * FROM dbo.TransactionTypes
+
+
+
+
+
+
+
+
+
+

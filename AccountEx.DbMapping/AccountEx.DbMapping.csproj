@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{28A952C4-830F-4912-B627-383777BF8661}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AccountEx.DbMapping</RootNamespace>
+    <AssemblyName>AccountEx.DbMapping</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AccountTypeExtra.cs" />
+    <Compile Include="BLStatusExtra.cs" />
+    <Compile Include="Class1.cs" />
+    <Compile Include="COAExtra.cs" />
+    <Compile Include="CompanyExtra.cs" />
+    <Compile Include="EmployeeLeaveExtra.cs" />
+    <Compile Include="EmployeeOTHourExtra.cs" />
+    <Compile Include="GeneralLedgerEntry.cs" />
+    <Compile Include="InvoiceExtra.cs" />
+    <Compile Include="Lab\TestSaveExtra.cs" />
+    <Compile Include="Lab\InvestigationGroupExtra.cs" />
+    <Compile Include="LeadConcernedItemExtra.cs" />
+    <Compile Include="LeadExpectedItemExtra.cs" />
+    <Compile Include="MenuItemExtra.cs" />
+    <Compile Include="PromotionItemExtra.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RentAgreementExtra.cs" />
+    <Compile Include="ReportObject.cs" />
+    <Compile Include="RoleExtra.cs" />
+    <Compile Include="SalaryExtra.cs" />
+    <Compile Include="SaleServiceExtra.cs" />
+    <Compile Include="SaveServicesExtra.cs" />
+    <Compile Include="SiteSettingContainer.cs" />
+    <Compile Include="TenantExtra.cs" />
+    <Compile Include="TransactionExtra.cs" />
+    <Compile Include="UserExtra.cs" />
+    <Compile Include="VehicleSystem\BLExtra.cs" />
+    <Compile Include="VehicleSystem\ShipperExtra.cs" />
+    <Compile Include="VehicleSystem\VehicleLogBook.cs" />
+    <Compile Include="WheatPurchaseExtra.cs" />
+    <Compile Include="WidgetObject.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AccountEx.CodeFirst\AccountEx.CodeFirst.csproj">
+      <Project>{103f5c0f-7829-427e-9181-408fa16a57cf}</Project>
+      <Name>AccountEx.CodeFirst</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AccountEx.Common\AccountEx.Common.csproj">
+      <Project>{2ac11c97-c09e-4023-ab64-122f899e2a1e}</Project>
+      <Name>AccountEx.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

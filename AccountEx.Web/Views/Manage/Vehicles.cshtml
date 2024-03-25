@@ -1,0 +1,547 @@
+﻿@using AccountEx.Common;
+@section PageTitle
+{
+    <h1 class="font-green-sharp bold">Manage Vehicles</h1>
+}
+
+<div class="row hidden-print" id="div-form">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-edit"></i>Add/Edit Vehicles
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div id="mainform" class="form-horizontal" data-save="save">
+                    <input type="text" id="Id" class="hide" value="0" />
+                    <div class="form-body">
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Chassis No</label>
+                            <div class="col-md-2">
+                                <input id="ChassisNo" type="text" class="form-control" data-required="required" data-message="Chassis No is required">
+                            </div>
+                            <div class="col-md-1">
+                                <select id="Type" class="form-control select2">
+                                    <option value="@((byte)VehicleType.New)">New</option>
+                                    <option value="@((byte)VehicleType.TradIn)">Traded</option>
+                                    <option value="@((byte)VehicleType.LocalPurchase)">LP</option>
+
+                                </select>
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">Model</label>
+                            <div class="col-md-3">
+                                <select id="ModelId" class="form-control select2" data-required="required" data-message="Model is required">
+                                    <option></option>
+                                    @foreach (var p in (List<IdName>)ViewBag.Model)
+                                    {
+                                        <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                    }
+                                </select>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Vendor</label>
+                            <div class="col-md-3">
+                                <select class="form-control select2 suppliers" id="VendorId" placeholder="Select Vendor" data-required="false" data-message="Vendor is required">
+                                    <option></option>
+                                </select>
+                            </div>
+
+                            <label class="col-md-2 control-label" for="prefix">Date</label>
+                            <div class="col-md-3">
+
+                                <input id="PurchaseDate" type="text" class="form-control date-picker">
+                            </div>
+
+                        </div>
+                        <div class="form-group forex-container hide">
+                            <label class="col-md-2 control-label" for="prefix">Currency</label>
+                            <div class="col-md-3">
+
+                                <select id="CurrencyId" class="form-control select2" data-required="false" data-message="Currency is required">
+                                    <option></option>
+                                    @foreach (var p in (List<IdName>)ViewBag.Currencies)
+                                    {
+                                        <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                    }
+                                </select>
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">Forex Price</label>
+                            <div class="col-md-1">
+
+                                <input id="ForexPrice" type="text" class="form-control num3" data-required="false">
+                            </div>
+                            <label class="col-md-1 control-label" for="prefix">Exchange Rate</label>
+                            <div class="col-md-1">
+
+                                <input id="ExcRate" type="text" class="form-control num3" data-required="false" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+
+
+                            <label class="col-md-2 control-label" for="prefix">Purchase Price</label>
+                            <div class="col-md-1">
+
+                                <input id="PurchasePrice" type="text" class="form-control num3" data-required="false" data-message="Purchase price is required">
+                            </div>
+
+                        </div>
+
+                        <div class="form-group tradin">
+                            <label class="col-md-2 control-label" for="prefix">Registeration No.</label>
+                            <div class="col-md-3">
+                                <input id="RegNo" type="text" class="form-control" data-required="required" data-message="Registeration No. is required">
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">Engine No</label>
+                            <div class="col-md-3">
+                                <input id="EngineNo" type="text" class="form-control" data-required="required" data-message="Engine No is required">
+                            </div>
+
+
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">File No.</label>
+                            <div class="col-md-3">
+                                <input id="FileNo" type="text" class="form-control" data-required="required" data-message="File No. is required">
+                            </div>
+
+
+
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Manufacturer</label>
+                            <div class="col-md-3">
+
+                                <select id="ManufacturerId" class="form-control select2" data-required="required" data-message="Manufacturer is required">
+                                    <option></option>
+                                    @foreach (var p in (List<IdName>)ViewBag.Manufactures)
+                                    {
+                                        <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                    }
+                                </select>
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">Engine Power (CC)</label>
+                            <div class="col-md-3">
+
+                                <select id="EnginePowerId" class="form-control select2" data-required="required" data-message="Engine Power (CC) No is required">
+                                    <option></option>
+                                    @foreach (var p in (List<IdName>)ViewBag.EnginePower)
+                                    {
+                                        <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                    }
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Color</label>
+                            <div class="col-md-3">
+
+                                <select id="ColorId" class="form-control select2" data-required="required" data-message="Color is required">
+                                    <option></option>
+                                    @foreach (var p in (List<IdName>)ViewBag.Colors)
+                                    {
+                                        <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                    }
+                                </select>
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">Fuel</label>
+                            <div class="col-md-3">
+
+                                <select id="FuelId" class="form-control select2" data-required="required" data-message="Manufacturer is required">
+                                    <option></option>
+                                    @foreach (var p in (List<IdName>)ViewBag.Fuel)
+                                    {
+                                        <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                    }
+                                </select>
+                            </div>
+
+                        </div>
+                        <div class="form-group hide">
+
+                            <label class="col-md-2 control-label" for="prefix">Brand Name</label>
+                            <div class="col-md-3">
+
+                                <select id="BrandNameId" class="form-control select2" data-required="false" data-message="Brand Name is required">
+                                    <option></option>
+                                    @foreach (var p in (List<IdName>)ViewBag.Brands)
+                                    {
+                                        <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                    }
+                                </select>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Car Type</label>
+                            <div class="col-md-3">
+
+                                <select id="CarTypeId" class="form-control select2" data-required="required" data-message="Fuel is required">
+                                    <option></option>
+                                    @foreach (var p in (List<IdName>)ViewBag.CarType)
+                                    {
+                                        <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                    }
+                                </select>
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">Clearing Company</label>
+                            <div class="col-md-3">
+
+                                <select id="ClearingCompanyId" class="form-control select2" data-required="false" data-message="Clearing Company is required">
+                                    <option></option>
+                                    @* @foreach (var p in (List<IdName>)ViewBag.ClearingCompany)
+                                        {
+                                            <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                        }*@
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Year</label>
+                            <div class="col-md-3">
+
+                                <select id="YearId" class="form-control select2" data-required="false" data-message="Year is required">
+                                    <option></option>
+                                    @foreach (var p in (List<IdName>)ViewBag.Year)
+                                    {
+                                        <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                    }
+                                </select>
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">Month</label>
+                            <div class="col-md-3">
+
+                                <select id="MonthId" class="form-control select2" data-required="false" data-message="Month is required">
+                                    <option></option>
+                                    @foreach (var p in (List<IdName>)ViewBag.Month)
+                                    {
+                                        <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Description of Motor</label>
+                            <div class="col-md-6">
+                                <input id="DoM" type="text" class="form-control" data-required="false" data-message="Description of Motor No is required">
+                            </div>
+
+                        </div>
+                        <div class="portlet-body form">
+                            <div class="form-actions">
+                                <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+                                <div class="col-md-8">
+                                    <button type="button" class="btn red purchase-return hide pull-right" onclick="Vehicles.PurchaseReturnInfo()">
+                                        <i class="fa fa-trash-o"></i>
+                                        Purchase Return
+                                    </button>
+                                    <button type="button" class="btn btn-primary green" onclick="Vehicles.Save()" data-plus-as-tab="false">Save</button>
+                                    <button id="btnCancel" type="button" class="btn btn-default" onclick="Vehicles.CustomClear()">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @*                    <div class="row " id="div-uploader">
+                            <div class="portlet light">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        Upload Files
+                                    </div>
+                                </div>
+                                <form id="fileupload" action="../Handlers/FileUpload.ashx?directory=StudentFiles" method="POST" enctype="multipart/form-data">
+                                    <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+                                    <div class="col-md-2"></div>
+                                    <div class="row fileupload-buttonbar">
+                                        <div class="col-lg-7">
+                                            <!-- The fileinput-button span is used to style the file input field as button -->
+                                            <span class="btn green fileinput-button">
+                                                <i class="fa fa-plus"></i>
+                                                <span>Add files... </span>
+                                                <input type="file" name="files[]" multiple="">
+                                            </span>
+                                            <button type="submit" class="btn blue start hide">
+                                                <i class="fa fa-upload"></i>
+                                                <span>Start upload </span>
+                                            </button>
+                                            <button type="reset" class="btn warning cancel">
+                                                <i class="fa fa-ban-circle"></i>
+                                                <span>Cancel upload </span>
+                                            </button>
+                                            <button type="button" class="btn red delete">
+                                                <i class="fa fa-trash"></i>
+                                                <span>Delete </span>
+                                            </button>
+                                            <input type="checkbox" class="toggle">
+                                            <!-- The global file processing state -->
+                                            <span class="fileupload-process"></span>
+                                        </div>
+                                        <!-- The global progress information -->
+                                        <div class="col-lg-5 fileupload-progress fade">
+                                            <!-- The global progress bar -->
+                                            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                                                <div class="progress-bar progress-bar-success" style="width: 0%;">
+                                                </div>
+                                            </div>
+                                            <!-- The extended global progress information -->
+                                            <div class="progress-extended">
+                                                &nbsp;
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- The table listing the files available for upload/download -->
+                                    <table role="presentation" class="table table-striped clearfix">
+                                        <tbody class="files">
+                                        </tbody>
+                                    </table>
+                                </form>
+
+                            </div>
+                        </div>
+
+                                <div class="portlet-body form">
+                                    <div class="form-actions">
+                                        <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+                                        <div class="col-md-8">
+                                            <button type="button" class="btn btn-primary green" onclick="Vehicles.Save()" data-plus-as-tab="false">Save</button>
+                                            <button id="btnCancel" type="button" class="btn btn-default" onclick="Vehicles.CustomClear()">Cancel</button>
+                                        </div>
+                                    </div>
+                                </div>*@
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- END EXAMPLE TABLE PORTLET-->
+
+
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet box grey-cascade">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Vehicles Listing
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover" id="mainTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                File No.
+                            </th>
+                            <th>Chassis No</th>
+                            <th>Reg. No.</th>
+                            <th>Engine No</th>
+                            <th>Manufacturer</th>
+                            <th>Model</th>
+                            <th>Color</th>
+                            <th style="width: 200px;" class="no-sort"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="8" class="center">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+<div id="inventroy-transfer-Container" class="modal fade hidden-print bs-modal-lg" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <span class='caption-subject font-green-sharp bold'>Inverntory Transfer Request</span>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row installment-form">
+                    <div class="form-horizontal" data-save="save">
+                        <div class="form-group">
+
+                            <label class="col-md-2 control-label" for="prefix">Owner Branch:</label>
+                            <div class="col-md-3">
+                                <input type="hidden" id="FromBranchId" />
+                                <input type="hidden" id="VehicleId" />
+                                <input type="hidden" id="Type" />
+                                <span class="label label-sm label-success"><span id="lblownerbranch"></span></span>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Vehicle:</label>
+                            <div class="col-md-3">
+                                <span class="label label-sm label-success"><span id="lblvehicle"></span></span>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Receiving Branch</label>
+                            <div class="col-md-5">
+                                <span class="label label-sm label-success hide" id="lbltobranch"><span></span></span>
+                                <select class="form-control select2" id="ToBranchId" placeholder="Select Branch" data-required="required" data-message="branch is required">
+                                    <option></option>
+                                    @foreach (var item in (List<IdName>)ViewBag.VehicleBranches)
+                                    {
+                                        <option data-custom="@item.Id" value="@item.Id">@item.Name</option>
+                                    }
+                                </select>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Remarks</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" id="Remarks" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix"></label>
+                    <button type="button" style="margin-right: 15px;" class="btn btn-primary green contacts-form" onclick="Vehicles.SendTransferRequst()" data-plus-as-tab="false">Save</button>
+                    <button type="button" data-dismiss="modal" class="btn btnclose-model">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="model-purchase-return" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">
+                    <strong>
+                        Purchase Return&nbsp;<span class="Manufacturer"></span>&nbsp;<span class="Model"></span>
+                    </strong>
+                </h4>
+            </div>
+            <div class="modal-body" data-save="save">
+
+
+
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <table class="table table-striped table-hover table-col1-bold" style="margin: 0;">
+                            <tbody>
+                                <tr class="head">
+                                    <td colspan="2" style="text-align: center;">Vehicle Info</td>
+
+                                </tr>
+
+
+                                <tr>
+                                    <td>Chassis No:</td>
+                                    <td>
+                                        <span class="ChassisNo"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Engine No:</td>
+                                    <td>
+                                        <span class="EngineNo"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Reg. No:</td>
+                                    <td>
+                                        <span class="RegNo"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>C.C:</td>
+                                    <td>
+                                        <span class="EnginePower"></span>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <table class="table table-striped table-hover table-col1-bold" style="margin: 0;">
+                            <tbody>
+
+                                <tr class="head">
+                                    <td colspan="2" style="text-align: center;">Vendor & Purchase Info</td>
+
+                                </tr>
+                                <tr>
+                                    <td>Vendor:</td>
+                                    <td><span class="LocalVendor"></span></td>
+                                </tr>
+                                <tr>
+                                    <td>Purchase Price:</td>
+                                    <td><span class="PurchasePrice" data-db-type="int" data-formating="true"></span>
+                                    <td>
+                                </tr>
+                                <tr>
+                                    <td>Purchase Date:</td>
+                                    <td><span class="PurchaseDate" data-db-type="date"></span>
+                                    <td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn red" onclick="Vehicles.PurchaseReturn()">
+                    <i class="fa fa-trash-o"></i>
+                    Return Purchase
+                </button>
+                <button type="button" data-dismiss="modal" class="btn default">Close</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div id="jsondata" class="hide">
+    <p id="data">@ViewBag.FormSetting</p>
+</div>
+@section FooterScript
+{
+    <style type="text/css">
+        #model-purchase-return table tr.head {
+            text-align: center;
+            background-color: #2ab4c0 !important;
+        }
+
+        table.table-col1-bold td:first-child {
+            font-weight: bold;
+        }
+    </style>
+    <script src="~/Content/AppJS/Manage/Vehicles.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            Vehicles.init();
+        });
+    </script>
+}

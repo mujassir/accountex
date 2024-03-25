@@ -1,0 +1,680 @@
+﻿@using AccountEx.Common;
+
+@{
+    ViewBag.FormTitle = "Voucher";
+    var type = Request.QueryString["type"] + "";
+    var vouchertype = ((VoucherType)Enum.Parse(typeof(VoucherType), type, true));
+    switch (type.ToLower())
+    {
+        case "sale":
+        case "sales":
+            ViewBag.FormTitle = "Trade Sale";
+            break;
+        case "purchase":
+        case "purchases":
+            ViewBag.FormTitle = "Trade Purchase";
+            break;
+        case "salereturn":
+            ViewBag.FormTitle = "Trade Sale Return";
+            break;
+        case "purchasereturn":
+            ViewBag.FormTitle = "Trade Purchase Return";
+            break;
+    }
+    ViewBag.Title = ViewBag.FormTitle;
+}
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold hidden-print">Manage @ViewBag.FormTitle</h1>
+}
+
+@using AccountEx.BussinessLogic;
+@{
+    type = Request["type"].ToLower();
+    var error = "";
+    switch (type)
+    {
+        case "sale":
+            if (SettingManager.SaleAccountHeadId == 0)
+            {
+                error += "<li>Sale account is missing.</li>";
+
+            }
+            if (SettingManager.CustomerHeadId == 0 && SettingManager.CashAccountId == 0)
+            {
+                error += "<li>Customer or cash account is missing.</li>";
+
+            }
+            if (SettingManager.TerritoryManagerHeadId == 0)
+            {
+                error += "<li>Territory Manager account is missing.</li>";
+
+            }
+            if (SettingManager.OrderTakerHeadId == 0)
+            {
+                error += "<li>Order taker account is missing.</li>";
+
+            }
+            if (SettingManager.SalemanHeadId == 0)
+            {
+                error += "<li>sale account is missing.</li>";
+
+            }
+            break;
+        case "purchase":
+            if (SettingManager.PurchaseAccountHeadId == 0)
+            {
+                error += "<li>Purchase account is missing.</li>";
+
+            }
+            if (SettingManager.AdvanceTaxacHeadId == 0)
+            {
+                error += "<li>Advance Tax Account is Missing.</li>";
+            }
+            if (SettingManager.SupplierHeadId == 0)
+            {
+                error += "<li>Supplier account is missing.</li>";
+
+            }
+
+            break;
+        case "salereturn":
+            if (SettingManager.SaleReturnAccountHeadId == 0)
+            {
+                error += "<li>Sale return account is missing.</li>";
+
+            }
+            if (SettingManager.CustomerHeadId == 0 && SettingManager.CashAccountId == 0)
+            {
+                error += "<li>Customer or cash account is missing.</li>";
+
+            }
+            if (SettingManager.TerritoryManagerHeadId == 0)
+            {
+                error += "<li>Territory Manager account is missing.</li>";
+
+            }
+            if (SettingManager.OrderTakerHeadId == 0)
+            {
+                error += "<li>Order taker account is missing.</li>";
+
+            }
+            if (SettingManager.SalemanHeadId == 0)
+            {
+                error += "<li>sale account is missing.</li>";
+
+            }
+            break;
+        case "purchasereturn":
+            if (SettingManager.PurchaseReturnAccountHeadId == 0)
+            {
+                error += "<li>Purchase return account is missing.</li>";
+
+            }
+            if (SettingManager.SupplierHeadId == 0)
+            {
+                error += "<li>Supplier account is missing.</li>";
+
+            }
+            if (SettingManager.AdvanceTaxacHeadId == 0)
+            {
+                error += "<li>Advance Tax Account is Missing.</li>";
+            }
+            break;
+    }
+    if (SettingManager.ProductHeadId == 0)
+    {
+        error += "<li>Product Account is Missing.</li>";
+
+    }
+    if (SettingManager.DiscountAccountId == 0)
+    {
+        error += "<li>Discount Account is Missing.</li>";
+    }
+    if (SettingManager.PromotionAcccountId == 0)
+    {
+        error += "<li>Promotion Account is Missing.</li>";
+    }
+
+    if (SiteContext.Current.Fiscal == null)
+    {
+        error += "<li>No fiscal year found.</li>";
+
+    }
+    
+}
+@if (!string.IsNullOrWhiteSpace(error))
+{
+    <div class="note note-danger note-bordered">
+        <h4 class="block">Head Account Missing</h4>
+        <div>
+            <i class="fa-lg fa fa-warning"></i>Head Account is missing in the application settings.In order to complete current transaction head accounts must be added in settings.<br />
+
+
+            <ul>
+                @Html.Raw(error)
+            </ul>
+
+
+            Add missing head accounts in settings and then try again by <a href="@Request.Url"><i class="fa fa-refresh"></i>&nbsp;Relaoding</a>&nbsp;the current page.
+        </div>
+    </div>
+}
+else
+{
+
+
+    if (Request.Browser.IsMobileDevice)
+    {
+
+    }
+    else
+    {
+    @Html.Partial("Distributions/_PC_TradeSale");
+    }
+
+    <div class="hide" id="div-table">
+        <div class="col-md-12 col-sm-12">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <div class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-list"></i>Record Listing
+                    </div>
+                    <div class="actions">
+                        <a href="javascript:;" onclick="TradeSale.Add()" class="btn blue">
+                            <i class="fa fa-plus"></i>&nbsp;New 
+                        </a>
+                        @*<div class="btn-group">
+                        <a class="btn purple" href="#" data-toggle="dropdown">
+                            <i class="fa fa-cogs"></i>&nbsp;Tools <i class="fa fa-angle-down"></i>
+                        </a>
+                        <ul class="dropdown-menu pull-right">
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-pencil"></i>Edit
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-trash-o"></i>Delete
+                                </a>
+                            </li>
+
+                            <li class="divider"></li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-print"></i>Print
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-table"></i>Export to CSV
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-bar-chart-o"></i>Export to excel
+                                </a>
+                            </li>
+                        </ul>
+                    </div>*@
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="hide alert alert-danger container-message">
+                        <i class="close" onclick="$(this).parent().hide();"></i>
+                        <strong></strong>
+                        <div class="form-body message-content"></div>
+                    </div>
+
+                    <table class="table table-striped table-bordered table-hover" id="mainTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 8px;" class="no-sort">
+                                    <input type="checkbox" class="group-checkable" data-set="#mainTable .checkboxes" />
+                                </th>
+                                <th>Vou #
+                                </th>
+                                <th>Book #</th>
+                                <th>Party</th>
+                                <th>Total</th>
+                                <th>Date</th>
+                                <th>Remarks</th>
+                                <th style="width: 75px;" class="no-sort"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="8">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- END EXAMPLE TABLE PORTLET-->
+        </div>
+
+    </div>
+    
+    <div id="DC-Container" class="modal fade hidden-print bs-modal-lg" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title"><span class='caption-subject font-green-sharp bold'>Search Orders</span> </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table id="DCTable" style="border: 1px solid #DDD" class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>DC Number</th>
+                                        <th>Party Code</th>
+                                        <th>Party Name</th>
+                                        <th>Order Number</th>
+                                        <th>Order Date</th>
+                                        <th>Delivery Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn" id="btnDCClose">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="jsondata" class="hide">
+        <p id="data">@ViewBag.FormSetting</p>
+        <input id="SalemanHeadId" type="text" value="@SettingManager.SalemanHeadId" />
+        <input id="OrderTakerHeadId" type="text" value="@SettingManager.OrderTakerHeadId" />
+        <input id="TerritoryManagerHeadId" type="text" value="@SettingManager.TerritoryManagerHeadId" />
+    </div>
+}
+<style>
+    .report-table td {
+        padding: 4px;
+    }
+
+    @@page {
+        size: landscape;
+        margin: 0.5cm;
+    }
+
+    .copy-left {
+        padding-right: 0.75cm;
+        border-right: 2px solid darkgray;
+    }
+
+    .copy-right {
+        padding-left: 0.75cm;
+    }
+
+    .address {
+        display: block;
+    }
+
+    hr {
+        margin: 0;
+    }
+
+    h2 {
+        margin: 0;
+    }
+
+    h3 {
+        margin: 5px;
+    }
+
+    th.number {
+        width: 60px;
+    }
+
+    .fixed-height {
+        height: 310px !important;
+    }
+
+    .page-title {
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .Customerlable {
+        margin-top: -8px;
+    }
+
+    .title-name {
+        font-size: 23px;
+    }
+
+    .invoice-payment {
+        text-align: right;
+    }
+
+    .copy-type {
+        text-align: right;
+    }
+
+    @@media print {
+        /*table.table-items tr td {
+            font-size: 12px;
+        }*/
+        table.table-items tr td:nth-child(1), table.table-items tr td:nth-child(2) {
+            text-align: left;
+        }
+
+        table.table-items tr td {
+            text-align: right;
+        }
+
+        .invoice-block label {
+            font-size: 11px;
+            text-align: right;
+        }
+    }
+</style>
+<div class="row"></div>
+<div id="div-report" class="visible-print">
+    <div class="row">
+        <div class="portlet light">
+            <div class="portlet-title hidden-print">
+                <div class="actions">
+                    <button class="btn blue hidden-print" onclick="window.print();"><i class="fa fa-print"></i>&nbsp;Print </button>
+                </div>
+            </div>
+            <div class="portlet-body" style="overflow: auto">
+                <div class="col-xs-6 invoice copy-left">
+                    <div class="page-title">
+                        <label class="bold">
+                            <span class="title-name">Usman Traders</span>
+                            <label class="address bold">Opp, Gulshan-e-Munir, Ahloo Road, Lahore.</label>
+                        </label>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-xs-8 invoice-type">
+                            <h4 style="text-align: right;"><strong>@(vouchertype  == VoucherType.Sale || vouchertype  == VoucherType.SaleReturn ? "Sale Invoice" : "Purchase Invoice")</strong></h4>
+                        </div>
+                        <div class="col-xs-4 copy-type">
+                            <label style="text-align: right;">Office Copy</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-5 Customerlable">
+                            <h4><strong>@(vouchertype  == VoucherType.Sale || vouchertype == VoucherType.SaleReturn ? "Customer" : "Supplier") :</strong></h4>
+                            <ul class="list-unstyled">
+                                <li>
+                                    <span class="lblAccountName"></span>
+                                </li>
+
+                            </ul>
+                        </div>
+                        <div class="col-xs-2">
+                        </div>
+                        <div class="col-xs-5 invoice-payment">
+                            <ul class="list-unstyled">
+                                <li>
+                                    <strong class="">Date:</strong>
+                                    <label class="lblDate"></label>
+                                </li>
+                                <li>
+                                    <strong class="">Invoice Number:</strong>
+                                    <span class="lblVoucherNumber"></span>
+                                </li>
+
+
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row fixed-height">
+                        <div class="col-xs-12">
+                            <table id="report-saleOriginal" class="table table-striped table-hover table-items">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 20px;">#
+                                        </th>
+                                        <th style="width: 45%">Item
+                                        </th>
+                                        <th class="number">Qty
+                                        </th>
+                                        <th class="number">Price
+                                        </th>
+                                        <th class="number">Total
+                                        </th>
+                                        <th>Less</th>
+                                        <th>Promo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class=" invoice-block">
+                            <ul class="list-unstyled amounts">
+                                <li>
+                                    <label class="col-xs-9 align-right">Quantity Total:</label>
+                                    <label class="col-xs-2 underlined lblQuantityTotal">
+                                    </label>
+                                </li>
+                                <li>
+                                    <label class="col-xs-9 align-right">Total Sale:</label>
+                                    <label class="col-xs-2 underlined lblGrossTotal">
+                                    </label>
+                                </li>
+                                <li>
+                                    <label class="col-xs-9 align-right">Total Less:</label>
+                                    <label class="col-xs-2 underlined lblDiscount">
+                                    </label>
+                                </li>
+                                <li>
+                                    <label class="col-xs-9 align-right">Total Promotion:</label>
+                                    <label class="col-xs-2 underlined lblPromotionTotal">
+                                    </label>
+                                </li>
+                                <li>
+                                    <label class="col-xs-2 bold align-right">Signature:</label>
+                                    <label class="col-xs-3 underlined">
+                                        &nbsp;
+                                    </label>
+
+                                    <label class="col-xs-4 align-right">Net Total:</label>
+                                    <label class="col-xs-2 underlined lblNetTotal">
+                                    </label>
+                                </li>
+                            </ul>
+                            <br />
+                        </div>
+                    </div>
+                    <div class="row">
+                    </div>
+                </div>
+
+
+                <div class="col-xs-6 invoice copy-right">
+                    <div class="page-title">
+                        <label class="bold">
+                            <span class="title-name">Usman Traders</span>
+                            <label class="address bold">Opp, Gulshan-e-Munir, Ahloo Road, Lahore.</label>
+                        </label>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-xs-8 invoice-type">
+                            <h4 style="text-align: right;"><strong>@(vouchertype  == VoucherType.Sale || vouchertype  == VoucherType.SaleReturn ? "Sale Invoice" : "Purchase Invoice")</strong></h4>
+                        </div>
+                        <div class="col-xs-4 copy-type">
+                            <label style="text-align: right;">Customer's Copy</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-5 Customerlable">
+                            <h4><strong>@(vouchertype  == VoucherType.Sale || vouchertype  == VoucherType.SaleReturn ? "Customer" : "Supplier"):</strong></h4>
+                            <ul class="list-unstyled">
+                                <li>
+                                    <span class="lblAccountName"></span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-xs-2">
+                        </div>
+                        <div class="col-xs-5 invoice-payment">
+                            <ul class="list-unstyled">
+                                <li>
+                                    <strong class="">Date:</strong>
+                                    <label class="lblDate"></label>
+                                </li>
+                                <li>
+                                    <strong class="">Invoice Number:</strong>
+                                    <span class="lblVoucherNumber"></span>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row fixed-height">
+                        <div class="col-xs-12">
+                            <table id="report-saleCopy" class="table table-striped table-hover table-items">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 20px;">#
+                                        </th>
+                                        <th style="width: 45%">Item
+                                        </th>
+                                        <th class="number">Qty
+                                        </th>
+                                        <th class="number">Price
+                                        </th>
+                                        <th class="number">Total
+                                        </th>
+                                        <th>Less</th>
+                                        <th>Promo</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="fixed-height">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class=" invoice-block">
+                            <ul class="list-unstyled amounts">
+                                <li>
+                                    <label class="col-xs-9 align-right">Quantity Total:</label>
+                                    <label class="col-xs-2 underlined lblQuantityTotal">
+                                    </label>
+                                </li>
+                                <li>
+                                    <label class="col-xs-9 align-right">Total Sale:</label>
+                                    <label class="col-xs-2 underlined lblGrossTotal">
+                                    </label>
+                                </li>
+                                <li>
+                                    <label class="col-xs-9 align-right">Total Less:</label>
+                                    <label class="col-xs-2 underlined lblDiscount">
+                                    </label>
+                                </li>
+                                <li>
+                                    <label class="col-xs-9 align-right">Total Promotion:</label>
+                                    <label class="col-xs-2 underlined lblPromotionTotal">
+                                    </label>
+                                </li>
+                                <li>
+                                    <label class="col-xs-2 bold align-right">Signature:</label>
+                                    <label class="col-xs-3 underlined">
+                                        &nbsp;
+                                    </label>
+
+                                    <label class="col-xs-4 align-right">Net Total:</label>
+                                    <label class="col-xs-2 underlined lblNetTotal">
+                                    </label>
+                                </li>
+                            </ul>
+                            <br />
+                        </div>
+                    </div>
+                    <div class="row">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<style>
+    .twitter-typeahead {
+        /*width: 500%;*/
+    }
+</style>
+<script type="text/html" id="template-item">
+    <tr>
+
+        <td>
+            <input type="hidden" class="ItemId" id="ItemId" data-db-column="ItemId">
+            <input type="hidden"  class="EntryType" id="EntryType" data-db-column="EntryType" value="@((int)EntryType.Item)"><input type="hidden">
+            <input type="text" class="Code form-control typeahead input-small ui-autocomplete-input" data-db-column="ItemCode" autocomplete="off">
+        </td>
+        <td>
+            <input type="text" disabled="disabled" class="Name form-control input-medium" data-db-column="ItemName"></td>
+        <td class="align-right">
+            <input type="text" class="Quantity form-control input-small num3" data-db-column="Quantity" data-db-type="float"></td>
+        <td class="align-right">
+            <input type="text" class="Rate form-control input-small num3" data-db-column="Rate" data-db-type="float"></td>
+        <td class="align-right">
+            <input type="text" class="Amount form-control input-small num3" disabled="disabled" readonly="readonly" data-db-column="Amount" data-db-type="float"></td>
+        <td class="align-right">
+            <input type="text" class="DiscountPerItem form-control input-small num3" data-db-column="DiscountPerItem" data-db-type="float"></td>
+        <td class="align-right">
+            <input type="text" class="DiscountAmount form-control input-small num3" disabled="disabled" readonly="readonly" data-db-column="DiscountAmount" data-db-type="float"></td>
+        <td class="align-right">
+            <input type="text" class="PromotionPercent form-control input-small num3" data-db-column="PromotionPercent" data-db-type="float"></td>
+        <td class="align-right">
+            <input type="text" class="PromotionAmount form-control input-small num3" disabled="disabled" readonly="readonly" data-db-column="PromotionAmount" data-db-type="float"></td>
+        <td class="align-right">
+            <input type="text" class="NetAmount form-control input-small num3" disabled="disabled" readonly="readonly" data-db-column="NetAmount" data-db-type="float"></td>
+        <td style="width: 8px;">
+            <span class="action"><i class="fa fa-trash-o" onclick="TradeSale.DeleteRow(this)" data-original-title="Delete Item"></i></span>
+
+        </td>
+    </tr>
+</script>
+
+<script type="text/html" id="template-print">
+    <tr>
+        <td>{{SrNo}}
+        </td>
+        <td>{{ItemName}}
+        </td>
+        <td>{{Quantity}}
+        </td>
+        <td>{{Rate}}
+        </td>
+        <td>{{Amount}}
+        </td>
+        <td>{{DiscountAmount}}
+        </td>
+        <td>{{PromotionAmount}}
+        </td>
+    </tr>
+</script>
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Transaction/TradeSale.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            TradeSale.init();
+        });
+    </script>
+}
+

@@ -1,0 +1,323 @@
+﻿@{
+    ViewBag.Title = "Dashboard";
+    ViewBag.TitleDescription = "dashboard & statistics";
+}
+
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">Dashboard
+    </h1>
+}
+<div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="dashboard-stat green">
+            <div class="visual">
+                <i class="fa fa-shopping-cart"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    @ViewBag.CashInBank
+                </div>
+                <div class="desc">
+                    Sales
+                </div>
+            </div>
+            <a class="more" href="../transaction/index?type=Sale">View more <i class="m-icon-swapright m-icon-white"></i>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="dashboard-stat blue">
+            <div class="visual">
+                <i class="fa fa-comments"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    @ViewBag.Taxes
+                </div>
+                <div class="desc">
+                    Purchase
+                </div>
+            </div>
+            <a class="more" href="../transaction/index?type=Purchase">View more <i class="m-icon-swapright m-icon-white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="dashboard-stat purple">
+            <div class="visual">
+                <i class="fa fa-globe"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    @ViewBag.Sale
+                </div>
+                <div class="desc">
+                    Debtors
+                </div>
+            </div>
+            <a class="more" href="#">View more <i class="m-icon-swapright m-icon-white"></i>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="dashboard-stat yellow">
+            <div class="visual">
+                <i class="fa fa-bar-chart-o"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    @ViewBag.Purchase
+                </div>
+                <div class="desc">
+                    Creditors
+                </div>
+            </div>
+            <a class="more" href="#">View more <i class="m-icon-swapright m-icon-white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="col-xs-12">
+        <div class="tiles">
+            <a href="../transaction/trans?type=Sale">
+                <div class="tile bg-green">
+                    <div class="tile-body">
+                        <i class="fa icon-handbag"></i>
+                    </div>
+                    <div class="tile-object">
+                        <div class="name">
+                            Sales
+                        </div>
+                        @*<div class="number">
+                        121
+                    </div>*@
+                    </div>
+                </div>
+            </a>
+            <a href="../transaction/trans?type=Purchase">
+                <div class="tile bg-red-intense ">
+                    <div class="tile-body">
+                        <i class="fa fa-shopping-cart"></i>
+                    </div>
+                    <div class="tile-object">
+                        <div class="name">
+                            Purchase
+                        </div>
+                        @*<div class="number">
+                        121
+                    </div>*@
+                    </div>
+                </div>
+            </a>
+            <a href="../transaction/vouchertrans?type=CashPayments">
+                <div class="tile bg-purple-studio">
+                    <div class="tile-body">
+                        <i class="fa fa-money"></i>
+                    </div>
+                    <div class="tile-object">
+                        <div class="name">
+                            Cash Payment
+                        </div>
+                        @*<div class="number">
+                        121
+                    </div>*@
+                    </div>
+                </div>
+            </a>
+            <a href="../transaction/vouchertrans?type=CashReceipts">
+
+                <div class="tile bg-yellow-lemon">
+                    <div class="tile-body">
+                        <i class="fa fa-money"></i>
+                    </div>
+                    <div class="tile-object">
+                        <div class="name">
+                            Cash Receipt
+                        </div>
+                        @*<div class="number">
+                        121
+                    </div>*@
+                    </div>
+                </div>
+            </a>
+            <a href="../transaction/vouchertrans?type=BankPayments">
+
+                <div class="tile bg-blue-steel">
+                    <div class="tile-body">
+                        <i class="fa fa-bank"></i>
+                    </div>
+                    <div class="tile-object">
+                        <div class="name">
+                            Bank Payment
+                        </div>
+                        @*<div class="number">
+                        121
+                    </div>*@
+                    </div>
+                </div>
+            </a>
+            <a href="../transaction/vouchertrans?type=BankReceipts">
+
+                <div class="tile bg-green-meadow">
+                    <div class="tile-body">
+                        <i class="fa fa-bank"></i>
+                    </div>
+                    <div class="tile-object">
+                        <div class="name">
+                            Bank Receipt
+                        </div>
+                        @*<div class="number">
+                        121
+                    </div>*@
+                    </div>
+                </div>
+            </a>
+            <a href="../transaction/vouchertrans?type=TransferVoucher">
+
+                <div class="tile bg-blue">
+                    <div class="tile-body">
+                        <i class="glyphicon glyphicon-transfer"></i>
+                    </div>
+                    <div class="tile-object">
+                        <div class="name">
+                            Journal Voucher
+                        </div>
+                        @*<div class="number">
+                        121
+                    </div>*@
+                    </div>
+                </div>
+            </a>
+            <a href="../manage/customers">
+                <div class="tile bg-yellow">
+                    <div class="tile-body">
+                        <i class="fa fa-user"></i>
+                    </div>
+                    <div class="tile-object">
+                        <div class="name">
+                            Customers
+                        </div>
+                        @*<div class="number">
+                        121
+                    </div>*@
+                    </div>
+                </div>
+            </a>
+            <a href="../manage/Products">
+
+                <div class="tile bg-blue-steel">
+                    <div class="tile-body">
+                        <i class="icon-social-dropbox"></i>
+                    </div>
+                    <div class="tile-object">
+                        <div class="name">
+                            Products
+                        </div>
+                        @*<div class="number">
+                        121
+                    </div>*@
+                    </div>
+                </div>
+            </a>
+            <a href="../reports/generalledger">
+                <div class="tile bg-red">
+                    <div class="tile-body">
+                        <i class="fa fa-bar-chart-o"></i>
+                    </div>
+                    <div class="tile-object">
+                        <div class="name">
+                            Party Ledger
+                        </div>
+                        @*<div class="number">
+                        121
+                    </div>*@
+                    </div>
+                </div>
+            </a>
+            <a href="../reports/stockreport">
+
+                <div class="tile bg-green">
+                    <div class="tile-body">
+                        <i class="fa fa-cubes"></i>
+                    </div>
+                    <div class="tile-object">
+                        <div class="name">
+                            Stock Report
+                        </div>
+                        @*<div class="number">
+                        121
+                    </div>*@
+                    </div>
+                </div>
+            </a>
+            <a href="../reports/generalledger?type=cash">
+
+                <div class="tile bg-blue-hoki">
+                    <div class="tile-body">
+                        <i class="fa fa-usd"></i>
+                    </div>
+                    <div class="tile-object">
+                        <div class="name">
+                            Cash Book
+                        </div>
+                        @*<div class="number">
+                        121
+                    </div>*@
+                    </div>
+                </div>
+            </a>
+            <a href="../reports/generalledger?type=banks">
+
+                <div class="tile bg-red-intense">
+                    <div class="tile-body">
+                        <i class="fa fa-bank"></i>
+                    </div>
+                    <div class="tile-object">
+                        <div class="name">
+                            Bank Book
+                        </div>
+                        @*<div class="number">
+                        121
+                    </div>*@
+                    </div>
+                </div>
+            </a>
+            <a href="../reports/customer-recovery">
+
+                <div class="tile bg-yellow-lemon">
+                    <div class="tile-body">
+                        <i class="fa fa-money"></i>
+                    </div>
+                    <div class="tile-object">
+                        <div class="name">
+                            Recovery
+                        </div>
+                        @*<div class="number">
+                        121
+                    </div>*@
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+<!-- END DASHBOARD STATS -->
+<div>
+</div>
+
+
+<!-- END PAGE CONTENT-->
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Account/Dashboard.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            Dashboard.init();
+            Dashboard.initDashboardDaterange();
+            Dashboard.initCharts();
+        });
+    </script>
+}

@@ -1,0 +1,458 @@
+﻿@using AccountEx.Common
+@using AccountEx.Common.CRM;
+@{
+    ViewBag.Title = "Projects";
+}
+
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">Manage Projects</h1>
+}
+
+
+<!-- END PAGE HEADER-->
+
+<div class="row" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-edit"></i>Add/Edit Projects
+                </div>
+
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal" data-save="save">
+                    <input type="text" id="Id" class="hide" />
+                    <input type="text" id="PMCItemId" class="hide" />
+                    <div class="form-body">
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label hide" for="prefix">Project #</label>
+                            <div class="col-md-1 container-voucher hide">
+                                <label id="lblVoucherNumber" class="label label-info label-voucher hide"></label>
+                                <input type="text" class="form-control number input-xsmall" id="VoucherNumber" data-plus-as-tab="false" data-required="required" data-message="Project Number is required" data-include-in-item="true">
+                            </div>
+
+
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Created Date</label>
+                            <div class="col-md-1">
+
+                                <input id="CreatedAt" type="text" class="form-control date-picker" data-clear-type='date' data-required="required" data-message="From Date is required" disabled="disabled" readonly="readonly" data-permanent-disabled="true">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label master-account-label" for="prefix">Organization</label>
+                            <div class="col-md-6">
+                                <select class="form-control select2" id="CustomerId" data-required="required" data-message="Organization is required" placeholder="select Organization">
+                                    <option></option>
+                                    @foreach (var p in (List<IdName>)ViewBag.Customers)
+                                    {
+                                        <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                    }
+
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label master-account-label" for="prefix">Sale Person</label>
+                            <div class="col-md-6">
+                                <select class="form-control select22" id="SalePersonId" data-required="required" data-message="SalePerson is required" placeholder="select SalePerson" disabled="disabled" readonly="readonly" data-permanent-disabled="true"></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Actual Product</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control" id="Product" disabled="disabled" readonly="readonly" data-permanent-disabled="true" />
+                            </div>
+                            <label class="col-md-1 control-label master-account-label" for="prefix">Product</label>
+                            <div class="col-md-3">
+                                <select class="form-control select2" id="ProductId" data-required="required" data-message="Product is required" placeholder="select product">
+
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Currency</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control" id="Currency" disabled="disabled" readonly="readonly" data-permanent-disabled="true" />
+                            </div>
+                            <label class="col-md-1 control-label master-account-label" for="prefix">Currency</label>
+                            <div class="col-md-3">
+                                <select class="form-control select2" id="CurrencyId" data-required="required" data-message="Currency is required" placeholder="select currency">
+                                    <option></option>
+                                    @foreach (var p in (List<IdName>)ViewBag.Currencies)
+                                    {
+                                        <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                    }
+
+                                </select>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Exchange Rate</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control num3" id="PMCExcRate" disabled="disabled" readonly="readonly" data-permanent-disabled='true' />
+                            </div>
+                            <label class="col-md-1 control-label" for="prefix">Exchange Rate</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control input-small num3" id="ExcRate" disabled="disabled" readonly="readonly" data-permanent-disabled="true" />
+                            </div>
+
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Actual Price</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control num3" id="PMCPrice" disabled="disabled" readonly="readonly" data-permanent-disabled="true" />
+                            </div>
+                            <label class="col-md-1 control-label" for="prefix">Target Price</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control input-small num3" id="Price" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Actual Qty</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control num3" id="AnnualQty" disabled="disabled" readonly="readonly" data-permanent-disabled="true" />
+                            </div>
+                            <label class="col-md-1 control-label" for="prefix">Target Qty</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control input-small num3" id="Quantity" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Actual Potential</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control num3" id="AnnualPotential" disabled="disabled" readonly="readonly" data-permanent-disabled="true" />
+                            </div>
+                            <label class="col-md-1 control-label" for="prefix">Target Potential</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control input-small num3" id="Potential" disabled="disabled" readonly="readonly" data-permanent-disabled="true" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Status</label>
+                            <div class="col-md-2">
+                                <select class="form-control select2" id="StatusId" data-required="false" data-message="Customer is required" placeholder="select status">
+                                    <option></option>
+                                    @foreach (var p in (List<IdName>)ViewBag.Statuses)
+                                    {
+                                        <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                    }
+
+                                </select>
+
+                            </div>
+                            <label class="col-md-1 control-label" for="prefix">% Target Potential</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control input-small num3" id="PotentialPercent" disabled="disabled" readonly="readonly" data-permanent-disabled="true" />
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Lost Reason</label>
+                            <div class="col-md-2">
+                                <select class="form-control select2" id="LostReasonId" data-required="false" data-message="Customer is required" placeholder="select lost reason">
+                                    <option></option>
+                                    @foreach (var p in (List<IdName>)ViewBag.LostReasons)
+                                    {
+                                        <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                    }
+
+                                </select>
+
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-1 control-label bold" for="prefix">Timeline</label>
+
+                            <label class="col-md-2 control-label" for="prefix">From Date</label>
+                            <div class="col-md-1">
+
+                                <input id="FromDate" type="text" class="form-control date-picker" data-clear-type='date' data-required="required" data-message="From Date is required">
+                            </div>
+                            <label class="col-md-1 control-label" for="prefix">To Date</label>
+                            <div class="col-md-1">
+
+                                <input id="Date" type="text" class="form-control date-picker" data-clear-type='date' data-required="required" data-message="To Date is required" disabled="disabled" readonly="readonly" data-permanent-disabled="true">
+                            </div>
+
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Remarks</label>
+                            <div class="col-md-6">
+                                <textarea class="form-control" id="Remarks" rows="4"></textarea>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+                <div class="form-actions">
+                    <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+
+                    <div class="col-md-8">
+                        <button type="button" id="btn-save" class="btn btn-primary">Save</button>
+                        <button id="btnCancel" type="button" class="btn btn-default">Cancel</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <!-- END EXAMPLE TABLE PORTLET-->
+</div>
+
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Record Listing
+
+                </div>
+                <div class="actions">
+                    @if (SiteContext.Current.User.IsAdmin || SiteContext.Current.UserTypeId == CRMUserType.Admin)
+                    {
+                        <a href="javascript:;" onclick="Project.OpenSaleTypeChangeModal()" class="btn green-dark">
+                            <i class="fa fa-edit"></i>&nbsp;Change Sale Type
+                        </a>
+                    }
+                </div>
+                <div class="col-md-4">
+                    <select id="FilterFiscalId" class="form-control Filterselect2 pull-right" placeholder="select year">
+                        @*<option></option>*@
+                        @foreach (var item in ViewBag.Fiscals)
+                        {
+                            if (SiteContext.Current.Fiscal.Id == item.Id)
+                            {
+                                <option selected="selected" value="@item.Id">@(item.Name)</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Id">@(item.Name)</option>
+
+                            }
+                        }
+                    </select>
+                </div>
+
+            </div>
+            <div class="form-horizontal" data-save='save' id="filters-container">
+                <div class="col-md-12 col-sm-12">
+                    <div class="portlet light">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <i class="fa fa-edit"></i>Filter
+                            </div>
+                            <div class="actions hide12">
+                                @*<a id="actionBackList" href="javascript:;" class="btn blue ">
+                                        <i class="fa fa-angle-left"></i>&nbsp;Back to list
+                                    </a>*@
+                                @{ Html.RenderPartial("_Export_Button_DataTable");  }
+                            </div>
+                        </div>
+
+                        <div class="form-body" data-querystring="true">
+
+                            <div class="row">
+                                <div class="col-md-12">
+
+                                    <div class="form-group">
+
+                                        <label class="col-md-1 control-label" for="prefix">Customer</label>
+                                        <div class="col-md-6">
+                                            <select id="FilterCustomer" class="form-control Filterselect2" placeholder="All" data-custum-disabled='false'>
+                                                <option></option>
+                                                @foreach (var p in (List<IdName>)ViewBag.Customers)
+                                                {
+                                                    <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                                }
+                                            </select>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-1 control-label" for="prefix">Product</label>
+                                        <div class="col-md-3">
+                                            <select id="FilterProduct" class="form-control select2" placeholder="All" data-custum-disabled='false'>
+                                                <option></option>
+                                                @foreach (var p in (List<CRMProductWithOwnerShip>)ViewBag.Products)
+                                                {
+                                                    <option value="@p.Id">@p.Name</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <label class="col-md-1 control-label" for="prefix">Division</label>
+                                        <div class="col-md-2">
+                                            <select id="FilterDivision" class="form-control select2" placeholder="All" data-custum-disabled='false'>
+                                                <option></option>
+                                                @foreach (var p in (List<IdName>)ViewBag.Divisions)
+                                                {
+                                                    <option value="@p.Id">@p.Name</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button id="btnSearch" type="button" class="btn btn-primary btnSearch"><i class="fa fa-filter"></i>&nbsp;Search</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @if (SiteContext.Current.UserTypeId != CRMUserType.SalesExecutive)
+                                        {
+                                            <label class="col-md-1 control-label master-account-label" for="prefix">Sale Person</label>
+                                            <div class="col-md-3">
+                                                <select id="FilterSalePersonId" class="form-control select2" placeholder="Select sale person" data-clear='true' data-custum-disabled='false'>
+                                                    <option></option>
+                                                    @foreach (var p in (List<IdName>)ViewBag.SalePersons)
+                                                    {
+                                                        <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                                    }
+                                                </select>
+
+
+                                            </div>
+                                        }
+
+                                        <label class="col-md-1 control-label" for="prefix">Type</label>
+                                        <div class="col-md-3">
+                                            <select id="FilterType" class="form-control Filterselect2 input-small" placeholder="All" data-custum-disabled='false'>
+                                                <option></option>
+                                                <option value="1">Without PMC</option>
+                                                <option value="2">With PMC</option>
+
+                                            </select>
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+
+                <table class="table table-striped table-bordered table-hover" id="mainTable" data-export='true'>
+                    <thead>
+                        <tr>
+                            @*<th>Project #</th>*@
+                            <th style="width:20%">Organization</th>
+                            <th style="width:15%">Actual Product</th>
+                            <th style="width:10%">Vendor</th>
+                            <th style="width:15%">Product</th>
+                            <th style="width:0.3%">AC Cur</th>
+                            <th style="width:0.3%">Cur</th>
+                            <th style="width:1%">A Price</th>
+                            <th style="width:1%">T Price</th>
+                            <th style="width:1%">A Qty</th>
+                            <th style="width:1%">T Qty</th>
+                            <th style="width:2%">A Pot.</th>
+                            <th style="width:2%">T  Pot.</th>
+                            <th style="width:1%">%</th>
+                            <th style="width:5%">Status</th>
+                            <th style="width:7%" class="no-sort"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="16">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+<div id="modal-saletype-change-container">
+    <div id="modal-saletype-change" class="modal fade hidden-print bs-modal-lg full-screen" tabindex="-1" data-backdrop="static" data-keyboard="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span class='caption-subject font-green-sharp bold'>Update Sale Type</span>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-horizontal" data-save="save">
+
+                            <div class="portlet light">
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label master-account-label" for="prefix">Organization</label>
+                                    <div class="col-md-6">
+                                        <select class="form-control select2" id="ModelCustomerId" data-required="required" data-message="Organization is required" placeholder="select Organization">
+                                            <option></option>
+                                            @foreach (var p in (List<IdName>)ViewBag.Customers)
+                                            {
+                                                <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                            }
+
+                                        </select>
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label master-account-label" for="prefix">Product</label>
+                                    <div class="col-md-6">
+                                        <select class="form-control select2" id="ModelProductId" data-required="false" data-message="Product is required" placeholder="select Product"></select>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix"></label>
+                            <button type="button" id="btn-chnageinvoiceType" class="btn green-dark" onclick="Project.UpdateSaleType()">Process</button>
+                            &nbsp;<button type="button" data-dismiss="modal" class="btn btnclose-model">Close</button>
+                        </div>
+                    </div>
+
+
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="jsondata" class="hide">
+    <p id="data">@ViewBag.FormSetting</p>
+</div>
+@section FooterScript
+{
+    <script src="~/Content/AppJS/CRM/Projects.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            Project.init();
+        });
+    </script>
+}

@@ -1,0 +1,121 @@
+SET QUOTED_IDENTIFIER ON;
+SET ANSI_NULLS ON;
+GO
+
+
+
+DECLARE @CompanyId INT= 76;
+DECLARE db_cursor CURSOR
+FOR
+    SELECT  [Group]
+    FROM    dbo.OstricProducts
+    GROUP BY [Group]; 
+DECLARE @GroupName VARCHAR(MAX);
+OPEN db_cursor;
+FETCH NEXT FROM db_cursor INTO @GroupName;
+WHILE @@FETCH_STATUS = 0
+    BEGIN  
+
+        DECLARE @ParentId INT= ( SELECT TOP 1
+                                        Id
+                                 FROM   dbo.Accounts
+                                 WHERE  CompanyId = @CompanyId
+                                        AND Name = @GroupName
+                               );
+       --Do stuff with scalar values
+
+	   DECLARE db_cursor1 CURSOR
+FOR
+    SELECT  Name
+    FROM    dbo.OstricProducts
+    WHERE	[Group]=@GroupName; 
+DECLARE @Name VARCHAR(MAX);
+OPEN db_cursor1;
+FETCH NEXT FROM db_cursor1 INTO @Name;
+WHILE @@FETCH_STATUS = 0
+    BEGIN  
+
+        
+
+
+        INSERT  INTO [dbo].[Accounts]
+                ( [ParentId] ,
+                  [Name] ,
+                  [DisplayName] ,
+                  [AccountCode] ,
+                  [Level] ,
+                  [IsDeleted] ,
+                  [CompanyId] ,
+                  [CreatedBy] ,
+                  [CreatedAt]
+                )
+                SELECT  @ParentId [ParentId] ,
+                        [Name] ,
+                        Name ,
+                        Code ,
+                        4 ,
+                        0 ,
+                        76 [CompanyId] ,
+                        3182 [CreatedBy] ,
+                        GETDATE() [CreatedAt]
+                FROM    dbo.OstricProducts
+                WHERE   Name = @Name AND [Group]=@GroupName;
+
+
+
+
+	 ------------------------------------Get Auto generated Id-----------------------------------------------------
+        DECLARE @AUTOID INT;
+        SELECT  @AUTOID = SCOPE_IDENTITY();
+  --------------------------------------------------------------------------------------------------------------
+
+
+        INSERT  INTO AccountDetails
+                ( [AccountId] ,
+                  [AccountDetailFormId] ,
+                  [Code] ,
+                  [Name] ,
+				  BrandName,
+                  [IsDeleted] ,
+                  [CompanyId] ,
+                  [CreatedBy] ,
+                  [CreatedAt]
+	            )
+                SELECT  @AUTOID ,
+                        5,
+                        [Code],
+                        [Name],
+						[Group],
+                        0 ,
+                        76 [CompanyId] ,
+                        3182 [CreatedBy] ,
+                        GETDATE() [CreatedAt]
+                FROM    dbo.OstricProducts
+                WHERE   Name = @Name AND [Group]=@GroupName;
+
+				FETCH NEXT FROM db_cursor1 INTO @Name;
+    END;
+CLOSE db_cursor1;
+DEALLOCATE db_cursor1;
+
+
+
+
+       FETCH NEXT FROM db_cursor INTO @GroupName;
+    END;
+CLOSE db_cursor;
+DEALLOCATE db_cursor;
+
+
+
+
+
+
+
+
+
+
+
+	
+  
+ 

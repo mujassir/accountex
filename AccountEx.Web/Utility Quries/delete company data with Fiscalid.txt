@@ -1,0 +1,37 @@
+
+
+--SELECT * FROM dbo.Companies WHERE Id=85
+
+
+--SELECT * FROM dbo.Fiscals WHERE CompanyId=85
+
+
+DECLARE @CompanyId int=85
+DECLARE @FiscalId int=135
+
+DELETE FROM dbo.VoucherItems WHERE CompanyId=@CompanyId AND VoucherId IN(SELECT Id FROM dbo.Vouchers WHERE CompanyId=@CompanyId AND FiscalId=@FiscalId)
+DELETE FROM dbo.Vouchers WHERE CompanyId=@CompanyId AND FiscalId=@FiscalId
+DELETE FROM dbo.SaleItems WHERE CompanyId=@CompanyId AND SaleId IN(SELECT Id FROM dbo.Sales WHERE CompanyId=@CompanyId AND FiscalId=@FiscalId)
+DELETE FROM dbo.Sales WHERE CompanyId=@CompanyId AND FiscalId=@FiscalId
+
+--DELETE FROM dbo.ServiceItems WHERE CompanyId=@CompanyId
+--DELETE FROM dbo.SaleServicesItems WHERE CompanyId=@CompanyId
+--DELETE FROM dbo.Projects WHERE CompanyId=@CompanyId
+
+
+--DELETE FROM dbo.WheatPurchaseItems WHERE CompanyId=@CompanyId
+--DELETE FROM dbo.WheatPurchases WHERE CompanyId=@CompanyId
+
+
+--DELETE FROM dbo.SalaryItems WHERE CompanyId=@CompanyId
+--DELETE FROM dbo.Salaries WHERE CompanyId=@CompanyId
+
+--DELETE FROM dbo.SalaryConfigItems WHERE CompanyId=@CompanyId
+--DELETE FROM dbo.SalaryConfigs WHERE CompanyId=@CompanyId
+
+
+DELETE FROM dbo.Transactions WHERE CompanyId=@CompanyId AND FiscalId=@FiscalId
+
+--DELETE FROM dbo.AccountDetails WHERE CompanyId=@CompanyId
+--DELETE FROM dbo.Accounts WHERE CompanyId=@CompanyId AND Level=4
+

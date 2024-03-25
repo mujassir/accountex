@@ -1,0 +1,110 @@
+﻿@{
+    Layout = null;
+}
+@using AccountEx.CodeFirst.Models
+@using AccountEx.Common
+@using AccountEx.Repositories;
+@using AccountEx.BussinessLogic
+
+@{
+    var LableColSpan = Numerics.GetInt(ViewData["Labelcolspan"]);
+    LableColSpan = LableColSpan == 0 ? 2 : LableColSpan;
+    var DivColSpan = Numerics.GetInt(ViewData["Divcolspan"]);
+    DivColSpan = DivColSpan == 0 ? 4 : DivColSpan;
+    var accountId = SettingManager.BankHeadId;
+    var accountName = "Banks";
+    var markRequired = Numerics.GetBool(ViewData["markRequired"]);
+    var exludeId = Numerics.GetBool(ViewData["exludeId"]);
+    var onlyControlRequired = Numerics.GetBool(ViewData["onlyControlRequired"]);
+    var controlId = ViewData["controlId"] + "";
+    var cssClass = ViewData["class"] + "";
+    var message = ViewData["message"] + "";
+    controlId = string.IsNullOrWhiteSpace(controlId) ? "AccountId" : controlId;
+    cssClass = string.IsNullOrWhiteSpace(cssClass) ? "form-control select2" : cssClass;
+    message = string.IsNullOrWhiteSpace(message) ? "Account is required" : message;
+
+    if (!onlyControlRequired)
+    {          
+    <div class="form-group">
+        <label class='@("col-md-" + LableColSpan) control-label' for="prefix">Account</label>
+        <div class='@("col-md-" + DivColSpan)'>
+
+
+
+
+            <select  id="@(exludeId ? "" : controlId)" class="@(cssClass)" data-required="@(markRequired ? "required" : "false")" data-message="@(message)" placeholder="Select Account" data-db-column="@(controlId)">
+
+                @for (var i = 1; i <= 2; i++)
+                {
+                    if (i == 2)
+                    {
+                        accountId = SettingManager.CashHeadId;
+                        accountName = "Cash";
+                    }
+
+                    var ParentAcc = new Account();
+                    ParentAcc = new AccountRepository().GetById(accountId);
+
+
+                    if (ParentAcc != null)
+                    {
+                        var Accounts = new AccountRepository().GetLeafAccountsDetail(ParentAcc.Id);
+                        var SettingLevel = ParentAcc.Level;
+                    <option></option>
+                    <optgroup label='@accountName'>
+                        @foreach (var item in Accounts)
+                        {
+                                                   
+                            <option value="@item.Id">@(item.Name)</option>
+                        }
+                    </optgroup>
+                       
+                        
+                    }
+                }
+
+            </select>
+
+        </div>
+
+    </div>
+        
+    }
+    else
+    {
+    <select  "@(exludeId ? "" : "id=" + controlId)" class="@(cssClass)" data-required="@(markRequired ? "required" : "false")" data-message="@(message)" placeholder="Select Account" data-db-column="@(controlId)">
+
+        @for (var i = 1; i <= 2; i++)
+        {
+            if (i == 2)
+            {
+                accountId = SettingManager.CashHeadId;
+                accountName = "Cash";
+            }
+
+            var ParentAcc = new Account();
+            ParentAcc = new AccountRepository().GetById(accountId);
+
+
+            if (ParentAcc != null)
+            {
+                var Accounts = new AccountRepository().GetLeafAccountsDetail(ParentAcc.Id);
+                var SettingLevel = ParentAcc.Level;
+            <option></option>
+            <optgroup label='@accountName'>
+                @foreach (var item in Accounts)
+                {
+                                                   
+                    <option value="@item.Id">@(item.Name)</option>
+                }
+            </optgroup>
+                       
+                        
+            }
+        }
+
+    </select>
+    } 
+   
+  
+}

@@ -1,0 +1,522 @@
+﻿<!DOCTYPE html>
+@using AccountEx.BussinessLogic;
+@using AccountEx.Common;
+@using AccountEx.Repositories;
+@using Newtonsoft.Json;
+@using Newtonsoft.Json.Converters;
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en" class="no-js">
+
+
+<!--<![endif]-->
+<!-- BEGIN HEAD -->
+<head>
+    <meta charset="utf-8" />
+    @if (string.IsNullOrWhiteSpace(SettingManager.ApplicationTitle))
+    {
+        <title>@(!string.IsNullOrEmpty(ViewBag.Title) ? ViewBag.Title + " | " : "") AccountEx | Accounts & Finance Management System </title>
+    }
+    else
+    {
+        <title>@(!string.IsNullOrEmpty(ViewBag.Title) ? ViewBag.Title + " | " : "") @SettingManager.ApplicationTitle </title>
+    }
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="" name="description" />
+    <meta content="" name="author" />
+
+
+    @Styles.Render("~/Content/Themes/cs/bootstrap")
+    @Styles.Render("~/Content/Themes/cs/metronic")
+    @Styles.Render("~/Content/Themes/cs/plugin/select2")
+    @Styles.Render("~/Content/Themes/cs/plugin/multiselect")
+    @Styles.Render("~/Content/Themes/cs/plugin/timepicker")
+    @Styles.Render("~/Content/Themes/cs/plugin/datepicker")
+
+    @Styles.Render("~/Content/Themes/cs/plugin/fileuploadmaster")
+    @Styles.Render("~/Content/Themes/cs/plugin/offline")
+    @Styles.Render("~/Content/Themes/cs/plugin/jqueryui")
+    @Styles.Render("~/Content/Themes/cs/plugin/toaster")
+    @Styles.Render("~/Content/Themes/cs/plugin/uniform")
+    @Styles.Render("~/Content/Themes/cs/custom")
+    @Styles.Render("~/Content/Themes/cs/fontawsome")
+    @RenderSection("PageStyle", false)
+
+    <style type="text/css">
+        .client-message {
+            clear: both;
+            position: absolute;
+            margin-top: 30px;
+            color: red;
+            text-decoration: wavy;
+            font-weight:bold;
+        }
+
+        .blink {
+            animation: blinker 1s step-start infinite;
+        }
+
+        @@keyframes blinker {
+            50% {
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body class="page-header-fixed page-container-bg-solid page-sidebar-closed-hide-logo page-header-menu-fixed page-header-top-fixed12 page-header-fixed-mobile page-footer-fixed1">
+    @{      var user = SiteContext.Current.User;
+    }
+    @if (SiteContext.Current.User != null)
+    {
+        <!-- BEGIN HEADER -->
+        <div class="page-header">
+            <!-- BEGIN HEADER TOP -->
+            <div class="page-header-top">
+                <div class="container-fluid">
+                    <!-- BEGIN LOGO -->
+                    <div class="page-logo">
+
+
+                        @if (!string.IsNullOrWhiteSpace(SettingManager.ApplicationLogo) && File.Exists(Server.MapPath("~/Upload/" + SiteContext.Current.UploadFolder + "/ApplicationLogo/" + (SettingManager.ApplicationLogo))))
+                        {
+                            <img src="../Upload/@(SiteContext.Current.UploadFolder)/ApplicationLogo/@(SettingManager.ApplicationLogo)" alt="logo" class="logo-default" />
+                        }
+                        else if (!string.IsNullOrWhiteSpace(SettingManager.ApplicationTitle))
+                        {
+                            <h3 style="margin-top: 8px">@SettingManager.ApplicationTitle</h3>
+                        }
+                        else
+                        {
+                            <h3 style="margin-top: 8px">Accountex</h3>
+                        }
+
+
+                    </div>
+                    <!-- END LOGO -->
+                    @{ var SwitchCompany = ConfigurationReader.GetConfigKeyValue<bool>("SwitchCompany", false);}
+                    @if (SwitchCompany)
+                    {
+                        var compnanies = new CompanyRepository().GetAll();
+
+                        <div class="form-group switch-companies">
+                            @* <label class="col-md-2 control-label" for="prefix">Switch Companies</label>*@
+                            <div class="col-md-3">
+                                <select id="switch-company" class="form-control select21" data-message="Parent Account is required" placeholder="Select Parent Account">
+
+                                    @foreach (var item in compnanies)
+                                    {
+                                        if (SiteContext.Current.User.CompanyId == item.Id)
+                                        {
+                                    <option selected="selected" value="@item.Id">@(item.Name)</option>
+                                        }
+                                        else
+                                        {
+                                    <option value="@item.Id">@(item.Name)</option>
+
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+                        </div>
+                    }
+
+
+                    @if (SiteContext.Current.User.CanChangeFiscal)
+                    {
+                        var fiscals = new FiscalRepository().GetAll();
+
+                        <div class="form-group switch-companies">
+                            @* <label class="col-md-2 control-label" for="prefix">Switch Companies</label>*@
+                            <div class="col-md-3">
+                                <select id="switch-fiscal" class="form-control select" placeholder="Select Fiscal to Change">
+
+                                    @foreach (var item in fiscals)
+                                    {
+                                        if (SiteContext.Current.Fiscal.Id == item.Id)
+                                        {
+                                    <option selected="selected" value="@item.Id">@(item.Name)</option>
+                                        }
+                                        else
+                                        {
+                                    <option value="@item.Id">@(item.Name)</option>
+
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+                        </div>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(SiteContext.Current.InfoText))
+                    {
+                        <div class="client-message blink">
+                            @(SiteContext.Current.InfoText)
+                        </div>
+                    }
+                    @* <div class="switch-companies col-md-3" style="float: right">
+                        </div>*@
+                    <!-- BEGIN RESPONSIVE MENU TOGGLER -->
+                    <a href="javascript:;" class="menu-toggler"></a>
+                    <!-- END RESPONSIVE MENU TOGGLER -->
+                    <!-- BEGIN TOP NAVIGATION MENU -->
+                    <div class="top-menu">
+                        <ul class="nav navbar-nav pull-right">
+
+
+                            @*  <li class="droddown dropdown-separator">
+                                    <span class="separator"></span>
+                                </li>*@
+
+                            <!-- BEGIN USER LOGIN DROPDOWN -->
+                            <li style="padding: 16px 6px 7px 6px;" class="dropdown dropdown-user dropdown-dark"><strong>@SiteContext.Current.Fiscal.Name <span>(@(SiteContext.Current.Fiscal.IsClosed ? "Closed" : "Open"))</span></strong></li>
+                            <li class="dropdown dropdown-user dropdown-dark">
+                                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                    @* <img alt="" class="img-circle" src="/Content/metronic/assets/layouts/layout/img/avatar9.jpg">*@
+                                    <span class="username username-hide-mobile12">
+
+                                        @AccountEx.Common.SiteContext.Current.User.FirstName @AccountEx.Common.SiteContext.Current.User.LastName
+
+                                    </span>
+                                </a>
+
+                                <ul class="dropdown-menu dropdown-menu-default">
+                                    <li>
+                                        <a href="@Url.Content("~/account/ChangePassword")">
+                                            <i class="icon-key"></i>Change Passowrd
+                                        </a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a href="@Url.Content("~/account/LogOff")">
+                                            <i class="icon-key"></i>Log Out
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <!-- END USER LOGIN DROPDOWN -->
+                        </ul>
+                    </div>
+                    <!-- END TOP NAVIGATION MENU -->
+                </div>
+            </div>
+            <!-- END HEADER TOP -->
+            <!-- BEGIN HEADER MENU -->
+            <div class="page-header-menu">
+                <div class="container-fluid">
+
+                    <!-- BEGIN MEGA MENU -->
+
+                    <div class="hor-menu">
+                        <ul class="nav navbar-nav">
+                            @Html.Action("Menu", "Home")
+                        </ul>
+                    </div>
+                    <!-- END MEGA MENU -->
+                </div>
+            </div>
+            <!-- END HEADER MENU -->
+        </div>
+        <!-- END HEADER -->
+        <!-- BEGIN PAGE CONTAINER -->
+                        <div class="page-container">
+                            <!-- BEGIN PAGE HEAD -->
+                            <div class="page-head">
+                                <div class="container-fluid">
+                                    <!-- BEGIN PAGE TITLE -->
+                                    <div class="page-title hidden-print">
+
+                                        @RenderSection("PageTitle", false)
+                                    </div>
+                                    <!-- END PAGE TITLE -->
+                                    <div class="hidden-print vehicle-branches-dropdown">
+                                        @RenderSection("VehicleBranchesDropdown", false)
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- END PAGE HEAD -->
+                            <!-- BEGIN PAGE CONTENT -->
+                            <div class="page-content">
+                                <div class="container-fluid">
+                                    @*   <div class="row visible-print report-header">
+                                            @if (!string.IsNullOrWhiteSpace(SettingManager.ReportHeader))
+                                            {
+                                                @(new HtmlString(SettingManager.ReportHeader))
+                                            }
+                                        </div>*@
+                                    @RenderBody()
+                                </div>
+                            </div>
+                            <!-- END PAGE CONTENT -->
+                        </div>
+        <!-- END PAGE CONTAINER -->
+        <!-- BEGIN PRE-FOOTER -->
+
+                        <div class="page-prefooter hide">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-3 col-sm-6 col-xs-12 footer-block">
+                                        <h2>About</h2>
+                                        <p>
+                                            XAMEER Software Technologies was established in 2010 as a company specialized in Software Engineering.
+                                        </p>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 col-xs12 footer-block">
+                                        <h2>Subscribe Email</h2>
+                                        <div class="subscribe-form">
+                                            <form action="javascript:;">
+                                                <div class="input-group">
+                                                    <input type="text" placeholder="mail@email.com" class="form-control">
+                                                    <span class="input-group-btn">
+                                                        <button class="btn" type="butoon">Submit</button>
+                                                    </span>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 col-xs-12 footer-block">
+                                        <h2>follow us on</h2>
+                                        <ul class="social-icons">
+                                            <li>
+                                                <a href="javascript:;" data-original-title="rss" class="rss"></a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;" data-original-title="facebook" class="facebook"></a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;" data-original-title="twitter" class="twitter"></a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;" data-original-title="googleplus" class="googleplus"></a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;" data-original-title="linkedin" class="linkedin"></a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;" data-original-title="youtube" class="youtube"></a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;" data-original-title="vimeo" class="vimeo"></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 col-xs-12 footer-block">
+                                        <h2>Contacts</h2>
+                                        <address class="margin-bottom-40">
+                                            Phone: +92 42 35461326<br />
+                                            Mobile: +92 321 4752123<br />
+                                            Fax: +92 42 37845396<br>
+                                            Email: <a href="mailto:info@xameer.com">info@xameer.com</a><br />
+                                            Web:<a href="www.xameer.com" target="_blank"> www.xameer.com</a>
+                                        </address>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="jsondata" class="hide jsondata">
+                        </div>
+        <!-- END CONFIRM DELETE DIALOG -->
+                        <div id="modal-delete" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                        <h4 class="modal-title">Confirmation</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="message-container">
+                                            Are you sure to continue...? Click <strong>Yes</strong> to delete.
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" onclick="Common.ConfirmDeleteWithYes()" class="btn red">Yes</button>
+                                        <button type="button" data-dismiss="modal" class="btn default">No</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="credential" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+                            <a id="btncredential" class="btn default" data-toggle="modal" href="#credential"></a>
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                        <h4 class="modal-title">Confirmation</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p class="message-container">
+                                            Are you sure to delete.Please provide your password?
+                                        </p>
+                                        <div class="row">
+                                            <div id="modelerror" class="alert alert-danger display-hide">
+                                                <button data-close="alert" class="close"></button>
+                                                <span>Enter your password. </span>
+                                            </div>
+                                            <div class="col-md-10">
+                                                <div data-save="save">
+                                                    <div class="form-body">
+                                                        <div class="form-group">
+                                                            <div class="input-icon">
+                                                                <i class="fa fa-lock"></i>
+                                                                <input type="text" id="LoginPassword" placeholder="Password" class="form-control placeholder-no-fix" style="padding-left: 33px;" autocomplete="off" data-plus-as-tab="false">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" onclick="Common.ContinueDelete()" class="btn red">Continue</button>
+                                        <button id="btnmodelcancel" type="button" data-dismiss="modal" class="btn default">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+        <!-- END CONFIRM DELETE DIALOG -->
+
+                        <div class="modal fade" id="session-timeout-dialog" data-backdrop="static">
+                            <div class="modal-dialog modal-small">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Your session has expired.</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div id="modelerror" class="alert alert-danger display-hide">
+                                            <button data-close="alert" class="close"></button>
+                                            <span>Enter your password. </span>
+                                        </div>
+
+                                        <p><i class="fa fa-warning"></i>Do you want to continue your session? Please enter your password as it required for security reasons.</p>
+
+                                        <div class="page-lock-info">
+                                            <h1 id="lblusername">@SiteContext.Current.User.Username</h1>
+                                            <span class="email">@SiteContext.Current.User.Email </span>
+                                            <br />
+                                            <br />
+                                            <span class="locked hide">Locked </span>
+                                            <div class="form-inline">
+                                                <div class="input-group input-medium">
+                                                    <input type="text" class="form-control" placeholder="Password" id="ReloginPassword">
+                                                    @* <span class="input-group-btn">
+                                                            <button type="button" class="btn blue icn-only"><i class="m-icon-swapright m-icon-white"></i></button>
+                                                        </span>*@
+                                                </div>
+                                                <!-- /input-group -->
+                                                <div class="relogin hide">
+                                                    <a href="account/ajxlogin">Not @SiteContext.Current.User.Username ? </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="modal-footer">
+                                            <button id="session-timeout-dialog-logout" type="button" class="btn btn-default">No, Logout</button>
+                                            <button id="session-timeout-dialog-keepalive" type="button" class="btn btn-primary">Yes, Keep Working</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="fiscal-year-change-dialog" data-backdrop="static">
+                            <div class="modal-dialog modal-small">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Fiscal Year Change Detected.</h4>
+                                    </div>
+                                    <div class="modal-body">
+
+
+                                        <p><i class="fa fa-warning"></i>Do you want to continue your session? Please enter your password as it required for security reasons.</p>
+
+
+                                        <br />
+                                        <div class="modal-footer">
+                                            <button id="session-timeout-dialog-logout" type="button" class="btn btn-default">No, Closewindow</button>
+                                            <button id="session-timeout-dialog-keepalive" type="button" class="btn btn-primary">Yes, Refresh</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        }
+    <script>
+        window.CKEDITOR_BASEPATH = '@Url.Content("~/Content/metronic/assets/global/plugins/ckeditor/")';
+    </script>
+    @Scripts.Render("~/Content/scripts/mandatory")
+    @Scripts.Render("~/Content/scripts/plugin")
+    @Scripts.Render("~/Content/scripts/plugin/tableexport")
+    @Scripts.Render("~/Content/scripts/plugin/pagelevel")
+    @Scripts.Render("~/Content/scripts/plugin/linqjs")
+    @Scripts.Render("~/Content/scripts/custom")
+
+
+    <!-- BEGIN:File Upload Plugin JS files-->
+    <!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+    @*<script src="~/Content/metronic/assets/global/plugins/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
+        <script src="~/Content/metronic/assets/global/plugins/jquery-file-upload/js/vendor/tmpl.min.js"></script>
+        <script src="~/Content/metronic/assets/global/plugins/jquery-file-upload/js/vendor/load-image.min.js"></script>
+        <script src="~/Content/metronic/assets/global/plugins/jquery-file-upload/js/vendor/canvas-to-blob.min.js"></script>
+        <script src="~/Content/metronic/assets/global/plugins/jquery-file-upload/blueimp-gallery/jquery.blueimp-gallery.min.js"></script>
+        <script src="~/Content/metronic/assets/global/plugins/jquery-file-upload/js/jquery.fileupload.js"></script>
+        <script src="~/Content/metronic/assets/global/plugins/jquery-file-upload/js/jquery.fileupload-process.js"></script>
+        <script src="~/Content/metronic/assets/global/plugins/jquery-file-upload/js/jquery.fileupload-image.js"></script>
+        <script src="~/Content/metronic/assets/global/plugins/jquery-file-upload/js/jquery.fileupload-audio.js"></script>
+        <script src="~/Content/metronic/assets/global/plugins/jquery-file-upload/js/jquery.fileupload-video.js"></script>
+        <script src="~/Content/metronic/assets/global/plugins/jquery-file-upload/js/jquery.fileupload-validate.js"></script>
+        <script src="~/Content//metronic/assets/global/plugins/jquery-file-upload/js/jquery.fileupload-ui.js"></script>
+        <script src="~/Content/metronic/assets/pages/scripts/form-fileupload.js"></script>*@
+
+    <script src="~/Content/AppJS/CRM/CRMCommon.js"></script>
+    <div id="jsonData-container" class="hide">
+        @*  @Html.Raw(Json.Encode(AccountManager.LoadCoa()))*@
+    </div>
+    <!-- END CUSTOM SCRIPTS -->
+
+    <script>
+        var SiteBaseUrl = '@Url.Content("~/")';
+        var globalUploadFolder = '@SiteContext.Current.UploadFolder';
+        var StorageKey = '@UtilityFunctionManager.GetLocalStorgaeKey()';
+        jQuery.hotkeys.options.filterInputAcceptingElements = false;
+        jQuery.hotkeys.options.filterContentEditable = false;
+        jQuery.hotkeys.options.filterTextInputs = false;
+        jQuery(document).ready(function () {
+            var fiscalJSON = "@JsonConvert.SerializeObject(UtilityFunctionManager.GetFiscalForLocalStorgae())"
+
+            var isDebug = '@(ConfigurationReader.GetConfigKeyValue<bool>("debug", false))'
+            var requireDeletePassword = '@(SettingManager.RequiredDeletePassword)'
+            Common.Fiscal = JSON.parse(fiscalJSON.replace(/&quot;/g, '"'));
+            var accessJSON = "@Json.Encode(UtilityFunctionManager.GetRoleAccesslForLocalStorgae())";
+            Common.Access = JSON.parse(accessJSON.replace(/&quot;/g, '"'));
+            Common.RequiredDeletePassword = requireDeletePassword;
+            Url.init();
+            Common.init();
+            ComponentsFormTools.init();
+            UIIdleTimeout.init();
+            debugger
+            if (isDebug != 'True') {
+                setInterval(
+                    function () {
+                        Common.CheckIfLoadCOA(undefined, false);
+                    }, 15000);
+            }
+            CRMCommon.init();
+
+        });
+    </script>
+
+    @RenderSection("FooterScript", false)
+    @RenderSection("Scripts", false)
+</body>
+<!-- END BODY -->
+</html>

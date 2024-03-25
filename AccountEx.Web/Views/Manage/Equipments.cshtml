@@ -1,0 +1,295 @@
+﻿@using AccountEx.Common;
+@using AccountEx.BussinessLogic;
+@{
+    ViewBag.Title = "Equipments";   
+}
+
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">Manage Equipments</h1>
+}
+
+<!-- END PAGE HEADER-->
+@if (SettingManager.EquipmentHeadId == 0)
+{
+    @Html.Partial("_HeadAccountMissing")
+}
+<div class="row" id="form-info">
+    <input type="text" id="AccountDetailFormId" class="hide" value="@((int)AccountDetailFormType.Equipments)" />
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-edit"></i>Add/Edit Equipments
+                </div>
+                <div class="actions hide">
+                    <a href="javascript:;" onclick="Equipments.ListView()" class="btn blue">
+                        <i class="fa fa-angle-left"></i>&nbsp;Back to list 
+                    </a>
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal" data-save="save">
+                    <input type="text" id="Id" class="hide" />
+                    <input type="text" id="TempCode" class="hide" />
+                    <div class="form-body">
+                        <div class="hide alert alert-danger container-message">
+                            <i class="close" onclick="$(this).parent().hide();"></i>
+                            <strong></strong>
+                            <div class="form-body message-content"></div>
+                        </div>
+                        @Html.Partial("_ParentAccount", new ViewDataDictionary { { "HeadId", SettingManager.EquipmentHeadId }, { "Labelcolspan", 2 }, { "Divcolspan", 4 } })
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Account Code</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control " id="Code" data-plus-as-tab="false" data-required="required" data-message="Account Code is required" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Name</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control " id="Name" data-required="required" data-message="Account Name is required" />
+                            </div>
+                        </div>
+                        <div class="form-group barcode">
+                            <label class="col-md-2 control-label" for="prefix">BarCode</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control " id="BarCode" data-required="required" data-message="BarCode is required" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Company</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control " id="Company" data-required="false" data-message="Company is required" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Made In</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control " id="MadeIn" />
+                            </div>
+                        </div>
+                         <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">Article #</label>
+                                <div class="col-md-3">
+                                    <input class="form-control" type="text" name="text" id="ArticleNo" />
+                                </div>
+                            </div>
+                        <div class="form-group hide">
+                            <label class="col-md-2 control-label" for="prefix">Unit</label>
+                            <div class="col-md-1">
+                                <input type="text" class="form-control number" id="Unit" />
+                            </div>
+                            <label class="col-md-1 control-label" for="prefix">Article</label>
+                            <div class="col-md-1">
+                                <input type="text" class="form-control number" id="Article" />
+                            </div>
+                        </div>
+                        <div class="form-group hide">
+                            <label class="col-md-2 control-label" for="prefix">Weight</label>
+                            <div class="col-md-1">
+                                <input type="text" class="form-control num3" id="Weight" />
+                            </div>
+                            <label class="col-md-1 control-label" for="prefix">Freight</label>
+                            <div class="col-md-1">
+                                <input type="text" class="form-control num3" id="Freight" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Sr.#</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control " id="SrNo" data-required="false" data-message="Sr No is required"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Readings</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control " id="Readings" />
+                            </div>
+                        </div>
+                         <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Unit Type</label>
+                            <div class="col-md-3">
+                                <select id="UnitTypeId" class="form-control select2" placeholder="Select Unit Type">
+                                    <option></option>
+                                    @foreach (var p in (List<IdName>)ViewBag.UnitTypes)
+                                    {
+                                        <option value="@p.Id">@p.Name</option>
+                                    }
+                                </select>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Group</label>
+                            <div class="col-md-3">
+                                <select id="GroupId" class="form-control select2" placeholder="Select group">
+                                    <option></option>
+                                    @foreach (var p in (List<IdName>)ViewBag.ProductGroups)
+                                    {
+                                        <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                              
+                                    }
+                                </select>
+                                <input type="hidden" value="GroupId" />
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Price Type</label>
+                            <div class="col-md-3">
+                                <select class="form-control select2" placeholder="Select Type" id="PriceType">
+                                    <option></option>
+                                    <option>Unit Price</option>
+                                    <option>Weight Price</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Purchase Price</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control " id="PurchasePrice" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Sale Price</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control " id="SalePrice" />
+                            </div>
+                        </div>
+                         <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Minimum Stock</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control " id="MinimumStock" />
+                            </div>
+                        </div>
+                         <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Maximum Stock</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control " id="MaximumStock" />
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Packing per Carton</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control " id="PackingPerCarton" />
+                            </div>
+                        </div>
+
+                        <div class="form-group hide">
+                            <label class="col-md-2 control-label" for="prefix">Quantity in Hand</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control " id="Quantity" />
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Manufacturer</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control " id="Manufacturer" placeholder="Manufacturer" />
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Details</label>
+                            <div class="col-md-8">
+                                <textarea id="Others" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    @if (SiteContext.Current.RoleAccess.CanCreate)
+                    {
+                        <div class="form-actions">
+                            <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+
+                            <div class="col-md-8">
+                                <button type="button" class="btn btn-primary" onclick="Equipments.Save()">Save</button>
+                                <button id="btnCancel" type="button" class="btn btn-default" onclick="Equipments.Cancell()">Cancel</button>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet box grey-cascade">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Equipments Listing
+                </div>
+                <div class="actions hide">
+                    <button id="btnEdit" type="button" class="btn blue" onclick="Equipments.Add()"><i class="fa fa-plus"></i>&nbsp;New</button>
+                    <button id="btnSave" type="button" class="btn blue hide" onclick="Equipments.Save()"><i class="fa fa-check"></i>&nbsp;Save Changes</button>
+
+
+                </div>
+                <div class="tools hide">
+                    <a href="javascript:;" class="collapse"></a>
+                </div>
+            </div>
+
+            <div class="portlet-body">
+                <div class="hide alert alert-danger container-message">
+                    <i class="close" onclick="$(this).parent().hide();"></i>
+                    <strong></strong>
+                    <div class="form-body message-content"></div>
+                </div>
+                <table class="table table-striped table-bordered table-hover" id="mainTable">
+                    <thead>
+                        <tr>
+                          @*  <th style="width: 8px;" class="no-sort">
+                                <input type="checkbox" class="group-checkable" data-set="#mainTable .checkboxes" />
+                            </th>*@
+                            <th>Code</th>
+                            <th>Title</th>
+                            <th>Packing/Carton
+                            </th>
+                            <th>Purchase Price</th>
+                            <th>Sale Price</th>
+
+                            <th>Manufacturer</th>
+                            <th>Details </th>
+                            <th style="width: 75px;" class="no-sort"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="11">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+<div id="jsondata" class="hide">
+    <p id="data">@ViewBag.FormSetting</p>
+</div>
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Manage/Equipments.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            Equipments.init();
+        });
+    </script>
+}

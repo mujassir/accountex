@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <style>
+        table, th, td {
+            /*border: 1px solid black;*/
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 5px;
+        }
+
+        #table-detail {
+            border-collapse: collapse;
+        }
+
+            #table-detail tbody tr td {
+                border: 1px solid #808080;
+            }
+              .PoAddress
+    {
+        float: left;
+    }
+.PoHead {
+
+    float:right;
+    font-size:20px;
+    padding-right:80px;
+}
+    </style>
+</head>
+
+<body style="background-color: #eeeeee;">
+    <div style="width: 1000px; margin: auto; padding: 20px; background-color: #FFF;">
+
+
+        <p>The Branch Manager,</p>
+        <p>{Date}</p>
+        <p>{BankName},</p>
+        <p>{BankAddress}</p>
+
+
+
+        <div style="padding-top: 30px;">Dear Sir/Madam,</div>
+
+        <div>
+            <p>Request for disbursement of Salary for the month of {Month},{Year} detailed for salary data of our employees is as Under:</p>
+        </div>
+        <table id="table-detail" style="border: 1px solid">
+            <thead>
+                <tr>
+                    <th>Sr. No</th>
+                    <th>Name</th>
+                    <th>Employee Id</th>
+                    <th>Salary Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {tableBody}
+            </tbody>
+
+
+
+        </table>
+
+        <div>
+            <p>Kindly disburse the salary for the month of {Month},{Year} by debit our Account A/C No. {AccountNo}. maintain with you.</p>
+            <p>kindly send us the conformation of  disnursement of salary to the individual account of the employees.</p>
+        </div>
+        <div>
+            <p style="padding-top: 30px">Thanking You</p>
+            <p>Your Faithfully</p>
+            <p>For ABC Corporation</p>
+            <p>Authorized Signatory</p>
+
+        </div>
+    </div>
+</body>
+</html>

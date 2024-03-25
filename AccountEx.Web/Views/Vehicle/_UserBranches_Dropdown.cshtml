@@ -1,0 +1,55 @@
+﻿@{
+    Layout = null;
+}
+@using AccountEx.CodeFirst.Models
+@using AccountEx.Common
+@using AccountEx.Repositories;
+@using AccountEx.BussinessLogic
+
+@{
+    var LableColSpan = Numerics.GetInt(ViewData["Labelcolspan"]);
+    LableColSpan = LableColSpan == 0 ? 2 : LableColSpan;
+    var DivColSpan = Numerics.GetInt(ViewData["Divcolspan"]);
+    DivColSpan = DivColSpan == 0 ? 12 : DivColSpan;
+    var markRequired = !string.IsNullOrWhiteSpace(ViewData["markRequired"] + "") ? Numerics.GetBool(ViewData["markRequired"]) : true;
+    var showLabel = Numerics.GetBool(ViewData["showLabel"]);
+    var addAllOption = Numerics.GetBool(ViewData["addAllOption"]);
+
+
+    var controlId = ViewData["controlId"] + "";
+    var userBranches = new UserVehicleBranchesRepository().GetByUserIds(SiteContext.Current.User.Id);
+    controlId = string.IsNullOrWhiteSpace(controlId) ? "BranchId" : controlId;
+    if (userBranches.Count() > 1)
+    {                         
+    <div class="form-group">
+        @if (showLabel)
+        {
+            <label class='@("col-md-" + LableColSpan) control-label' for="prefix">Branch</label>
+        }
+        <div class='@("col-md-" + DivColSpan)'>
+            <select id="@(controlId)" class="form-control select2" data-required="@(markRequired ? "required" : "false")" data-message="Branch is required" placeholder="Select Branch">
+                @if (addAllOption)
+                {
+                   
+                    <option value="0">All</option>
+                }
+
+                @foreach (var item in userBranches)
+                {
+                    <option value="@item.Id">@(item.Name)</option>
+                }
+
+
+
+            </select>
+        </div>
+
+    </div>
+    }
+    else
+    {
+        var branchId = userBranches.Any() ? userBranches.FirstOrDefault().Id : 0;
+    <input type="hidden" class="hide" id="BranchId" data-clear="false" value="@(branchId)" />
+    }
+                     
+}

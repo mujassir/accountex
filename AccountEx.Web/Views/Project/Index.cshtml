@@ -1,0 +1,784 @@
+﻿@{
+    ViewBag.Title = "Projects";   
+}
+@using AccountEx.Common;
+@using AccountEx.BussinessLogic;
+<style type="text/css">
+    #PR_mainTable_wrapper .row:first-child, #PR_mainTable_wrapper .row:last-child {
+        display: none;
+    }
+</style>
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold hidden-print">Manage Projects</h1>
+}
+
+<div class="row hide hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-edit"></i>Add/Edit Detail
+                </div>
+                <div class="actions">
+                    <a href="javascript:;" onclick="Project.ListView()" class="btn blue">
+                        <i class="fa fa-angle-left"></i>&nbsp;Back to list 
+                    </a>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal" data-save="save">
+                    <input type="text" id="Id" class="hide" />
+                    <input type="text" id="PictureUrl" class="hide" />
+                    <div class="form-body">
+                        <div class="hide alert alert-danger container-message">
+                            <i class="close" onclick="$(this).parent().hide();"></i>
+                            <strong></strong>
+                            <div class="form-body message-content"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Project #</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control number" id="Number" placeholder="Project #" data-required="required" data-validate="true" data-message="Project # is required" >
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Project Title</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control " id="Title" placeholder="Project Title" data-required="required" data-validate="true" data-message="Project Title is required" >
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Client</label>
+                            <div class="col-md-8">
+                                @*  <div id="remote">
+                                    <input type="text" class="form-control typeahead" autocomplete="off" />
+                                    <input type="hidden" id="AccountId" />
+                                    <input type="hidden" id="AccountTitle" />
+                                    <input type="hidden" id="AccountCode" />
+                                    <div class="input-group data-preview hide">
+                                        <div class="account-data form-control"></div>
+                                        <span class="input-group-btn">
+                                            <button class="btn blue close-button" type="button"><i class="fa fa-times"></i></button>
+                                        </span>
+                                    </div>
+                                </div>*@
+
+                                <select id="AccountId" class="form-control select2" placeholder="Select Client" data-trackchange="true"></select>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">PO Number</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control " id="PONumber" placeholder="PO Number" data-validate="true" data-required="required" data-message="PO Number is required"  />
+                            </div>
+                            @*  </div>
+                        <div class="form-group">*@
+                            <label class="col-md-2 control-label" for="prefix">Date of PO Issuance</label>
+                            <div class="col-md-3">
+
+                                <div class="input-group input-medium">
+                                    <input type="text" class="form-control date-picker" id="POIssueDate" placeholder="Date of PO Issuance" data-validate="true" data-message="Date of PO Issuance is required"  data-hide-dropdown="true">
+                                    <span class="input-group-btn date-icon">
+                                        <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Project Start Date</label>
+                            <div class="col-md-3">
+                                <div class="input-group input-medium">
+                                    <input type="text" class="form-control date-picker" id="StartDate" placeholder="Project Start Date" data-validate="true" data-message="Project Start Date is required"  data-hide-dropdown="true">
+                                    <span class="input-group-btn date-icon">
+                                        <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                            @*</div>
+                        <div class="form-group">*@
+                            <label class="col-md-2 control-label" for="prefix">Project End Date</label>
+                            <div class="col-md-3">
+                                <div class="input-group input-medium">
+                                    <input type="text" class="form-control date-picker" id="EndDate" placeholder="Project End Date" data-hide-dropdown="true" />
+                                    <span class="input-group-btn date-icon">
+                                        <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Gross Cost</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control num3" id="GrossCost" placeholder="Gross Cost" data-validate="true" data-required="required" data-message="Gross Cost is required" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Sales Tax</label>
+                            <div class="col-md-2">
+                                <input type="text" class="number form-control"  readonly="" data-validate="true" id="GST">
+                            </div>
+                            <div class="col-md-1">
+                                <input type="text" class="form-control num2"  maxlength="5" data-validate="true" value="16" id="GSTPercent">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">WHT</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control"  readonly="" data-validate="true" id="WHT">
+                            </div>
+                            <div class="col-md-1">
+                                <input type="text" class="form-control num2"  maxlength="5" data-validate="true" value="8" id="WHTPercent">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Miscellaneous</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control number hide" id="Miscellaneous" placeholder="Miscellaneous" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Net Cost</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control num3" id="NetCost" placeholder="Net Cost" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Work Scope</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control " id="WorkScope" placeholder="Work Scope" data-required="required" data-validate="true" data-message="WorkScope is required" >
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Employees</label>
+                            <div class="col-md-5">
+                                <select multiple="multiple" class="multi-select" id="Employees" name="Employees[]">
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <div class="form-group">
+                                        <input id="PoCopy" accept="image/x-png, image/gif, image/jpeg" type="file" name="..." data-upload-async="true">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            <div class="col-md-6">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <th style="width: 60%">Progress Monitoring</th>
+                                        <th>Planned %</th>
+                                        <th>Actual %</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Engineering</td>
+                                        <td>
+                                            <input type="text" id="Engineering_Planned" class="form-control" value="10" placeholder="%" />
+                                        </td>
+                                        <td>
+                                            <input type="text" id="Engineering_Actual" class="form-control" placeholder="%" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Planning</td>
+                                        <td>
+                                            <input type="text" id="Planning_Planned" class="form-control" value="10" placeholder="%" />
+                                        </td>
+                                        <td>
+                                            <input type="text" id="Planning_Actual" class="form-control" placeholder="%" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Procurement</td>
+                                        <td>
+                                            <input type="text" id="Procurement_Planned" class="form-control" value="15" placeholder="%" />
+                                        </td>
+                                        <td>
+                                            <input type="text" id="Procurement_Actual" class="form-control" placeholder="%" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Construction</td>
+                                        <td>
+                                            <input type="text" id="Construction_Planned" class="form-control" value="35" placeholder="%" />
+                                        </td>
+                                        <td>
+                                            <input type="text" id="Construction_Actual" class="form-control" placeholder="%" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Commissioning</td>
+                                        <td>
+                                            <input type="text" id="Commissioning_Planned" class="form-control" value="25" placeholder="%" />
+                                        </td>
+                                        <td>
+                                            <input type="text" id="Commissioning_Actual" class="form-control" placeholder="%" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Hand Over</td>
+                                        <td>
+                                            <input type="text" id="HandOver_Planned" class="form-control" value="5" placeholder="%" />
+                                        </td>
+                                        <td>
+                                            <input type="text" id="HandOver_Actual" class="form-control" placeholder="%" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <th style="width: 60%">Budget Monitoring</th>
+                                        <th>Planned</th>
+                                        <th>Actual</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Manpower</td>
+                                        <td>
+                                            <input type="text" id="Manpower_Planned" class="form-control Planned" />
+                                        </td>
+                                        <td>
+                                            <input type="text" id="Manpower_Actual" class="form-control Actual" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Direct Material</td>
+                                        <td>
+                                            <input type="text" id="DirectMaterial_Planned" class="form-control Planned" />
+                                        </td>
+                                        <td>
+                                            <input type="text" id="DirectMaterial_Actual" class="form-control Actual" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Transportation</td>
+                                        <td>
+                                            <input type="text" id="Transportation_Planned" class="form-control Planned" />
+                                        </td>
+                                        <td>
+                                            <input type="text" id="Transportation_Actual" class="form-control Actual" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tool & Equipment</td>
+                                        <td>
+                                            <input type="text" id="ToolnEquipment_Planned" class="form-control Planned" />
+                                        </td>
+                                        <td>
+                                            <input type="text" id="ToolnEquipment_Actual" class="form-control Actual" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Site Office Cost</td>
+                                        <td>
+                                            <input type="text" id="SiteOfficeCost_Planned" class="form-control Planned" />
+                                        </td>
+                                        <td>
+                                            <input type="text" id="SiteOfficeCost_Actual" class="form-control Actual" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Misc</td>
+                                        <td>
+                                            <input type="text" id="Misc_Planned" class="form-control Planned" />
+                                        </td>
+                                        <td>
+                                            <input type="text" id="Misc_Actual" class="form-control Actual" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Total</th>
+                                        <th>
+                                            <strong>
+                                                <span id="lblPlannedtotal"></span>
+                                            </strong>
+                                        </th>
+                                        <th>
+                                            <strong>
+                                                <span id="lblActualtotal"></span>
+                                            </strong>
+                                        </th>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div id="div-ProjectReceipts" class="hide">
+
+
+                            <div class="portlet">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        Payments
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+
+                                <label class="col-md-2 control-label" for="prefix">
+                                    BPV/CPV No.
+                                </label>
+                                <div class="col-md-1">
+                                    <input type="text" class="form-control number input-xsmall" id="ExpenseVoucherNumber" />
+                                </div>
+                                <label class="col-md-1 control-label" for="prefix">
+                                    Type.
+                                </label>
+                                <div class="col-md-2">
+                                    <select class="form-control input-small" id="ExpenseType">
+                                        <option value="@((int)VoucherType.CashPayments)">Cash Payment</option>
+                                        <option value="@((int)VoucherType.BankPayments)">Bank Payment</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="button" class="btn btn-primary" value="Add" onclick="ProjectReceipts.Save()" />
+                                </div>
+                            </div>
+                            <hr />
+                            <div>
+                                <table class="table table-striped table-bordered table-hover" id="PR_mainTable">
+                                    <thead>
+                                        <tr>
+
+                                            <th>Vou #</th>
+                                            <th>Date</th>
+                                            <th>From</th>
+                                            <th class="no-sort">Comment</th>
+                                            <th>Amount</th>
+                                            <th style="width: 30px;" class="no-sort"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="8" class="align-center">No data available in table</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12 align-right">
+                                    <label id="lblBalance" class="bold"></label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+
+                        <div class="col-md-8">
+                            <button type="button" class="btn btn-primary" onclick="Project.Save()">Save</button>
+                            <button id="btnCancel" type="button" class="btn btn-default" onclick="Project.CustomClear()">Cancel/Clear</button>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+
+<div class="row hide hidden-print" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Record Listing
+                </div>
+                <div class="actions">
+                    <button id="btnEdit" type="button" class="btn blue" onclick="Project.Add()"><i class="fa fa-plus"></i>&nbsp;New</button>
+                    <button id="btnSave" type="button" class="btn blue hide" onclick="Project.Save()"><i class="fa fa-check"></i>&nbsp;Save Changes</button>
+
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover" id="mainTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 8px;" class="no-sort">
+                                <input type="checkbox" class="group-checkable" data-set="#mainTable .checkboxes" />
+                            </th>
+                            <th>No.</th>
+                            <th>Name</th>
+                            <th>Client</th>
+                            <th>PO #</th>
+                            @*<th>Issued</th>*@
+                            <th>Start</th>
+                            <th>End</th>
+                            <th>Gross Cost</th>
+                            <th>Payments</th>
+                            <th>Balance</th>
+
+                            @*<th>Workscope</th>*@
+                            <th style="width: 75px;" class="no-sort"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="11">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+
+<div class="row hide1 visible-print" id="div-report">
+    <div class="col-md-12 col-sm-12">
+        <div class="row visible-print report-header">
+            @if (!string.IsNullOrWhiteSpace(SettingManager.ReportHeader))
+            {
+                @(new HtmlString(SettingManager.ReportHeader))
+            }
+        </div>
+        <!-- BEGIN Project Print-->
+
+        <div class="portlet-body">
+            <div class="form-horizontal project-printDiv">
+                <div class="row">
+
+                    <div class="col-md-6 col-xs-6">
+                        <table class="pull-left" style="font-size: 11px;">
+                            <tr>
+                                <td>Project Number: <span id="lblNumber"></span></td>
+
+                            </tr>
+                            <tr>
+                                <td>PO Number:
+                                </td>
+
+                                <td>
+                                    <span id="lblPONumber"></span>
+                                </td>
+
+
+
+                            </tr>
+
+                            <tr>
+                                <td>Date: </td>
+
+                                <td><span id="lblDate"></span></td>
+                            </tr>
+                            <tr>
+                                <td>Start Date:
+                                </td>
+
+                                <td>
+                                    <span id="lblStartDate"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>End Date:
+                                </td>
+
+                                <td>
+                                    <span id="lblEndDate"></span>
+                                </td>
+                            </tr>
+
+                        </table>
+                    </div>
+                    <div class="col-md-6 col-xs-6">
+                        <table class="project-container">
+
+                            <tr>
+                                <td>Project Title:<span id="lblTitle"></span></td>
+                                <td></td>
+                            </tr>
+
+
+                        </table>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 col-xs-6">
+                        <table class="table table-bordered">
+                            <tr>
+                                <!-- prog tbl-->
+                                <th style="width: 60%">Progress Monitoring</th>
+                                <th>Planned %</th>
+                                <th>Actual %</th>
+                            </tr>
+                            <tr>
+                                <td>Engineering</td>
+                                <td>
+                                    <span id="lblEngineering_Planned"></span>
+
+                                </td>
+                                <td>
+                                    <span id="lblEngineering_Actual"></span>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Planning</td>
+                                <td>
+                                    <span id="lblPlanning_Planned"></span>
+
+                                </td>
+                                <td>
+                                    <span id="lblPlanning_Actual"></span>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Procurement</td>
+                                <td>
+                                    <span id="lblProcurement_Planned"></span>
+
+                                </td>
+                                <td>
+                                    <span id="lblProcurement_Actual"></span>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Construction</td>
+                                <td>
+                                    <span id="lblConstruction_Planned"></span>
+
+                                </td>
+                                <td>
+                                    <span id="lblConstruction_Actual"></span>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Commissioning</td>
+                                <td>
+                                    <span id="lblCommissioning_Planned"></span>
+
+                                </td>
+                                <td>
+                                    <span id="lblCommissioning_Actual"></span>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Hand Over</td>
+                                <td>
+                                    <span id="lblHandOver_Planned"></span>
+
+                                </td>
+                                <td>
+                                    <span id="lblHandOver_Actual"></span>
+
+                                </td>
+                            </tr>
+
+                        </table>
+                    </div>
+                    <div class="col-md-6 col-xs-6">
+
+                        <!-- budget tbl-->
+                        <table class="table table-bordered">
+                            <tr>
+                                <th style="width: 60%">Budget Monitoring</th>
+                                <th>Planned</th>
+                                <th>Actual</th>
+                            </tr>
+                            <tr>
+                                <td>Manpower</td>
+                                <td>
+                                    <span id="lblManpower_Planned"></span>
+
+                                </td>
+                                <td>
+                                    <span id="lblManpower_Actual"></span>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Direct Material</td>
+                                <td>
+                                    <span id="lblDirectMaterial_Planned"></span>
+
+                                </td>
+                                <td>
+                                    <span id="lblDirectMaterial_Actual"></span>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Transportation</td>
+                                <td>
+                                    <span id="lblTransportation_Planned"></span>
+
+                                </td>
+                                <td>
+                                    <span id="lblTransportation_Actual"></span>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Tool & Equipment</td>
+                                <td>
+                                    <span id="lblToolnEquipment_Planned"></span>
+
+                                </td>
+                                <td>
+                                    <span id="lblToolnEquipment_Actual"></span>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Site Office Cost</td>
+                                <td>
+                                    <span id="lblSiteOfficeCost_Planned"></span>
+
+                                </td>
+                                <td>
+                                    <span id="lblSiteOfficeCost_Actual"></span>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Misc</td>
+                                <td>
+                                    <span id="lblMisc_Planned"></span>
+
+                                </td>
+                                <td>
+                                    <span id="lblMisc_Actual"></span>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Total</th>
+                                <th>
+                                    <strong>
+                                        <span id="lblPlannedtotal"></span>
+                                    </strong>
+                                </th>
+                                <th>
+                                    <strong>
+                                        <span id="lblActualtotal"></span>
+                                    </strong>
+                                </th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-md-8 col-xs-8">
+                        <table class="table table-striped table-bordered table-hover" id="PR_Print_mainTable">
+                            <thead>
+                                <tr>
+
+                                    <th>Vou #</th>
+                                    <th>Date</th>
+                                    <th>From</th>
+                                    <th class="no-sort">Comment</th>
+                                    <th>Amount</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="8" class="align-center">No data available in table</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-4 col-xs-4">
+                        <table class="pull-right" style="font-size: 11px;">
+                            <tr>
+
+                                <td>Gross Cost:
+                                </td>
+                                <td>
+                                    <span id="lblGrossCost"></span>
+                                </td>
+                            </tr>
+                            <tr>
+
+                                <td>Sales Tax:
+                                </td>
+                                <td>
+                                    <span style="margin-right: 15%;" id="lblGST"></span>
+                                </td>
+                            </tr>
+                            <tr>
+
+                                <td>WHT Tax:
+                                </td>
+                                <td>
+                                    <span id="lblWHT"></span>
+                                </td>
+                            </tr>
+
+                            <tr>
+
+                                <td>Total:
+                                </td>
+                                <td>
+                                    <span id="lblTotal"></span>
+                                </td>
+                            </tr>
+                            <tr>
+
+                                <td>Expenses:
+                                </td>
+                                <td>
+                                    <span id="lblReceipts"></span>
+                                </td>
+                            </tr>
+                            <tr>
+
+                                <td>Balance:
+                                </td>
+                                <td>
+                                    <span id="lblBalancePrint"></span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+
+
+
+
+                <br />
+                <table class="table table-bordered report-table">
+                </table>
+            </div>
+        </div>
+
+        <!-- END Project Print-->
+    </div>
+</div>
+
+@section FooterScript
+{
+    <script src="~/Content/metronic/assets/global/plugins/jquery-multi-select/js/jquery.multi-select.js" type="text/javascript"></script>
+    <script src="~/Content/AppJS/Project/ProjectReceipts.js" type="text/javascript"></script>
+    <script src="~/Content/AppJS/Project/Projects.js" type="text/javascript"></script>
+    <script>
+        jQuery(document).ready(function () {
+            Project.init();
+        });
+    </script>
+}

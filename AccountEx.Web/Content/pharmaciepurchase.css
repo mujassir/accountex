@@ -1,0 +1,65 @@
+﻿ #div-report {
+        width: 82%;
+    }
+
+    .Ivoice-slip {
+        font-size: 9px;
+    }
+
+    table.report-summary-info > tbody > tr > td {
+        padding: 5px;
+        border: 1px solid #AAA;
+    }
+
+    table.report-summary-info td table tr td:first-child {
+        font-size: 9px !important;
+        text-align: right;
+        font-weight: bold;
+    }
+
+    table.report-summary-info td table tr td {
+        padding: 2px 5px;
+    }
+
+    #div-report strong {
+        font-size: 9px !important;
+    }
+
+    #div-report span {
+        font-weight: normal;
+        font-size: 11px !important;
+    }
+
+    #div-report .table-bordered td, #div-report .table-bordered th {
+        border: 1px solid #AAA !important;
+    }
+
+    #tblAgingItems {
+        border: 1px solid #AAA;
+        font-size: 11px;
+    }
+
+        #tblAgingItems thead th {
+            border-bottom: 1px dashed #AAA;
+            text-align: center;
+        }
+
+        #tblAgingItems tbody td:nth-child(3),
+        #tblAgingItems tbody td:nth-child(4),
+        #tblAgingItems tbody td:nth-child(5),
+        #tblAgingItems tbody td:nth-child(6),
+        #tblAgingItems tbody td:nth-child(7),
+        #tblAgingItems tbody td:nth-child(8),
+        #tblAgingItems tbody td:nth-child(9),
+        #tblAgingItems tbody td:nth-child(10) {
+            text-align: right;
+        }
+
+        #tblAgingItems tbody td:nth-child(10) {
+            padding-right: 10px;
+        }
+
+    #report-saleitem {
+        width: 100%;
+        padding: 5px;
+    }

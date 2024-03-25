@@ -1,0 +1,140 @@
+﻿@using AccountEx.BussinessLogic;
+@{
+
+    Layout = "~/Views/Reports/_Layout.cshtml";
+    ViewBag.Title = "Detail of Bill/Payment";
+}
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">
+        Detail of Bill/Payment
+        <small id="lblFromMonth" class="pull-right small visible-print">
+        </small>
+        <br />
+        <small id="lblToMonth" class="pull-right small visible-print">
+            To:
+
+        </small><br />
+        <small id="lblDepartment" class="pull-right small visible-print">
+            Department:
+
+        </small>
+    </h1>
+}
+<div class="row hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-filter"></i>Report Filters
+                </div>
+                <div class="actions">
+                    <button class="btn blue hidden-print" onclick="window.print();"><i class="fa fa-print"></i>&nbsp;Print </button>
+                </div>
+
+            </div>
+            <div class="portlet-body form" data-querystring="true">
+
+
+                <div class="form-horizontal" data-save="Save">
+                    <input type="text" id="Id" class="hide" />
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">From Month</label>
+                            <div class="col-md-3">
+                                <select class="form-control select2" id="FromMonth" data-trackchange='true' placeholder="select from month" data-required="required" data-message="From month is required" data-querystring="true">
+                                    @Html.Raw(FiscalYearManager.CreateMonthYearDropDownOptions());
+                                </select>
+                                <input type="hidden" id="FromYear" data-querystring="true" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">To Month</label>
+                            <div class="col-md-3">
+                                <select class="form-control select2" id="ToMonth" data-trackchange='true' placeholder="select to month" data-required="required" data-message="To month is required" data-querystring="true">
+                                    @Html.Raw(FiscalYearManager.CreateMonthYearDropDownOptions());
+                                </select>
+                                <input type="hidden" id="ToYear" data-querystring="true" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Department</label>
+                            <div class="col-md-6">
+                                @*@Html.DropDownListFor(p => p.AccountId, new SelectList(Model.Accounts, "Id", "Name"), new { @class = "form-control select2" })*@
+                                <select id="DepartmentId" class="form-control select2" data-required="required" data-message="Department is required"></select>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+                        <div class="col-md-8">
+                            <button type="button" id="btnShowReport" class="btn btn-primary">Show Report</button>
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+<!-- END PAGE HEADER-->
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title hidden-print">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Report Data
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                    <a href="javascript:;" class="remove hide"></a>
+                </div>
+                <div class="actions">
+                    <button class="btn blue large pull-right" onclick="window.print();"><i class="fa fa-print"></i>&nbsp;Print </button>
+                </div>
+                <div class="tools pull-right">
+                    @{ Html.RenderPartial("_Export_Button");  }
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table id="table-report" class="table table-striped table-bordered report-table" data-export='true'>
+                    <thead>
+                        <tr>
+                            <th>Month</th>
+                            <th class="align-right">Bill Amount</th>
+                            <th class="align-right">Difference</th>
+                            <th class="align-right">App Amount</th>
+                            <th class="align-right">Tax</th>
+                            <th class="align-right">Net Received</th>
+                            <th>Refferal</th>
+                        </tr>
+                    </thead>
+
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- END EXAMPLE TABLE PORTLET-->
+</div>
+<div id="jsondata" class="hide">
+    <p id="data">@ViewBag.FormSetting</p>
+</div>
+@section FooterScript
+{
+    <!-- BEGIN PAGE LEVEL PLUGINS -->
+    <script src="~/Content/AppJS/Nexus/Reports/DetailBillPayment.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            DetailBillPayment.init();
+        });
+    </script>
+}

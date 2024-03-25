@@ -1,0 +1,14 @@
+﻿@media print {
+    a:link:after,
+    a:visited:after {
+        content: "" !important;
+    }
+
+    .page-head {
+        display: block;
+    }
+}
+
+td > a {
+    color: #333333 !important;
+}

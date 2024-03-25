@@ -1,0 +1,1496 @@
+﻿@using AccountEx.Common;
+@section PageStyle
+{
+
+}
+@section PageTitle
+{
+    <h1 class="font-green-sharp bold hidden-print">Manage Service Order</h1>
+}
+@{
+    ViewBag.FormTitle = "Manage Service Order";
+    ViewBag.Title = ViewBag.FormTitle;
+}
+@using AccountEx.BussinessLogic;
+@{
+    var error = "";
+    if (SettingManager.CustomerHeadId == 0 && SettingManager.CashAccountId == 0)
+    {
+        error += "<li>Customer or cash account is missing.</li>";
+
+    }
+    if (SettingManager.EmployeeHeadId == 0)
+    {
+        error += "<li>Eployee account is missing.</li>";
+
+    }
+    if (SettingManager.SalemanHeadId == 0)
+    {
+        error += "<li>Salesman account is missing.</li>";
+
+    }
+    if (SettingManager.ProductHeadId == 0)
+    {
+        error += "<li>Product account is missing.</li>";
+
+    }
+    if (SettingManager.SiteAccountHeadId == 0)
+    {
+        error += "<li>Site account head is missing.</li>";
+    }
+    if (SettingManager.SiteHeadId == 0)
+    {
+        error += "<li>Site account is missing.</li>";
+    }
+    if (SettingManager.SiteEquipmentHeadId == 0)
+    {
+        error += "<li>Site Equipment account is missing.</li>";
+    }
+    if (SettingManager.ExternalEquipmentHeadId == 0)
+    {
+        error += "<li>External Equipment account is missing.</li>";
+    }
+    if (SettingManager.MaterialServicesAccountId == 0)
+    {
+        error += "<li>material service account is missing.</li>";
+    }
+    if (SettingManager.EquipmentAccountId == 0)
+    {
+        error += "<li>Equipment account head is missing.</li>";
+    }
+    if (SettingManager.StockConsumptionAccountId == 0)
+    {
+        error += "<li>Stock Consumption account is missing.</li>";
+    }
+    if (SettingManager.RentalIncomeHeadId == 0)
+    {
+        error += "<li>Rental Income account is missing.</li>";
+    }
+    if (SettingManager.ServicesAccountId == 0)
+    {
+        error += "<li>Service  account is missing.</li>";
+    }
+
+    if (SiteContext.Current.Fiscal == null)
+    {
+        error += "<li>No fiscal year found.</li>";
+
+    }
+    
+    
+}
+@if (!string.IsNullOrWhiteSpace(error))
+{
+    <div class="note note-danger note-bordered">
+        <h4 class="block">Head Account Missing</h4>
+        <div>
+            <i class="fa-lg fa fa-warning"></i>Head Account is missing in the application settings.In order to complete current transaction head accounts must be added in settings.<br />
+
+
+            <ul>
+                @Html.Raw(error)
+            </ul>
+
+
+            Add missing head accounts in settings and then try again by <a href="@Request.Url"><i class="fa fa-refresh"></i>&nbsp;Relaoding</a>&nbsp;the current page.
+        </div>
+    </div>
+}
+else
+{
+
+
+    <div class="row hidden-print " id="form-info">
+        <div class="col-md-12 col-sm-12">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <div class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-edit"></i>Add/Edit Service
+                    </div>
+                    <div class="actions hide">
+                        <a href="javascript:;" onclick="Trans.LoadVoucher('previous')" class="btn blue">
+                            <i class="fa fa-angle-left"></i>&nbsp;Back
+                        </a>
+                        <a href="javascript:;" onclick="Trans.LoadVoucher('next')" class="btn blue">
+                            <i class="fa fa-angle-left"></i>&nbsp;Next 
+                        </a>
+
+                    </div>
+                </div>
+                <div class="portlet-body form">
+
+                    <div id="mainform" class="form-horizontal" data-save="save">
+
+                        <input type="text" id="Id" class="hide" data-include-in-item="true" data-item-id="OrderId" />
+                        <input type="text" id="CreatedDate" class="hide ac-date" data-clear-type="date" />
+                        <input type="text" id="IsDeleted" class="hide" />
+                        <input type="text" id="PreVoucherNumber" class="hide" />
+                        <div class="form-body">
+                            <div class="hide alert alert-danger container-message">
+                                <i class="close" onclick="$(this).parent().hide();"></i>
+                                <strong></strong>
+                                <div class="form-body message-content"></div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="prefix">Book No.</label>
+                                        <div class="col-md-2 container-voucher">
+
+                                            <input type="text" class="form-control number input-xsmall" id="VoucherNumber" data-plus-as-tab="false" data-required="required" data-message="Job number is required"  data-include-in-item="true">
+                                        </div>
+
+
+                                        <label class="col-md-3 control-label" for="prefix">Select Type</label>
+                                        <div class="col-md-3 container-voucher">
+
+                                            <select class="form-control select2 " id="TransactionType"  data-include-in-item="true" data-required="required" data-message="Type is Required">
+
+                                                <option value="@((byte)VoucherType.CustomerServiceOrder)">Customer</option>
+                                                <option value="@((byte)VoucherType.SiteServiceOrder)">Site</option>
+                                                <option value="@((byte)VoucherType.RepairingServiceOrder)">Repairing</option>
+
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group">
+
+                                        <label class="col-md-4 control-label" for="prefix">Job #</label>
+                                        <div class="col-md-2">
+                                            <input type="text" id="InvoiceNumber" data-validate="true" data-required="required" data-message="OB Number is required"  class="number form-control input-small" data-include-in-item="true" />
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group customer-site-feild">
+                                        <label class="col-md-4 control-label " for="prefix"><span class="master-account-label">Client</span></label>
+                                        <div class="col-md-2">
+                                            <input type="text" class="form-control input-small" id="AccountCode" data-required="required" data-plus-as-tab="false" data-validate="true" data-message="Client Code is required" >
+                                            <input type="hidden" id="AccountId" value="0" />
+
+                                        </div>
+                                        <div class="col-md-6">
+
+                                            <input type="text" class="form-control" id="AccountName"  disabled="disabled">
+                                        </div>
+                                    </div>
+                                    <div class="form-group customer-site-feild ">
+                                        <label class="col-md-4 control-label" for="prefix">Address</label>
+                                        <div class="col-md-8">
+                                            <input class="form-control" type="text" name="text" id="PartyAddress" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group customer-feild">
+                                        <label class="col-md-4 control-label  " for="prefix">Salesman</label>
+                                        <div class="col-md-2">
+                                            <input type="text" class="form-control input-small" id="SalesmanCode" data-required="required" data-plus-as-tab="false" data-validate="true" data-message="Salesman Code is required" >
+                                            <input type="hidden" id="SalesmanId" value="0" />
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control" id="SalesmanName"  disabled="disabled">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label " for="prefix">Equipment</label>
+                                        <div class="col-md-2">
+                                            <input type="text" class="form-control input-small" id="MachineCode" data-required="required" data-validate="true" data-message="Equipment Code is required" >
+                                            <input type="hidden" id="MachineId" value="0" />
+
+                                        </div>
+                                        <div class="col-md-6">
+
+                                            <input type="text" class="form-control" id="MachineName"  disabled="disabled">
+                                        </div>
+                                    </div>
+                                    <div class="form-group customer-feild">
+                                        <label class="col-md-4 control-label" for="prefix">Contact Person</label>
+                                        <div class="col-md-8">
+                                            <input class="form-control" type="text" name="text" id="ContactPerson" />
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group customer-feild">
+                                        <label class="col-md-4 control-label" for="prefix">Contact Time</label>
+                                        <div class="col-md-8">
+                                            <input class="form-control" type="text" name="text" id="ContactTime" />
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="prefix">Sr. Number</label>
+                                        <div class="col-md-4">
+                                            <input class="form-control" type="text" name="text" id="SrNo" disabled="disabled" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="prefix">Previous Reading</label>
+                                        <div class="col-md-4">
+                                            <input class="form-control" type="text" name="text" id="PreviousReading" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="prefix">Current Reading</label>
+                                        <div class="col-md-4">
+                                            <input class="form-control" type="text" name="text" id="CurrentReading" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="prefix">Consumption</label>
+                                        <div class="col-md-4">
+                                            <input class="form-control" type="text" name="text" id="Consumption" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="prefix">Services Required</label>
+                                        <div class="col-md-8">
+                                            <input class="form-control" type="text" name="text" id="ServicesRequired" data-plus-as-tab="false" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="prefix">Air Filter Condition</label>
+                                        <div class="col-md-4">
+                                            <select id="AirFilterCondition" class="form-control select2">
+                                                <option></option>
+                                                <option>Good</option>
+                                                <option>Normal</option>
+                                                <option>Bad</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="prefix">Oil Condition</label>
+                                        <div class="col-md-4">
+                                            <select id="OilCondition" class="form-control select2">
+                                                <option></option>
+                                                <option>Level</option>
+                                                <option>High</option>
+                                                <option>Medium</option>
+                                                <option>Low</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="prefix">Condition</label>
+                                        <div class="col-md-4">
+                                            <select id="Condition" class="form-control select2">
+                                                <option></option>
+                                                <option>Good</option>
+                                                <option>Bad</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+
+                                        <label class="col-md-3 control-label" for="prefix">Date</label>
+                                        <div class="col-md-3">
+                                            <input id="Date" type="text" class="form-control date-picker input-small" data-clear-type='date' data-validate="true" data-required="required" data-message="Date is required" data-plus-as-tab="false" data-hide-dropdown="true" data-fiscal-date="true">
+                                        </div>
+                                        <label class="col-md-2 control-label" for="prefix">Sale Tax #</label>
+                                        <div class="col-md-2 container-voucher">
+                                            <input type="text" class="form-control number input-xsmall" id="ServiceSaleTaxNo" data-plus-as-tab="false"  data-include-in-item="true">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label " for="prefix">Technician</label>
+                                        <div class="col-md-2">
+                                            <input type="text" class="form-control input-small" id="EmployeeCode" data-required="required" data-plus-as-tab="false" data-validate="true" data-message="Technician Code is required" >
+                                            <input type="hidden" id="EmployeeId" value="0" />
+
+                                        </div>
+                                        <div class="col-md-4">
+
+                                            <input type="text" class="form-control" id="EmployeeName"  disabled="disabled">
+                                        </div>
+
+
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="prefix">Initial Observation</label>
+                                        <div class="col-md-6">
+                                            <input class="form-control" type="text" name="text" id="InitialObservation" />
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="prefix">Services Needed</label>
+                                        <div class="col-md-6">
+                                            <input class="form-control" type="text" name="text" id="ServicesNeeded" />
+
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="prefix">Estimated Time</label>
+                                        <div class="col-md-6">
+                                            <input class="form-control" type="text" name="text" id="EstimatedTime" data-plus-as-tab="false" />
+
+                                        </div>
+
+                                    </div>
+                                    <br />
+                                    <div class="portlet customer-feild">
+                                        <div class="portlet-title">
+                                            <div class="caption">
+                                                Customer Feedback
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group customer-feild">
+                                        <label class="col-md-3 control-label " for="prefix">Level of Behaviour</label>
+                                        <div class="col-md-7">
+                                            <select id="BehaviourLevel" class="form-control select2">
+                                                <option></option>
+                                                <option>Excellent</option>
+                                                <option>Good</option>
+                                                <option>Satisfactory</option>
+                                                <option>Poor</option>
+                                                <option>VeryPoor</option>
+                                            </select>
+
+                                        </div>
+
+
+
+                                    </div>
+                                    <div class="form-group customer-feild">
+                                        <label class="col-md-3 control-label " for="prefix">Level of Services</label>
+                                        <div class="col-md-7">
+                                            <select class="form-control select2" id="ServicesLevel">
+                                                <option></option>
+                                                <option>Excellent</option>
+                                                <option>Good</option>
+                                                <option>Satisfactory</option>
+                                                <option>Poor</option>
+                                                <option>VeryPoor</option>
+                                            </select>
+
+                                        </div>
+
+
+
+                                    </div>
+                                    <div class="form-group customer-feild">
+                                        <label class="col-md-3 control-label " for="prefix">Services Delay Time</label>
+                                        <div class="col-md-7">
+                                            <select class="form-control select2" id="DelayTime">
+                                                <option></option>
+                                                <option>One Time</option>
+                                                <option>Late</option>
+                                                <option>Very Late</option>
+                                            </select>
+
+                                        </div>
+
+
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">Problem</label>
+                                <div class="col-md-9">
+                                    <textarea class="form-control" id="Problem"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">Remarks</label>
+                                <div class="col-md-9">
+                                    <textarea class="form-control" id="Comments" data-plus-as-tab="false"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group row-servicesdelivered" data-save="false">
+                                <div class="portlet">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            Expenses
+                                       
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-12 saleitem-container scroller" style="height: 200px; padding: 10px !important;" data-always-visible="1" data-rail-visible1="1">
+
+                                    <table id="tbl-order-expenses" class="table table-bordered griditem">
+                                        <thead>
+                                            <tr>
+                                                <th class="align-center" colspan="2">Employee</th>
+                                                <th class="align-center" colspan="2">Expense</th>
+                                                <th colspan="6"></th>
+
+                                            </tr>
+                                            <tr>
+                                                <th style="width: 5%;">Code</th>
+                                                <th style="width: 10%;">Name</th>
+                                                <th style="width: 5%;">Code</th>
+                                                <th style="width: 10%;">Name</th>
+                                                <th style="width: 20%;">PerformedBy</th>
+                                                <th>Date</th>
+                                                <th class="align-right">Quantity</th>
+                                                <th class="align-right">P Price</th>
+                                                <th class="align-right">S Price</th>
+                                                <th class="align-right">Amount</th>
+                                                <th class="align-right hide">Gst %</th>
+                                                <th class="align-right hide">Gst Amount</th>
+                                                <th class="align-right hide">Inclusive Amount</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody data-plus-as-tab="false">
+                                        </tbody>
+                                        <tfoot data-plus-as-tab="false">
+                                            <tr class="bold well">
+                                                <td colspan="6" class="bold align-right">Total &nbsp;</td>
+                                                <td colspan="1" class="bold well align-right">
+                                                    <input type="text" class="Quantity form-control input-small" disabled="disabled" readonly="readonly"></td>
+                                                <td colspan="2"></td>
+                                                <td class="bold well align-right">
+                                                    <input type="text" class="Amount form-control input-small" disabled="disabled" readonly="readonly"></td>
+
+                                                <td class="hide">
+                                                    <input type="text" class="GstAmount form-control input-small" disabled="disabled" readonly="readonly"></td>
+
+                                                <td class="hide" colspan="2">
+                                                    <input type="text" class="NetAmount form-control input-small" disabled="disabled" readonly="readonly"></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+
+                            </div>
+                            <div class="form-group" data-save="false">
+                                <div class="portlet">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            Services
+                                       
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-12  scroller12" style="height: 300px; padding: 10px !important;" data-always-visible="1" data-rail-visible1="1">
+
+                                    <table id="tbl-order-services" class="table table-bordered griditem">
+                                        <thead>
+                                            <tr>
+
+                                                <th>Code</th>
+                                                <th style="width: 40%;">Name</th>
+                                                @* <th class="align-right">Quantity</th>*@
+                                                <th class="align-right">Amount</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody data-plus-as-tab="false">
+                                        </tbody>
+                                        <tfoot data-plus-as-tab="false">
+                                            <tr class="bold well">
+                                                <td colspan="2" class="bold align-right">Total &nbsp;</td>
+
+                                                <td class="align-right">
+                                                    <input type="text" class="Amount form-control input-small" disabled="disabled" readonly="readonly"></td>
+                                                <td></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="form-group" data-save="false">
+                                <div class="portlet">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            Material Consumed
+                                       
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-12  scroller12" style="height: 300px; padding: 10px !important;" data-always-visible="1" data-rail-visible1="1">
+
+                                    <table id="item-container" class="table table-bordered griditem">
+                                        <thead>
+                                            <tr>
+                                                <th>DC</th>
+                                                <th>Dated</th>
+                                                <th>Code</th>
+                                                <th style="width: 40%;">Name</th>
+                                                <th class="align-right">Quantity</th>
+                                                <th class="align-right">P Price</th>
+                                                <th class="align-right">S Price</th>
+                                                <th class="align-right">Amount</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody data-plus-as-tab="false">
+                                        </tbody>
+                                        <tfoot data-plus-as-tab="false">
+                                            <tr class="bold well">
+                                                <td colspan="4" class="bold align-right">Total &nbsp;</td>
+                                                <td colspan="3">
+                                                    <input type="text" class="Quantity form-control input-small" disabled="disabled" readonly="readonly"></td>
+                                                <td colspan="2">
+                                                    <input type="text" class="Amount form-control input-small" disabled="disabled" readonly="readonly"></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="form-group ">
+                                <div class="col-md-8">
+                                    <br />
+                                </div>
+                                <div class="col-md-4 align-right">
+                                    <div class="row">
+                                    </div>
+                                    <div class="row ">
+                                        <label class="control-label col-md-7">Expenses Total</label>
+                                        <div class="col-md-5">
+                                            <input id="ExpensesTotal" class="align-right form-control" disabled="disabled" readonly="readonly" type="text" value="" />
+
+                                        </div>
+                                    </div>
+
+                                    <div class="row ">
+                                        <label class="control-label col-md-7">Services Total</label>
+                                        <div class="col-md-5">
+                                            <input id="ServiceNetTotal" class="align-right form-control" type="text" disabled="disabled" readonly="readonly" data-required="FALSE" data-message="Please add atleast one item" />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="control-label col-md-7">Material Consumed Total</label>
+                                        <div class="col-md-5">
+                                            <input class="align-right form-control" type="text" disabled="disabled" readonly="readonly" id="MaterialConsumedTotal" />
+                                        </div>
+                                    </div>
+                                    <div class="row ">
+                                        <label class="control-label col-md-7">Net Total</label>
+                                        <div class="col-md-5">
+                                            <input id="NetTotal" class="align-right form-control" disabled="disabled" readonly="readonly" type="text" value="" />
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-actions">
+                            <div class="btn-set pull-left">
+                                <a href="javascript:;" onclick="ServiceOrder.LoadVoucher('first')" class="btn blue tooltips disabled first" data-original-title="First">
+                                    <i class="fa fa-angle-double-left"></i>
+                                </a>
+                                <a href="javascript:;" onclick="ServiceOrder.LoadVoucher('previous')" class="btn blue tooltips disabled previous" data-original-title="Previous">
+                                    <i class="fa fa-angle-left"></i>
+                                </a>
+                                <a href="javascript:;" onclick="ServiceOrder.LoadVoucher('next')" class="btn blue tooltips disabled next" data-original-title="Next">
+                                    <i class="fa fa-angle-right"></i>
+                                </a>
+                                <a href="javascript:;" onclick="ServiceOrder.LoadVoucher('last')" class="btn blue tooltips disabled last" data-original-title="Last">
+                                    <i class="fa fa-angle-double-right"></i>
+                                </a>
+                            </div>
+                            <div class="btn-set pull-right">
+                                @if (!SiteContext.Current.Fiscal.IsClosed)
+                                {
+                                    <button id="btnfinal" type="button" class="btn yellow hide" onclick="ServiceOrder.SaveTransaction()">
+                                        <i class="fa fa-check"></i>
+                                        Finalize</button>
+                                    <button type="button" class="btn purple-plum" onclick="ServiceOrder.New()">
+                                        <i class="fa  fa-plus-circle"></i>
+                                        New</button>
+                                    <button id="btnsave" type="button" class="btn btn-primary green" onclick="ServiceOrder.Save()">
+                                        <i class="fa fa-check"></i>
+                                        Save</button>
+                                    <button id="btndelete" type="button" class="btn red" onclick="ServiceOrder.Delete()">
+                                        <i class="fa fa-trash-o"></i>
+                                        Delete</button>
+                                    
+                                }
+
+                                <div class='btn-group'>
+                                    <button id="btnprint" type='button' class='btn yellow dropdown-toggle' data-toggle='dropdown' data-hover='dropdown12' data-delay='1000' data-close-others='true' aria-expanded='false'>Print <i class='fa fa-angle-up'></i></button>
+                                    <ul class='dropdown-menu bottom-up' role='menu'>
+                                        <li><a href='javascript:ServiceOrder.Print("div-services-invoice")'>Servics Invoice</a></li>
+                                        <li><a href='javascript:ServiceOrder.Print("div-workshopjobcard-report")'>Workshop Job Card</a></li>
+                                        <li><a href='javascript:ServiceOrder.Print("div-report")'>Job Completion Report</a></li>
+                                        <li><a href='javascript:ServiceOrder.Print("div-fieldservice-report")'>Field Service Report</a></li>
+
+                                    </ul>
+                                </div>
+                                @*  <button type="button" class="btn yellow" onclick="ServiceOrder.Print()">
+                                    <i class="fa fa-print"></i>
+
+                                    Print</button>*@
+                                <button type="button" class="btn blue" onclick="window.location='@(Url.Content(SettingManager.DashBoardUrl))'">
+                                    <i class="fa  fa-times-circle"></i>
+
+                                    Close</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <!-- END EXAMPLE TABLE PORTLET-->
+        </div>
+
+    </div>
+    <div class="row hidden-print" id="div-table">
+
+        <div class="col-md-12 col-sm-12">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <div class="portlet light">
+
+
+
+                <div class="form-horizontal hide" data-save='save' id="Job-Filters">
+                    <div class="col-md-12 col-sm-12">
+                        <div class="portlet light">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    <i class="fa fa-edit"></i>Filter
+                                </div>
+                                <div class="actions hide">
+                                    <a id="actionBackList" href="javascript:;" class="btn blue ">
+                                        <i class="fa fa-angle-left"></i>&nbsp;Back to list 
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="form-body" data-querystring="true">
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="col-md-1 control-label" for="prefix">From</label>
+                                            <div class="col-md-2">
+                                                <input id="FromDate" name="FromDate" type="text" class="form-control ac-date date-picker" />
+                                            </div>
+                                            <label class="col-md-1 control-label" for="prefix">To</label>
+                                            <div class="col-md-2">
+                                                <input id="ToDate" name="ToDate" type="text" class="form-control ac-date date-picker" />
+
+                                            </div>
+
+                                        </div>
+                                        <div class="form-group">
+
+                                            <label class="col-md-1 control-label" for="prefix">Customer</label>
+                                            <div class="col-md-5">
+                                                <select id="FilterCustomer" class="form-control Filterselect2" data-trackchange='true' data-trackchange="true" placeholder=" ">
+                                                    <option></option>
+                                                    @* @foreach (var item in (List<IdName>)ViewBag.Customers)
+                                {
+                                    <option data-custom="@item.Id" value="@item.Id" >@item.Name</option>
+                                }*@
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button id="btnSearch" type="button" class="btn btn-primary btnSearch"><i class="fa fa-filter"></i>&nbsp;Search Vouchers</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                <div class="portlet-body">
+                    <table class="table table-striped table-bordered table-hover" id="mainTable">
+                        <thead>
+                            <tr>
+                                <th>Voucher No.</th>
+                                <th>Job No.</th>
+                                <th>Date</th>
+                                <th>Account</th>
+                                <th style="width: 30px;" class="no-sort"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="5" class="center">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- END EXAMPLE TABLE PORTLET-->
+        </div>
+    </div>
+    <div id="jsondata" class="hide">
+        <p id="data">@ViewBag.FormSetting</p>
+    </div>
+}
+<style>
+    #report-serviceitem tbody td:nth-child(n+4), #report-saleitem tbody td:nth-child(n+6) {
+        text-align: right;
+    }
+
+    #report-serviceitem thead th:nth-child(n+4), #report-saleitem thead th:nth-child(n+6) {
+        text-align: right;
+    }
+
+    #report-fieldservice tbody td:not(:nth-child(5)), #report-fieldservice tbody td:not(:nth-child(6)) {
+        text-align: center;
+        width: 15%;
+    }
+
+    #report-engineparameters thead th {
+        text-align: center;
+    }
+
+    #report-fieldservice tbody td {
+        border: 1px solid #000;
+    }
+
+    #report-serviceitem tbody td:nth-child(n+4), #report-saleitem tbody td:nth-child(n+6); {
+        text-align: right;
+    }
+
+    #report-engineparameters thead tr th {
+        border: 1px solid #000;
+    }
+
+    #report-serviceitem thead th:nth-child(n+4), #report-saleitem thead th:nth-child(n+6) {
+        text-align: right;
+    }
+</style>
+<style>
+    @@media print {
+        .div-services-invoice #compnay-print-header, #compnay-print-subheader {
+            background-color: rgba(128, 128, 128, 0.44) !important;
+            -webkit-print-color-adjust: exact !important;
+        }
+    }
+
+    .div-services-invoice #compnay-print-header, #compnay-print-subheader {
+        -webkit-print-color-adjust: exact;
+        background-color: rgba(128, 128, 128, 0.44);
+    }
+
+    body {
+        -webkit-print-color-adjust: exact;
+    }
+
+    .div-services-invoice table.report-summary-info > tbody > tr > td {
+        padding: 5px;
+        border: 1px solid #AAA;
+    }
+
+    .div-services-invoice table.report-summary-info td table tr td:first-child {
+        font-size: 9px !important;
+        text-align: right;
+        font-weight: bold;
+    }
+
+    .div-services-invoice table.report-summary-info td table tr td {
+        padding: 2px 5px;
+    }
+
+    .div-services-invoice strong {
+        font-size: 9px !important;
+    }
+
+    .div-services-invoice span {
+        font-weight: normal;
+        font-size: 11px !important;
+    }
+
+    .div-services-invoice .table-bordered td, #div-report .table-bordered th {
+        border: 1px solid #AAA !important;
+    }
+</style>
+
+@*Start Print for service Order*@
+
+<div class="row" id="service-print-conatiner">
+    <div id="div-report" class="visible-print hide">
+        @* @if (!string.IsNullOrWhiteSpace(SettingManager.ApplicationLogo) && File.Exists(Server.MapPath("../Upload/ApplicationLogo/" + (SettingManager.ApplicationLogo))))
+    {
+        <div class="align-center">
+
+
+            <img style="height:90px !important" src="../Upload/ApplicationLogo/@(SettingManager.ApplicationLogo)" alt="logo" class="logo-default" />
+
+        </div>
+    }
+    else
+    {
+        *@<div style="font-size: 18px; padding: 5px; font-weight: bold; font-style: italic;" class=" align-center">
+            KAN ENERGY
+            <br />
+            <span style="font-size: 16px; border-bottom: 1px solid">Job Completion Report</span>
+        </div>
+        @*}*@
+        <div style="font-size: 14px; padding: 5px;">
+            <table class="report-summary-info table full-width table-bordered" style="margin-bottom: 0px;">
+                <tbody>
+                    <tr class="td-no-border">
+                        <td style="width: 35%; border: none !important; vertical-align: middle">Customer Name & Address:</td>
+                        <td style="border: none !important">
+                            @*<span  id="lblAccountCode"></span>*@
+                            <span style="display: block" id="lblAccountName"></span>
+                            <span id="lblPartyAddress"></span>
+
+                        </td>
+                        <td style="vertical-align: middle">Job Type:  <span id="lblJobType"></span></td>
+
+                    </tr>
+                    <tr>
+                        <td>Job No: <span id="lblVoucherNumber"></span></td>
+                        <td>Date: <span id="lblDate"></span></td>
+                        <td>Current Date: <span id="lblCurrentDate"></span></td>
+
+                    </tr>
+                    <tr>
+                        <td colspan="3">Job Description:  <span id="lblProblem"></span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">Customer Contact Person:   <span id="lblContactPerson"></span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="border: none !important">Job Performed By:   <span id="lblEmployeeName"></span></td>
+                        <td style="border: none !important">Gen Set Model:   <span id="lblMachineName"></span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="form-group"></div>
+        <div class="clearfix"></div>
+        <div style="font-size: 16px; padding: 5px; font-weight: bold; font-style: italic;" class=" align-center">
+            <span style="border-bottom: 1px solid">Detail of Services</span>
+        </div>
+        <table id="report-serviceitem" class="table table-bordered full-width" style="margin-top: -1px;">
+            <thead>
+                <tr>
+                    <th style="width: 30px;">Sr.#</th>
+                    <th>Description</th>
+                    <th>Performed By</th>
+                    <th>P.Price</th>
+                    <th>S.Price</th>
+                    <th>Total Rs.</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+            <tfoot>
+                <tr style="height: 40px;">
+                    <td colspan="5">Remarks if any:</td>
+                    <td class="align-right"></td>
+                </tr>
+            </tfoot>
+        </table>
+        <div class="form-group"></div>
+        <div class="clearfix"></div>
+        <div style="font-size: 16px; padding: 5px; font-weight: bold; font-style: italic;" class=" align-center">
+            <span style="border-bottom: 1px solid">Detail of Issued Parts</span>
+        </div>
+        <table id="report-saleitem" class="table table-bordered full-width" style="margin-top: -1px;">
+            <thead>
+                <tr>
+                    <th style="width: 30px;">Sr.#</th>
+                    <th>D.C/SIR</th>
+                    <th>Dated</th>
+                    <th>Part Number</th>
+                    <th>Description</th>
+                    <th>P.Price</th>
+                    <th>S.Price</th>
+                    <th>Qty</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="8" class="align-right">Total Rs:</td>
+                    <td class="align-right"></td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <div class="row-bottom" style="position: fixed; width: 96%; bottom: 15px; padding-top: 5px;">
+            <div style="font-size: 16px; padding: 5px; font-weight: bold; font-style: italic;" class=" align-center">
+                <span style="border-bottom: 1px solid">For Use Only Commercial Department</span>
+            </div>
+            <table id="report-tbl-footer" class="table table-bordered full-width" style="margin-top: -1px; margin-bottom: 0px">
+                <tbody>
+                    <tr>
+                        <td style="width: 30%">Invoice No : <span id="lblInvoiceNumber"></span></td>
+                        <td>Date</td>
+                        <td style="width: 15%" id="lblInvoiceDate"></td>
+                        <td>Amount Rs.</td>
+                        <td style="width: 25%" id="totalAmount" class="align-right"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="5">Remarks if any: <span id="lblComments"></span></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr style="height: 55px;">
+                        <td>signature<div style="margin-top: 25px">Store Incharge</div>
+                        </td>
+                        <td>signature 
+                        <div style="margin-top: 25px">Manager Services</div>
+                        </td>
+                        <td colspan="2">signature
+                        <div style="margin-top: 25px">Manager Commercial</div>
+
+                        </td>
+                        <td>signature
+                        <div style="margin-top: 25px">Manager Audit</div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+            <div>
+                <span class="underlined" style="font-size: 10px">Opposite Nazria-e-Pakistan Trust Building,Thoker Niaz Baig,Lahore</span>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="div-workshopjobcard-report" class="visible-print hide">
+        <div>
+            <div style="font-size: 18px; padding: 5px; font-weight: bold;" class="align-center">
+                <span style="border-bottom: 1px solid; font-weight: bold;">KAN ENERGY</span>
+            </div>
+
+            <div style="float: right;">Job No.<span style="display: inline-block; width: 85px; border-bottom: 1px solid #000;"></span></div>
+
+        </div>
+        <hr />
+        <table class="report-summary-info full-width">
+            <tbody>
+                <tr style="height: 40px;">
+                    <td colspan="3">
+                        <div style="float: right; margin-right: 13px;"><span style="font-size: 16px; border-bottom: 1px solid;">Workshop Job Card</span></div>
+                    </td>
+                    <td>
+                        <div style="float: right;">Date:<span id="lblDate" class="label-data" style="display: inline-block; width: 85px; border-bottom: 1px solid #000;"></span></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <label>Customer Name:</label>&nbsp;<span id="lblAccountName" class="label-data" style="display: inline-block; width: 540px; border-bottom: 1px solid #000;"></span></td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <label>Engine Make/model:</label>&nbsp;<span class="label-data" style="display: inline-block; width: 280px; border-bottom: 1px solid #000;"></span></td>
+                    <td colspan="1">
+                        <label>Sr.No:</label>&nbsp;<span id="lblSrNo" class="label-data" style="display: inline-block; width: 200px; border-bottom: 1px solid #000;"></span></td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <label>Job Description:</label>&nbsp;<span id="lblComments" class="label-data" style="display: inline-block; width: 300px; border-bottom: 1px solid #000;"></span></td>
+                    <td colspan="1">
+                        <label>job Leader:</label>&nbsp;<span id="lblEmployeeName" class="label-data" style="display: inline-block; width: 180px; border-bottom: 1px solid #000;"></span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="form-group"></div>
+        <div class="clearfix"></div>
+        <table id="report-serviceitemdelivered" class="table table-bordered full-width" style="margin-top: -1px;">
+            <thead>
+                <tr>
+                    <th style="width: 15%; text-align: center">Date</th>
+                    <th style="width: 15%; text-align: center">Technician Name</th>
+                    <th style="width: 40%; text-align: center">Job Detail</th>
+                    <th style="width: 30%; text-align: center">Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <div class="form-group"></div>
+        <div class="clearfix"></div>
+
+        <div class="row-bottom" style="position: fixed; width: 96%; bottom: 15px; padding-top: 5px;">
+            <div style="margin-bottom: 24px;">
+                <div style="float: left">
+                    <label>Signature's Technician</label><span class="label-data" style="display: inline-block; width: 100px; border-bottom: 1px solid #000;"></span>
+                </div>
+                <div style="float: right">
+                    <label>Signature's Work's Manager</label><span class="label-data" style="display: inline-block; width: 100px; border-bottom: 1px solid #000;"></span>
+                </div>
+
+                <div class="form-group"></div>
+                <div class="clearfix"></div>
+            </div>
+            <div>
+                <span class="underlined" style="font-size: 10px">Opposite Nazria-e-Pakistan Trust Building,Thoker Niaz Baig,Lahore</span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div id="div-fieldservice-report" class="visible-print hide">
+        <div style="font-size: 18px; padding: 5px; font-weight: bold;" class=" align-center">
+            <span style="text-decoration: underline;">KAN ENERGY</span>
+        </div>
+        <div style="float: right;">Job No.<span style="display: inline-block; width: 85px; border-bottom: 1px solid #000;"></span></div>
+        <div class="form-group"></div>
+        <div class="clearfix"></div>
+        <div style="font-size: 18px; padding: 5px; font-weight: bold; text-align: center">
+            <span style="text-decoration: underline;">Field Service Report</span>
+        </div>
+
+        <div style="border: 1px solid; padding: 5px;">
+            <table class="report-summary-info full-width">
+                <tbody>
+
+                    <tr>
+                        <td colspan="4">
+                            <label>Of</label>&nbsp;&nbsp;<span class="label-data" id="lblMachineName" style="display: inline-block; width: 530px; border-bottom: 1px solid #000;"></span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <label>Customer Name</label>&nbsp;&nbsp;<span id="lblAccountName" class="label-data" style="display: inline-block; width: 530px; border-bottom: 1px solid #000;"></span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <label>Address:&nbsp;&nbsp;</label><span id="lblPartyAddress" class="label-data" style="display: inline-block; width: 280px; border-bottom: 1px solid #000;"></span></td>
+                        <td colspan="1">
+                            <label>Contact No.&nbsp;&nbsp;</label><span class="label-data" style="display: inline-block; width: 200px; border-bottom: 1px solid #000;"></span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="form-group"></div>
+        <div class="clearfix"></div>
+
+        <div>
+            <label>Visited by:-</label>
+        </div>
+        <div style="border: 1px solid;">
+            <table id="report-fieldservice" class="report-summary-info full-width table-bordered">
+                <tbody>
+
+                    <tr>
+                        <td>Date of Visit</td>
+                        <td><span class="label-data"></span></td>
+                        <td>Time In</td>
+                        <td><span class="label-data"></span></td>
+                        <td colspan="2">Reason of Visit</td>
+                    </tr>
+                    <tr>
+                        <td>Running Hours</td>
+                        <td><span class="label-data"></span></td>
+                        <td>Time Out</td>
+                        <td><span class="label-data"></span></td>
+                        <td>Routine</td>
+                        <td>Emergency</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="form-group"></div>
+        <div class="clearfix"></div>
+        <div style="border: 1px solid; padding: 5px;">
+            <table class="report-summary-info full-width">
+                <thead>
+                    <tr>
+                        <th>Problem/Trouble/Complain by Operator/Client:-</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div style="height: 75px;">
+                                <p style="margin: 0px;" id="lblProblem">
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+        <div class="form-group"></div>
+        <div class="clearfix"></div>
+        <div style="border: 1px solid; padding: 5px;">
+            <table class="report-summary-info full-width">
+                <thead>
+                    <tr>
+                        <th>Observe &amp; Troubleshoot:-</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div style="height: 75px;">
+                                <p style="margin: 0px;" id="lblInitialObservation">
+                                </p>
+                                <p style="margin: 0px;" id="lblServicesNeeded">
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+        <div class="form-group"></div>
+        <div class="clearfix"></div>
+
+        <div>
+            <label><b>Engine parameters:-</b></label>
+        </div>
+        <div style="border: 1px solid;">
+            <table id="report-engineparameters" class="report-summary-info full-width table-bordered">
+                <thead>
+                    <tr>
+                        <th>O.P</th>
+                        <th>W.T</th>
+                        <th colspan="3">Air Filter Condition</th>
+                        <th colspan="4">Oil Condition</th>
+                        <th colspan="2">A.C.T</th>
+                    </tr>
+
+                    <tr>
+                        <th rowspan="2"><span></span></th>
+                        <th rowspan="2"><span></span></th>
+                        <th rowspan="2">Good</th>
+                        <th rowspan="2">Normal</th>
+                        <th rowspan="2">Bad</th>
+                        <th>Level</th>
+                        <th>high</th>
+                        <th>medium</th>
+                        <th>low</th>
+                        <th>in</th>
+                        <th>out</th>
+                    </tr>
+
+                    <tr>
+                        <th colspan="2">Condition</th>
+                        <th>Good</th>
+                        <th>Bad</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+
+                    <tr>
+                        <th colspan="3">Voltage/Frequency</th>
+                        <th colspan="6">Smoke/Sound/Vibration/Blow Pipe</th>
+                        <th colspan="2">Working Load</th>
+                    </tr>
+
+                    <tr>
+                        <th colspan="3">
+                            <span></span>/
+                        <span></span>
+                        </th>
+                        <th colspan="6">/</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="form-group"></div>
+        <div class="clearfix"></div>
+        <div style="border: 1px solid; padding: 5px;">
+            <table class="report-summary-info full-width">
+                <thead>
+                    <tr>
+                        <th>Remarks/Recommendation:-</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div style="height: 75px;">
+                                <p style="margin: 0px;" id="lblComments">
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="form-group"></div>
+        <div class="clearfix"></div>
+
+        <div class="row-bottom" style="position: fixed; width: 96%; bottom: 15px; padding-top: 5px;">
+            <div style="margin-bottom: 24px;">
+                <div style="float: left">
+                    <label>Kan Representative</label><span class="label-data" style="display: inline-block; margin-left: 5px; width: 150px; border-bottom: 1px solid #000;"></span>
+                </div>
+                <div style="float: right">
+                    <label>Client Representative</label><span class="label-data" style="display: inline-block; width: 150px; border-bottom: 1px solid #000;"></span>
+                </div>
+                <div class="clearfix"></div>
+                <div style="float: left">
+                    <label>Designation</label><span class="label-data" style="display: inline-block; margin-left: 52px; width: 150px; border-bottom: 1px solid #000;"></span>
+                </div>
+                <div class="clearfix"></div>
+                <div style="float: left">
+                    <label>Signature</label><span class="label-data" style="display: inline-block; margin-left: 68px; width: 150px; border-bottom: 1px solid #000;"></span>
+                </div>
+                <div style="float: right">
+                    <label>Signature</label><span class="label-data" style="display: inline-block; width: 150px; border-bottom: 1px solid #000;"></span>
+                </div>
+                <div class="form-group"></div>
+                <div class="clearfix"></div>
+            </div>
+            <div>
+                <span class="underlined" style="font-size: 10px">Opposite Nazria-e-Pakistan Trust Building,Thoker Niaz Baig,Lahore</span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div id="div-services-invoice" class="visible-print hide div-services-invoice">
+
+
+        <div id="compnay-print-header" style="font-size: 18px; padding: 8px; font-weight: bold; margin-bottom: 3px;" class="border-black align-center">
+            @(!string.IsNullOrWhiteSpace(SettingManager.ApplicationPrintTitle) ? SettingManager.ApplicationPrintTitle : !string.IsNullOrWhiteSpace(SettingManager.ApplicationTitle) ? SettingManager.ApplicationTitle : "Management System")
+        </div>
+
+        <div id="compnay-print-subheader" style="font-size: 16px; padding: 3px; margin-top: 5px" class="border-black align-center"><u id="lblReportTitle">Services Invoices</u></div>
+        <div class="form-group"></div>
+
+        <table class="report-summary-info full-width">
+            <tbody>
+                <tr>
+                    <td style="width: 60%; border-top-width: 0;">
+                        <table>
+                            <tr>
+                                <td>Job No. : </td>
+                                <td>
+                                    <span id="lblInvVoucherNumber"></span>
+
+                                </td>
+                                <td>Book No. : </td>
+                                <td><span id="lblInvInvoiceNumber"></span></td>
+                            </tr>
+
+                            <tr>
+                                <td>Date :</td>
+                                <td>
+                                    <span id="lblInvDate" data-db-type="date"></span>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 60px;">M/s : </td>
+                                <td>
+                                    <span id="lblInvAccountName"></span>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="clearfix"></div>
+        <table id="report-services-Items" class="table table-bordered full-width" style="margin-top: -1px;">
+            <thead>
+                <tr>
+                    <th style="width: 30px;">S#</th>
+                    <th>Service Description</th>
+                    <th class='align-right'>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
+        <div class="row-bottom" style="position: fixed; border-top: 1px solid #000; width: 720px; bottom: 15px; padding-top: 50px;">
+            <table class=" report-summary-info full-width">
+                <tbody>
+                    <tr>
+                        <td style="width: 60%; vertical-align: top; padding-top: 0; border-width: 0;" rowspan="3">
+
+                            <table class="full-width">
+                                <tr>
+                                    <td style="width: 0px;"></td>
+                                    <td>
+                                        <div style="font-weight: normal; text-align: center; padding: 0 2px; border-bottom: 1px solid #AAA;"><span>Prepared By</span></div>
+                                    </td>
+                                    <td>
+                                        <div style="font-weight: normal; text-align: center; padding: 0 2px; border-bottom: 1px solid #AAA;"><span>Checked By</span></div>
+                                    </td>
+                                    <td>
+                                        <div style="font-weight: normal; text-align: center; padding: 0 2px; border-bottom: 1px solid #AAA;"><span>Approved By</span></div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td style="width: 5%; border-width: 0;"></td>
+                        <td style="width: 35%">
+                            <table class="full-width">
+                                <tbody>
+
+                                    <tr>
+                                        <td>
+                                            <div style="font-size: 1.3em;">Net Amount :</div>
+                                        </td>
+                                        <td style="border-bottom: 2px solid #000; text-align: center; width: 35%; font-size: 1.3em;">
+
+                                            <div id="lblInvServiceNetTotal" data-db-type="int" data-formating="true"></div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+            <div style="margin-top: 5px;">
+                <table>
+                    <tr>
+                        <td style="width: 20%"><span>@DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt")</span></td>
+                        <td style="width: 70%; text-align: center;"><strong id="lblFooterNotes" style="border-bottom: 1px solid #000;"></strong></td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                </table>
+
+
+            </div>
+        </div>
+
+
+
+    </div>
+
+</div>
+<script type="text/html" id="order-expenses-template">
+    <tr>
+
+        <td>
+            <input type="hidden" value="" data-db-column="Id">
+            <input type="hidden" class="EmployeeId" data-db-column="EmployeeId">
+            <input type="hidden"  class="EntryType" id="EntryType" data-db-column="EntryType" value="@((int)EntryType.Item)">
+            <input type="text" class="EmployeeCode form-control typeahead input-small ui-autocomplete-input" data-db-column="EmployeeCode" autocomplete="off">
+        </td>
+
+        <td>
+            <input type="text" disabled="disabled" class="EmployeeName form-control input-medium" data-db-column="EmployeeName" readonly="readonly"></td>
+        <td>
+            <input type="hidden" class="ExpenseId" data-db-column="ExpenseId">
+            <input type="text" class="ExpenseCode form-control input-small ui-autocomplete-input" data-db-column="ExpenseCode" autocomplete="off">
+        </td>
+        <td>
+            <input type="text" disabled="disabled" class="ExpenseName form-control input-medium" data-db-column="ExpenseName" readonly="readonly"></td>
+        <td>
+            <input type="text" class="PerformedBy form-control input-medium" data-db-column="PerformedBy"></td>
+        <td>
+            <input type="text" class="Date form-control date-picker" data-db-column="Date" data-db-type="date" /></td>
+        <td class="align-right">
+            <input type="text" class="Quantity form-control input-small num3" data-db-column="Quantity" data-db-type="float"></td>
+        <td class="align-right">
+            <input type="text" class="PurchasePrice form-control input-small num3" data-db-column="PurchasePrice" data-db-type="float"></td>
+        <td class="align-right">
+            <input type="text" class="Rate form-control input-small num3" data-db-column="Rate" data-db-type="float"></td>
+        <td class="align-right">
+            <input type="text" class="Amount form-control input-small num3" disabled="disabled" readonly="readonly" data-db-column="Amount" data-db-type="float"></td>
+        <td class="align-right hide">
+            <input type="text" class="GSTPercent form-control input-small num3"  data-db-column="GSTPercent" value="@SettingManager.Gst" data-db-type="float">
+        <td class="align-right hide">
+            <input type="text" class="GstAmount form-control input-small num3" data-db-column="GSTAmount" data-db-type="float"></td>
+        <td class="align-right hide">
+            <input type="text" class="NetAmount form-control input-small num3" disabled="disabled" readonly="readonly" data-db-column="NetAmount" data-db-type="float"></td>
+        <td style="width: 8px;">
+            <span class="action"><i class="fa fa-trash-o" onclick="ServiceOrder.DeleteRow(this)" data-original-title="Delete Item"></i></span>
+
+        </td>
+    </tr>
+
+</script>
+<script type="text/html" id="template-item">
+    <tr>
+        <td>
+            <input type="text" disabled="disabled" class="form-control input-small" data-db-column="DcNo" data-db-type="int" />
+            <input type="hidden" data-db-column="DcId" data-db-type="int" />
+
+        </td>
+        <td>
+            <input type="text" disabled="disabled" class="form-control date-picker" data-db-column="Date" data-db-type="date" /></td>
+        <td>
+            <input type="hidden" value="">
+            <input type="hidden" class="ProductId" id="ProductId" data-db-column="ItemId">
+            <input type="hidden"  class="EntryType"  data-db-column="EntryType" value="@((int)EntryType.Item)">
+            <input type="text" disabled="disabled" class="ProductCode form-control typeahead input-small ui-autocomplete-input" autocomplete="off" data-db-column="ItemCode">
+        </td>
+        <td>
+            <input type="text" disabled="disabled" class="Name form-control input-medium" data-db-column="ItemName" />
+        </td>
+        <td class="align-right">
+            <input type="text" disabled="disabled" class="ProductQuantity form-control input-small num3" data-db-column="Quantity" data-db-type="float" />
+
+        </td>
+        <td class="align-right">
+            <input type="text" class="PurchaseRate form-control input-small num3" data-db-column="PurchaseRate" data-db-type="decimal"></td>
+        <td class="align-right">
+            <input type="text" class="ProductRate form-control input-small num3" data-db-column="Rate" data-db-type="decimal"></td>
+        <td class="align-right">
+            <input type="text" class="ProductAmount form-control input-small num3" data-db-column="Amount" data-db-type="decimal" disabled></td>
+        <td style="width: 8px;">
+            <span class="action"><i class="fa fa-trash-o" onclick="ServiceOrder.DeleteRow(this)" data-original-title="Delete Item"></i></span>
+        </td>
+    </tr>
+
+</script>
+<script type="text/html" id="order-services-template">
+    <tr>
+
+
+        <td>
+            <input type="hidden" value="">
+            <input type="hidden" class="ItemId" data-db-column="ItemId">
+            <input type="hidden"  class="EntryType"  data-db-column="EntryType" value="@((int)EntryType.Services)">
+            <input type="text" class="ItemCode form-control typeahead input-small ui-autocomplete-input" autocomplete="off" data-db-column="ItemCode">
+        </td>
+        <td>
+            <input type="text" disabled="disabled" class="ItemName form-control input-medium" data-db-column="ItemName" />
+        </td>
+        @*<td class="align-right">
+            <input type="text"  class="Quantity form-control input-small num3" data-db-column="Quantity" data-db-type="float" />
+
+        </td>*@
+
+        <td class="align-right">
+            <input type="text" class="Amount form-control input-small num3" data-db-column="Amount" data-db-type="decimal"></td>
+        <td style="width: 8px;">
+            <span class="action"><i class="fa fa-trash-o" onclick="ServiceOrder.DeleteRow(this)" data-original-title="Delete Item"></i></span>
+        </td>
+    </tr>
+
+</script>
+
+
+@section FooterScript
+{
+
+    <script src="~/Content/AppJS/Transaction/ServiceOrder.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            ServiceOrder.init();
+        });
+    </script>
+}
+

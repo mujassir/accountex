@@ -1,0 +1,138 @@
+﻿@using AccountEx.Common;
+
+@{
+    Layout = "~/Views/Reports/_Layout.cshtml";
+    ViewBag.Title = "Repossessions";   
+   
+}
+<style type="text/css">
+</style>
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">
+
+        <span class="main-title">@ViewBag.Title</span>
+
+
+    </h1>
+}
+@section VehicleBranchesDropdown
+{
+
+    @Html.Partial("../Vehicle/_UserBranches_Dropdown", new ViewDataDictionary { { "Labelcolspan", 2 }, { "Divcolspan", 12 }, { "showLabel", false } })
+}
+<div class="row hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-filter"></i>Report Filters
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                    @*<a href="javascript:;" class="remove"></a>*@
+                </div>
+                <div class="actions">
+                    <button class="btn blue hidden-print" onclick="window.print();"><i class="fa fa-print"></i>&nbsp;Print </button>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal" data-save="Save">
+                    <input type="text" id="Id" class="hide" />
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Type</label>
+                            <div class="col-md-3">
+                                <select id="RecoveryStatus" class="form-control select2">
+                                    <option value="NULL">All</option>
+                                    <option value="@((byte)RecoveryStatus.InProcess)">Not Repossessed</option>
+                                    <option value="@((byte)RecoveryStatus.Recovered)">Repossessed</option>
+                                    <option value="@((byte)RecoveryStatus.InventoryReturn)">Available for Sale</option>
+                                    <option value="@((byte)RecoveryStatus.CustomerReturn)">Settlement</option>
+                                </select>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+                        <div class="col-md-8">
+                            <button type="button" id="btnShowReport" class="btn btn-primary">Show Report</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title hidden-print">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Report Data
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                    @*<a href="javascript:;" class="remove"></a>*@
+                </div>
+                <div class="tools pull-right">
+                    @{ Html.RenderPartial("_Export_Button");  }
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover report-table" data-export='true'>
+                        <thead>
+                            <tr>
+                                <th>Letter Issue Date</th>
+                                <th>CUSTOMER,Id,Contact</th>
+                                <th>Chassis</th>
+                                <th>REG NO</th>
+                                <th>Auctionner</th>
+                                <th>Letter Issued</th>
+                                <th>Repossessed</th>
+                                <th>Repossessed Date</th>
+                                <th>Pending Repossessed</th>
+                                <th>Notification Days</th>
+                                <th>Advertisement Paper</th>
+                                <th>Advertisement Date</th>
+                                <th>Available for Sale</th>
+                                <th>Settlemment</th>
+                                <th>Remarks</th>
+                                <th>Resold</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Vehicle/Reports/Repossession.js"></script>
+
+
+    <script>
+        jQuery(document).ready(function () {
+            Repossession.init();
+        });
+    </script>
+}
+
+
+
+
+
+

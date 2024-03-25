@@ -1,0 +1,103 @@
+﻿@using AccountEx.Common;
+@section PageTitle
+{
+    <h1 class="font-green-sharp bold">Manage Currencies</h1>
+}
+
+<div class="row hidden-print" id="div-form">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-edit"></i>Add/Edit Currencies
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div id="mainform" class="form-horizontal" data-save="save">
+                    <input type="text" id="Id" class="hide" value="0" />
+                    <div class="form-body">
+                        <div class="hide alert alert-danger container-message">
+                            <i class="close" onclick="$(this).parent().hide();"></i>
+                            <strong></strong>
+                            <div class="form-body message-content"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Name</label>
+                            <div class="col-md-3">
+                                <input id="Name" type="text" class="form-control" data-required="required" data-message="Name is required">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Short Name</label>
+                            <div class="col-md-3">
+                                <input id="ShortName" type="text" class="form-control" data-required="false" data-message="Name is required">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Symbol/Sign</label>
+                            <div class="col-md-3">
+                                <input id="Unit" type="text" class="form-control" data-required="required" data-message="Symbol is required">
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-actions">
+                        <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+                        <div class="col-md-8">
+                            <button type="button" class="btn btn-primary green" onclick="Currencies.Save()" data-plus-as-tab="false">Save</button>
+                            <button id="btnCancel" type="button" class="btn btn-default" onclick="Currencies.CustomClear()">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+
+
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet box grey-cascade">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Currencies Listing
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover" id="mainTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 8px;" class="no-sort">
+                                <input type="checkbox" class="group-checkable" data-set="#mainTable .checkboxes" />
+                            </th>
+                            <th>Name</th>
+                            <th>Short Name</th>
+                            <th>Symbol</th>
+                            <th style="width: 75px;" class="no-sort"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="6" class="center">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Manage/Currencies.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            Currencies.init();
+        });
+    </script>
+}

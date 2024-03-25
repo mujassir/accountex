@@ -1,0 +1,199 @@
+﻿@using AccountEx.Common;
+@using AccountEx.CodeFirst;
+
+@{
+    ViewBag.Title = "Bill of Lading Statuses";
+}
+@section PageTitle
+{
+    <h1 class="font-green-sharp bold hidden-print">Manage @ViewBag.Title</h1>
+}
+
+@using AccountEx.BussinessLogic;
+
+<div class="row hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-edit"></i>@ViewBag.Title
+                </div>
+                <div class="actions hide">
+                    <a href="javascript:;" onclick="BLStatuses.LoadVoucher('previous')" class="btn blue">
+                        <i class="fa fa-angle-left"></i>&nbsp;Back
+                    </a>
+                    <a href="javascript:;" onclick="BLStatuses.LoadVoucher('next')" class="btn blue">
+                        <i class="fa fa-angle-left"></i>&nbsp;Next 
+                    </a>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div id="mainform" class="form-horizontal" data-save="save">
+                    <input type="text" id="Id" class="hide" data-include-in-item="true" data-item-id="SaleId" />
+                    <input type="text" id="CreatedDate" class="hide ac-date" data-clear-type="date" />
+                    <input type="text" id="IsDeleted" class="hide" />
+                    <input type="text" id="PreVoucherNumber" class="hide" />
+                    <div class="form-body">
+                        <div class="hide alert alert-danger container-message">
+                            <i class="close" onclick="$(this).parent().hide();"></i>
+                            <strong></strong>
+                            <div class="form-body message-content"></div>
+                        </div>
+                        @*   <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">BL #</label>
+                            <div class="col-md-3 container-voucher">
+                                <label id="lblVoucherNumber" class="label label-info label-voucher hide"></label>
+                                <input type="text" class="form-control number" id="VoucherNumber" data-plus-as-tab="false" data-required="required" data-message="BL# is required" data-include-in-item="true">
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">Date</label>
+                            <div class="col-md-3">
+                                <input id="Date" type="text" class="form-control date-picker" data-clear-type='date' data-validate="true" data-required="required" data-message="Date is required" data-plus-as-tab="false" data-hide-dropdown="true" data-fiscal-date="true">
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Ship Name</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" name="text" id="ShipName" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label master-account-label" for="prefix">Shipper</label>
+                            <div class="col-md-1">
+                                <input type="text" class="form-control input-small" id="AccountCode" data-required="required" data-plus-as-tab="false" data-validate="true" data-message="Shipper Code is required" >
+                                <input type="hidden" id="AccountId" value="0" />
+
+                            </div>
+                            <div class="col-md-7">
+                                <input type="text" class="form-control" id="AccountName"  disabled="disabled">
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Shipper Address</label>
+                            <div class="col-md-8">
+                                <input class="form-control" type="text" name="text" id="Address" />
+                            </div>
+                        </div>*@
+                        <div class="row" data-save="false">
+                            <div class="col-md-12 saleitem-container scroller12" data-always-visible="1" data-rail-visible1="1">
+
+                                <table id="item-container" class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>BL No</th>
+                                            <th>Shipper</th>
+                                            <th>Ship</th>
+                                            <th>Supplier</th>
+                                            <th>Consignee</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody data-plus-as-tab="false">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <div class="btn-set pull-right">
+                            @*<button type="button" class="btn purple-plum" onclick="BLStatuses.New()">
+                                <i class="fa  fa-plus-circle"></i>
+                                New</button>*@
+                            <button type="button" class="btn btn-primary green" onclick="BLStatuses.Save()">
+                                <i class="fa fa-check"></i>
+                                Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+
+<div id="jsondata" class="hide">
+    <p id="data">@ViewBag.FormSetting</p>
+</div>
+
+
+<script type="text/html" id="template-item-header-row">
+    <tr class="head" data-id='{{BLNo}}' main-parent-row="true">
+        <td>{{BLNo}}
+            <input type="hidden" class="BLId" data-db-column="BLId">
+        </td>
+        <td colspan="1">{{ShipperName}}
+        </td>
+        <td>{{ShipName}}
+        </td>
+        <td>{{SupplierName}}
+        </td>
+        <td>{{ConigneeName}}
+        </td>
+        <td>
+            <select class="form-control StatusId" data-db-column="StatusId">
+                <option></option>
+                @foreach (var item in (List<AccountEx.CodeFirst.Models.VehicleStatuse>)ViewBag.Statuses)
+                {
+                    <option value="@item.Id" data-isfinal="@item.IsFinal">@item.Name</option>
+                }
+            </select>
+        </td>
+
+    </tr>
+</script>
+
+<script type="text/html" id="template-item">
+    <tr data-parent='{{BLNo}}'>
+        <td colspan='2'>
+            <input type="hidden" class="VehicleId" id="VehicleId" data-db-column="VehicleId">
+            <input type="hidden" class="Id" data-db-column="Id">
+            {{ChassisNo}}-{{RegNo}}-{{Manufacturer}}-{{Color}}-{{EnginePower}}</td>
+
+        <td>
+            <select class="form-control AssignedBranchId" data-db-column="AssignedBranchId" disabled="disabled">
+                <option></option>
+                @foreach (var item in (List<IdName>)ViewBag.Branches)
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+            </select>
+        </td>
+     
+
+        <td>
+
+            <input type="text" class="PurchasePrice form-control input-xsmall pull-left" data-db-column="PurchasePrice" disabled="disabled"></td>
+        <td>
+            <input type="text" class="SalePrice form-control input-xsmall" data-db-column="SalePrice" disabled="disabled"></td>
+        <td></td>
+    </tr>
+</script>
+@section FooterScript
+{
+    <style type="text/css">
+        .head {
+            background-color: rgba(0, 0, 255, 0.13) !important;
+            font-size: 20px;
+            text-align: center;
+            /* color: #fff; */
+            font-weight: bold;
+        }
+
+        #item-container thead tr th {
+            text-align: center;
+        }
+
+        /*.head input, .head select {
+                background-color: rgba(0, 0, 255, 0.13) !important;
+            }*/
+    </style>
+    <script src="~/Content/AppJS/Transaction/BLStatuses.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            BLStatuses.init();
+        });
+    </script>
+}
+

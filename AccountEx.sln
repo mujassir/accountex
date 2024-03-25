@@ -1,0 +1,93 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountEx.BussinessLogic", "Accountex.BussinessLogic\AccountEx.BussinessLogic.csproj", "{735FC16D-34FA-4813-9D44-5BC28F969B4C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountEx.CodeFirst", "AccountEx.CodeFirst\AccountEx.CodeFirst.csproj", "{103F5C0F-7829-427E-9181-408FA16A57CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountEx.Common", "AccountEx.Common\AccountEx.Common.csproj", "{2AC11C97-C09E-4023-AB64-122F899E2A1E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountEx.Entities", "AccountEx.Entities\AccountEx.Entities.csproj", "{7E57D333-96AA-4B16-BCFC-615677395F0A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountEx.Repositories", "AccountEx.Repositories\AccountEx.Repositories.csproj", "{BA6BAC4C-BAC4-4F6F-89D7-D75FB15B8311}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountEx.Web", "AccountEx.Web\AccountEx.Web.csproj", "{9DAB04D1-7A27-47BE-A64C-3AD8E85D9774}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WinServices", "WinServices", "{D2E82AA2-05ED-4672-A75E-7A2CBA7FE2DD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{8BF49DD4-871A-4D8C-8A6B-BED0721BBB47}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DAL", "DAL", "{BC1F1C59-BBD5-417D-969B-FA45D35CA283}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BLL", "BLL", "{4CBDB1B0-DDB1-4318-A4C8-B485A893386B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountEx.NotificationServices", "AccountEx.NotificationServices\AccountEx.NotificationServices.csproj", "{ED4F41BA-08A2-4B10-8850-2BD7BB0E1687}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmexNexusSyncServices", "AmexNexusSyncServices\AmexNexusSyncServices.csproj", "{628DE731-2AAA-406C-AFB3-60C0D0AB25C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountEx.DbMapping", "AccountEx.DbMapping\AccountEx.DbMapping.csproj", "{28A952C4-830F-4912-B627-383777BF8661}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{735FC16D-34FA-4813-9D44-5BC28F969B4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{735FC16D-34FA-4813-9D44-5BC28F969B4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{735FC16D-34FA-4813-9D44-5BC28F969B4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{735FC16D-34FA-4813-9D44-5BC28F969B4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{103F5C0F-7829-427E-9181-408FA16A57CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{103F5C0F-7829-427E-9181-408FA16A57CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{103F5C0F-7829-427E-9181-408FA16A57CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{103F5C0F-7829-427E-9181-408FA16A57CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2AC11C97-C09E-4023-AB64-122F899E2A1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AC11C97-C09E-4023-AB64-122F899E2A1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AC11C97-C09E-4023-AB64-122F899E2A1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AC11C97-C09E-4023-AB64-122F899E2A1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E57D333-96AA-4B16-BCFC-615677395F0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E57D333-96AA-4B16-BCFC-615677395F0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E57D333-96AA-4B16-BCFC-615677395F0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E57D333-96AA-4B16-BCFC-615677395F0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA6BAC4C-BAC4-4F6F-89D7-D75FB15B8311}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA6BAC4C-BAC4-4F6F-89D7-D75FB15B8311}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA6BAC4C-BAC4-4F6F-89D7-D75FB15B8311}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA6BAC4C-BAC4-4F6F-89D7-D75FB15B8311}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9DAB04D1-7A27-47BE-A64C-3AD8E85D9774}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DAB04D1-7A27-47BE-A64C-3AD8E85D9774}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DAB04D1-7A27-47BE-A64C-3AD8E85D9774}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DAB04D1-7A27-47BE-A64C-3AD8E85D9774}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED4F41BA-08A2-4B10-8850-2BD7BB0E1687}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED4F41BA-08A2-4B10-8850-2BD7BB0E1687}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED4F41BA-08A2-4B10-8850-2BD7BB0E1687}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED4F41BA-08A2-4B10-8850-2BD7BB0E1687}.Release|Any CPU.Build.0 = Release|Any CPU
+		{628DE731-2AAA-406C-AFB3-60C0D0AB25C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{628DE731-2AAA-406C-AFB3-60C0D0AB25C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{628DE731-2AAA-406C-AFB3-60C0D0AB25C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{628DE731-2AAA-406C-AFB3-60C0D0AB25C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28A952C4-830F-4912-B627-383777BF8661}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28A952C4-830F-4912-B627-383777BF8661}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28A952C4-830F-4912-B627-383777BF8661}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28A952C4-830F-4912-B627-383777BF8661}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{735FC16D-34FA-4813-9D44-5BC28F969B4C} = {4CBDB1B0-DDB1-4318-A4C8-B485A893386B}
+		{103F5C0F-7829-427E-9181-408FA16A57CF} = {BC1F1C59-BBD5-417D-969B-FA45D35CA283}
+		{2AC11C97-C09E-4023-AB64-122F899E2A1E} = {4CBDB1B0-DDB1-4318-A4C8-B485A893386B}
+		{7E57D333-96AA-4B16-BCFC-615677395F0A} = {BC1F1C59-BBD5-417D-969B-FA45D35CA283}
+		{BA6BAC4C-BAC4-4F6F-89D7-D75FB15B8311} = {BC1F1C59-BBD5-417D-969B-FA45D35CA283}
+		{9DAB04D1-7A27-47BE-A64C-3AD8E85D9774} = {8BF49DD4-871A-4D8C-8A6B-BED0721BBB47}
+		{ED4F41BA-08A2-4B10-8850-2BD7BB0E1687} = {D2E82AA2-05ED-4672-A75E-7A2CBA7FE2DD}
+		{628DE731-2AAA-406C-AFB3-60C0D0AB25C2} = {D2E82AA2-05ED-4672-A75E-7A2CBA7FE2DD}
+		{28A952C4-830F-4912-B627-383777BF8661} = {BC1F1C59-BBD5-417D-969B-FA45D35CA283}
+	EndGlobalSection
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+EndGlobal

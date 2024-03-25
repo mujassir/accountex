@@ -1,0 +1,145 @@
+﻿@{
+    Layout = "_Layout.cshtml";
+    ViewBag.Title = "NT Data Export";   
+}
+@using AccountEx.Common;
+@using AccountEx.BussinessLogic;
+<style type="text/css">
+    #tbldetail tfoot {
+        font-weight: bold;
+    }
+
+    .report-table tbody tr td:nth-last-child(1),
+    .report-table tbody tr td:nth-last-child(2),
+    .report-table tfoot tr td:nth-last-child(1),
+    .report-table tfoot tr td:nth-last-child(2) {
+        text-align: right;
+    }
+</style>
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">NT Data Export<small id="lblReportDate" class="pull-right small visible-print">Date: 24/10/2014</small></h1>
+}
+<div class="row hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-filter"></i>Report Filters
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                    @*<a href="javascript:;" class="remove"></a>*@
+                </div>
+                <div class="actions">
+                    <button class="btn blue hidden-print" onclick="window.print();"><i class="fa fa-print"></i>&nbsp;Print </button>
+                    &nbsp;&nbsp;
+                    
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal" data-save="Save">
+                    <input type="text" id="Id" class="hide" />
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">From Date</label>
+                            <div class="col-md-3">
+                                <div class="input-group input-medium">
+                                    <input class="date-picker form-control" type="text" id="FromDate" value="@SiteContext.Current.Fiscal.FromDate.ToString("dd/MM/yyyy")" data-validate="true"  data-required="required" data-fiscal-date="true">
+                                    <span class="input-group-btn date-icon">
+                                        <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">To Date</label>
+                            <div class="col-md-3">
+                                <div class="input-group input-medium">
+                                    <input class="date-picker form-control" type="text" value="@SiteContext.Current.Fiscal.ToDate.ToString("dd/MM/yyyy")" id="ToDate" data-validate="true" data-required="required" data-fiscal-date="true">
+                                    <span class="input-group-btn date-icon">
+                                        <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="prefix"></label>
+                        <div class="col-md-4">
+                            <div class="radio-list">
+                                <label class="radio-inline">
+                                    <input type="radio" name="order-type" value="@((byte)VoucherType.Sale)" checked="checked">
+                                    Sale
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="order-type" value="@((byte)VoucherType.Purchase)">
+                                    Purchase
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+                            <div class="col-md-8">
+                                @*<button id="btnShowReport" type="button" class="btn btn-primary">Show Report</button>*@
+                                <button id="btnExcelExport" type="button" class="btn btn-primary">Export To Excel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+<div class="row hide" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title hidden-print">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Report Data
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                </div>
+            </div>
+            <div class="tools pull-right">
+                @{ Html.RenderPartial("_Export_Button");  }
+            </div>
+            <div class="portlet-body">
+                <table id="tbldetail" class="table table-striped table-bordered table-hover report-table" data-export='true'>
+                    <thead>
+                        <tr>
+
+                            <th>Party Name</th>
+                            <th>DC Date</th>
+                            <th>Description</th>
+                            <th>Vehicle No</th>
+                            <th>Delivered To</th>
+                            <th>GatePassNo</th>
+                            <th>TotalMeters</th>
+                            <th>Kgs</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot></tfoot>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Reports/NTDataExport.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            NTDataExport.init();
+        });
+    </script>
+}

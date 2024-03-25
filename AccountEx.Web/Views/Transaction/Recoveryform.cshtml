@@ -1,0 +1,72 @@
+﻿@section PageTitle
+{
+    <h1 class="font-green-sharp bold">Manage Recovery Form</h1>
+}
+<div class="row-fluid">
+    <div class="span12">
+        <h2 class="page-title">&nbsp<span class="formtitle12">@Resources.Resource.StorePurchase</span> @*<small>manage and receive &nbsp<span class="formtitle12">Purchase</span></small>*@</h2>
+    </div>
+</div>
+
+<div class="row-fluid" id="masterdetail">
+    <section class="widget">
+       
+
+
+        <div class="body">
+
+            <div id="form-info" data-save='Save' class="form-horizontal label-left">
+                <input type="text" id="Id" class="hide" />
+                <input type="text" data-checktrack='false' value="false" id="IsReceived" class="hide" />
+                <div class="row-fluid">
+                   
+                    <div class="span8">
+                        <label class="control-label" for="prefix">@Resources.Resource.Date</label>
+                        <div class="controls controls-row">
+                            <input type="text" id="txtdate" data-validate="true" data-required="required" value="@DateTime.Now.ToString("MM/dd/yyyy")" data-message="@Resources.Resource.Date"  class="date-picker" data-hide-dropdown="true">
+                            &nbsp;&nbsp;
+                            <button type="button" class="btn btn-primary" onclick="LoadRecovery()">Load</button>
+                        </div>
+                    </div>
+
+                </div>
+                <fieldset>
+
+                    <legend class="section">@Resources.Resource.AddEdit&nbsp<span class="formtitle12">@Resources.Resource.OpeningBalance</span>
+                        <button type="submit" class="btn btn-danger pull-right" onclick="Save()">
+                            <span class="small-circle"><i class="icon-plus"></i></span>
+                            @Resources.Resource.Save
+                        </button>
+
+                    </legend>
+                    <table id="tbldetail" class="table table-hover table-bordered data-table">
+                        <thead>
+                            
+                            <tr>
+                                <th>Sr. No</th>
+                                <th>Customer Name</th>
+                                <th>Previous Balance</th>
+                                <th>Today Sale</th>
+                                <th>Today Balance</th>
+                                <th class="no-sort">Received</th>
+                                <th>Net Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </fieldset>
+
+            </div>
+        </div>
+    </section>
+</div>
+<div id="jsondata" class="hide">
+    @* <input id="FormSetting"  type="text" value="@ViewBag.FormSettings" />*@
+    <input id="OpeningBalances"  type="text" value="@ViewBag.OpeningBalances" />
+    <input id="Voucher"  type="text" value="@ViewBag.Voucher" />
+
+</div>
+<script src="~/Scripts/app/recovery.js"></script>
+<script src="~/Content/Urdu/jquery.UrduEditor.js"></script>
+<link href="~/Content/Urdu/UrduEditor.css" rel="stylesheet" />

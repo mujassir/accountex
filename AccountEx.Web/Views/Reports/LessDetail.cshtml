@@ -1,0 +1,185 @@
+﻿@model AccountEx.Web.Models.GeneralLedgerModel
+@using AccountEx.CodeFirst.Models
+@using AccountEx.Common
+@using AccountEx.Repositories;
+@using AccountEx.BussinessLogic;
+@{
+    Layout = "_Layout.cshtml";
+    ViewBag.Title = "Less Detail";   
+}
+@{
+    var ParentAcc = new Account();
+    ParentAcc = new AccountRepository().GetById(SettingManager.CustomerHeadId);
+    var Accounts = new AccountRepository().GetChildrenTo3RdLevelDetail(ParentAcc.Id);
+   
+}
+<style type="text/css">
+    #tbldetail tfoot {
+        font-weight: bold;
+    }
+
+    @@media print {
+        div.table-scrollable {
+            overflow: visible !important;
+            font-size: 16px;
+        }
+    }
+
+    /*.report-table tbody tr td:nth-last-child(1),
+    .report-table tbody tr td:nth-last-child(2),
+    .report-table tfoot tr td:nth-last-child(1),
+    .report-table tfoot tr td:nth-last-child(2) {
+        text-align: left;
+    }*/
+
+    /*#report-table tbody tr td:nth-child(2) {
+        text-align: right;
+    }*/
+
+
+    #report-table thead tr td table.innertable {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    table.innertable thead tr {
+        border: 1px solid #ccc;
+        padding: 7px;
+    }
+
+    td.group-head {
+        text-align: center;
+        font-size: 16px;
+        /*background: aliceblue;*/
+    }
+
+    /*.sub-head {
+        text-align: left;
+    }*/
+</style>
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold"><span class="main-title">Area Wise Sale Report</span>
+        @*<small id="lblReportDate" class="pull-right small visible-print">Date: 24/10/2014</small>*@</h1>
+}
+<div class="row hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-filter"></i>Report Filters
+                </div>
+                <div class="actions">
+                    <button class="btn blue hidden-print" onclick="window.print();"><i class="fa fa-print"></i>&nbsp;Print </button>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal" data-save="Save">
+                    <input type="text" id="Id" class="hide" />
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">From Date</label>
+                            <div class="col-md-3">
+                                <div class="input-group input-medium">
+                                    <input class="date-picker form-control date-picker" type="text" id="FromDate" data-validate="true" data-required="required" value="@SiteContext.Current.Fiscal.FromDate.ToString(AppSetting.DateFormat)" data-message="From Date"  data-fiscal-date="true" >
+
+                                    <span class="input-group-btn date-icon">
+                                        <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">To Date</label>
+                            <div class="col-md-3">
+                                <div class="input-group input-medium">
+                                    <input class="date-picker form-control date-picker" type="text" id="ToDate" data-validate="true" data-required="required" value="@SiteContext.Current.Fiscal.ToDate.ToString(AppSetting.DateFormat)" data-message="To Date"  data-fiscal-date="true" >
+                                    <span class="input-group-btn date-icon">
+                                        <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            <label class="col-md-2 control-label master-account-label" for="prefix">Area</label>
+                            <div class="col-md-3">
+                                <select class="form-control select2" id="AreaAccountId">
+                                    <option value="NULL">All</option>
+                                    @foreach (var item in Accounts)
+                                    {
+                                        <option value="@item.Id">@(item.Name)</option>
+                                    }
+                                </select>
+
+                            </div>
+
+                            <label class="col-md-2 control-label" for="prefix">Report Type</label>
+                            <div class="col-md-2">
+                                <select id="ReportType" class="select2 form-control">
+
+                                    <option value="1">Less</option>
+                                    <option value="2">Standard</option>
+                                    <option value="3">Sampling</option>
+                                    <option value="4">Promotion</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <div class="form-group">
+
+                            <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+                            <div class="col-md-8">
+                                <button id="btnShowReport" type="submit" class="btn btn-primary">Show Report</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="tools pull-right">
+                @{ Html.RenderPartial("_Export_Button");  }
+            </div>
+            <div class="portlet-body">
+                <div class="table-scrollable">
+                    <table class="table table-striped table-bordered table-hover" id="report-table" data-export='true'>
+                        <thead>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="11" class="align-center">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+
+<div id="jsondata" class="hide">
+    <input id="FormSetting"  type="text" value="@ViewBag.FormSetting" />
+</div>
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Reports/LessDetail.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            LessDetail.init();
+        });
+    </script>
+}
+

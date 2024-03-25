@@ -1,0 +1,371 @@
+﻿@using AccountEx.Common
+@using AccountEx.BussinessLogic;
+@{
+    ViewBag.Title = "Transfers";   
+}
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">Manage Transfers</h1>
+}
+
+<!-- END PAGE HEADER-->
+<div class="row" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-edit"></i>Add/Edit Transfers
+                </div>
+                <div class="actions hide">
+                    <a href="javascript:;" onclick="Transfers.ListView()" class="btn blue">
+                        <i class="fa fa-angle-left"></i>&nbsp;Back to list 
+                    </a>
+                </div>
+                <div class="tools hide">
+                    <a href="javascript:;" class="collapse"></a>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal" data-save="save">
+                    <input type="text" id="Id" class="hide" />
+                    <input type="text" id="TransferByTenantAccountId" class="hide" />
+                    <input type="text" id="TransferToTenantAccountId" class="hide" />
+                    <input type="text" id="ShopId" class="hide" />
+                    <input type="text" id="VoucherNumber" class="hide" />
+                    <input type="text" id="TempCode" class="hide" />
+                    <div class="form-body">
+                        <div class="hide alert alert-danger container-message">
+                            <i class="close" onclick="$(this).parent().hide();"></i>
+                            <strong></strong>
+                            <div class="form-body message-content"></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="portlet">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            Transfer by
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label class="col-md-4 control-label" for="prefix">Account Code</label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control " id="TransferByAccountCode" data-required="required" data-message="Transfer By Account Code is required" data-plus-as-tab="false" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Tenant Name</label>
+                                    <div class="col-md-6">
+                                        <input disabled type="text" class="form-control" id="TransferByTenantName" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">CNIC No.</label>
+                                    <div class="col-md-6">
+                                        <input disabled type="text" class="form-control" id="TransferByCNIC" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Business/Brand</label>
+                                    <div class="col-md-6">
+                                        <input disabled type="text" class="form-control " id="TransferByBusiness" data-plus-as-tab="false" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">No. of Partners</label>
+                                    <div class="col-md-6">
+                                        <input disabled class="form-control number" type="text" name="text" id="TransferByNumberOfPartners" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Contact No</label>
+                                    <div class="col-md-6">
+                                        <input disabled type="text" class="form-control " id="TransferByContactNo" data-plus-as-tab="false" />
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Single</label>
+                                    <div class="col-md-6">
+                                        <input disabled class="form-control number" type="text" name="text" id="TransferBySingle" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Partnership</label>
+                                    <div class="col-md-6">
+                                        <input disabled class="form-control" type="text" name="text" id="TransferByPartnership" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="portlet">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            Transferred To
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label class="col-md-4 control-label" for="prefix">Account Code</label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control " id="TransferToAccountCode" data-required="required" data-message="Transfer To Account Code is required" data-plus-as-tab="false" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Tenant Name</label>
+                                    <div class="col-md-6">
+                                        <input disabled type="text" class="form-control" id="TransferToTenantName" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">CNIC No.</label>
+                                    <div class="col-md-6">
+                                        <input disabled type="text" class="form-control" id="TransferToCNIC" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+
+                                    <label class="col-md-4 control-label" for="prefix">Business/Brand</label>
+                                    <div class="col-md-6">
+                                        <input disabled type="text" class="form-control " id="TransferToBusiness" data-plus-as-tab="false" />
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">No. of Partners</label>
+                                    <div class="col-md-6">
+                                        <input disabled class="form-control number" type="text" name="text" id="TransferToNumberOfPartners" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Contact No</label>
+                                    <div class="col-md-6">
+                                        <input disabled type="text" class="form-control " id="TransferToContactNo" data-plus-as-tab="false" />
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Single</label>
+                                    <div class="col-md-6">
+                                        <input disabled class="form-control number" type="text" name="text" id="TransferToSingle" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Partnership</label>
+                                    <div class="col-md-6">
+                                        <input disabled class="form-control" type="text" name="text" id="TransferToPartnership" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="portlet">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            Shop Info
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Shop No</label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control " id="ShopNo" data-plus-as-tab="false" disabled="disabled" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Block</label>
+                                    <div class="col-md-6">
+                                        <input disabled type="text" class="form-control " id="Block" data-plus-as-tab="false" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Area(sqft)</label>
+                                    <div class="col-md-6">
+                                        <input disabled type="text" class="form-control" id="TotalArea" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">North</label>
+                                    <div class="col-md-6">
+                                        <input disabled class="form-control number" type="text" name="text" id="North" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">South</label>
+                                    <div class="col-md-6">
+                                        <input disabled class="form-control" type="text" name="text" id="South" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">East</label>
+                                    <div class="col-md-6">
+                                        <input disabled class="form-control number" type="text" name="text" id="East" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">West</label>
+                                    <div class="col-md-6">
+                                        <input disabled class="form-control" type="text" name="text" id="West" />
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="portlet">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            Agreement Info
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Agreement PD</label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" id="AgreementPD" />
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="prefix">Yearly Inc.</label>
+                                    <div class="col-md-6">
+                                        <input class="form-control" type="text" name="text" id="YearlyInc" value="10" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-6 scroller12" data-always-visible="1" data-rail-visible1="1">
+                                <div class="portlet">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <i class="fa fa-list"></i>Transfer Charges 
+                                        </div>
+                                    </div>
+                                </div>
+                                <table id="TransferCharges" class="table table-bordered griditem">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 40%;">Transfer Charges</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody data-plus-as-tab="false">
+                                        <tr>
+                                            <td><input type='text' class='hide TransferChargesName' id="TransferChargesName" value='Transfer Charges'>Transfer Charges</td>
+                                            <td><input type='text' class='TransferChargesAmount' id="TransferChargesAmount"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-6 scroller12" data-always-visible="1" data-rail-visible1="1">
+                                <div class="portlet">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <i class="fa fa-list"></i>Processing Fee 
+                                        </div>
+                                    </div>
+                                </div>
+                                <table id="ProcessingFee" class="table table-bordered griditem">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 40%;">Processing Fee </th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody data-plus-as-tab="false">
+                                        <tr>
+                                            <td><input type='text' class='hide ProcessingFee' value='Processing Fee for Seller'>Processing Fee for Seller</td>
+                                            <td><input type='text' class='SellerFee' id="SellerFee"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type='text' class='hide ProcessingFee' value='Processing Fee for Buyer'>Processing Fee for Buyer</td>
+                                            <td><input type='text' class='BuyerFee' id="BuyerFee"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-actions">
+                        <div class="btn-set pull-left">
+                            <a href="javascript:;" onclick="Transfers.LoadVoucher('first')" class="btn blue tooltips disabled first" data-original-title="First">
+                                <i class="fa fa-angle-double-left"></i>
+                            </a>
+                            <a href="javascript:;" onclick="Transfers.LoadVoucher('previous')" class="btn blue tooltips disabled previous" data-original-title="Previous">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a href="javascript:;" onclick="Transfers.LoadVoucher('next')" class="btn blue tooltips disabled next" data-original-title="Next">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                            <a href="javascript:;" onclick="Transfers.LoadVoucher('last')" class="btn blue tooltips disabled last" data-original-title="Last">
+                                <i class="fa fa-angle-double-right"></i>
+                            </a>
+                        </div>
+                        <div class="btn-set pull-right">
+                            @if (!SiteContext.Current.Fiscal.IsClosed)
+                            {
+                                <button type="button" class="btn purple-plum" onclick="Transfers.New()">
+                                    <i class="fa  fa-plus-circle"></i>
+                                    New</button>
+                                <button type="button" class="btn btn-primary green" onclick="Transfers.Save()">
+                                    <i class="fa fa-check"></i>
+                                    Save</button>
+                                <button id="btndelete" type="button" class="btn red" onclick="Transfers.Delete()">
+                                    <i class="fa fa-trash-o"></i>
+                                    Delete</button>
+                            }
+                            <button id="btnprint" type="button" class="btn yellow" onclick="Transfers.Print()">
+                                <i class="fa fa-print"></i>
+
+                                Print</button>
+                            <button type="button" class="btn blue" onclick="window.location='@(Url.Content(SettingManager.DashBoardUrl))'">
+                                <i class="fa  fa-times-circle"></i>
+
+                                Close</button>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+<div id="jsondata" class="hide">
+    <input id="FormSetting"  type="text" value="@ViewBag.FormSetting" />
+</div>
+
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Manage/Transfers.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            Transfers.init();
+        });
+    </script>
+}

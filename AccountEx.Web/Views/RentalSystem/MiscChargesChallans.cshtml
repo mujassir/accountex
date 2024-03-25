@@ -1,0 +1,921 @@
+﻿@using AccountEx.Common
+@using AccountEx.BussinessLogic;
+
+@{ 
+    ViewBag.Title = "Miscellaneous Charges Challans";
+}
+@{ 
+    var years = Enumerable.Range(DateTime.Now.Year - 5, 15).ToList();
+    var monthslist = new List<IdName>();
+    var months = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.MonthNames;
+    for (int i = 0; i < months.Length; i++)
+    {
+        if (i <= 11)
+        {
+            monthslist.Add(new IdName() { Name = months[i], Id = i + 1 });
+        }
+
+    }
+    var currentmonth = DateTime.Now.Month;
+}
+
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold hidden-print">Craete Misc Challans</h1>
+}
+<!-- END PAGE HEADER-->
+<div class="row hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title hide">
+                <div class="caption">
+                    <i class="fa fa-edit"></i>Add/Edit Challans
+                </div>
+
+
+                <div class="tools hide">
+                    <a href="javascript:;" class="collapse"></a>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal" data-save="save">
+
+                    <div class="form-body">
+
+
+                        <div class="row">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label" for="prefix">Tenants</label>
+                                    <div class="col-md-10">
+                                        <select id="RentAgreementId" class="form-control select2" data-required="required" data-message="Tenant is required">
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label" for="prefix">Charge</label>
+                                    <div class="col-md-10">
+                                        <select id="ChargeId" class="form-control select2" data-required="required" data-message="Charge is required">
+                                            <option></option>
+                                            @foreach (var p in (List<IdName>)ViewBag.Charges)
+                                            {
+                                                <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                            }
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label" for="prefix">Month</label>
+                                    <div class="col-md-3">
+                                        <select id="Month" class="form-control select2" data-required="required" data-message="Month is required.">
+                                            <option></option>
+                                            @foreach (var item in monthslist)
+                                            {
+                                                <option value="@item.Id">@item.Name</option>
+                                            }
+                                        </select>
+
+                                    </div>
+                                    <label class="col-md-2 control-label" for="prefix">Year</label>
+                                    <div class="col-md-2">
+                                        <select id="Year" class="form-control select2" data-required="required" data-message="year is required.">
+                                            <option></option>
+                                            @foreach (var year in years)
+                                            { 
+                                                <option>@year</option>
+                                            }
+                                        </select>
+
+                                    </div>
+
+                                    <label class="col-md-1 control-label" for="prefix">Amount</label>
+                                    <div class="col-md-2">
+                                        <input type="hidden" id="EntryType" value="@((byte)EntryType.Manual)" data-clear="false" />
+                                        <input type="hidden" id="TransactionType" value="@((byte)VoucherType.MiscCharges)" data-clear="false" />
+                                        <input type="hidden" id="AmountPerInstallment" />
+                                        <input type="text" class="form-control input-xsmall num3" id="NetAmount" data-plus-as-tab="false" data-required="required" data-message="amount is required" />
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label class="col-md-2 control-label" for="prefix">Due Date</label>
+                                    <div class="col-md-3">
+                                        <input id="DueDate" type="text" class="form-control date-picker" data-required="required" data-message="Due date is required" data-plus-as-tab="false" data-clear-type="date" data-fiscal-date="true">
+                                    </div>
+                                    <label class="col-md-2 control-label" for="prefix">Fined Person</label>
+                                    <div class="col-md-5">
+                                        <input type="text" class="form-control" id="FinedPerson" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label class="col-md-2 control-label" for="prefix">Remarks</label>
+                                    <div class="col-md-10">
+                                        <input type="text" class="form-control" id="Remarks" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                </div>
+
+
+
+                                <div class="btn-set pull-right">
+                                    @if (!SiteContext.Current.Fiscal.IsClosed)
+                                    {
+                                        <button type="button" class="btn purple-plum" onclick="MiscChargesChallans.New()">
+                                            <i class="fa  fa-plus-circle"></i>
+                                            New</button>
+                                        <button type="button" class="btn btn-primary green" onclick="MiscChargesChallans.Save()">
+                                            <i class="fa fa-check"></i>
+                                            Create Chalaln</button>
+                               
+                                    }
+
+                                    <button type="button" class="btn blue" onclick="window.location='@(Url.Content(SettingManager.DashBoardUrl))'">
+                                        <i class="fa  fa-times-circle"></i>
+
+                                        Close</button>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-1"></div>
+
+                            <div class="col-md-8 hide" id="div-table">
+                                <div class="portlet box light">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <i class="fa fa-list"></i>Existing Challans
+                                        </div>
+
+                                        <div class="tools">
+                                            <a href="javascript:;" class="collapse"></a>
+                                        </div>
+                                    </div>
+
+                                    <div class="portlet-body">
+                                        <div class="hide alert alert-danger container-message">
+                                            <i class="close" onclick="$(this).parent().hide();"></i>
+                                            <strong></strong>
+                                            <div class="form-body message-content"></div>
+                                        </div>
+                                        <table class="table table-striped table-bordered table-hover" id="mainTable">
+                                            <thead>
+                                                <tr>
+
+                                                    <th>Challan No.</th>
+                                                    <th>Due Date</th>
+                                                    <th>Total Amount</th>
+                                                    <th>Status</th>
+
+                                                    <th style="width: 150px;" class="no-sort"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="5"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+
+
+<div id="jsondata" class="hide">
+    <input id="FormSetting"  type="text" value="@ViewBag.FormSetting" />
+</div>
+
+<style>
+    @@media print {
+        .mainheader {
+            padding-bottom: 20px;
+        }
+
+        .bdetails td, .bdetails th {
+            border: 1px solid;
+        }
+
+        .tbl-schedule {
+            height: 101px;
+        }
+
+        label, th, span {
+            padding-left: 4px;
+            padding-right: 4px;
+        }
+
+        .line-cutter {
+            margin: 0;
+            border-top: dashed 1px;
+            margin-bottom: 50px;
+            margin-top: 50px;
+        }
+
+        .div-report {
+            font-size: 12px;
+        }
+
+        .barcode {
+            height: 70px;
+        }
+
+        .solid {
+            border: 1px solid;
+        }
+
+
+
+        .barcode {
+            margin-left: 2px;
+            width: 210px;
+        }
+
+        .advertisement {
+            height: 150px;
+            width: 220px;
+            margin-left: 2px;
+            margin-top: -5px;
+        }
+
+        .inline {
+            display: inline-block;
+        }
+
+        .detail-head {
+            text-align: center;
+            margin: 0px;
+            margin-bottom: 4px;
+        }
+
+        .bill-details {
+            float: left;
+            width: 64%;
+            margin-top: -25px;
+            font-size: 10px;
+            margin-left: 12px;
+        }
+
+        .bank {
+            font-size: 11px;
+            margin-left: 175px;
+        }
+
+        .copy {
+            font-size: 11px;
+            float: right;
+            margin-right: 50px;
+        }
+
+        .lbl-cusID {
+            font-weight: bold;
+            float: right;
+            padding-right: 50px;
+        }
+
+        .headTopMargin {
+            margin: 0px;
+            margin-top: -8px;
+        }
+
+        .header-container {
+        }
+
+            /*.header-container p {
+            margin: 0px;
+        }*/
+
+            .header-container .div-left {
+                float: left;
+                width: 72%;
+            }
+
+                .header-container .div-left .line {
+                    margin: -8px;
+                }
+
+                .header-container .div-left .line3 {
+                    margin: -14px;
+                }
+
+            .header-container .div-right {
+                float: right;
+                width: 28%;
+            }
+
+                .header-container .div-right p {
+                    margin-top: -8px;
+                }
+
+                .header-container .div-right .copy-text {
+                    margin-top: -10px;
+                }
+
+                .header-container .div-right .cutomerId {
+                    margin-top: 20px !important;
+                }
+
+        .div-report .report-summary-info span.color-green, .div-report .report-summary-info label.color-green, .div-report .report-summary-info label.color-green *, .div-report .report-summary-info span.color-green * {
+            color: green !important;
+        }
+
+        .div-report report-summary-info span.color-red, .div-report .report-summary-info label.color-red, .div-report .report-summary-info label.color-red *, .div-report .report-summary-info span.color-red * {
+            color: red !important;
+        }
+    }
+</style>
+<div style="height: 40px;"></div>
+<div class="div-report visible-print">
+    <div class="row mainheader">
+        <div class="align-center header-container">
+            <div class="div-left">
+                <label class="bold hide" style="font-size: 12px">SOLDIERS WELFARE ORGANISATION LAHORE</label>
+                <div class="line">
+                    <label class="bold" style="font-size: 12px; text-transform: uppercase">Fortress Stadium Lahore (SWOL)</label>
+                </div>
+
+                <div class="line">
+
+                    <label class="bold" style="font-size: 12px">Account No.<label class="bold">0111650500850</label></label>
+                </div>
+                <div class="line3">
+
+                    <label class="bold" style="font-size: 12px">Askari Bank Limited, 16-Tufail Road, Lahore Cantt.</label>
+
+                </div>
+            </div>
+            <div class="div-right">
+                <p class="bold copy-text">
+                    Account Branch Copy
+                </p>
+                <p class="bold customerId">
+                    Customer ID:
+                    <label class="lblShopCode bold"></label>
+
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="bill-details">
+        <table class="report-summary-info full-width ">
+            <tbody>
+                <tr>
+                    <td colspan="2" class="solid" style="background-color: #E9E8E7;">
+                        <span>
+                            <label><b>Shop/Office No.</b> </label>
+                            &nbsp;<span class="lblShopNo label-data inline"></span></span>
+                        <span>
+                            <label style="margin-left: 105px;"><b>Block:</b></label>&nbsp;<span class="lblBlock label-data inline"></span></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="solid" style="background-color: #E9E8E7;" colspan="2">
+                        <span>
+                            <label><b>Tenant Name:</b> </label>
+                            &nbsp;<span class="lblFinedPerson label-data inline"></span></span></td>
+                </tr>
+                <tr>
+                    <td class="solid" style="width: 50%">
+                        <span>
+                            <label><b>Business:</b> </label>
+                            &nbsp;<span class="lblBusiness label-data inline"></span></span></td>
+                    <td class="solid">
+                        <span>
+                            <label><b>Amount Due:</b> </label>
+                            &nbsp;<span class="lblNetAmount label-data inline"></span></span></td>
+                </tr>
+                <tr>
+                    <td class="solid">
+                        <span>
+                            <label><b>Brand:</b> </label>
+                            &nbsp;<span class="lblBrand label-data inline"></span></span></td>
+
+                    <td class="solid">
+                        <span class="color-green">
+                            <label><b>Due Date:</b> </label>
+                            &nbsp;<span class="lblDueDate label-data inline"></span></span></td>
+                </tr>
+                <tr>
+                    <td class="solid">
+                        <span>
+                            <label><b>Month:</b> </label>
+                            &nbsp;<span class="lblMonth label-data inline"></span></span></td>
+                    <td class="solid"></td>
+                </tr>
+
+            </tbody>
+        </table>
+        <div style="margin-top: 4px;">
+            <p class="bold solid detail-head">
+                <label class="Charges bold"></label>
+                Details:
+                
+            </p>
+            <table class=" full-width ">
+                <tbody>
+                    <tr>
+                        <!-- This is for Rent -->
+                        <td colspan="2" style="width: 50%">
+                            <table class="full-width bdetails tbl-rent">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <label class="lblRemarks Charges bold"></label>
+                                        </th>
+                                        <th class="align-center">Amount</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <td><span class="inline">Amount Due</span></td>
+                                        <td class="align-right"><span class="lblNetAmount label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label></label>
+                                            &nbsp;</td>
+                                        <td class="align-right"><span class="lblHeld label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label></label>
+                                            &nbsp;</td>
+                                        <td class="align-right"><span class="lblBalance label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        @* <td>
+                                            <label class="CurrentInstallment" id="currinslbl">Current Installment</label>&nbsp;</td>
+                                        <td><span class="lblInstallmentAmount label-data inline" ></span></td>*@
+                                        <td>
+                                            <label></label>
+                                            &nbsp;</td>
+                                        <td class="align-right"><span class="lblNoofInstallments label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>Amount Payable</label>&nbsp;</td>
+                                        <td class="align-right"><span class="lblNetAmount label-data inline"></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                        <td>&nbsp</td>
+                        <!-- This is for Arrears -->
+                        <td colspan="2">
+                            <table class="full-width bdetails tbl-schedule">
+                                <thead>
+                                    <tr>
+                                        <th>Arrears</th>
+                                        <th class="align-center">Amount</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <label></label>
+                                            &nbsp;</td>
+                                        <td class="align-right"><span class="lblInstallmentPending label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label class="CurrentInstallment12"></label>
+                                            &nbsp;</td>
+                                        <td class="align-right"><span class="label-data currinslbl inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label></label>
+                                            &nbsp;</td>
+                                        <td class="align-right"><span class=" label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div style="margin-top: -20.5px;">
+        <img src="@("../upload/ApplicationLogo/" + SiteContext.Current.UploadFolder + "/" + SettingManager.BillLogo)" class="advertisement" /><br />
+        <img class="barcode" />
+    </div>
+</div>
+
+<hr class="visible-print line-cutter" />
+<div class="div-report visible-print">
+    <div class="row mainheader">
+        <div class="align-center header-container">
+            <div class="div-left">
+                <label class="bold hide" style="font-size: 12px">SOLDIERS WELFARE ORGANISATION LAHORE</label>
+                <div class="line">
+                    <label class="bold" style="font-size: 12px; text-transform: uppercase">Fortress Stadium Lahore (SWOL)</label>
+                </div>
+
+                <div class="line">
+
+                    <label class="bold" style="font-size: 12px">Account No.<label class="bold">0111650500850</label></label>
+                </div>
+                <div class="line3">
+
+                    <label class="bold" style="font-size: 12px">Askari Bank Limited, 16-Tufail Road, Lahore Cantt.</label>
+
+                </div>
+            </div>
+            <div class="div-right">
+                <p class="bold copy-text">
+                    Tenant Copy
+                </p>
+                <p class="bold customerId">
+                    Customer ID:
+                    <label class="lblShopCode bold"></label>
+
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="bill-details">
+        <table class="report-summary-info full-width ">
+            <tbody>
+                <tr>
+                    <td colspan="2" class="solid" style="background-color: #E9E8E7;">
+                        <span>
+                            <label><b>Shop/Office No.</b> </label>
+                            &nbsp;<span class="lblShopNo label-data inline"></span></span>
+                        <span>
+                            <label style="margin-left: 105px;"><b>Block:</b></label>&nbsp;<span class="lblBlock label-data inline"></span></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="solid" style="background-color: #E9E8E7;" colspan="2">
+                        <span>
+                            <label><b>Tenant Name:</b> </label>
+                            &nbsp;<span class="lblFinedPerson label-data inline"></span></span></td>
+                </tr>
+                <tr>
+                    <td class="solid" style="width: 50%">
+                        <span>
+                            <label><b>Business:</b> </label>
+                            &nbsp;<span class="lblBusiness label-data inline"></span></span></td>
+                    <td class="solid">
+                        <span>
+                            <label><b>Amount Due:</b> </label>
+                            &nbsp;<span class="lblNetAmount label-data inline"></span></span></td>
+                </tr>
+                <tr>
+                    <td class="solid">
+                        <span>
+                            <label><b>Brand:</b> </label>
+                            &nbsp;<span class="lblBrand label-data inline"></span></span></td>
+
+                    <td class="solid">
+                        <span class="color-green">
+                            <label><b>Due Date:</b> </label>
+                            &nbsp;<span class="lblDueDate label-data inline"></span></span></td>
+                </tr>
+                <tr>
+                    <td class="solid">
+                        <span>
+                            <label><b>Month:</b> </label>
+
+                            &nbsp;<span class="lblMonth label-data inline"></span></span></td>
+                    <td class="solid"></td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="margin-top: 4px;">
+            <p class="bold solid detail-head">
+                <label class="Charges bold"></label>
+                Details:
+                
+            </p>
+            <table class=" full-width ">
+                <tbody>
+                    <tr>
+                        <!-- This is for Rent -->
+                        <td colspan="2" style="width: 50%">
+                            <table class="full-width bdetails tbl-rent">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <label class="lblRemarks Charges bold"></label>
+                                        </th>
+                                        <th class="align-center">Amount</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <td><span class="inline">Amount Due</span></td>
+                                        <td class="align-right"><span class="lblNetAmount label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label></label>
+                                            &nbsp;</td>
+                                        <td class="align-right"><span class="lblHeld label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label></label>
+                                            &nbsp;</td>
+                                        <td class="align-right"><span class="lblBalance label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label></label>
+                                            &nbsp;</td>
+                                        <td class="align-right"><span class="lblNoofInstallments label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>Amount Payable</label>&nbsp;</td>
+                                        <td class="align-right"><span class="lblNetAmount label-data inline"></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                        <td>&nbsp</td>
+                        <!-- This is for Arrears -->
+                        <td colspan="2">
+                            <table class="full-width bdetails tbl-schedule">
+                                <thead>
+                                    <tr>
+                                        <th>Arrears</th>
+                                        <th class="align-center">Amount</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <label></label>
+                                            &nbsp;</td>
+                                        <td class="align-right"><span class="lblInstallmentPending label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label class="CurrentInstallment12"></label>
+                                            &nbsp;</td>
+                                        <td class="align-right"><span class="label-data currinslbl inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label></label>
+                                            &nbsp;</td>
+                                        <td class="align-right"><span class="label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div style="margin-top: -20.5px;">
+        <img src="@("../upload/ApplicationLogo/" + SiteContext.Current.UploadFolder + "/" + SettingManager.BillLogo)" class="advertisement" /><br />
+        <img class="barcode" />
+    </div>
+</div>
+
+<hr class="visible-print line-cutter" />
+<div class="div-report visible-print">
+    <div class="row mainheader">
+        <div class="align-center header-container">
+            <div class="div-left">
+                <label class="bold hide" style="font-size: 12px">SOLDIERS WELFARE ORGANISATION LAHORE</label>
+                <div class="line">
+                    <label class="bold" style="font-size: 12px; text-transform: uppercase">Fortress Stadium Lahore (SWOL)</label>
+                </div>
+
+                <div class="line">
+
+                    <label class="bold" style="font-size: 12px">Account No.<label class="bold">0111650500850</label></label>
+                </div>
+                <div class="line3">
+
+                    <label class="bold" style="font-size: 12px">Askari Bank Limited, 16-Tufail Road, Lahore Cantt.</label>
+
+                </div>
+            </div>
+            <div class="div-right">
+                <p class="bold copy-text">
+                    Bank Copy
+                </p>
+                <p class="bold customerId">
+                    Customer ID:
+                    <label class="lblShopCode bold"></label>
+
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="bill-details">
+        <table class="report-summary-info full-width ">
+            <tbody>
+                <tr>
+                    <td colspan="2" class="solid" style="background-color: #E9E8E7;">
+                        <span>
+                            <label><b>Shop/Office No.</b> </label>
+                            &nbsp;<span class="lblShopNo label-data inline"></span></span>
+                        <span>
+                            <label style="margin-left: 50px;"><b>Block:</b></label>&nbsp;<span class="lblBlock label-data inline"></span></span>
+                        <span>
+                            <label><b>Billing Month:</b> </label>
+                            &nbsp;<span class="lblMonth label-data inline"></span></span>
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <td class="solid" style="background-color: #E9E8E7;">
+                        <span>
+                            <label><b>Tenant Name:</b> </label>
+                            &nbsp;<span class="lblFinedPerson label-data inline"></span></span></td>
+                    <td class="solid">
+                        <span class="color-green">
+                            <label><b>Due Date:</b> </label>
+                            &nbsp;<span class="lblDueDate label-data inline"></span></span></td>
+                </tr>
+                <tr>
+
+                    <td class="solid">
+                        <span>
+                            <label><b>Amount Due:</b> </label>
+                            &nbsp;<span class="lblNetAmount label-data inline"></span></span></td>
+                    <td class="solid">
+                        <span class="color-red">
+                            <label><b>Amount After Due Date:</b> </label>
+                            &nbsp;<span class="lblNetAmount label-data inline"></span></span></td>
+                </tr>
+
+
+
+            </tbody>
+        </table>
+        <div class="hide" style="margin-top: 4px;">
+            <p class="bold solid detail-head">
+                <label class="Charges bold"></label>
+                Details:
+                
+            </p>
+            <table class=" full-width ">
+                <tbody>
+                    <tr>
+                        <!-- This is for Rent -->
+                        <td colspan="2" style="width: 50%">
+                            <table class="full-width bdetails tbl-rent">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <label class="lblRemarks Charges bold"></label>
+                                        </th>
+                                        <th class="align-center">Amount</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <td><span class="inline">Amount Due</span></td>
+                                        <td class="align-right"><span class="lblNetAmount label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label></label>
+                                            &nbsp;</td>
+                                        <td class="align-right"><span class="lblHeld label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label></label>
+                                            &nbsp;</td>
+                                        <td class="align-right"><span class="lblBalance label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label></label>
+                                            &nbsp;</td>
+                                        <td class="align-right"><span class="lblNoofInstallments label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>Amount Payable</label>&nbsp;</td>
+                                        <td class="align-right"><span class="lblNetAmount label-data inline"></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                        <td>&nbsp</td>
+                        <!-- This is for Arrears -->
+                        <td colspan="2">
+                            <table class="full-width bdetails tbl-schedule">
+                                <thead>
+                                    <tr>
+                                        <th>Arrears</th>
+                                        <th class="align-center">Amount</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <label></label>
+                                            &nbsp;</td>
+                                        <td class="align-right"><span class="lblInstallmentPending label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label class="CurrentInstallment12"></label>
+                                            &nbsp;</td>
+                                        <td class="align-right"><span class="label-data currinslbl inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label></label>
+                                            &nbsp;</td>
+                                        <td class="align-right"><span class=" label-data inline"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div style="margin-top: -20.5px;">
+
+        <img class="barcode" />
+    </div>
+</div>
+
+
+
+
+
+
+
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Global/JsBarcode.all.min.js"></script>
+    <script src="~/Content/AppJS/RentalSystem/MiscChargesChallans.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            MiscChargesChallans.init();
+        });
+    </script>
+}

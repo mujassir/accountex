@@ -1,0 +1,167 @@
+﻿@model AccountEx.Web.Models.InvoiceModel
+@using AccountEx.Common;
+@{
+    Layout = "_Layout.cshtml";
+    ViewBag.Title = "Invoice";   
+}
+<style type="text/css">
+    .report-table tbody tr td:nth-last-child(1),
+    .report-table tbody tr td:nth-last-child(2),
+    .report-table tbody tr td:nth-last-child(3) {
+        text-align: right;
+    }
+</style>
+@if (Model == null)
+{
+    <div class="alert alert-danger">
+        <strong>Error!</strong>
+
+        @Html.ValidationSummary()
+    </div>
+}
+else
+{
+  
+    <!-- BEGIN PAGE CONTENT-->
+    <div class="portlet light">
+        <div class="portlet-title hidden-print">
+            <div class="caption">
+                <i class="fa fa-list"></i>Report Data
+            </div>
+            <div class="tools">
+                <a href="javascript:;" class="collapse"></a>
+                <a href="javascript:;" class="remove"></a>
+            </div>
+            <div class="actions">
+                 <a class="btn btn-lg blue hidden-print margin-bottom-5" onclick="javascript:window.print();">Print <i class="fa fa-print"></i>
+        </a>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="invoice">
+
+                <h3 class="page-title align-center">Sale Invoice
+                </h3>
+                <hr />
+                <div class="row">
+                    <div class="col-xs-4">
+                        <h3>Client:</h3>
+                        <ul class="list-unstyled">
+                            <li>@Model.Account.Name
+                            </li>
+                            <li>@Model.Account.Address
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-4">
+                    </div>
+                    <div class="col-xs-4 invoice-payment">
+                        <h3>Invoice Details:</h3>
+                        <ul class="list-unstyled">
+                            <li>
+
+                                <strong class="">Invoice Number:</strong>
+                                @Model.InvoiceNumber
+                            </li>
+                            <li>
+                                <strong class="">Date:</strong> @Model.Date.ToString(AppSetting.DateFormat)
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="width: 20px;">#
+                                    </th>
+                                    <th>Item
+                                    </th>
+                                    <th class="hidden-480" style="width: 100px;">Quantity
+                                    </th>
+                                    <th class="hidden-480" style="width: 100px;">Unit Price
+                                    </th>
+                                    <th style="width: 100px;">Total
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @foreach (var item in Model.Items.Select((p, i) => new { Index = i + 1, Value = p }))
+                                {
+                                    <tr>
+                                        <td>@item.Index</td>
+                                        <td>@item.Value.Name</td>
+                                        <td>@Numerics.IntToString(item.Value.Quantity) </td>
+                                        <td>@Numerics.DecimalToString(item.Value.Price)  </td>
+                                        <td class="align-right">@Numerics.DecimalToString(item.Value.Amount)  </td>
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-7">
+                        <p>
+                            <b>Remarks:</b> @Model.Comments
+                        </p>
+                    </div>
+                    <div class="col-xs-5 invoice-block">
+                        <ul class="list-unstyled amounts">
+                            <li>
+                                <label class="col-xs-7 bold">Sub Total:</label>
+                                <label class="col-xs-5 underlined">
+                                    @Numerics.DecimalToString(Model.SubTotal)
+                                </label>
+                            </li>
+                            <li>
+                                <label class="col-xs-7 bold">Discount:</label>
+                                <label class="col-xs-5 underlined">
+                                    @Numerics.DecimalToString(Model.Discount)
+
+                                </label>
+                            </li>
+
+                            <li>
+                                <label class="col-xs-7 bold">Grand Total:</label>
+                                <label class="col-xs-5 underlined">
+                                    @Numerics.DecimalToString(Model.NetTotal)
+
+                                </label>
+                            </li>
+                        </ul>
+                        <br />
+                    </div>
+                </div>
+                <div class="row">
+
+                    <label class="col-xs-2 bold align-right">Signature:</label>
+                    <label class="col-xs-3 underlined">
+                        &nbsp;
+                    </label>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END PAGE CONTENT-->
+}
+@section FooterScript
+{
+    <link href="~/Content/Metronic/assets/admin/pages/css/invoice.css" rel="stylesheet" type="text/css" />
+    <script>
+        jQuery(document).ready(function () {
+            window.print();
+        });
+    </script>
+}
+
+
+
+
+
+

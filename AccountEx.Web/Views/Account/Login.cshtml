@@ -1,0 +1,165 @@
+﻿@{
+    Layout = null;
+}
+@using AccountEx.Common;
+@using AccountEx.BussinessLogic.Security;
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    @if (Request.Cookies["ApplicationTitle"] != null && !string.IsNullOrWhiteSpace(Request.Cookies["ApplicationTitle"].Value))
+    {
+        <title>@Request.Cookies["ApplicationTitle"].Value </title>
+    }
+    else
+    {
+        <title>Login | AccountEx</title>
+    }
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="" name="description" />
+    <meta content="" name="author" />
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+    @Styles.Render("~/Content/Themes/cs/fontawsome")
+    @Styles.Render("~/Content/Themes/cs/bootstrap")
+    @Styles.Render("~/Content/Themes/cs/metronic");
+    <!-- END GLOBAL MANDATORY STYLES -->
+    <!-- BEGIN PAGE LEVEL STYLES -->
+    @Styles.Render("~/Content/Themes/cs/plugin/select2")
+    @Styles.Render("~/Content/Themes/cs/plugin/toaster")
+    @Styles.Render("~/Content/Themes/cs/plugin/uniform")
+    <link href="~/Content/metronic/assets/pages/css/login-4.css" rel="stylesheet" type="text/css" />
+    <!-- END PAGE LEVEL SCRIPTS -->
+    <!-- BEGIN THEME STYLES -->
+    <!-- END THEME STYLES -->
+</head>
+<body class="login">
+    <!-- BEGIN LOGO -->
+    <div class="logo">
+        <a href="Login" style="text-decoration: none; color: white">
+            @if (!string.IsNullOrWhiteSpace(Request.Cookies["LoginLogo"] + "") && File.Exists(Server.MapPath("../Upload/" + (!string.IsNullOrWhiteSpace(Request.Cookies["UploadFolder"] + "") ? Request.Cookies["UploadFolder"].Value : "") + "/ApplicationLogo/" + (Request.Cookies["LoginLogo"].Value + ""))))
+            {
+                <img style="height:90px !important" src="../Upload/@(!string.IsNullOrWhiteSpace(Request.Cookies["UploadFolder"] + "") ? Request.Cookies["UploadFolder"].Value : "")/ApplicationLogo/@(Request.Cookies["LoginLogo"].Value + "")" alt="logo" class="logo-default" />
+            }
+            else if (!string.IsNullOrWhiteSpace(Request.Cookies["ApplicationTitle"] + ""))
+            {
+                <h3>@(Request.Cookies["ApplicationTitle"].Value)</h3>
+            }
+            else
+            {
+                <h3>AccountEx</h3>
+            }
+
+        </a>
+    </div>
+    <!-- END LOGO -->
+    <!-- BEGIN LOGIN -->
+    <div class="content">
+        <!-- BEGIN LOGIN FORM -->
+
+
+
+        <form>
+            <h3 class="form-title">Login to your account</h3>
+            <div class="hide alert alert-danger container-message">
+                <i class="close" onclick="$(this).parent().hide();"></i>
+                <div class="form-body message-content"></div>
+            </div>
+            <div class="form-group">
+                <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
+                <label class="control-label visible-ie8 visible-ie9">Username</label>
+                <div class="input-icon">
+                    <i class="fa fa-user"></i>
+
+                    <input type="text" value='@(!string.IsNullOrWhiteSpace(Request.Cookies["UserName"] + "") ? RsaCrypto.Decrypt(Request.Cookies["UserName"].Value) : "")' placeholder="Username" name="UserName" id="UserName" data-val-required="The User name field is required." data-val="true" class="form-control placeholder-no-fix">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label visible-ie8 visible-ie9">Password</label>
+                <div class="input-icon">
+                    <i class="fa fa-lock"></i>
+
+                    <input type="password" value='@(!string.IsNullOrWhiteSpace(Request.Cookies["Password"] + "") ? RsaCrypto.Decrypt(Request.Cookies["Password"].Value) : "")' placeholder="Password" name="Password" id="Password" data-val-required="The Password field is required." data-val="true" class="form-control placeholder-no-fix">
+                </div>
+            </div>
+            <div class="form-actions">
+                <label id="LableRememebr" data-toggle="tooltip" title="This will remember your username and password for one month.Dont check it on shared devices." class=" control-label" for="IsRemember">
+                    @{var check = !string.IsNullOrWhiteSpace(Request.Cookies["UserName"] + "") ? "checked='checked'" : "";
+                        var sbsb = "";
+                    }
+                    <input type="checkbox" id="IsRemember" @(check) />
+                    Remember me
+                </label>
+                <button class="btn blue pull-right btn-login" type="button">
+                    Login <i class="m-icon-swapright m-icon-white"></i>
+                </button>
+
+            </div>
+        </form>
+        <input type="hidden" id="Settings" value="@ViewBag.Settings" />
+        <!-- END LOGIN FORM -->
+    </div>
+
+    <div id="model-continue" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+        <a id="btncontinue" class="btn default hide" data-toggle="modal" href="#model-continue"></a>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">Login Successfull</h4>
+                </div>
+                <div class="modal-body">
+                    <p class="">
+                        Please select Fiscal Year to continue
+                    </p>
+                    <div class="row">
+                        <div id="modelerror" class="alert alert-danger display-hide">
+                            <button data-close="alert" class="close"></button>
+                            <span>Please select Fiscal Year.. </span>
+                        </div>
+                        <div class="col-md-10">
+                            <div data-save="save">
+                                <input type="text" id="Id" class="hide" />
+                                <div class="form-body">
+
+                                    <div class="form-group">
+
+                                        <div class="input-icon">
+                                            <select id="FiscalId" class="form-control select21" placeholder="Select Fiscal Year" data-message="Fiscal Year is required" data-clear='true'></select>
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" onclick="Login.Continue()" class="btn green">Continue</button>
+                    <button id="btnmodelcancel" type="button" data-dismiss="modal" class="btn default">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END LOGIN -->
+    <!-- BEGIN COPYRIGHT -->
+    <div class="copyright hide">
+    </div>
+    <!-- END COPYRIGHT -->
+    @Scripts.Render("~/Content/scripts/login/plugin")
+    @Scripts.Render("~/Content/scripts/login/custom")
+    <script>
+        jQuery(document).ready(function () {
+            App.init(); // init metronic core components
+            Login.init();
+        });
+    </script>
+    <!-- END JAVASCRIPTS -->
+</body>
+</html>

@@ -1,0 +1,679 @@
+﻿body {
+}
+
+.btnreset {
+    margin-top: 10px;
+}
+
+.page-header.navbar .top-menu .navbar-nav > li.dropdown-extended .dropdown-menu {
+    max-width: 450px !important;
+    min-width: 160px;
+    width: 450px !important;
+}
+
+.control-inline {
+    display: inline-block !important;
+}
+
+.FilterUser {
+    width: 115px;
+    padding-left: 5px;
+    padding-right: 10px;
+}
+
+.maindiv {
+    background-color: #eee;
+    border-radius: 10px !important;
+    width: 99.59%;
+    padding: 15px;
+    margin: 0px !important;
+}
+
+.lbl {
+    width: 80px;
+    padding-left: 5px;
+    padding-right: 10px;
+    margin-left: 20px;
+}
+
+.img {
+    width: 40px;
+    padding-left: 5px;
+    padding-right: 4px;
+    text-align: center;
+    height: 40px;
+}
+
+.booking {
+    width: 130px;
+    padding-left: 2px;
+    padding-right: 5px;
+}
+
+.img1 {
+    margin-left: 20px;
+    padding-left: 4px;
+    padding-right: 7px;
+    text-align: center;
+    width: 40px;
+    height: 40px;
+}
+
+.labl_size {
+    font-size: 8px;
+}
+
+.pricerange {
+    width: 125px;
+    padding-left: 2px;
+    padding-right: 5px;
+    margin-left: 10px;
+    text-align: left;
+}
+
+.align {
+    text-align: left !important;
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+    border: solid 1px #CCC;
+    height: 34px !important;
+}
+
+.geninfoo1 {
+    background-color: #eee;
+    padding: 6px;
+    margin: 2px 0px !important;
+    text-align: left !important;
+}
+
+.form {
+    margin-right: -15px !important;
+}
+
+.product {
+    height: 255px !important;
+    float: right;
+    border: solid 1px;
+    width: 45% !important;
+}
+
+.width {
+    width: 45% !important;
+}
+
+.heading {
+    background-color: #eee;
+    padding: 6px;
+    margin: 2px 0px !important;
+    text-align: left !important;
+    font-size: 16px;
+}
+
+.ds {
+    position: relative;
+    right: 30px;
+    top: -210px;
+}
+
+.txtarea {
+    height: 150px;
+    width: 45%;
+    margin-top: -240px;
+    text-align: left !important;
+}
+
+.btnbook {
+    background-color: green;
+    height: 40px;
+    border-radius: 5px;
+    color: white;
+}
+
+.btnsubmit {
+    background-color: purple;
+    height: 40px;
+    color: white;
+    border-radius: 5px;
+}
+
+.btnfav {
+    background-color: yellow;
+}
+
+.loc {
+    float: right;
+    margin-top: 50px;
+    margin-right: -120px;
+}
+
+.locval {
+    float: right;
+    margin-top: 50px;
+    margin-right: -572px !important;
+}
+
+.margnflow {
+    margin-top: -210px !important;
+}
+
+.margnsite {
+    margin-top: -174px !important;
+}
+
+.margnlong {
+    margin-top: -138px !important;
+}
+
+.margnlongitude {
+    margin-top: -102px !important;
+}
+
+.rate {
+    margin-top: -66px !important;
+}
+
+.margnmore {
+    margin-top: -32px !important;
+}
+
+.bs {
+    position: relative;
+    right: 30px;
+    top: -205px;
+}
+
+.bokngcaln {
+    margin-top: -160px;
+    margin-left: 63px;
+}
+
+.bokngimg {
+    position: relative;
+    margin-top: -158px;
+    margin-left: 50px;
+}
+
+.from {
+    margin-left: 50px;
+    margin-top: -100px;
+}
+
+.btns {
+    margin-left: 50px;
+    margin-top: -60px;
+}
+
+.icn {
+    margin-left: 100px;
+}
+
+.ddl {
+    margin-left: 15px !important;
+}
+
+.txtboxicon {
+    padding-left: 10px;
+}
+
+.passtxt {
+    padding-left: 20px !important;
+}
+
+.btnpass {
+    padding: 20px !important;
+}
+
+.datapicker {
+    width: 125px;
+    padding: 0px;
+    /*padding-right:5px;*/
+}
+
+.datapickerto {
+    width: 125px;
+    margin-left: 5px;
+    padding: 0px;
+    /*padding-right:5px;*/
+}
+
+.txt {
+    width: 70px !important;
+}
+
+.invchedr {
+    font-size: 30px !important;
+    margin-left: 350px;
+}
+
+.hderbrdr {
+    border: solid 2px;
+    background-color: silver;
+}
+
+.hdrmargn {
+    margin-top: 5px;
+}
+
+.invchedr2 {
+    font-size: 19px !important;
+    margin-left: 480px;
+    text-decoration: underline;
+}
+
+.maindivinvcc {
+    width: 100%;
+}
+
+.divaddrs {
+    border: solid 1px;
+    width: 570px;
+    height: 120px;
+    margin-top: 15px;
+    padding-top: 15px;
+    float: left;
+    border-bottom: none !important;
+}
+
+.divaddlabl1 {
+    width: 50px;
+    margin-left: 10px;
+    float: left;
+}
+
+.divaddlabl2 {
+    width: 470px;
+    margin-left: 10px;
+    float: left;
+}
+
+.divmain2 {
+    margin-left: 30px;
+    height: 120px;
+    float: left;
+    width: 474px;
+    border-bottom: none !important;
+    border: solid 1px;
+    margin-top: 15px;
+    padding-top: 15px;
+}
+
+.divsb {
+    width: 400px;
+    float: left;
+}
+
+.divmainlabel1 {
+    width: 150px;
+    float: left;
+    text-align: right;
+}
+
+.divmainlabel2 {
+    width: 150px;
+    float: left;
+    text-align: left;
+    margin-left: 10px;
+}
+
+.tbldivmain {
+    width: 100%;
+    margin-top: 0px;
+    padding: 10px;
+    float: left;
+    height: 30px;
+    border: solid 1px;
+}
+
+.srno1 {
+    width: 30px;
+    float: left;
+}
+
+.desc1 {
+    width: 420px;
+    float: left;
+    margin-left: 70px;
+}
+
+.qty1 {
+    text-align: center;
+    float: left;
+    width: 100px;
+}
+
+.rate1 {
+    text-align: center;
+    float: left;
+    width: 100px;
+}
+
+.amnt1 {
+    text-align: center;
+    float: left;
+    width: 110px;
+}
+
+.discnt {
+    text-align: center;
+    float: left;
+    width: 110px;
+}
+
+.totl1 {
+    text-align: center;
+    float: left;
+    width: 110px;
+}
+
+.srno2 {
+    width: 30px;
+    float: left;
+    text-align: center;
+    height: 30px;
+}
+
+.desc2 {
+    width: 490px;
+    float: left;
+    padding-left: 40px;
+    height: 30px;
+    border-left: solid 1px;
+}
+
+.qty2 {
+    text-align: right;
+    float: left;
+    width: 100px;
+    height: 30px;
+    border-left: solid 1px;
+}
+
+.rate2 {
+    text-align: right;
+    float: left;
+    width: 100px;
+    height: 30px;
+    border-left: solid 1px;
+}
+
+.amnt2 {
+    text-align: right;
+    float: left;
+    width: 110px;
+    height: 30px;
+    border-left: solid 1px;
+}
+
+.discnt2 {
+    text-align: right;
+    float: left;
+    width: 110px;
+    height: 30px;
+    border-left: solid 1px;
+}
+
+.totl2 {
+    text-align: right;
+    float: left;
+    width: 110px;
+    height: 30px;
+    border-left: solid 1px;
+}
+
+.tbldivmain22 {
+    width: 100%;
+    margin-top: 0px;
+    float: left;
+    height: 30px;
+    border: solid 1px;
+    border-top: none !important;
+}
+
+.tbl2main {
+    width: 100%;
+    margin-top: 900px;
+}
+
+.brdr {
+    width: 100%;
+    border-bottom: solid 2px;
+}
+
+.divdata1 {
+    border: solid 1px;
+    width: 570px;
+    height: 300px;
+    margin-top: 15px;
+    padding-top: 15px;
+    float: left;
+    border: solid 1px;
+}
+
+.estno1 {
+    width: 100px;
+    float: left;
+    text-align: center;
+    border-bottom: dotted;
+}
+
+.date11 {
+    width: 110px;
+    float: left;
+    text-align: center;
+    border-bottom: dotted;
+}
+
+.dueamnt1 {
+    text-align: center;
+    float: left;
+    width: 120px;
+    border-bottom: dotted;
+}
+
+.balance11 {
+    text-align: center;
+    float: left;
+    width: 120px;
+    border-bottom: dotted;
+}
+
+.age11 {
+    text-align: center;
+    float: left;
+    width: 110px;
+    border-bottom: dotted;
+}
+
+.estno2 {
+    width: 100px;
+    float: left;
+    text-align: center;
+    padding: 10px;
+}
+
+.date12 {
+    width: 110px;
+    float: left;
+    text-align: center;
+    padding: 10px;
+}
+
+.dueamnt2 {
+    text-align: center;
+    float: left;
+    width: 120px;
+    padding: 10px;
+}
+
+.balance12 {
+    text-align: center;
+    float: left;
+    width: 120px;
+    padding: 10px;
+}
+
+.age12 {
+    text-align: center;
+    float: left;
+    width: 110px;
+    padding: 10px;
+}
+
+.crntblnce1 {
+    width: 300px;
+    float: right;
+    margin-top: 10px;
+}
+
+.crntblncelbl1 {
+    width: 150px;
+    float: left;
+}
+
+.divdata2 {
+    margin-left: 70px;
+    height: 110px;
+    float: left;
+    width: 434px;
+    border: solid 1px;
+    margin-top: 15px;
+    padding-top: 15px;
+}
+
+.amntdata1 {
+    width: 150px;
+    margin-left: 10px;
+    float: left;
+    text-align: left;
+}
+
+.amntdata2 {
+    width: 250px;
+    float: left;
+    text-align: right;
+    margin-right: 10px;
+}
+
+.amntdata11 {
+    width: 250px;
+    margin-left: 10px;
+    float: left;
+    text-align: left;
+}
+
+.brdrrrr1 {
+    width: 150px;
+    float: left;
+    text-align: right;
+    margin-right: 10px;
+    border-bottom: solid 2px;
+}
+
+.brdrrrr2 {
+    width: 150px;
+    float: left;
+    text-align: right;
+    margin-right: 10px;
+    border-bottom: solid 3px;
+}
+
+.divdata3 {
+    margin-left: 70px;
+    height: 110px;
+    float: left;
+    width: 434px;
+    margin-top: 15px;
+    padding-top: 15px;
+}
+
+.clrncelbl1 {
+    width: 100px;
+    float: left;
+}
+
+.clrncelbl2 {
+    width: 120px;
+    float: left;
+}
+
+.clrncelbl3 {
+    width: 70px;
+    float: left;
+}
+
+.clrncelbl4 {
+    width: 170px;
+    float: left;
+}
+
+.clrncelbl5 {
+    width: 250px;
+    float: left;
+}
+
+.custmruse {
+    width: 434px;
+    text-align: center;
+}
+
+.dt {
+    margin-left: 70px;
+    height: 70px;
+    float: left;
+    width: 434px;
+    margin-top: 15px;
+    padding-top: 15px;
+}
+
+.namelbl1 {
+    width: 100px;
+    margin-left: 10px;
+    float: left;
+}
+
+.namelbl2 {
+    width: 250px;
+    border-bottom: solid 2px;
+    float: left;
+}
+
+.sig {
+    width: 650px;
+    margin-top: 10px;
+    float: left;
+}
+
+.sig1 {
+    width: 200px;
+    float: left;
+    border-bottom: solid 1px;
+    margin-left: 5px;
+    text-align: center;
+}
+
+.datetime {
+    width: 220px;
+}
+
+.datetime1 {
+    width: 100px;
+    float: left;
+    margin-top: 30px;
+}
+
+.msgval {
+    width: 485px;
+    margin-top: 30px;
+    float: left;
+    border-bottom: solid 1px;
+}
+
+.cntctno {
+    width: 370px;
+    float: right;
+}
+
+.cntctnoval1 {
+    width: 120px;
+    float: left;
+}

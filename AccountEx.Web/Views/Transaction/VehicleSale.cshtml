@@ -1,0 +1,1882 @@
+﻿@using AccountEx.Common
+@using AccountEx.BussinessLogic;
+@{
+    ViewBag.Title = "Vehicle Sale";
+}
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold hidden-print">Manage @ViewBag.FormTitle</h1>
+}
+@section VehicleBranchesDropdown
+{
+
+    @Html.Partial("../Vehicle/_UserBranches_Dropdown")
+}
+@{
+    var type = Request.QueryString["type"] + "";
+
+    switch (type.ToLower())
+    {
+        case "vehiclecashsale":
+            ViewBag.FormTitle = "Cash Sale";
+            break;
+        case "vehicleinstallmentsale":
+            ViewBag.FormTitle = "Installment Sale";
+            break;
+    }
+    ViewBag.Title = ViewBag.FormTitle;
+}
+<!-- END PAGE HEADER-->
+@if (SettingManager.CustomerHeadId == 0)
+{
+    @Html.Partial("_HeadAccountMissing")
+}
+@{
+    //var type = Request.QueryString["type"] + "";
+    var vouchertype = ((VoucherType)Enum.Parse(typeof(VoucherType), type, true));
+    var allowDc = (vouchertype == VoucherType.Sale || vouchertype == VoucherType.Purchase) && SettingManager.AllowDC;
+    var showDiscount = ((vouchertype == VoucherType.Sale || vouchertype == VoucherType.SaleReturn) && SettingManager.IsSaleAllowDisocunt) || (((vouchertype == VoucherType.Purchase || vouchertype == VoucherType.PurchaseReturn) && SettingManager.IsPurchaseAllowDisocunt)) ? "" : "hide";
+    var colspan = !string.IsNullOrWhiteSpace(showDiscount) ? "6" : "10";
+}
+<div class="row hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-edit"></i>Add/Edit @ViewBag.FormTitle
+                </div>
+                <div class="actions hide">
+                    <a href="javascript:;" onclick="VehicleSale.ListView()" class="btn blue">
+                        <i class="fa fa-angle-left"></i>&nbsp;Back to list
+                    </a>
+                </div>
+                <div class="tools hide">
+                    <a href="javascript:;" class="collapse"></a>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal" data-save="save">
+
+                    <input type="text" id="Id" class="hide" data-include-in-item="true" data-item-id="VehicleSaleId" />
+                    <input type="text" id="TempCode" class="hide" />
+                    <div class="form-body">
+                        <div class="hide alert alert-danger container-message">
+                            <i class="close" onclick="$(this).parent().hide();"></i>
+                            <strong></strong>
+                            <div class="form-body message-content"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Vou #</label>
+                            <div class="col-md-1 container-voucher">
+                                <label id="lblVoucherNumber" class="label label-info label-voucher hide"></label>
+                                <input type="text" class="form-control number input-xsmall" id="VoucherNumber" data-plus-as-tab="false" data-required="required" data-message="Voucher Number is required" data-include-in-item="true">
+                            </div>
+                            <label class="col-md-1 control-label" for="prefix">Book #</label>
+                            <div class="col-md-1">
+                                <input type="text" id="InvoiceNumber" data-validate="true" data-required="required" data-message="Book Number is required"  class="number form-control input-xsmall" data-plus-as-tab="false" data-include-in-item="true">
+                            </div>
+                            <label class="col-md-1 control-label" for="prefix">Date</label>
+                            <div class="col-md-2">
+
+                                <input id="Date" type="text" class="form-control date-picker" data-clear-type='date' data-validate="true" data-required="required" data-message="Date is required" data-plus-as-tab="false" data-hide-dropdown="true" data-fiscal-date="true">
+                            </div>
+
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label master-account-label" for="prefix">Customer</label>
+                            <div class="col-md-1">
+                                <input type="text" class="form-control input-small" id="AccountCode" data-required="required" data-plus-as-tab="false" data-validate="true" data-message="Customer is required" >
+                                <input type="hidden" id="AccountId" value="0" />
+
+                            </div>
+                            <div class="col-md-5">
+
+                                <input type="text" class="form-control" id="AccountName"  readonly="readonly" disabled="disabled">
+                            </div>
+                            <div class="col-md-4">
+                                <label class=" control-label" for="IsTradeIn">
+                                    <input type="checkbox" id="IsTradeIn" data-checktrack="false" />
+                                    Trade In
+                                </label>
+                            </div>
+
+
+                        </div>
+                        <div class="form-group tradein-container hide">
+                            <label class="col-md-2 control-label" for="prefix">Trade In Vehicle</label>
+                            <div class="col-md-4">
+                                <select class="form-control select2" id="TradeInVehicleId" placeholder="Select Trade In Vehicle" data-required="false" data-message="Trade In Vehicle is required">
+                                    <option></option>
+                                </select>
+                            </div>
+                            <label class="col-md-1 control-label" for="prefix">Price</label>
+                            <div class="col-md-1">
+                                <input id="TradeInPrice" type="text" class="form-control num3" disabled="disabled" readonly="readonly" data-required="false" data-message="Trade In price is required">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Vehicle</label>
+                            <div class="col-md-1">
+                                <input type="text" class="form-control input-small" id="ChassisNo" data-required="required" data-message="Vehicle is required" />
+                                <input type="text" class="hide form-control " id="VehicleId" />
+                            </div>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" id="RegNo" readonly="readonly" disabled="disabled" />
+                            </div>
+                            <div class="col-md-4">
+                                <div class="col-md-4 col-sm-3 col-xs-6 text-stat">
+                                    <span class="label label-sm label-success">Purchase Price: </span>
+                                    <h3 id="lblpurchaseprice">0.00</h3>
+                                </div>
+                                <div class="col-md-4 col-sm-3 col-xs-6 text-stat">
+                                    <span class="label label-sm label-info">Expenses: </span>
+                                    <h3 id="lblexpenses">0.00</h3>
+                                </div>
+                                <div class="col-md-4 col-sm-3 col-xs-6 text-stat">
+                                    <span class="label label-sm label-danger">Total: </span>
+                                    <h3 id="lbltotal">0.00</h3>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Description of motor</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" id="Description" readonly="readonly" />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="control-label" for="IsTrackerAdded">
+                                    <input type="checkbox" id="IsTrackerAdded" value="false" data-checktrack='false' />
+                                    Add Tracker
+                                </label>
+                                <label class="control-label" for="IsInsurenceAdded">
+                                    <input type="checkbox" id="IsInsurenceAdded" value="false" data-checktrack='false' />
+                                    Add Insurance
+                                </label>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group hide">
+                            <label class="col-md-2 control-label" for="prefix">EngineNo</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control" id="EngineNo" readonly="readonly" />
+                            </div>
+                            <label class="col-md-1 control-label" for="prefix">Manufacturer</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control " id="Manufacturer" readonly="readonly" />
+                            </div>
+                            <label class="col-md-1 control-label" for="prefix">C.C</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control " id="CC" readonly="readonly" />
+                                <input type="text" class="form-control hide" id="PurchasePrice" readonly="readonly" />
+                            </div>
+
+
+                        </div>
+
+                        <div class="form-group hide">
+                            <label class="col-md-2 control-label" for="prefix">Model</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control " id="Model" readonly="readonly" />
+                            </div>
+                            <label class="col-md-1 control-label" for="prefix">Fuel</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control " id="Fuel" readonly="readonly" />
+                            </div>
+                            <label class="col-md-1 control-label" for="prefix">Colour</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control" id="Colour" readonly="readonly" />
+                            </div>
+                        </div>
+
+
+                        <div class="row tracker-container hide">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-10">
+                                <div class="portlet">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <i class="fa fa-list"></i>Tracker Detail
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-1 control-label" for="prefix">Supplier</label>
+                                        <div class="col-md-8">
+                                            <select class="form-control select2 suppliers" id="TrackerSupplierId" placeholder="Select Supplier" data-required="false" data-message="Tracker Supplier is required">
+                                                <option></option>
+                                            </select>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="form-group PaymentOptions">
+                                        <label class="col-md-1 control-label" for="prefix">Mode</label>
+                                        <div class="col-md-2">
+                                            <select class="form-control select2" id="TrackerPaymentMode" data-required="false" data-message="Tracker Payment Option is required">
+                                                <option value="Cash">Cash</option>
+                                                <option value="Bank">Bank</option>
+                                                <option value="M Paisa">M Paisa</option>
+                                                <option value="LIPA NA MPESA">LIPA NA MPESA</option>
+                                                <option value="Mobile Money">Mobile Money</option>
+                                            </select>
+                                        </div>
+                                        @Html.Partial("../manage/_CashBankAccounts", new ViewDataDictionary { { "Labelcolspan", 1 }, { "Divcolspan", 5 }, { "markRequired", false }, { "controlId", "TrackerAccountId" } })
+
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-1 control-label" for="prefix">Selling</label>
+                                        <div class="col-md-1">
+
+                                            <input id="TrackerSellingPrice" type="text" class="form-control num3" laceholder="Select Supplier" data-required="false" data-message="Tracker Selling Price is required">
+                                        </div>
+                                        <label class="col-md-1 control-label" for="prefix">Sale Price</label>
+                                        <div class="col-md-1">
+
+                                            <input id="TrackerSalePrice" type="text" class="form-control num3" data-required="false" data-message="Tracker sale Price is required">
+                                        </div>
+                                        <label class="col-md-1 control-label" for="prefix">Received</label>
+                                        <div class="col-md-1">
+
+                                            <input id="TrackerReceivedAmount" type="text" class="form-control num3">
+                                        </div>
+                                        <label class="col-md-1 control-label" for="prefix">Balance</label>
+                                        <div class="col-md-1">
+
+                                            <input id="TrackerBalanceAmount" type="text" class="form-control num3" readonly="readonly">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row insurance-container hide">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-10">
+                                <div class="portlet">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <i class="fa fa-list"></i>Insurance Detail
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-1 control-label" for="prefix">Supplier</label>
+                                        <div class="col-md-6">
+                                            <select class="form-control select2 suppliers" id="InsurenceSupplierId" placeholder="Select Supplier" data-required="false" data-message="Insurance Supplier Price is required">
+                                                <option></option>
+                                            </select>
+                                        </div>
+
+
+
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-6">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+
+                                                        <th>Description</th>
+                                                        <th>Rate</th>
+                                                        <th>Amount</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <strong>Value given to GA Insurance Compnay</strong>
+                                                        </td>
+                                                        <td></td>
+                                                        <td>
+                                                            <input id="InsurenceValue" type="text" class="form-control num3 input-xsmall" data-required="false" data-message="Insurance value is required">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <strong>Rate/Percentage Charged by Insurance Compnay</strong>
+                                                        </td>
+                                                        <td>
+                                                            <input id="InsurencePercent" type="text" class="form-control num2 input-xsmall" data-required="false" data-message="Insurance percent is required">
+                                                        </td>
+                                                        <td>
+                                                            <input id="InsurenceAmount" type="text" class="form-control num2 input-xsmall" disabled="disabled" readonly="readonly">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <strong>MSS  Levy Charged on the percentage amount.</strong>
+                                                        </td>
+                                                        <td>
+                                                            <input id="LevyPercent" type="text" class="form-control num2 input-xsmall">
+                                                        </td>
+                                                        <td>
+                                                            <input id="LevyAmount" type="text" class="form-control num2 input-xsmall" disabled="disabled" readonly="readonly">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <strong>Stamp Duty Charge by GA Insurance.</strong>
+                                                        </td>
+                                                        <td></td>
+                                                        <td>
+                                                            <input id="StampDutyAmount" type="text" class="form-control num2 input-xsmall">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2">
+                                                            <strong>Total Insurance</strong>
+                                                        </td>
+
+                                                        <td>
+                                                            <input id="InsurenceSellingPrice" type="text" class="form-control num2 input-xsmall" disabled="disabled" readonly="readonly">
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+
+                                                        <th>Description</th>
+                                                        <th>Amount</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            Selling Price
+                                                        </td>
+                                                        <td>
+                                                            <input id="InsurenceSalePrice" type="text" class="form-control num3 input-xsmall" data-required="false" data-message="Insurance selling price is required">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            Received
+                                                        </td>
+                                                        <td>
+                                                            <input id="InsurenceReceivedAmount" type="text" class="form-control num3 input-xsmall">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            Mode
+                                                        </td>
+                                                        <td>
+
+                                                            <select class="form-control select2" id="InsurancePaymentMode" data-required="false" data-message="Insurance Payment mode is required">
+                                                                <option value="Cash">Cash</option>
+                                                                <option value="Bank">Bank</option>
+                                                                <option value="M Paisa">M Paisa</option>
+                                                                <option value="LIPA NA MPESA">LIPA NA MPESA</option>
+                                                                <option value="Mobile Money">Mobile Money</option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            Account
+                                                        </td>
+                                                        <td>
+                                                            <select class="form-control select2" id="InsuranceAccountId" data-required="false" data-message="Insurance account is required"></select>
+
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            Balance
+                                                        </td>
+                                                        <td>
+                                                            <input id="InsurenceBalanceAmount" type="text" class="form-control num3 input-xsmall">
+                                                        </td>
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Logbook Transfer Fee</label>
+                            <div class="col-md-1">
+                                <input type="text" class="form-control  num3" id="LogBookFee" />
+                            </div>
+                            <label class="col-md-1 control-label" for="prefix">Sale Price</label>
+                            <div class="col-md-1">
+                                <input type="text" class="form-control input-xsmall" id="SalePrice" data-required="required" data-message="Sale price is required" />
+                            </div>
+                            <div class="col-md-2">
+                                <span class="label label-sm label-success">Advance:<span id="lbladvance">0.0</span></span>
+                                <input type="hidden" class="form-control hide" id="Advance" readonly="readonly" disabled="disabled" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                        </div>
+
+                        @*  <div class="form-group PaymentOptions">
+                                <label class="col-md-2 control-label" for="prefix">Payment Options</label>
+                                <div class="col-md-2">
+                                    <select class="form-control select2" id="PaymentMode" data-required="required" data-message="Payment Option is required">
+                                        <option value="Cash">Cash</option>
+                                        <option value="Bank">Bank</option>
+                                        <option value="M Paisa">M Paisa</option>
+                                        <option value="LIPA NA MPESA">LIPA NA MPESA</option>
+                                        <option value="Mobile Money">Mobile Money</option>
+                                    </select>
+                                </div>
+                                @Html.Partial("../manage/_CashBankAccounts", new ViewDataDictionary { { "Labelcolspan", 2 }, { "Divcolspan", 5 }, { "markRequired", true }, { "controlId", "RcvAccountId" } })
+
+                                <div class="banks-options hide">
+                                    <label class="col-md-2 control-label" for="prefix">Cheque No</label>
+                                    <div class="col-md-2">
+
+                                        <input type="text" class="form-control" id="ChequeNo" data-required="false" data-message="Balance is required" />
+
+                                    </div>
+                                </div>
+                            </div>*@
+
+
+                        <div class="row" data-save="false">
+                            <div class="col-md-2"></div>
+
+                            <div class="col-md-8 scroller12 " data-always-visible="1" data-rail-visible1="1">
+                                <div class="portlet">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <i class="fa fa-list"></i>Deposit Details
+                                        </div>
+
+                                    </div>
+                                    <table id="item-sales-deposits-container" class="table table-bordered griditem">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Amount</th>
+                                                <th>Payment Mode</th>
+                                                <th>Accoount</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody data-plus-as-tab="false"></tbody>
+                                        <tfoot data-plus-as-tab="false">
+                                            <tr class="bold well">
+                                                <td class="bold align-right">Total &nbsp;</td>
+
+                                                <td class="bold well">
+                                                    <input type="text" class="Amount form-control input-small" disabled="disabled" readonly="readonly">
+                                                </td>
+                                                <td></td>
+                                                <td colspan="3"></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Received</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control" id="Received" data-required="required" data-message="Received is required" readonly="readonly" disabled="disabled" />
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">Balance</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control" readonly="readonly" id="Balance" data-required="required" data-message="Balance is required" />
+                            </div>
+                        </div>
+                        <div class="form-group NoOfInstallments hide">
+                            <label class="col-md-2 control-label" for="prefix">No of Installments</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control" id="NoOfInstallments" maxlength="2" />
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">Installments Start Date</label>
+                            <div class="col-md-2">
+                                <input type="text" id="InstalmentStartDate" class="form-control date-picker" data-clear-type="date" data-hide-dropdown="true" data-fiscal-date="true" />
+                            </div>
+                        </div>
+                        <div class="row NoOfInstallments" data-save="false">
+                            <div class="col-md-2"></div>
+
+                            <div class="col-md-8 scroller12 " data-always-visible="1" data-rail-visible1="1">
+                                <div class="portlet">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <i class="fa fa-list"></i>Instalment Detail
+                                        </div>
+                                        <div class="hide caption pay-installment pull-right">
+                                            <a href="javascript:;" onclick="VehicleSale.LoadInstallmentDetails()">Pay Installment</a>
+                                        </div>
+                                    </div>
+
+                                    <table id="item-container" class="table table-bordered griditem" style="padding: 10px">
+                                        <thead>
+                                            <tr>
+
+                                                <th>Instlment No.</th>
+                                                <th>Date</th>
+                                                <th>Amount</th>
+                                                <th>Cheque No</th>
+                                                <th>Cheque Date</th>
+                                                <th style="width: 30%;">Bank</th>
+                                                <th class="hide instalment-status">Recieved</th>
+                                                <th class="hide instalment-status">Status</th>
+                                                <th class="hide td-action">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody data-plus-as-tab="false"></tbody>
+                                        <tfoot data-plus-as-tab="false">
+                                            <tr>
+                                                <th colspan="2" class="align-right">Total</th>
+                                                <th class="bold">
+                                                    <label id="lbl-installment-total" class="lbl-installment-total"></label>
+                                                </th>
+                                                <th colspan="3"></th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-md-8 scroller12 " data-always-visible="1" data-rail-visible1="1">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Remarks</label>
+                            <div class="col-md-6">
+                                <textarea class="form-control" id="Comments" rows="4" cols="6"></textarea>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Notes</label>
+                            <div class="col-md-6">
+                                <textarea class="form-control" id="Notes" rows="4" cols="6"></textarea>
+
+                            </div>
+                        </div>
+                        <div class="row hide">
+
+                            <div class="form-group">
+                                <label class="col-md-2"></label>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input id="ProfilePic" accept="image/x-png, image/gif, image/jpeg" type="file" name="...">
+                                        <input type="text" id="FileUrl" class="hide" />
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                    <div class="form-actions">
+                        <div class="btn-set pull-left">
+                            <a href="javascript:;" onclick="VehicleSale.LoadVoucher('first')" class="btn blue tooltips disabled first" data-original-title="First">
+                                <i class="fa fa-angle-double-left"></i>
+                            </a>
+                            <a href="javascript:;" onclick="VehicleSale.LoadVoucher('previous')" class="btn blue tooltips disabled previous" data-original-title="Previous">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a href="javascript:;" onclick="VehicleSale.LoadVoucher('next')" class="btn blue tooltips disabled next" data-original-title="Next">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                            <a href="javascript:;" onclick="VehicleSale.LoadVoucher('last')" class="btn blue tooltips disabled last" data-original-title="Last">
+                                <i class="fa fa-angle-double-right"></i>
+                            </a>
+                        </div>
+                        <div class="btn-set pull-right">
+                            @if (!SiteContext.Current.Fiscal.IsClosed)
+                            {
+                            <button type="button" class="btn purple-plum" onclick="VehicleSale.New()">
+                                <i class="fa  fa-plus-circle"></i>
+                                New
+                            </button>
+                            <button id="btnsave" type="button" class="btn btn-primary green" onclick="VehicleSale.Save()">
+                                <i class="fa fa-check"></i>
+                                Save
+                            </button>
+                            <button id="btndelete" type="button" class="btn red" onclick="VehicleSale.Delete()">
+                                <i class="fa fa-trash-o"></i>
+                                Delete
+                            </button>
+                            <button id="btncanceldeal" type="button" class="btn red canceldeal hide" onclick="VehicleSale.GetCancellitionInfo()">
+                                <i class="fa fa-trash-o"></i>
+                                Cancel Deal
+                            </button>
+                            }
+                            <div class='btn-group'>
+                                <button id="btnprint" type='button' class='btn yellow'><i class="fa fa-print"></i>Print</button>
+                            </div>
+                            <button type="button" class="btn blue" onclick="window.location='@(Url.Content(SettingManager.DashBoardUrl))'">
+                                <i class="fa  fa-times-circle"></i>
+
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+<div id="jsondata" class="hide">
+    <p id="data">@ViewBag.FormSetting</p>
+</div>
+<div id="jsondatavehicle" class="hide">
+    <p id="data1">@ViewBag.Vehicles</p>
+</div>
+<div class="row hidden-print" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet box grey-cascade">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-list"></i>@ViewBag.FormTitle Listing
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover" id="mainTable">
+                    <thead>
+                        <tr>
+                            <th>Voucher No.</th>
+                            <th>Date</th>
+                            <th>Customer</th>
+                            <th>Chassis No</th>
+                            <th>Reg No</th>
+                            <th>Manufacturer</th>
+                            <th>Sale Price</th>
+                            <th>Received</th>
+                            <th>Balance</th>
+                            <th>User Name</th>
+                            <th style="width: 150px" class="no-sort"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="11" class="center">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+
+
+<div id="model-pay-installments" class="modal fade hidden-print bs-modal-lg" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <span class='caption-subject font-green-sharp bold'>Pay Installment</span>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row installment-form">
+                    <div class="form-horizontal" data-save="save">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Outstanding this month</label>
+                            <div class="col-md-3">
+                                <input type="text" readonly class="form-control" id="CurrentMonthOutStanding" />
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">Total outstanding</label>
+                            <div class="col-md-3">
+                                <input type="text" readonly class="form-control" id="TotalOutStanding" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @*<label class="col-md-2 control-label" for="prefix">Installment No.</label>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control hide" id="VoucherNo" />
+                                    <select class="form-control select2" id="InstalmentNo" data-required="required" data-message="Installment no. is required.">
+                                        <option></option>
+
+                                    </select>
+                                </div>*@
+                            <label class="col-md-2 control-label" for="prefix">Receiving Date</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control date-picker" id="RecievedDate" data-required="required" data-message="Receiving date is required." />
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">Payment Mode</label>
+                            <div class="col-md-3">
+                                <select class="form-control select2" id="PaymentMode">
+                                    <option value="Cash">Cash</option>
+                                    <option value="Bank">Bank</option>
+                                    <option value="M Paisa">M Paisa</option>
+                                    <option value="LIPA NA MPESA">LIPA NA MPESA</option>
+                                    <option value="Mobile Money">Mobile Money</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+
+                            <label class="col-md-2 control-label" for="prefix">Total</label>
+                            <div class="col-md-1">
+                                <input type="text" class="form-control input-xsmall" id="Amount" data-required="required" data-message="Amount is required.">
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">Discount</label>
+                            <div class="col-md-1">
+                                <input type="text" class="form-control input-xsmall" id="Discount">
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">Net Amount</label>
+                            <div class="col-md-1">
+                                <input type="text" class="form-control input-xsmall" id="TotalAmount" readonly="readonly">
+                            </div>
+
+                        </div>
+
+                        @Html.Partial("../manage/_CashBankAccounts", new ViewDataDictionary { { "Labelcolspan", 2 }, { "Divcolspan", 5 }, { "markRequired", true }, { "controlId", "RcvAccountId" } })
+                        <div class="form-group banks-options hide">
+
+
+                            <label class="col-md-2 control-label" for="prefix">Check No</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control" id="ChequeNo" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Remarks</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" id="Remarks" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            <div class="col-md-1"></div>
+                            <div class="col-md-10">
+                                <div class="portlet">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <i class="fa fa-list"></i>Paid Installments
+                                        </div>
+
+                                    </div>
+                                    <table class="table table-striped table-bordered table-hover" id="tbl-paid-installments">
+                                        <thead>
+                                            <tr>
+
+                                                <th>Date</th>
+                                                <th>Amount</th>
+                                                <th>Discount</th>
+                                                <th>Payment Mode</th>
+                                                <th>Account</th>
+                                                <th style="width: 150px;" class="no-sort"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-md-1"></div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix"></label>
+                    <button type="button" style="margin-right: 15px;" class="btn btn-primary green contacts-form" onclick="VehicleSale.SaveInstallments()" data-plus-as-tab="false">Save</button>
+                    <button type="button" data-dismiss="modal" class="btn btnclose-model">Close</button>
+                </div>
+            </div>
+
+
+
+
+
+
+        </div>
+    </div>
+</div>
+<div id="model-upload-documents" class="modal fade hidden-print bs-modal-lg model-upload-documents" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <span class='caption-subject font-green-sharp bold'>Upload Document</span>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row installment-form">
+                    <div class="form-horizontal" data-save="save">
+
+                        <div class="form-group">
+
+                            <div class="col-md-1"></div>
+                            <div class="col-md-10">
+
+                                <form id="fileupload" action="../Handlers/FileUpload.ashx?directory=AgreementFiles" method="POST" enctype="multipart/form-data">
+                                    <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+                                    <br />
+                                    <div class="col-md-1"></div>
+                                    <div class="row fileupload-buttonbar">
+                                        <div class="col-lg-7">
+                                            <!-- The fileinput-button span is used to style the file input field as button -->
+                                            <span class="btn green fileinput-button">
+                                                <i class="fa fa-plus"></i>
+                                                <span>Add files... </span>
+                                                <input type="file" name="files[]" multiple="">
+                                            </span>
+                                            <button type="submit" class="btn blue start hide">
+                                                <i class="fa fa-upload"></i>
+                                                <span>Start upload </span>
+                                            </button>
+                                            <button type="reset" class="btn warning cancel">
+                                                <i class="fa fa-ban-circle"></i>
+                                                <span>Cancel upload </span>
+                                            </button>
+                                            <button type="button" class="btn red delete">
+                                                <i class="fa fa-trash"></i>
+                                                <span>Delete </span>
+                                            </button>
+                                            <input type="checkbox" class="toggle">
+                                            <!-- The global file processing state -->
+                                            <span class="fileupload-process"></span>
+                                        </div>
+                                        <!-- The global progress information -->
+                                        <div class="col-lg-5 fileupload-progress fade">
+                                            <!-- The global progress bar -->
+                                            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                                                <div class="progress-bar progress-bar-success" style="width: 0%;">
+                                                </div>
+                                            </div>
+                                            <!-- The extended global progress information -->
+                                            <div class="progress-extended">
+                                                &nbsp;
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- The table listing the files available for upload/download -->
+                                    <table role="presentation" class="table table-striped clearfix">
+                                        <tbody class="files"></tbody>
+                                    </table>
+                                </form>
+
+
+
+                                <div class="portlet">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <i class="fa fa-list"></i>Documents
+                                        </div>
+
+                                    </div>
+
+
+                                    <table class="table table-striped table-bordered table-hover" id="tbl-document-uploads">
+                                        <thead>
+                                            <tr>
+
+                                                <th>Name</th>
+                                                <th>Thumnnail</th>
+                                                @*<th style="width: 75px;" class="no-sort"></th>*@
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-md-1"></div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix"></label>
+                    <button type="button" style="margin-right: 15px;" class="btn btn-primary green contacts-form" onclick="VehicleSale.SaveDocuments()" data-plus-as-tab="false">Save</button>
+                    <button type="button" data-dismiss="modal" class="btn btnclose-model">Close</button>
+                </div>
+            </div>
+
+
+
+
+
+
+        </div>
+    </div>
+</div>
+<div id="model-deal-cancellation" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">
+                    <strong>Deal Cancellation </strong><span class="Manufacturer"></span>&nbsp;<span class="Model"></span>
+                </h4>
+            </div>
+            <div class="modal-body" data-save="save">
+
+
+
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <table class="table table-striped table-hover table-col1-bold" style="margin: 0;">
+                            <tbody>
+                                <tr class="head">
+                                    <td colspan="2" style="text-align: center;">Vehicle Info</td>
+
+                                </tr>
+
+
+                                <tr>
+                                    <td>Chassis No:</td>
+                                    <td>
+                                        <span class="ChassisNo"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Engine No:</td>
+                                    <td>
+                                        <span class="EngineNo"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Reg. No:</td>
+                                    <td>
+                                        <span class="RegNo"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>C.C:</td>
+                                    <td>
+                                        <span class="EnginePower"></span>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <table class="table table-striped table-hover table-col1-bold" style="margin: 0;">
+                            <tbody>
+
+                                <tr class="head">
+                                    <td colspan="2" style="text-align: center;">Buyer Info</td>
+
+                                </tr>
+                                <tr>
+                                    <td>Name:</td>
+                                    <td><span class="AccountName"></span></td>
+                                </tr>
+                                <tr>
+                                    <td>P.O. BOX:</td>
+                                    <td><span class="PoBoxNo"></span>
+                                    <td>
+                                </tr>
+                                <tr>
+                                    <td>CNIC:</td>
+                                    <td><span class="LocalId"></span>
+                                    <td>
+                                </tr>
+
+
+                                <tr>
+                                    <td>TEL:</td>
+                                    <td><span class="ContactNumber"></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <table class="table table-striped table-hover table-col1-bold" style="margin: 0;">
+                            <tbody>
+
+                                <tr class="head">
+                                    <td colspan="2" style="text-align: center;">Deal Info</td>
+
+                                </tr>
+                                <tr>
+                                    <td>Sold Price:</td>
+                                    <td><span class="SalePrice" data-db-type="int" data-formating="true"></span></td>
+
+                                </tr>
+                                <tr>
+                                    <td>Logbook Fee:</td>
+                                    <td><span class="LogBookFee" data-db-type="int" data-formating="true"></span></td>
+
+                                </tr>
+                                <tr class="tr-tracker-info">
+                                    <td>Tracker:</td>
+                                    <td><span class="TrackerSalePrice" data-db-type="int" data-formating="true"></span></td>
+
+                                </tr>
+                                <tr class="tr-insurance-info">
+                                    <td>Insurance:</td>
+                                    <td><span class="InsurenceSalePrice" data-db-type="int" data-formating="true"></span></td>
+
+                                </tr>
+                                <tr class="head tr-trade-info hide">
+                                    <td colspan="2" style="text-align: center;">Trade Info&nbsp;<span class="label label-danger trade-status">Sold</span></td>
+
+                                </tr>
+                                <tr class="tr-trade-info hide">
+                                    <td>Trade Price:</td>
+                                    <td>
+                                        <span class="TradeInPrice" data-db-type="int" data-formating="true"></span>
+                                    </td>
+                                </tr>
+                                <tr class="tr-trade-info hide">
+                                    <td>Chassis No:</td>
+                                    <td>
+                                        <span class="tradeChassisNo"></span>
+                                    </td>
+                                </tr>
+                                <tr class="tr-trade-info hide">
+                                    <td>Engine No:</td>
+                                    <td>
+                                        <span class="tradeEngineNo"></span>
+                                    </td>
+                                </tr>
+                                <tr class="tr-trade-info hide">
+                                    <td>Reg. No:</td>
+                                    <td>
+                                        <span class="tradeRegNo"></span>
+                                    </td>
+                                </tr>
+                                <tr class="tr-trade-info hide">
+                                    <td>C.C:</td>
+                                    <td>
+                                        <span class="tradeEnginePower"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <table class="table table-striped table-hover table-col1-bold" style="margin: 0;">
+                            <tbody>
+
+                                <tr class="head">
+                                    <td colspan="2" style="text-align: center;">Cancellation Info</td>
+
+                                </tr>
+                                <tr>
+                                    <td>Sale Deposit:</td>
+                                    <td><span class="SaleDeposit"></span></td>
+
+                                </tr>
+                                <tr class="tr-installemt-info hide">
+                                    <td>Installment Deposit:</td>
+                                    <td><span class="InstallmentDeposit"></span></td>
+
+                                </tr>
+                                <tr class="tr-trade-info hide">
+                                    <td>Trade Price:</td>
+                                    <td>
+                                        <span class="TradeInPrice" data-db-type="int" data-formating="true"></span>
+                                    </td>
+                                </tr>
+                                <tr class="tr-IsTradeUnitReturned hide">
+                                    <td colspan="2">
+                                        <label id="LableActive" class="control-label" for="IsTradeUnitReturned">
+                                            <input type="checkbox" id="IsTradeUnitReturned" data-checktrack='true' value="true" />
+                                            Retrun Trade Unit
+                                        </label>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>Net Deposit:</td>
+                                    <td><span class="lblNetDeposit"></span></td>
+                                </tr>
+                                <tr>
+                                    <td>Depreciation Amount:</td>
+                                    <td>
+                                        <input type="text" class="form-control input-small num3" id="DepreciationAmount" data-required="required" data-message="Amount is required." />
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>Net Amount:</td>
+                                    <td>
+                                        <input type="text" class="form-control input-small num3 hide" id="ReturnAmount" /><span class="lblNetAmount"></span>
+
+                                    </td>
+
+                                </tr>
+
+
+                                <tr>
+                                    <td>Date:</td>
+                                    <td>
+                                        <input id="CancellationDate" type="text" class="form-control date-picker" data-clear-type='date' data-validate="true" data-required="required" data-message="Date is required" data-plus-as-tab="false" data-hide-dropdown="true" data-fiscal-date="true">
+                                    </td>
+
+                                </tr>
+
+
+
+                                <tr>
+                                    <td>
+                                        Payment Mode:
+                                    </td>
+                                    <td>
+                                        <select class="form-control select2" id="ReturnPaymentMode" data-required="false" data-message="Tracker Payment Option is required">
+                                            <option value="Cash">Cash</option>
+                                            <option value="Bank">Bank</option>
+                                            <option value="M Paisa">M Paisa</option>
+                                            <option value="LIPA NA MPESA">LIPA NA MPESA</option>
+                                            <option value="Mobile Money">Mobile Money</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+
+                                    <td colspan="2">
+                                        <select class="form-control select2" id="ReturnAccountId" data-required="required" data-message="Account is required"></select>
+                                    </td>
+                                </tr>
+                                <tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn red" onclick="VehicleSale.CancellDeal()">
+                    <i class="fa fa-trash-o"></i>
+                    Cancel Deal
+                </button>
+                <button type="button" data-dismiss="modal" class="btn default">Close</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/html" id="template-item">
+    <tr>
+        <td class="align-center">
+            {{InstalmentNo}}
+            <input type="text" class="InstalmentNo hide" value="1" data-db-column="InstalmentNo" data-db-type="int">
+            <input type="text" class="Id hide" value="0" data-db-column="Id" data-db-type="int">
+        </td>
+        <td>
+            <input type="text" class="InstallmentDate date-picker" value="" data-db-column="InstallmentDate" data-db-type="date">
+        </td>
+        <td>
+            <input type="text" class="Amount num3" value="" data-db-column="Amount" data-db-type="decimal">
+        </td>
+        <td>
+            <input type="text" class="ChequeNo form-control input-small" data-db-column="ChequeNo">
+        </td>
+
+        <td>
+            <input type="text" class="ChequeDate form-control date-picker input-small" data-db-column="ChequeDate" data-db-type="date">
+        </td>
+        <td>
+            <input type="text" class="BankName form-control" data-db-column="BankName">
+        </td>
+        <td class="hide instalment-status">{{RecievedAmount}}</td>
+        <td class="hide instalment-status">{{Status}}</td>
+        <td class="hide td-action">
+            <button type='button' class='btn red btn-xs' onclick='VehicleSale.Delete(this)'><i class='fa fa-trash-o'></i>&nbsp;Receive</button>
+        </td>
+    </tr>
+</script>
+
+
+<div class="main-print-conatiner">
+    <style>
+        .border1 {
+            border-bottom: 1px solid;
+            display: inline-block;
+        }
+
+        .border2 {
+            border-bottom: 1px solid;
+            display: inline-block;
+        }
+
+        .border3 {
+            border-bottom: 1px solid;
+            display: inline-block;
+        }
+
+        .width-1 {
+            width: 70%;
+        }
+
+        .width-2 {
+            width: 98%;
+        }
+
+        .width-3 {
+            width: 80%;
+        }
+
+        .width-4 {
+            width: 60%;
+        }
+
+        .width-5 {
+            width: 40%;
+        }
+
+        .width-6 {
+            width: 30%;
+        }
+    </style>
+    <div id="deliverynote-print-container" class="print-container hide">
+
+        <div class="col-md-12 col-xs-12">
+            <div class="col-md-3 col-xs-4 pull-left">
+                <span>P.O. BOX: <span>99945-80107, Mombasa-Kenya </span></span>
+                <br />
+                <span>Tel:<span>0711 382393</span></span><br />
+                <span><strong>VAT No.:</strong><span><strong></strong>P051439082P</span></span>
+            </div>
+
+            <div class="col-md-3 col-xs-4 pull-left">
+                <h4>ALI CARS LTD.</h4>
+                <br />
+                <h5>DELIVERY NOTE</h5>
+            </div>
+            <div class="col-md-3 col-xs-4 pul-left" style="border-left: 1px solid">
+                <span><strong>No.</strong></span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<span style="color: red"><span class="lbldnId"></span></span>
+                <br />
+                <br />
+                <br />
+                <span><strong>Date:&nbsp;&nbsp;</strong></span><span style="border-bottom: 1px solid; display: inline-block; width: 50%"><span class="lbldnDeliveredDate" data-db-type="date"></span></span>
+            </div>
+        </div>
+        <div class=" col-md-12">
+            <table class="table table-bordered table-striped table-hover">
+                <tbody>
+                    <tr>
+                        <td>Name</td>
+                        <td colspan="5"><span class="lbldnCustomer"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Address</td>
+                        <td colspan="5"><span class="lbldnAddress"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Chassis No.</td>
+                        <td colspan="2"><span class="lbldnChassisNo"></span></td>
+                        <td>Engine No.</td>
+                        <td colspan="2"><span class="lbldnEngineNo"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Reg. No.</td>
+                        <td style="width: 100px"><span class="lbldnRegNo"></span></td>
+                        <td>Color</td>
+                        <td style="width: 100px"><span class="lbldnColor"></span></td>
+                        <td colspan="2">Make & Model:<span class="lbldnManufacturer"></span>&nbsp;<span class="lbldnModel"></span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="6" class="text-center">
+                            <h3>I/We also confirm the receipt of the follwoing:</h3>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Spare Wheel</td>
+                        <td colspan="2"></td>
+                        <td>Wheel Caps</td>
+                        <td colspan="2"></td>
+
+                    </tr>
+                    <tr>
+                        <td>Radio/CD</td>
+                        <td colspan="2"></td>
+                        <td>Spanners</td>
+                        <td colspan="2"></td>
+
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td colspan="2"></td>
+                        <td>Jack</td>
+                        <td colspan="2"></td>
+
+                    </tr>
+                    <tr>
+                        <td colspan="6" class="text-left">
+                            <h3>Extras/Code</h3>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6" class="text-left">
+                            <h3><strong>Remarks: </strong>The vehicle is good order and condition:</h3>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">
+                            <h1></h1>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="col-md-12 col-xs-12">
+                <h4>I/We certefy that instructions and operation of the vehicle is explained and the manufacturer warranty is read and understood</h4>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="pull-left col-xs-6">
+                <label>Delivered By:</label>
+                <span style="border-bottom: 1px solid; display: inline-block; width: 70%; font-size: 15px;"><span class="lbldnDeliveredByName"></span></span>
+            </div>
+            <div class="pull-left col-xs-6">
+                <label>Accepted By:</label>
+                <span style="border-bottom: 1px solid; display: inline-block; width: 70%; font-size: 15px"><span class="lbldnCustomer"></span></span>
+            </div>
+
+        </div>
+        <div class="col-xs-12">
+            <br />
+            <br />
+            <div class="pull-left col-xs-6">
+                <label style="width: 86px">Sign:</label>
+                <span style="border-bottom: 1px solid; display: inline-block; width: 70%"></span>
+            </div>
+            <div class="pull-left col-xs-6">
+                <label style="width: 86px">Sign:&nbsp;</label>
+                <span style="border-bottom: 1px solid; display: inline-block; width: 70%"></span>
+            </div>
+            <div class="text-center col-xs-12">
+                <h4>NB. Delivery Note is not valid if not signed & stamped</h4>
+            </div>
+        </div>
+    </div>
+    <div id="cashreceipt-print-container" class="print-container visible-print">
+        <div class="col-md-12 col-xs-12">
+            <div class="col-md-3 col-xs-4 pull-left">
+                <h3><strong>ALI CARS LTD.</strong></h3>
+                <br />
+            </div>
+            <div class="col-md-3 col-xs-4 pull-left">
+                <span>P.O. BOX: <span>99945-80107, Mombasa-Kenya </span></span>
+                <br />
+                <span>Tel: <span>0711 382393</span></span><br />
+                <span>PIN No. <span><strong></strong>P051439082P</span></span>
+            </div>
+            <div class="col-md-3 col-xs-4 pul-left" style="border-left: 1px solid">
+                <br />
+                <br />
+                <span><strong>Date:</strong></span><span style="border-bottom: 1px dotted"><span class="lblcrvpRecievedDate" data-db-type="date"></span></span>
+                <br />
+
+            </div>
+        </div>
+        <div class="col-xs-12">
+
+            <div class="col-xs-4 pull-let">
+                <span><strong>No. A</strong></span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                <span class="lblcrvpId"></span>
+            </div>
+            <div class="col-xs-4 pull-left text-center">
+                <h4><strong>RECEIPT</strong></h4>
+            </div>
+            <div class="col-xs-4 pull-left">
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="col-xs-12">
+                <label><strong>Received with thanks from</strong></label>
+                <span class="border1 width-1"><span class="lblcrvsCustomer"></span></span>
+                <br />
+            </div>
+            <div class="col-xs-12">
+                <div class="border2 width-2"></div>
+                <br />
+            </div>
+            <div class="col-xs-12">
+                <label><strong>The sum of shillings/dollars</strong></label>&nbsp;
+                <span class="border1 width-1"><span class="lbldcrvpamountinword text-uppercase"></span></span>
+                <br />
+            </div>
+            <div class="col-xs-12">
+                <div class="border2 width-2"></div>
+                <br />
+            </div>
+            <div class="col-xs-12">
+                <label><strong>Being payment of</strong></label>
+                <span class="border1 width-1"><span class="lblcrvsManufacturer"></span>&nbsp;<span class="lblcrvsModel"></span></span>
+                <br />
+            </div>
+            <div class="col-xs-12">
+                <div class="border2 width-2"></div>
+                <br />
+            </div>
+            <div class="col-xs-12">
+                <div class="pull-left col-xs-6">
+                    <label><strong>Reg. No.</strong> </label>
+                    <span class="border3 width-3"><span class="lblcrvsRegNo"></span></span>
+                </div>
+                <div class="pull-left col-xs-6">
+                    <label><strong>Chassis No.</strong></label>
+                    <div class="border3 width-4"><span class="lblcrvsChassisNo"></span></div>
+                </div>
+
+            </div>
+            <div class="col-xs-12" style="margin-top: 20px">
+                <label><strong>Receipt</strong></label>
+                <span class="border1 width-1"><span class="lblcrvpPaymentMode"></span></span>
+                <br />
+            </div>
+            <div class="col-xs-12">
+                <div class="col-xs-5 pull-left">
+                    <div class="pull-left col-xs-5" style="margin-top: 50px;">
+                        <label><strong>KSHS./US$</strong></label>
+                    </div>
+                    <div class="col-xs-7" style="border: 1px solid; height: 100px"><span class="lblcrvpAmount" data-db-type="int" data-formating="true"></span></div>
+                </div>
+                <div class="col-xs-7 pull-left">
+
+                    <div class="col-xs-12" style="border: 1px solid; height: 100px">
+                        <div style="margin-top: 10px">
+                            <label><strong>Received By:</strong><span class="lbldnEngineNo"></span></label>
+                            <span class="border3 width-5"></span>
+                            <br />
+                            <br />
+                            <label><strong>Sign:</strong></label>
+                            <span class="border3 width-5"></span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="text-center col-xs-12 hide">
+                    <h4>NB. this receipt is not valid if not stamped or signed </h4>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="CashDealAgreement-print-container" class="print-container hide">
+        <div class="wrapper" style="margin: 5px 50px;">
+
+            <div class="clear">
+            </div>
+            <div class="align-center bold">
+                <p style="font-size: 19px;">SALE AGREEMENT</p>
+                <p style="font-size: 16px;"><u>CASH SALES AGREEMENT</u></p>
+            </div>
+            <div class="bold">
+                <p style="margin: 0px;">
+                    <span>NAME OF BUYER: <span class="AccountName"></span></span>
+                    <span style="float: right">ID: <span class="LocalId" style="margin-right: 50px"></span></span>
+                </p>
+                <p style="margin: 0px;">
+                    <span>P.O. BOX: <span class="PoBoxNo"></span></span>
+                    <span style="float: right">TEL: <span class="ContactNumber" style="margin-right: 50px"></span></span>
+                </p>
+                <br />
+                @* <br />*@
+                <p style="margin: 0px;">
+                    <span>DESCRIPTION OF MOTOR: <span class="Manufacturer"></span>&nbsp<span class="Model"> </span></span>
+                    <span style="float: right">REG NO: <span class="RegNo" style="margin-right: 50px"></span></span>
+                </p>
+                <p style="margin: 0px;">
+                    <span>CHASSIS NO: <span class="ChassisNo"></span></span>
+                    <span style="margin-left: 40px">C.C: <span class="EnginePower"></span></span>
+                    <span style="float: right">ENGINE NO:<span class="EngineNo" style="margin-right: 50px"></span></span>
+                </p>
+                <p style="margin: 0px;">
+                    <span>MODEL: <span class="Year"></span></span>
+                    <span style="margin-left: 100px">FUEL: <span class="Fuel"></span></span>
+                    <span style="float: right">COLOUR:<span class="Color" style="margin-right: 50px"> </span></span>
+                </p>
+                <br />
+                @* <br />*@
+                <p style="margin: 0px;">
+                    <span>
+                        1.SALES PRICE: <span class="SalePrice"></span>
+                        (<span class="SalePriceInWords text-uppercase"></span>).
+                    </span>
+                </p>
+                <p class="bold deposit-container">
+                </p>
+                <p style="margin: 0px;">
+                    <span>
+                        3.BALANCE: <span class="Balance"></span>
+                        <span class="BalanceInWords12 text-uppercase">Nill</span>.
+                    </span>
+                </p>
+                <p class="bold comment-container">
+                    Remarks:<span class="Comments text-uppercase"></span>
+                </p>
+                <p class="bold notes-container">
+                    Note:<span class="Notes bold text-uppercase"></span>
+
+                </p>
+            </div>
+            <div class="content" style="margin-top: 20px; text-align: justify; font-size: 14px;">
+                <b><u>FURTHER AGREED BETWEEN THE BUYER AND SELLER AS FOLLOWS:</u></b>
+                <p style="margin: 5px;">
+                    <b>1.</b> The aforesaid motor vehicle is sold on the basis “AS IT IS” and the seller does not give
+                    Any guarantee whatsoever to the buyer.
+                </p>
+                <p style="margin: 5px;">
+                    <b>2.</b> The buyer has confirmed by signing this Agreement that He /She has taken possession
+                    Of The aforesaid motor vehicle on basis “AS IT IS” and upon being satisfied that the
+                    Motor vehicle is in a proper condition.
+                </p>
+                <p style="margin: 5px;">
+                    <b>3.</b> The buyer shall not be refunded.
+                </p>
+                <p style="margin: 5px;">
+                    <b>4.</b> Immediately the buyer takes possession of the motor vehicle, He /She shall be
+                    responsible to cater for insurance cover at an insurance company of his/her
+                    Choice, but preferable comprehensive and the buyer is not entitled or authorized
+                    To resell the motor vehicle unless he/she clears all the payments in case of the
+                    Hire purchase, installments and the postdated payments.
+                </p>
+                <p style="margin: 5px;">
+                    <b>5.</b> Should the motor vehicle be involved in an accident or stolen, burned e.t.c.it shall be the
+                    The sole responsibility of the buyer, notwithstanding the fact that the motor vehicle has
+                    Not been formally transferred to his/her name.
+                </p>
+                <p style="margin: 5px;">
+                    <b>6.</b> The logbook shall be handed over to the buyer immediately upon the seller receiving
+                    The last installment and transfer fee of the same or as the parties may agree herein in Writing.      Logbook after two weeks.
+                </p>
+                <p>In witness where of the parties have set their hands on <span class="Date">18TH JULY, 2016</span>.</p>
+
+            </div>
+            <div class="bottom-content bold" style="margin-top: 15px;">
+                <p>
+                    <span class="Signature-Buyer">
+                        SIGNED BY THE BUYER
+                        <br>
+                    </span>
+                </p>
+                <p style="margin-top: 50px;">
+                    <span class="Signature-Seller">
+                        SIGNED BY THE SELLER
+                        <br>
+                    </span>
+                </p>
+
+            </div>
+        </div>
+    </div>
+    <div id="VehicleSaleAgreement-print-container" class="hide print-container">
+
+        <div class="wrapper" style="margin: 5px 50px;">
+
+            <div class="clear">
+            </div>
+            <div class="align-center bold">
+                <p style="font-size: 19px;">MOTOR VEHICLE SALE AGREEMENT</p>
+            </div>
+            <div class="bold">
+                <p style="margin: 0px;">
+                    <span>MAKE: <span class="Manufacturer"></span>&nbsp;<span class="Model"></span></span>
+                    <span style="float: right">MODEL: <span class="Year" style="margin-right: 50px"></span></span>
+                </p>
+                <p style="margin: 0px;">
+                    <span>CHASSIS NO: <span class="ChassisNo"></span></span>
+                    <span style="float: right">ENGINE NO: <span class="EngineNo" style="margin-right: 50px"></span></span>
+                </p>
+                <p style="margin: 0px;">
+                    <span>REG NO: <span class="RegNo">KCD 658Z</span></span>
+                    <span style="float: right">COLOUR:<span class="Color" style="margin-right: 50px"> </span></span>
+                </p>
+                <p style="margin: 0px;">
+                    <span>C.C: <span class="EnginePower"></span></span>
+                    <span style="float: right">FUEL: <span class="Fuel" style="margin-right: 50px"></span></span>
+                </p>
+                <p class="align-center bold"><u>PARTICULARS OF THE BUYER:</u></p>
+                <p style="margin: 0px;">
+                    <span>NAME OF BUYER: <span class="AccountName"></span></span>
+                    <br />
+                    <span>P.O. BOX: <span class="PoBoxNo"></span></span>
+                    <br />
+                    <span>ID: <span class="LocalId"></span></span>
+                    <br />
+                    <span>TEL: <span class="ContactNumber"></span></span>
+                    <br />
+                    <span>ROUTE: <span class="Route"></span></span>
+                </p>
+            </div>
+            <div class="content" style="margin-top: 20px; text-align: justify; font-size: 14px;">
+                <p class="bold">
+                    <b>1. </b><span>
+                        SALES PRICE: <span class="SalePrice"></span>
+                        (<span class="SalePriceInWords text-uppercase"></span>).
+                    </span>
+                </p>
+                <p class="bold deposit-container">
+                </p>
+                <p class="bold">
+                    <b>3. </b><span>
+                        BALANCE<span class="ins-trac-lines text-uppercase"></span>: <span class="Balance"></span>
+                        (<span class="BalanceInWords text-uppercase"></span>).
+                    </span>
+                </p>
+                <p class="bold">
+                    <b>4. </b>LOG BOOK TRANSFER FEE KSH. <span class="LogBookFee"></span>&nbsp;IS PAYABLE BY CUSTOMER
+                </p>
+                <p class="bold">
+                    <b>5. </b><span>
+                        TOTAL BALANCE: <span class="TotalBalance">900,000 </span>
+                        (<span class="TotalBalanceInWords text-uppercase"></span>).
+                    </span>
+                </p>
+                <p class="bold comment-container">
+                    Remarks:<span class="Comments text-uppercase"></span>
+                </p>
+                <p>
+                    The balance of the above at (5) shall be liquidated by the Purchaser through the payment of equal monthly installments of the amount(s) shown:
+                </p>
+
+                <div class="bold" id="item-container-print">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Instlment No.</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody data-plus-as-tab="false"></tbody>
+                    </table>
+                </div>
+                <p>
+                    FAILURE OF NON-PAYMENT OF THE ABOVE STATED, THERE WILL BE A 30% FURTHER PENALTIES.
+                </p>
+                <p>
+                    <b>6. </b>INCASE OF DELAY TO PAY ANY TWO INSTALLMENT IMMEDIATELY THE VEHICLE WILL BE REPOSES WITHOUT ANY FURTHER NOTICE AND ONCE IT WILL BE REPOSES CAN BE RELEASED ON CLEARING OF ALL THE BALANCE AND THE REPOSESING CHARGES WIL BE PAID BY THE CUSTOMER.
+                </p>
+                <p>
+                    <b>7. </b>THE BUYER SHOULD TAKE A FULL COMPREHENSIVE INSURANCE COVER PROVIDED BY THE SELLER AND SHOULD PAY THE FULL AMOUNT FOR THE INSURANCE COVER OF ONE YEAR.
+                </p>
+                <p>
+                    <b><u>IT IS FURTHER AGREED BETWEEN THE BUYER AND THE SELLER AS FOLLOWS:-</u></b>
+                </p>
+                <p>
+                    <b>1. </b>The aforesaid motor vehicle is sold on basis “AS IT IS” and the Seller does not give any guarantee whatsoever to the Buyer.
+                </p>
+                <p>
+                    <b>2. </b>The Buyer has confirmed by signing this Agreement that he/she has taken possession of the aforesaid motor vehicle on the basis “AS IT IS” and upon being satisfied that the motor vehicle is in a proper condition.  However the Buyer covenants with the Seller that he (the Buyer) shall not part with possession of the motor vehicle before full payment of the full purchase price and a transfer executed in his/her favor.  For the avoidance of doubt any purported sale, assignment, pledge mortgage, under letting to lend and any other transaction pursuant thereto shall be null and void and of no consequence whatsoever.
+                </p>
+                <p>
+                    <b>3. </b>The Buyer during the continuance of this agreement will provide a safe and proper garage for the said motor vehicle and will pay the rent rates and taxes (if applicable) and not suffer the said motor vehicle to be seized under any distress, execution or any other legal process and will not take the same out of the Republic of Kenya without the previous consent in writing of the Seller and will not use or suffer the same to be used contrary to law and will not remove, alter, erase, conceal, deface or otherwise interfere with any Chassis, Engine or registration mark upon the said motor vehicle or permit any person so to do.
+                </p>
+                <p>
+                    <b>4. </b>If the motor vehicle is involved in an accident while in the possession and custody of the Buyer herein and before transferring the motor vehicle into the Buyers name within the required time as stipulated in the Traffic Act any suit arising out of such accident and the Seller is sued as a result of the delay of the Buyer transferring the motor vehicle in his or her name, the costs of defending such suit shall be borne by the Buyer.
+                </p>
+                <p>
+                    <b>5. </b>It is hereby agreed between the parties that the Seller shall at all times reserve the right to inspect the motor vehicle and verify its state and  condition and/or its whereabouts before the full purchase price is paid.  It shall be the Buyers obligation to unconditionally avail the motor vehicle and allow the Seller to inspect the state and condition and verify the motor vehicles whereabouts upon receipt by the Buyer of the Seller’s written request which shall be sent through the Buyers postal address indicated in this agreement.  Upon such requests being ignored the Seller shall have the right to repossess the motor vehicle and if the same be hidden and/or be suspected to be hidden the Seller shall have the right to legal redress without prejudice to his other legal rights open to him.
+                </p>
+                <p>
+                    <b>6. </b>The Buyer further confirms that the original Logbook remains and shall at all times hereto in the custody and possession of the Seller until the full payment of the purchaser price and transfer affected in the name of the Buyer.
+                </p>
+                <p>
+                    <b>7. </b>Immediately the Buyer takes possession of the motor vehicle, he shall be responsible to cater for insurance cover at an Insurance Company of his/her choice. However a true Photostat copy of the Insurance Cover shall at all times be availed to the Seller until the full payment of the purchase price.
+                </p>
+                <p>
+                    <b>8. </b>Should the motor vehicle be involved in an accident or stolen, burnt etc it shall be the sole responsibility of the Buyer notwithstanding the fact that the motor vehicle has not been formally transferred into his/her name.
+                </p>
+                <p>
+                    <b>9. </b>The Buyer during the continuance of this Sale Agreement will at his/her own expense keep the said motor vehicle in good repair and good working condition (reasonable wear and tear excepted) and will not make any major alteration in or addition to the said motor vehicle without the previous consent of the Seller.  If the Buyer makes a major alteration to the detriment of the well being of the motor vehicle the Seller shall have the right of repossession without prior notice.
+                </p>
+                <p>
+                    <b>10. </b>In the event of a default by the Purchaser of any one installment on its due date as shown in this Agreement, the deposit herein shall not be refunded and the whole balance then outstanding shall become due and payable forthwith and shall immediately attract a penalty/charge of 10% per month interest until payment in full.  The Seller shall immediately have the right to repossess the motor vehicle without prior notice or a court order. It is hereby understood by all parties that this agreement does not exempt any requisite statutory notice before repossession.
+                </p>
+                <p>
+                    <b>11. </b>Further to paragraph 10 above the parties herein covenant and/or agree that after the repossession, the Seller shall then have the right to re-sell the motor vehicle to recover the balance outstanding, the legal charges, court broker’s fees, interest accrued and all other related expenses. The balance of the re-sale price after pursuant to the default shall then be forwarded to the Purchaser.
+                </p>
+                <p class="bold notes-container">
+                    Note:<span class="Notes bold text-uppercase"></span>
+
+                </p>
+                <p>
+                    <b>
+                        IN THE WITNESS WHEREOF THE PARTIES HAVE SET THEIR HANDS THIS <span class="Date">18TH JULY, 2016</span>.
+                    </b>
+                </p>
+
+            </div>
+            <div class="bottom-content bold" style="margin-top: 15px;">
+                <p>
+                    <span class="Signature-Buyer">
+                        SIGNED BY THE BUYER
+                        <br>
+                        <br>
+                    </span>
+                </p>
+                <p style="margin-top: 50px;">
+                    <span class="Signature-Seller">
+                        SIGNED BY THE SELLER
+                        <br>
+                    </span>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<script id="template-upload" type="text/x-tmpl">
+    {% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-upload fade">
+        <td>
+            <span class="preview"></span>
+        </td>
+        <td>
+            <p class="name">{%=file.name%}</p>
+            <strong class="error text-danger label label-danger"></strong>
+        </td>
+        <td>
+            <p class="size">Processing...</p>
+            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+            </div>
+        </td>
+        <td>
+            {% if (!i && !o.options.autoUpload) { %}
+            <button class="btn blue start" disabled>
+                <i class="fa fa-upload"></i>
+                <span>Start</span>
+            </button>
+            {% } %}
+            {% if (!i) { %}
+            <button class="btn red cancel">
+                <i class="fa fa-ban"></i>
+                <span>Cancel</span>
+            </button>
+            {% } %}
+        </td>
+    </tr>
+    {% } %}
+</script>
+<!-- The template to display files available for download -->
+<script id="template-download" type="text/x-tmpl">
+    {% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-download fade">
+        <td>
+            <span class="preview">
+                {% if (file.ThumbnailUrl) { %}
+                <a href="../Upload/@(SiteContext.Current.UploadFolder)/AgreementFiles/{%=file.Url%}" title="{%=file.Name%}" download="{%=file.Name%}" data-gallery><img src="../Upload/@(SiteContext.Current.UploadFolder)/AgreementFiles/{%=file.ThumbnailUrl%}"></a>
+                {% } %}
+            </span>
+        </td>
+        <td>
+            <p class="name">
+                {% if (file.Url) { %}
+                <a href="../Upload/@(SiteContext.Current.UploadFolder)/AgreementFiles/{%=file.Url%}" title="{%=file.Name%}" download="{%=file.Name%}" {%=file.ThumbnailUrl?'data-gallery':''%}>{%=file.Name%}</a>
+                {% } else { %}
+                <span>{%=file.Name%}</span>
+                {% } %}
+            </p>
+            {% if (file.error) { %}
+            <div><span class="label label-danger">Error</span> {%=file.error%}</div>
+            {% } %}
+        </td>
+        <td>
+            <span class="Size">{%=file.Size%}</span>
+        </td>
+        <td>
+            {% if (file.DeleteUrl) { %}
+            <button class="btn red delete btn-sm" data-type="{%=file.deleteType%}" data-url="{%=file.DeleteUrl%}" {% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}' {% } %}>
+                <i class="fa fa-trash-o"></i>
+                <span>Delete</span>
+            </button>
+            <input type="checkbox" name="delete" value="1" class="toggle">
+            {% } else { %}
+            <button class="btn yellow cancel btn-sm">
+                <i class="fa fa-ban"></i>
+                <span>Cancel</span>
+            </button>
+            {% } %}
+        </td>
+        <td class="hide">
+            <input class="data" data-file="{%=JSON.stringify(file)%}" type="hidden" />
+
+        </td>
+    </tr>
+    {% } %}
+</script>
+<script type="text/html" id="template-sales-deposits">
+    <tr>
+        <td>
+            <input type="hidden" class="ItemId" id="ItemId" data-db-column="ItemId">
+            <input type="hidden" class="Id" data-db-column="Id">
+            <input type="text" class="Date form-control input-medium date-picker" data-db-column="Date" data-db-type="date">
+        </td>
+        <td>
+            <input type="text" class="Amount form-control input-small num3" data-db-column="Amount" data-db-type="float">
+        </td>
+        <td>
+            <select class="form-control select2 payment-mode" data-required="required" data-message="Payment Option is required" data-db-column="PaymentMode">
+                <option value="Cash">Cash</option>
+                <option value="Bank">Bank</option>
+                <option value="M Paisa">M Paisa</option>
+                <option value="LIPA NA MPESA">LIPA NA MPESA</option>
+                <option value="Mobile Money">Mobile Money</option>
+            </select>
+        </td>
+        <td>
+            @Html.Partial("../manage/_CashBankAccounts", new ViewDataDictionary { { "onlyControlRequired", true }, { "exludeId", true }, { "class", "form-control select2 AccountId" } })
+        </td>
+        <td style="width: 8px;">
+            <span class="action"><i class="fa fa-trash-o" onclick="VehicleSale.DeleteRow(this)" data-original-title="Delete Item"></i></span>
+
+        </td>
+
+    </tr>
+</script>
+@section FooterScript
+{
+    <style type="text/css">
+        .griditem td td {
+            padding: 10px;
+        }
+
+        #fileupload .text-danger {
+            color: white !important;
+        }
+
+        #model-deal-cancellation table tr.head {
+            text-align: center;
+            background-color: #2ab4c0 !important;
+        }
+
+        table.table-col1-bold td:first-child {
+            font-weight: bold;
+        }
+
+        #tbl-document-uploads .preview img {
+            height: 60px;
+            width: 80px;
+        }
+    </style>
+    @Styles.Render("~/Content/Themes/cs/plugin/fileupload")
+    @Scripts.Render("~/content/scripts/plugin/fileupload")
+    <script src="~/Content/metronic/assets/pages/scripts/form-fileupload.js"></script>
+    <script src="~/Content/AppJS/Vehicle/VehicleSale.js?v=2"></script>
+    <script>
+        jQuery(document).ready(function () {
+            VehicleSale.init();
+        });
+    </script>
+}

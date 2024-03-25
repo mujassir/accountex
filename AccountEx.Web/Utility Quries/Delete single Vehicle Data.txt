@@ -1,0 +1,24 @@
+use amex_dev
+
+--SELECT * FROM dbo.Vehicles
+--SELECT * FROM dbo.Vehicles WHERE ChassisNo='SCP92-1065907' AND CompanyId=63
+
+DECLARE @VehicleId INT=65
+DECLARE @CompanyId INT=63
+
+DELETE FROM dbo.VehicleFollowUps WHERE VehicleId=@VehicleId AND CompanyId=@CompanyId
+DELETE FROM dbo.VehicleSales WHERE VehicleId=@VehicleId AND CompanyId=@CompanyId
+DELETE FROM dbo.BLItems WHERE VehicleId=@VehicleId AND CompanyId=@CompanyId
+DELETE FROM dbo.Transactions WHERE ReferenceId IN (SELECT Id FROM dbo.VehicleSales WHERE VehicleId=@VehicleId AND CompanyId=@CompanyId) AND CompanyId=@CompanyId AND Transactions.TransactionType IN(1,57,49,45,46)
+DELETE FROM dbo.VehicleAcutions WHERE VehicleId=@VehicleId AND CompanyId=@CompanyId
+DELETE FROM dbo.Transactions WHERE ReferenceId IN (SELECT Id FROM dbo.VehicleAcutions WHERE VehicleId=@VehicleId AND CompanyId=@CompanyId) AND CompanyId=@CompanyId AND Transactions.TransactionType IN(53)
+DELETE FROM dbo.VehiclePenalties WHERE VehicleId=@VehicleId AND CompanyId=@CompanyId
+DELETE FROM dbo.VehicleInstallmentPayments WHERE VehicleId=@VehicleId AND CompanyId=@CompanyId
+DELETE FROM dbo.VehicleRequests WHERE VehicleId=@VehicleId AND CompanyId=@CompanyId
+DELETE FROM dbo.VehiclePayments WHERE VehicleId=@VehicleId AND CompanyId=@CompanyId
+DELETE FROM dbo.BLStatusHistories WHERE VehicleId=@VehicleId AND CompanyId=@CompanyId
+DELETE FROM dbo.VehicleVouchers WHERE VehicleId=@VehicleId AND CompanyId=@CompanyId
+DELETE FROM dbo.Transactions WHERE ReferenceId IN (SELECT Id FROM dbo.VehicleVouchers WHERE VehicleId=@VehicleId AND CompanyId=@CompanyId) AND CompanyId=@CompanyId AND Transactions.TransactionType IN(58,59,60)
+DELETE FROM dbo.Transactions WHERE ReferenceId IN (@VehicleId) AND CompanyId=@CompanyId AND Transactions.TransactionType IN(50,54)
+DELETE FROM dbo.Vehicles WHERE Id=@VehicleId AND CompanyId=@CompanyId
+

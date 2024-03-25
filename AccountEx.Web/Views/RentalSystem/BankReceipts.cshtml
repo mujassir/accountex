@@ -1,0 +1,220 @@
+﻿@using BussinessLogic;
+@using AccountEx.Common;
+@using System.Globalization;
+
+@*@{
+    ViewBag.FormTitle = "Bank Receipts";
+    var months = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.MonthNames;
+    var monthlist = new List<IdName>();
+    for (int i = 1; i < months.Length; i++)
+    {
+        monthlist.Add(new IdName { Id = i, Name = months[i - 1] });
+    }
+    IList<int> years = Enumerable.Range(DateTime.Now.Year - 2, 10).ToList();
+    
+}*@
+<style>
+    .align-center {
+        text-align: center;
+    }
+
+    #item-container thead tr th {
+        text-align: center;
+    }
+</style>
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold hidden-print">Challan Receiving</h1>
+}
+<div class="row hidden-print  " id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title hide">
+                <div class="caption">
+                    <i class="fa fa-edit"></i>Add/Edit @ViewBag.FormTitle
+                </div>
+                <div class="actions hide">
+                    <a href="javascript:;" onclick="BankReceipts.LoadVoucher('previous')" class="btn blue">
+                        <i class="fa fa-angle-left"></i>&nbsp;Back
+                    </a>
+                    <a href="javascript:;" onclick="BankReceipts.LoadVoucher('next')" class="btn blue">
+                        <i class="fa fa-angle-left"></i>&nbsp;Next 
+                    </a>
+
+                </div>
+            </div>
+            <div class="portlet-body form">
+
+                <div id="mainform" class="form-horizontal" data-save="save">
+                    <input type="text" id="Id" class="hide" data-include-in-item="true" data-item-id="BankReceiptId" />
+                    <input type="text" id="PreVoucherNumber" class="hide" />
+                    <div class="form-body">
+                        <div class="hide alert alert-danger container-message">
+                            <i class="close" onclick="$(this).parent().hide();"></i>
+                            <strong></strong>
+                            <div class="form-body message-content"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Vou #</label>
+                            <div class="col-md-2 ">
+                                <input type="text" class="form-control number " id="VoucherNumber" data-plus-as-tab="false" data-required="required" data-message="Voucher Number is required"  data-include-in-item="true" />
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">Date</label>
+                            <div class="col-md-2 ">
+                                <input id="PaymentDate" type="text" class="form-control date-picker input-small" data-required="required" data-message="date is required" data-plus-as-tab="false" data-clear-type="date" data-fiscal-date="true">
+                            </div>
+                        </div>
+                        <div class="form-group" data-save="false">
+                            <div class="col-md-12 saleitem-container scroller" style="height: 200px; padding: 10px !important" data-always-visible="1" data-rail-visible1="1">
+
+                                <table id="item-container" class="table table-bordered griditem">
+                                    <thead>
+                                        <tr>
+                                            <th rowspan="2">Challan No.</th>
+                                            <th style="width: 10%;" rowspan="2">Tenant Name</th>
+                                            <th rowspan="2">Shop No</th>
+                                            <th style="width: 15%;" rowspan="2">Description</th>
+                                            <th colspan="3" class="align-center">Agreements</th>
+                                            <th colspan="3" class="align-center">Arrears</th>
+                                            <th colspan="2" class="align-center">Surcharge</th>
+                                            <th rowspan="2">Due Date</th>
+                                            <th rowspan="2">Paid Date</th>
+                                            <th rowspan="2">Net Amount</th>
+                                            <th rowspan="2"></th>
+                                        </tr>
+                                        <tr>
+                                            <th>Monthly Rent</th>
+                                            <th>Utility Charges</th>
+                                            <th>Electricity</th>
+                                            <th>Monthly Rent</th>
+                                            <th>Utility Charges</th>
+                                            <th>Electricity</th>
+                                            <th>Previous Surcharge</th>
+                                            <th>Current Surcharge</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody data-plus-as-tab="false">
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                        <div class="form-group ">
+                            <div class="col-md-8">
+                                <br />
+                            </div>
+                            <div class="col-md-4 align-right">
+                                <div class="row">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <div class="btn-set pull-left ">
+                            <a href="javascript:;" onclick="BankReceipts.LoadVoucher('first')" class="btn blue tooltips disabled first" data-original-title="First">
+                                <i class="fa fa-angle-double-left"></i>
+                            </a>
+                            <a href="javascript:;" onclick="BankReceipts.LoadVoucher('previous')" class="btn blue tooltips disabled previous" data-original-title="Previous">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a href="javascript:;" onclick="BankReceipts.LoadVoucher('next')" class="btn blue tooltips disabled next" data-original-title="Next">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                            <a href="javascript:;" onclick="BankReceipts.LoadVoucher('last')" class="btn blue tooltips disabled last" data-original-title="Last">
+                                <i class="fa fa-angle-double-right"></i>
+                            </a>
+                        </div>
+                        <div class="btn-set pull-right">
+
+                            <button type="button" class="btn purple-plum" onclick="BankReceipts.New()">
+                                <i class="fa  fa-plus-circle"></i>
+                                New</button>
+                            <button type="button" class="btn btn-primary green btnSave" onclick="BankReceipts.Save()">
+                                <i class="fa fa-check"></i>
+                                Save</button>
+                            <button id="btndelete" type="button" class="btn red" onclick="BankReceipts.Delete()">
+                                <i class="fa fa-trash-o"></i>
+                                Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+
+<script type="text/html" id="template-item">
+    <tr>
+        <td>
+            <input type="text" class="ChallanNumber form-control input-small" data-db-column="ChallanId">
+            <input type="hidden" class="ChallanNo form-control input-small" data-db-column="ChallanNo">
+            <input type="hidden" class="Id" data-db-column="Id">
+            <input type="hidden" class="TransactionType" data-db-column="TransactionType">
+        </td>
+        <td>
+            <input type="hidden" class="TenantAccountId" data-db-column="TenantAccountId">
+            <input type="text" class="TenantAccountName form-control input-small" disabled="disabled" data-db-column="TenantAccountName">
+        </td>
+        <td>
+            <input type="text" class="ShopNo form-control input-medium" disabled="disabled" data-db-column="ShopNo">
+            <input type="hidden" class="BankReceiptId" data-db-column="BankReceiptId">
+        </td>
+        <td>
+            <input type="text" class="Description form-control" data-db-column="Description">
+        </td>
+        <td>
+            <input type="text" class="MonthlyRent form-control " data-db-column="MonthlyRent" disabled="disabled">
+        </td>
+        <td>
+            <input type="text" class="UCPercent form-control " data-db-column="UCPercent" disabled="disabled">
+        </td>
+        <td>
+            <input type="text" disabled="disabled" class="ElectricityCharges form-control input-small" data-db-column="ElectricityCharges" data-db-type="decimal"@* value="@SettingManager.Fine"*@>
+        </td>
+        <td>
+            <input type="text" disabled="disabled" class="RentArrears form-control input-small" data-db-column="RentArrears" data-db-type="int" value="">
+        </td>
+        <td>
+            <input type="text" disabled="disabled" class="UCPercentArears form-control input-small" data-db-column="UCPercentArears" data-db-type="int">
+        </td>
+        <td>
+            <input type="text" disabled="disabled" class="ElectricityArrears form-control input-small" data-db-column="ElectricityArrears" data-db-type="decimal" value="">
+        </td>
+        <td>
+            <input type="text" disabled="disabled" class="SurCharge form-control input-small" data-db-column="SurCharge" data-db-type="decimal" value="">
+        </td>
+        <td>
+            <input type="text" class="LateSurCharge form-control input-small" data-db-column="LateSurCharge" data-db-type="decimal" value="">
+        </td>
+        <td>
+            <input type="text" disabled="disabled" class="DueDate form-control input-small" data-db-column="DueDate" data-db-type="date" value="">
+        </td>
+        <td>
+            <input type="text" class="ReceiveDate form-control input-small date-picker" data-db-column="ReceiveDate" data-db-type="date" value="">
+        </td>
+        <td>
+            <input type="text" disabled="disabled" class="NetAmount form-control input-small" data-db-column="NetAmount" data-db-type="decimal"@* value="@SettingManager.Fine"*@>
+        </td>
+        <td class="td-delete">
+            <span class="action"><i class="fa fa-trash-o" onclick="BankReceipts.DeleteRow(this)" data-original-title="Delete Item"></i></span>
+        </td>
+    </tr>
+</script>
+
+
+@section FooterScript
+{
+
+    <script src="~/Content/AppJS/RentalSystem/BankReceipts.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            BankReceipts.init();
+        });
+    </script>
+}
+
+

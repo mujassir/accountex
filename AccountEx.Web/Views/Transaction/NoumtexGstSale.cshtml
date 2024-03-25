@@ -1,0 +1,933 @@
+﻿@using AccountEx.Common;
+
+@{
+    //ViewBag.FormTitle = "Add/Edit Commercial Sales";
+    var type = Request.QueryString["type"] + "";
+    var vouchertype = ((VoucherType)Enum.Parse(typeof(VoucherType), type, true));
+    var allowDc = (vouchertype == VoucherType.Sale || vouchertype == VoucherType.GstSale || vouchertype == VoucherType.Purchase || vouchertype == VoucherType.GstPurchase) && SettingManager.AllowDC;
+    var allowPartner = false;
+    if (vouchertype == VoucherType.GstSale && SettingManager.IsGSTSaleAllowPartner)
+    {
+        allowPartner = true;
+    }
+    else if (vouchertype == VoucherType.GstSaleReturn && SettingManager.IsGSTSaleReturnAllowPartner)
+    {
+        allowPartner = true;
+    }
+    switch (type.ToLower())
+    {
+        case "gstsale":
+        case "gstsales":
+            ViewBag.FormTitle = "GST Sale";
+            break;
+        case "gstpurchase":
+        case "gstpurchases":
+            ViewBag.FormTitle = "GST Purchase";
+            break;
+        case "gstsalereturn":
+            ViewBag.FormTitle = "GST Sale Return";
+            break;
+        case "gstpurchasereturn":
+            ViewBag.FormTitle = "GST Purchase Return";
+            break;
+    }
+    ViewBag.Title = ViewBag.FormTitle;
+}
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold hidden-print">Manage @ViewBag.FormTitle</h1>
+}
+@using AccountEx.BussinessLogic;
+@{
+    type = Request["type"].ToLower();
+    var error = "";
+    switch (type)
+    {
+        case "sale":
+            if (SettingManager.SaleAccountHeadId == 0)
+            {
+                error += "<li>Sale account is missing.</li>";
+
+            }
+            if (SettingManager.CustomerHeadId == 0 && SettingManager.CashAccountId == 0)
+            {
+                error += "<li>Customer or cash account is missing.</li>";
+
+            }
+            break;
+        case "purchase":
+            if (SettingManager.PurchaseAccountHeadId == 0)
+            {
+                error += "<li>Purchase account is missing.</li>";
+
+            }
+            if (SettingManager.SupplierHeadId == 0)
+            {
+                error += "<li>Supplier account is missing.</li>";
+
+            }
+            break;
+        case "salereturn":
+            if (SettingManager.SaleReturnAccountHeadId == 0)
+            {
+                error += "<li>Sale return account is missing.</li>";
+
+            }
+            if (SettingManager.CustomerHeadId == 0 && SettingManager.CashAccountId == 0)
+            {
+                error += "<li>Customer or cash account is missing.</li>";
+
+            }
+            break;
+        case "purchasereturn":
+            if (SettingManager.PurchaseReturnAccountHeadId == 0)
+            {
+                error += "<li>Purchase return account is missing.</li>";
+
+            }
+            if (SettingManager.SupplierHeadId == 0)
+            {
+                error += "<li>Supplier account is missing.</li>";
+
+            }
+            break;
+    }
+    if (SettingManager.ProductHeadId == 0)
+    {
+        error += "<li>Product Account is Missing.</li>";
+
+    }
+    if (SiteContext.Current.Fiscal == null)
+    {
+        error += "<li>No fiscal year found.</li>";
+
+    }
+
+}
+@if (!string.IsNullOrWhiteSpace(error))
+{
+    <div class="note note-danger note-bordered">
+        <h4 class="block">Head Account Missing</h4>
+        <div>
+            <i class="fa-lg fa fa-warning"></i>Head Account is missing in the application settings.In order to complete current transaction head accounts must be added in settings.<br />
+
+
+            <ul>
+                @Html.Raw(error)
+            </ul>
+
+
+            Add missing head accounts in settings and then try again by <a href="@Request.Url"><i class="fa fa-refresh"></i>&nbsp;Relaoding</a>&nbsp;the current page.
+        </div>
+    </div>
+}
+else
+{
+
+
+    <div class="row hidden-print" id="form-info">
+        <div class="col-md-12 col-sm-12">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <div class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-edit"></i>Add/Edit @ViewBag.FormTitle
+                    </div>
+                    <div class="actions hide">
+                        <a href="javascript:;" onclick="NoumtexGstSale.LoadVoucher('previous')" class="btn blue">
+                            <i class="fa fa-angle-left"></i>&nbsp;Back
+                        </a>
+                        <a href="javascript:;" onclick="NoumtexGstSale.LoadVoucher('next')" class="btn blue">
+                            <i class="fa fa-angle-left"></i>&nbsp;Next 
+                        </a>
+
+                    </div>
+                </div>
+                <div class="portlet-body form">
+
+                    <div id="mainform" class="form-horizontal" data-save="save">
+
+                        <input type="text" id="Id" class="hide" data-include-in-item="true" data-item-id="SaleId" />
+                        <input type="text" id="CreatedDate" class="hide ac-date" data-clear-type="date" />
+                        <input type="text" id="IsDeleted" class="hide" />
+                        <input type="text" id="PreVoucherNumber" class="hide" />
+                        <input type="text" id="TransactionType" class="hide" value="@((byte)vouchertype)" data-clear="false" data-include-in-item="true" />
+                        <div class="form-body">
+                            <div class="hide alert alert-danger container-message">
+                                <i class="close" onclick="$(this).parent().hide();"></i>
+                                <strong></strong>
+                                <div class="form-body message-content"></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">Vou #</label>
+                                <div class="col-md-1 container-voucher">
+                                    <label id="lblVoucherNumber" class="label label-info label-voucher hide"></label>
+                                    <input type="text" class="form-control number input-xsmall" id="VoucherNumber" data-plus-as-tab="false" data-required="required" data-message="Voucher Number is required" data-include-in-item="true">
+                                </div>
+                                <label class="col-md-1 control-label" for="prefix">Book #</label>
+                                <div class="col-md-1">
+                                    <input type="text" id="InvoiceNumber" data-validate="true" data-required="required" data-message="Book Number is required"  class="number form-control input-xsmall" data-plus-as-tab="false" data-include-in-item="true">
+                                </div>
+                                <label class="col-md-1 control-label" for="prefix">Date</label>
+                                <div class="col-md-2">
+
+                                    <input id="Date" type="text" class="form-control date-picker" data-clear-type='date' data-validate="true" data-required="required" data-message="Date is required" data-plus-as-tab="false" data-hide-dropdown="true" data-fiscal-date="true">
+                                </div>
+                                @if (allowDc)
+                                {
+@*<label class="col-md-1 control-label" for="prefix">Dc</label>*@
+                                    <div class="col-md-2">
+                                        @*  <a href="javascript:;" onclick="Trans.GetDC()" class="hide btn green btn-xs btn-load">Load DC&nbsp;
+                                                                                <i class="fa fa-search"></i>
+                                        </a>*@
+                                        <div class="input-group">
+                                            <input type="text" id="DCNo" class="number form-control " data-plus-as-tab="false" disabled="disabled" readonly="readonly" />
+                                            <span id="dc-search" class="input-group-btn">
+                                                <button onclick="NoumtexGstSale.GetDC()" class="btn green search-icon" data-toggle="tooltip" data-original-title="View Delivery Challans" type="button">
+                                                    <i class="icon-magnifier"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                }
+@*  <div class="col-md-1">
+                                    <input type="text" id="DCNo" class="number form-control input-xxsmall" data-plus-as-tab="false">
+                                </div>*@
+                                <label id="lblorderno" class="col-md-1 control-label" for="prefix">Order #</label>
+                                <div class="col-md-1">
+                                    <input type="text" id="OrderNo" class="number form-control input-xsmall" data-plus-as-tab="false" disabled="disabled" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label master-account-label" for="prefix">Party</label>
+                                <div class="col-md-1">
+                                    <input type="text" class="form-control input-small" id="AccountCode" data-required="required" data-plus-as-tab="false" data-validate="true" data-message="Party Code is required" >
+                                    <input type="hidden" id="AccountId" value="0" />
+
+                                </div>
+                                <div class="col-md-5">
+
+                                    <input type="text" class="form-control" id="AccountName"  disabled="disabled">
+                                </div>
+
+
+
+                            </div>
+                            @if (@allowPartner)
+                            {
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label" for="prefix">Company Partner</label>
+                                    <div class="col-md-6">
+                                        <select class="form-control select2" data-trackchange="true" id="CompanyPartnerId" placeholder="Select Company Partner" data-required="required" data-message="Partner is required.">
+                                            <option></option>
+                                            @foreach (var item in (List<IdName>)ViewBag.CompanyPartners)
+                                            {
+                                                <option data-custom="@item.Id" value="@item.Id">@item.Name</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            }
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">Party Address</label>
+                                <div class="col-md-6">
+                                    <input class="form-control" type="text" name="text" id="PartyAddress" />
+
+                                </div>
+                                @*    <div class="col-md-4 hide" id="account-type-conatiner">
+                                    <div class="radio-list">
+                                        <label class="radio-inline">
+
+                                            <input type="radio" name="ac-type" value="credit" checked="checked">
+                                            Credit Sale
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="ac-type" value="cash">
+                                            Cash Sale
+                                        </label>
+
+                                    </div>
+                                </div>*@
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">Vehicle</label>
+                                <div class="col-md-1">
+                                    <input type="text" class="form-control input-small" id="ShipViaCode" data-required="false" data-plus-as-tab="false" />
+                                    <input type="hidden" id="ShipViaId" value="0" />
+
+                                </div>
+                                <div class="col-md-5">
+
+                                    <input type="text" class="form-control" id="ShipViaName"  disabled="disabled">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">Remarks</label>
+                                <div class="col-md-6">
+                                    <input class="form-control" type="text" name="text" id="Comments" />
+                                </div>
+                            </div>
+                            <div class="row" data-save="false">
+                                @*<div class="col-md-2"></div>*@
+                                <div class="col-md-12 saleitem-container scroller12" data-always-visible="1" data-rail-visible1="1">
+                                    <div class="portlet">
+                                        <div class="portlet-title">
+                                            <div class="caption">
+                                                <i class="fa fa-list"></i>Item List
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <table id="item-container" class="table table-bordered griditem">
+                                        <thead>
+                                            <tr>
+                                                <th>Code</th>
+                                                <th style="width: 15%;">Name</th>
+                                                <th class="align-right">GSM</th>
+                                                <th class="align-right">Width</th>
+                                                <th class="align-right">Meters</th>
+                                                <th class="align-right">Rolls</th>
+                                                <th class="align-right">Total Meters</th>
+                                                <th class="align-right">Std Weight</th>
+                                                <th class="align-right">Act Weight</th>
+                                                <th class="align-right">Quantity</th>
+                                                <th>Type</th>
+                                                <th class="align-right">Rate</th>
+                                                <th class="align-right">Amount</th>
+                                                <th class="align-right">S.Tax %</th>
+                                                <th class="align-right">Amt of S.Tax</th>
+                                                <th class="align-right">Value</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody data-plus-as-tab="false">
+                                        </tbody>
+                                        <tfoot data-plus-as-tab="false">
+                                            <tr class="bold well">
+                                                <td colspan="6" class="bold align-right">Total &nbsp;</td>
+
+                                                <td colspan="1" class="bold well">
+                                                    <input type="text" class="TotalMeters form-control input-small" disabled="disabled" readonly="readonly"></td>
+                                                <td colspan="1">
+                                                    <input type="text" class="StandardWeight form-control input-small" disabled="disabled" readonly="readonly"></td>
+                                                <td colspan="1">
+                                                    <input type="text" class="ActualWeight form-control input-small" disabled="disabled" readonly="readonly"></td>
+                                                <td colspan="1">
+                                                    <input type="text" class="Quantity form-control input-small" disabled="disabled" readonly="readonly"></td>
+                                                <td>
+                                                    <input type="text" class="form-control input-small" disabled="disabled" readonly="readonly">
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="form-control input-small" disabled="disabled" readonly="readonly">
+                                                </td>
+                                                <td colspan="1">
+                                                    <input type="text" class="Amount form-control input-small" disabled="disabled" readonly="readonly">
+                                                </td>
+                                                <td colspan="1">
+                                                    <input type="text" class="form-control input-small" disabled="disabled" readonly="readonly">
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="GSTAmount form-control input-small" disabled="disabled" readonly="readonly"></td>
+                                                <td colspan="2">
+                                                    <input type="text" class="NetAmount form-control input-small" disabled="disabled" readonly="readonly"></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <div class="col-md-6 hide">
+                                    <div class="portlet">
+                                        <div class="portlet-title">
+                                            <div class="caption">
+                                                <i class="fa fa-tags"></i>Detail of Selected DC
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <table id="table-dc-detail" class="table table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>DC Number</th>
+                                                <th>Party Code</th>
+                                                <th>Party Name</th>
+                                                <th>Order Number</th>
+                                                @*<th>Order Date</th>*@
+                                                <th>Delivery Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                            <div class="form-group ">
+                                <div class="col-md-8">
+                                    <div class="sale-content">
+
+                                        <div class="form-group">
+                                            @* <label class="col-md-2 control-label" for="prefix">Ship Via</label>
+                                            <div class="col-md-1">
+                                                <input type="text" class="form-control input-small" id="ShipViaCode" data-required="false" data-plus-as-tab="false" />
+                                                <input type="hidden" id="ShipViaId" value="0" />
+
+                                            </div>
+                                            <div class="col-md-7">
+
+                                                <input type="text" class="form-control" id="ShipViaName"  disabled="disabled">
+                                            </div>*@
+
+
+
+                                            <label class="control-label col-md-2 hide">Quantity Ship</label>
+                                            <div class="col-md-2 hide">
+                                                <input id="ShipQty" class="form-control number" type="text" data-plus-as-tab="false" />
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+
+                                    @*   <div class="form-group">
+                                        <label class="col-md-3 control-label" for="prefix">Previous Balance</label>
+                                        <div class="col-md-3 container-voucher">
+
+                                            <label id="lblpreviousbalance" class="label label-warning label-voucher">00</label>
+                                        </div>
+
+                                        <label class="control-label col-md-3">Current Balance</label>
+                                        <div class="col-md-2">
+                                            <label id="lblcurrentbalance" class="label label-success label-voucher">00</label>
+
+                                        </div>
+                                    </div>*@
+
+                                </div>
+                                <div class="col-md-4 align-right">
+                                    <div class="row">
+                                    </div>
+                                    <div class="row other-content12">
+                                        <label class="control-label col-md-7">Actual Weight Total</label>
+                                        <div class="col-md-5">
+                                            <input id="QuantityTotal" class="form-control" type="text" disabled="disabled" readonly="readonly" data-required="required" data-message="Please add atleast one item" />
+
+                                        </div>
+                                    </div>
+                                    <div class="row other-content12">
+                                        <label class="control-label col-md-7">Quantity Total</label>
+                                        <div class="col-md-5">
+                                            <input id="NTQtyTotal" class="form-control" type="text" disabled="disabled" readonly="readonly" />
+
+                                        </div>
+                                    </div>
+                                    <div class="row hide12">
+                                        <label class="control-label col-md-7">Gross Total</label>
+                                        <div class="col-md-5">
+                                            <input id="GrossTotal" class="form-control" type="text" disabled="disabled" readonly="readonly" data-required="FALSE" data-message="Please add atleast one item" />
+
+                                        </div>
+                                    </div>
+                                    <div class="row hide12">
+                                        <label class="control-label col-md-7">GST Total</label>
+                                        <div class="col-md-5">
+                                            <input id="GstAmountTotal" class="form-control" type="text" disabled="disabled" readonly="readonly" data-required="FALSE" data-message="Please add atleast one item" />
+
+                                        </div>
+                                    </div>
+                                    <div class="row hide">
+                                        <label class="control-label col-md-7">Discount</label>
+                                        <div class="col-md-5">
+                                            <input id="Discount" class="form-control" type="text" value="0" readonly />
+
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="control-label col-md-7">Net Total</label>
+                                        <div class="col-md-5">
+                                            <input id="NetTotal" class="form-control" disabled="disabled" readonly="readonly" type="text" value="" />
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <div class="btn-set pull-left">
+                                <a href="javascript:;" onclick="NoumtexGstSale.LoadVoucher('first')" class="btn blue tooltips disabled first" data-original-title="First">
+                                    <i class="fa fa-angle-double-left"></i>
+                                </a>
+                                <a href="javascript:;" onclick="NoumtexGstSale.LoadVoucher('previous')" class="btn blue tooltips disabled previous" data-original-title="Previous">
+                                    <i class="fa fa-angle-left"></i>
+                                </a>
+                                <a href="javascript:;" onclick="NoumtexGstSale.LoadVoucher('next')" class="btn blue tooltips disabled next" data-original-title="Next">
+                                    <i class="fa fa-angle-right"></i>
+                                </a>
+                                <a href="javascript:;" onclick="NoumtexGstSale.LoadVoucher('last')" class="btn blue tooltips disabled last" data-original-title="Last">
+                                    <i class="fa fa-angle-double-right"></i>
+                                </a>
+                            </div>
+                            <div class="btn-set pull-right">
+                                @if (!SiteContext.Current.Fiscal.IsClosed)
+                                {
+                                    <button type="button" class="btn purple-plum" onclick="NoumtexGstSale.New()">
+                                        <i class="fa  fa-plus-circle"></i>
+                                        New</button>
+                                    <button type="button" class="btn btn-primary green" onclick="NoumtexGstSale.Save()">
+                                        <i class="fa fa-check"></i>
+                                        Save</button>
+                                    <button id="btndelete" type="button" class="btn red" onclick="NoumtexGstSale.Delete()">
+                                        <i class="fa fa-trash-o"></i>
+                                        Delete</button>
+                                }
+                                <button id="btnprint" type="button" class="btn yellow" onclick="NoumtexGstSale.Print()">
+                                    <i class="fa fa-print"></i>
+
+                                    Print</button>
+                                <button type="button" class="btn blue" onclick="window.location='@(Url.Content(SettingManager.DashBoardUrl))'">
+                                    <i class="fa  fa-times-circle"></i>
+
+                                    Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END EXAMPLE TABLE PORTLET-->
+        </div>
+
+    </div>
+    <div class="hide" id="div-table">
+        <div class="col-md-12 col-sm-12">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <div class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-list"></i>Record Listing
+                    </div>
+                    <div class="actions">
+                        <a href="javascript:;" onclick="NoumtexGstSale.Add()" class="btn blue">
+                            <i class="fa fa-plus"></i>&nbsp;New 
+                        </a>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="hide alert alert-danger container-message">
+                        <i class="close" onclick="$(this).parent().hide();"></i>
+                        <strong></strong>
+                        <div class="form-body message-content"></div>
+                    </div>
+
+                    <table class="table table-striped table-bordered table-hover" id="mainTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 8px;" class="no-sort">
+                                    <input type="checkbox" class="group-checkable" data-set="#mainTable .checkboxes" />
+                                </th>
+                                <th>Vou #
+                                </th>
+                                <th>Book #</th>
+                                <th>Party</th>
+                                <th>Total</th>
+                                <th>Date</th>
+                                <th>Remarks</th>
+                                <th style="width: 75px;" class="no-sort"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="8">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- END EXAMPLE TABLE PORTLET-->
+        </div>
+
+    </div>
+    <div id="DC-Container" class="modal fade hidden-print bs-modal-lg" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title"><span class='caption-subject font-green-sharp bold'>Search Delivery Challan</span> </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table id="DCTable" style="border: 1px solid #DDD" class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Select</th>
+                                        <th>DC Number</th>
+                                        <th>Book No</th>
+                                        <th>Weight</th>
+                                        <th>Party Code</th>
+                                        <th>Party Name</th>
+                                        <th>Order Number</th>
+                                        @*<th>Order Date</th>*@
+                                        <th>Delivery Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button id="select-dc" type="button" class="btn btn-primary">Select & Finish</button>
+                    <button type="button" data-dismiss="modal" class="btn" id="btnDCClose">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="jsondata" class="hide">
+        <p id="data">@ViewBag.FormSetting</p>
+    </div>
+}
+<style>
+    table.report-summary-info > tbody > tr > td {
+        padding: 5px;
+        border: 1px solid #AAA;
+    }
+
+    table.report-summary-info td table tr td:first-child {
+        font-size: 9px !important;
+        text-align: right;
+        font-weight: bold;
+    }
+
+    table.report-summary-info td table tr td {
+        padding: 2px 5px;
+    }
+
+    #div-report strong {
+        font-size: 9px !important;
+    }
+
+    #div-report span {
+        font-weight: normal;
+        font-size: 11px !important;
+    }
+
+    #div-report .table-bordered td, #div-report .table-bordered th {
+        border: 1px solid #AAA !important;
+    }
+
+    #tblAgingItems {
+        border: 1px solid #AAA;
+        font-size: 11px;
+    }
+
+        #tblAgingItems thead th {
+            border-bottom: 1px dashed #AAA;
+            text-align: center;
+        }
+
+        #tblAgingItems tbody td:nth-child(3),
+        #tblAgingItems tbody td:nth-child(4),
+        #tblAgingItems tbody td:nth-child(5),
+        #tblAgingItems tbody td:nth-child(6),
+        #tblAgingItems tbody td:nth-child(7),
+        #tblAgingItems tbody td:nth-child(8),
+        #tblAgingItems tbody td:nth-child(9),
+        #tblAgingItems tbody td:nth-child(10) {
+            text-align: right;
+        }
+
+        #tblAgingItems tbody td:nth-child(10) {
+            padding-right: 10px;
+        }
+
+    #lblAccountName {
+        font-size: 22px;
+    }
+</style>
+<div class="row"></div>
+<div id="div-report" class="visible-print">
+    <div class="row">
+        <div class="align-center">
+            <h1 style="margin: 0px;">
+                <label style="font-weight: bold; font-family: Times New Roman, Georgia, Serif;" id="lblPartnerName"></label>
+            </h1>
+            <p style="margin: 0px;">
+                <label id="lblPartnerAddress"></label>
+            </p>
+            <p style="margin: 0px; font-weight: bold;">
+                NTN #
+                <label id="lblNTNNo"></label>
+            </p>
+            <p style="margin: 0px; font-weight: bold;">
+                SALES TAX #
+                <label id="lblGSTNo"></label>
+            </p>
+            <p style="text-decoration: underline;">INVOICE</p>
+        </div>
+        @* <div id="compnay-print-subheader" style="font-size: 16px; padding: 3px; margin-top: 5px" class="border-black12 align-center"><u id="lblReportTitle">Bill/Invoice</u></div>
+      *@
+    </div>
+    <br />
+    <table class="report-summary-info full-width">
+        <tbody>
+            <tr>
+                <td style="width: 60%; vertical-align: top;">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td style="width: 60px; font-size: 22px;">
+                                    <p style="font-size: 22px;">M/s:</p>
+                                </td>
+                                <td>
+                                    <p id="lblAccountName"></p>
+                                </td>
+                            </tr>
+                            @*<tr>
+                                <td></td>
+                                <td>
+                                    <span id="lblPartyAddress"></span>
+                                </td>
+                            </tr>*@
+                        </tbody>
+                    </table>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-11">
+                    </div>
+                </td>
+                <td style="width: 2%; border-top-width: 0;"></td>
+                <td>
+                    <table>
+                        <tr>
+                            <td>Invoice No. : </td>
+                            <td>
+                                <span id="lblInvoiceNumber"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>DC No. : </td>
+                            <td>
+                                <span id="lblDCNo"></span>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Date :</td>
+                            <td>
+                                <span id="lblDate"></span>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Order No. : </td>
+                            <td>
+                                 <span id="lblOrderNo"></span>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="clearfix"></div>
+    <table id="report-saleitem" class="table table-bordered full-width" style="margin-top: -1px;">
+        <thead>
+            <tr>
+                <th style="width: 30px;">S#</th>
+                <th>Product Description</th>
+                <th>Qty</th>
+                <th>Rate</th>
+                <th>Exc. Amt</th>
+                <th>GST %</th>
+                <th>GST Amt</th>
+                <th>Inc. Amt</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <div class="row-bottom" style="position: fixed; border-top: 1px solid #000; width: 720px; bottom: 30px; padding-top: 5px;">
+        <table class=" report-summary-info full-width">
+            <tbody>
+                <tr>
+                    <td style="width: 60%; vertical-align: top; padding-top: 0; border-width: 0;" rowspan="3">
+                        <div style="min-height: 200px; padding: 0 10px;">
+                            <table class="hide" id="tblAgingItems" class="full-width">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 0;"></th>
+                                        <th style="width: 10%;">Est #</th>
+                                        <th style="width: 0;"></th>
+                                        <th style="width: 20%;">Date</th>
+                                        <th style="width: 5%;"></th>
+                                        <th style="width: 20%;">Due Amount</th>
+                                        <th style="width: 10%;"></th>
+                                        <th style="width: 20%;">Balance(Rs.)</th>
+                                        <th style="width: 5%;"></th>
+                                        <th style="width: 10%;">Age</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <table class="full-width">
+                            <tr>
+                                <td style="width: 0px;"></td>
+                                <td>
+                                    <div style="font-weight: normal; text-align: center; padding: 0 2px; border-top: 1px solid #AAA;"><span>Prepared By</span></div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: normal; text-align: center; padding: 0 2px; border-top: 1px solid #AAA;"><span>Checked By</span></div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: normal; text-align: center; padding: 0 2px; border-top: 1px solid #AAA;"><span>@SettingManager.ApprovedBy</span></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="width: 5%; border-width: 0;"></td>
+                    <td style="width: 35%">
+                        <table class="full-width">
+                            <tbody>
+                                <tr class="row-sale">
+                                    <td>Exc. Amount :</td>
+                                    <td rowspan="3" style="width: 15%"></td>
+                                    <td style="width: 35%; text-align: center;">
+                                        <span id="lblGrossTotal"></span>
+
+                                    </td>
+                                </tr>
+                                <tr class="row-sale">
+                                    <td>GST Amt :</td>
+                                    <td style="border-bottom: 1px solid #000; text-align: center;">
+                                        <span id="lblGstAmountTotal"></span>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div style="font-size: 1.3em;">Inc. Amount :</div>
+                                    </td>
+                                    <td style="border-bottom: 2px solid #000; text-align: center; width: 35%; font-size: 1.3em;">
+                                        <div id="lblNetTotal"></div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-width: 0;"></td>
+                    <td style="border-width: 0;">
+                        <table class="full-width">
+                            <tr class="row-sale purchase-row">
+                                <td style="width: 50%; text-align: left;"><strong>Bilty No.: </strong><span id="lblBiltyNo"></span></td>
+                                <td><strong>Date : </strong><span id="lblBiltyDate"></span></td>
+                            </tr>
+                        </table>
+                        <br />
+                        <div class="row-sale"><strong>Transport : </strong><span id="lblShipVia"></span></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-width: 0;"></td>
+                    <td style="vertical-align: top;">
+                        <div class="align-center" style="padding-bottom: 5px;"><strong>For Customer use only </strong></div>
+                        <table class="full-width">
+                            <tr>
+                                <td style="text-align: left; width: 20%;">Name</td>
+                                <td style="border-bottom: 1px solid #000;">
+                                    <span id="lblContactPerson"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;">Signature</td>
+                                <td style="border-bottom: 1px solid #000;"></td>
+                            </tr>
+                        </table>
+                        <strong></strong>
+                        <br />
+                        <strong></strong>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="margin-top: 5px;">
+            <table>
+                <tr>
+                    <td style="width: 20%"><span>@DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt")</span></td>
+                    <td style="width: 70%; text-align: center;"><strong id="lblFooterNotes" style="border-bottom: 1px solid #000;"></strong></td>
+                    <td style="width: 10%"></td>
+                </tr>
+            </table>
+
+
+        </div>
+    </div>
+
+</div>
+<script type="text/html" id="template-item">
+    <tr>
+
+        <td>
+            <input type="hidden" class="Id" data-db-column="Id">
+            <input type="hidden" class="ItemId" id="ItemId" data-db-column="ItemId">
+            <input type="hidden"  class="EntryType" id="EntryType" data-db-column="EntryType" value="@((int)EntryType.Item)"><input type="hidden">
+            <input type="text" class="Code form-control typeahead input-small ui-autocomplete-input" data-db-column="ItemCode" autocomplete="off">
+        </td>
+        <td>
+            <input type="text" disabled="disabled" class="Name form-control input-medium" data-db-column="ItemName"></td>
+        <td class="align-right">
+            <input type="text" disabled="disabled" class="Weight form-control input-small num3" data-db-column="Weight" data-db-type="decimal"></td>
+        <td class="align-right">
+            <input type="text" class="Width form-control input-small num3" data-db-column="Width" data-db-type="decimal"></td>
+        <td class="align-right">
+            <input type="text" class="Meters form-control input-small num3" data-db-column="Meters" data-db-type="decimal"></td>
+        <td class="align-right">
+            <input type="text" class="Rolls form-control input-small num3" data-db-column="Rolls" data-db-type="decimal"></td>
+        <td class="align-right">
+            <input type="text" disabled="disabled" class="TotalMeters form-control input-small num3" data-db-column="TotalMeters" data-db-type="decimal"></td>
+        <td class="align-right">
+            <input type="text" disabled="disabled" class="StandardWeight form-control input-small num3" data-db-column="StandardWeight" data-db-type="decimal"></td>
+        <td class="align-right">
+            <input type="text" class="ActualWeight form-control input-small num3" data-db-column="Quantity" data-db-type="decimal"></td>
+        <td class="align-right">
+            <input type="text" class="Quantity form-control input-small num3" data-db-column="NTQty" data-db-type="decimal"></td>
+        <td>
+            @*<input type="text" class="Type form-control input-small" data-db-column="Type" data-db-type="decimal">*@
+            <select class="Type form-control" data-db-column="UnitType">
+                <option>Weight</option>
+                <option>Meter</option>
+                <option>Quantity</option>
+            </select>
+
+        </td>
+        <td class="align-right">
+            <input type="text" class="Rate form-control input-small num3" data-db-column="Rate" data-db-type="decimal"></td>
+        <td class="align-right">
+            <input type="text" class="Amount form-control input-small num3" data-db-column="Amount" data-db-type="decimal"></td>
+        <td class="align-right">
+            <input type="text" class="GSTPercent form-control input-small num3" value="@SettingManager.Gst" data-db-column="GSTPercent" data-db-type="float"></td>
+        <td class="align-right">
+            <input type="text" class="GSTAmount form-control input-small num3" disabled="disabled" data-db-column="GSTAmount" data-db-type="float"></td>
+        <td class="align-right">
+            <input type="text" class="NetAmount form-control input-small num3" disabled="disabled" readonly="readonly" data-db-column="NetAmount" data-db-type="decimal"></td>
+        <td style="width: 8px;">
+            <span class="action"><i class="fa fa-trash-o" onclick="NoumtexGstSale.DeleteRow(this)" data-original-title="Delete Item"></i></span>
+
+        </td>
+    </tr>
+</script>
+@section FooterScript
+{
+
+    <script src="~/Content/AppJS/Transaction/NoumtexGstSale.js"></script>
+    <link href="~/Content/print.css" rel="stylesheet" />
+    <script>
+        jQuery(document).ready(function () {
+            NoumtexGstSale.init();
+        });
+    </script>
+}
+

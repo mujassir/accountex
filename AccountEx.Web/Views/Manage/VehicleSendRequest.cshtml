@@ -1,0 +1,132 @@
+﻿@using AccountEx.Common
+@using AccountEx.BussinessLogic;
+@{
+    ViewBag.Title = "Vehicle Send Request";   
+}
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">Manage Transfer Requests</h1>
+}
+@section VehicleBranchesDropdown
+{
+
+    @Html.Partial("../Vehicle/_UserBranches_Dropdown")
+}
+@*<div id="jsondatavehicle" class="hide">
+    <p id="data1">@ViewBag.Vehicles</p>
+</div>*@
+
+
+<div id="jsondata" class="hide">
+    <p id="data">@ViewBag.FormSetting</p>
+</div>
+<div id="jsondatavehicle" class="hide">
+    <p id="data1">@ViewBag.Vehicles</p>
+</div>
+
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Vehicle Transfer Requests Record
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover" id="mainTable">
+                    <thead>
+                        <tr>
+
+                            <th>Chassis No</th>
+                            <th>Reg No</th>
+                            <th>C.C</th>
+                            <th>Engine No</th>
+                            <th>Model</th>
+                            <th>Fuel</th>
+                            <th>Colour</th>
+                            <th>Owner Branch</th>
+                            <th>Receiving Branch</th>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th style="width: 150px;" class="no-sort"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="11" class="center">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+<div id="inventroy-transfer-Container" class="modal fade hidden-print bs-modal-lg" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"><span class='caption-subject font-green-sharp bold'>Inverntory Accept/Reject</span>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row installment-form">
+                    <div class="form-horizontal" data-save="save">
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Vehicle:</label>
+                            <div class="col-md-3">
+                                <span class="label label-sm label-success"><span id="lblvehicle"></span></span>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+
+                            <label class="col-md-2 control-label" for="prefix">Owner Branch:</label>
+                            <div class="col-md-3">
+                                <input type="hidden" id="Id" />
+                                <input type="hidden" id="Status" />
+                                <span class="label label-sm label-success"><span id="lblownerbranch"></span></span>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Receiving Branch</label>
+                            <div class="col-md-5">
+                                <span class="label label-sm label-success" id="lbltobranch"><span></span></span>
+
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Remarks</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" id="Reason" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix"></label>
+                    <button type="button" style="margin-right: 15px;" class="btn btn-primary green contacts-form" onclick="VehicleSendRequest.SendTransferRequst()" data-plus-as-tab="false">Confirm</button>
+                    <button type="button" data-dismiss="modal" class="btn btnclose-model">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Manage/VehicleSendRequest.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            VehicleSendRequest.init();
+        });
+    </script>
+}

@@ -1,0 +1,149 @@
+﻿@using AccountEx.Common
+@{
+    ViewBag.Title = "Company Partner";   
+}
+
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">Manage Company Partner</h1>
+}
+
+
+<!-- END PAGE HEADER-->
+
+<div class="row" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-edit"></i>Add/Edit Company Partner
+                </div>
+                <div class="actions hide">
+                    <a href="javascript:;" onclick="CompanyPartners.ListView()" class="btn blue">
+                        <i class="fa fa-angle-left"></i>&nbsp;Back to list 
+                    </a>
+                </div>
+                <div class="tools hide">
+                    <a href="javascript:;" class="collapse"></a>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal" data-save="save">
+                    <input type="text" id="Id" class="hide" />
+                    <input type="text" id="AccountId" class="hide" />
+                    <div class="form-body">
+                        <div class="hide alert alert-danger container-message">
+                            <i class="close" onclick="$(this).parent().hide();"></i>
+                            <strong></strong>
+                            <div class="form-body message-content"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Name</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control" id="Name" data-plus-as-tab="true" data-required="required" data-message="Company Partner Name is required" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">NTN No</label>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" id="NTNNo" data-plus-as-tab="true" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">GST No</label>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" id="GSTNo" data-plus-as-tab="true" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Phone</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control" id="Phone" data-plus-as-tab="true" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Address</label>
+                            <div class="col-md-4">
+                                <textarea class="form-control" id="Address"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    @if (SiteContext.Current.RoleAccess.CanCreate)
+                    {
+                        <div class="form-actions">
+                            <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+
+                            <div class="col-md-8">
+                                <button type="button" class="btn btn-primary" onclick="CompanyPartners.Save()">Save</button>
+                                <button id="btnCancel" type="button" class="btn btn-default" onclick="CompanyPartners.ListView()">Cancel</button>
+                            </div>
+                        </div>
+                    }
+
+
+                </div>
+
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet box grey-cascade">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Company Partner Listing
+                </div>
+                <div class="actions hide">
+                    <button id="btnEdit" type="button" class="btn blue" onclick="CompanyPartners.Add()"><i class="fa fa-plus"></i>&nbsp;New</button>
+                    <button id="btnSave" type="button" class="btn blue hide" onclick="CompanyPartners.Save()"><i class="fa fa-check"></i>&nbsp;Save Changes</button>
+
+                </div>
+                <div class="tools hide">
+                    <a href="javascript:;" class="collapse"></a>
+                </div>
+            </div>
+
+            <div class="portlet-body">
+                <div class="hide alert alert-danger container-message">
+                    <i class="close" onclick="$(this).parent().hide();"></i>
+                    <strong></strong>
+                    <div class="form-body message-content"></div>
+                </div>
+                <table class="table table-striped table-bordered table-hover" id="mainTable">
+                    <thead>
+                        <tr>
+                            @* <th style="width: 8px;" class="no-sort">
+                                <input type="checkbox" class="group-checkable" data-set="#mainTable .checkboxes" />
+                            </th>*@
+                            <th>Company Partners Name</th>
+
+                            <th style="width: 75px;" class="no-sort"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="11">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Manage/CompanyPartners.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            CompanyPartners.init();
+        });
+    </script>
+}

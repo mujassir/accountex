@@ -1,0 +1,173 @@
+﻿@{
+    Layout = "_Layout.cshtml";
+    ViewBag.Title = "Party Trans";   
+}
+@using AccountEx.Common;
+<link href="~/Content/AutoComplete/jquery-ui.css" rel="stylesheet" />
+<style type="text/css">
+    #tbldetail tfoot {
+        font-weight: bold;
+    }
+
+    .report-table tbody tr td:nth-last-child(1),
+    .report-table tbody tr td:nth-last-child(2),
+    .report-table tfoot tr td:nth-last-child(1),
+    .report-table tfoot tr td:nth-last-child(2) {
+        text-align: right;
+    }
+</style>
+
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold"><span class=" main-title">>Party Sale Repor</span><small id="lblReportDate" class="pull-right small visible-print">Date: 24/10/2014</small> </h1>
+
+}
+
+
+
+<div class="row hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-filter"></i>Report Filters
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                    @* <a href="javascript:;" class="remove"></a>*@
+                </div>
+                <div class="actions">
+                    <button class="btn blue hidden-print" onclick="window.print();"><i class="fa fa-print"></i>&nbsp;Print </button>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal" data-save="Save">
+                    <input type="text" id="Id" class="hide" />
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">From Date</label>
+                            <div class="col-md-3">
+                                <div class="input-group input-medium">
+                                    <input class="date-picker form-control date-picker" type="text" id="FromDate" data-validate="true" data-required="required" value="@SiteContext.Current.Fiscal.FromDate.ToString(AppSetting.DateFormat)" data-message="From Date"  >
+
+                                    <span class="input-group-btn date-icon">
+                                        <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">To Date</label>
+                            <div class="col-md-3">
+                                <div class="input-group input-medium">
+                                    <input class="date-picker form-control date-picker" type="text" id="ToDate" data-validate="true" data-required="required" value="@SiteContext.Current.Fiscal.ToDate.ToString(AppSetting.DateFormat)" data-message="To Date"  >
+
+                                    <span class="input-group-btn date-icon">
+                                        <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label master-account-label" for="prefix">Code</label>
+                            <div class="col-md-1">
+                                <input type="text" class="form-control input-small" id="AccountCode" data-required="required" data-plus-as-tab="false" data-validate="true" data-message="Party Code is required" >
+                                <input type="hidden" id="AccountId" value="0" />
+
+                            </div>
+                            <div class="col-md-5">
+
+                                <input type="text" class="form-control" id="AccountName"  disabled="disabled">
+                            </div>
+                            <div class="col-md-2" id="account-type-conatiner">
+                                <div class="radio-list">
+                                    <label class="radio-inline">
+
+                                        <input type="radio" name="all-product" value="all" checked="checked">
+                                        All Parties
+                                    </label>
+
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <div class="form-group">
+
+                            <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+                            <div class="col-md-8">
+                                <button id="btnShowReport" type="submit" class="btn btn-primary">Show Report</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title hidden-print">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Report Data
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                    @*<a href="javascript:;" class="remove"></a>*@
+                </div>
+                <div class="tools pull-right">
+                    @{ Html.RenderPartial("_Export_Button");  }
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover report-table" data-export='true'>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+
+                            <th>Voucher#</th>
+                            <th>Party</th>
+                            <th>Description</th>
+                            <th>Quantity</th>
+                            <th>Rate</th>
+                            <th>Amount</th>
+                            <th>Discount Amount</th>
+                            <th>Net Amount</th>
+                            <th>Balance</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+<link type="text/css" href="http://yourwebsite.com/css/ui-lightness/jquery-ui-1.8.custom.css" rel="stylesheet" />
+<div id="jsondata" class="hide">
+    <input id="FormSetting"  type="text" value="@ViewBag.FormSetting" />
+    @* <input id="OpeningBalances"  type="text" value="@ViewBag.OpeningBalances" />*@
+    <input id="Voucher"  type="text" value="@ViewBag.Voucher" />
+</div>
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Reports/PartyTransDetail.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            PartyTransDetail.init();
+        });
+    </script>
+}

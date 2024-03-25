@@ -1,0 +1,728 @@
+﻿@using AccountEx.Common;
+@using AccountEx.CodeFirst;
+
+@{
+    ViewBag.Title = "Recovery Managment";
+}
+<style type="text/css">
+    #modal-history table tr.head {
+        text-align: center;
+        background-color: #2ab4c0 !important;
+        color: white;
+    }
+
+    .letter-head-margin {
+        margin-top: 100px !important;
+    }
+</style>
+@section PageTitle
+{
+    <h1 class="font-green-sharp bold hidden-print">@ViewBag.Title</h1>
+}
+@section VehicleBranchesDropdown
+{
+
+    @Html.Partial("../Vehicle/_UserBranches_Dropdown")
+}
+
+
+@using AccountEx.BussinessLogic;
+
+<div class="row hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-edit"></i>@ViewBag.Title
+                </div>
+                <div class="actions hide">
+                    <a href="javascript:;" onclick="VehicleRecovery.LoadVoucher('previous')" class="btn blue">
+                        <i class="fa fa-angle-left"></i>&nbsp;Back
+                    </a>
+                    <a href="javascript:;" onclick="VehicleRecovery.LoadVoucher('next')" class="btn blue">
+                        <i class="fa fa-angle-left"></i>&nbsp;Next 
+                    </a>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div id="mainform" class="form-horizontal" data-save="save">
+
+                    <input type="text" id="CreatedDate" class="hide ac-date" data-clear-type="date" />
+                    <input type="text" id="IsDeleted" class="hide" />
+                    <input type="text" id="PreVoucherNumber" class="hide" />
+                    <div class="form-body">
+                        <div class="hide alert alert-danger container-message">
+                            <i class="close" onclick="$(this).parent().hide();"></i>
+                            <strong></strong>
+                            <div class="form-body message-content"></div>
+                        </div>
+
+                        <div class="row" data-save="false">
+                            <div class="col-md-12 saleitem-container scroller12" data-always-visible="1" data-rail-visible1="1">
+
+                                <table id="item-container" class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="5">Vehicle</th>
+                                            <th colspan="3">Customer</th>
+                                            <th colspan="2">Outstanding yet to date</th>
+                                            <th></th>
+                                        </tr>
+                                        <tr>
+                                            <th style="width: 20%;">Chesis No</th>
+                                            <th>Reg. No</th>
+                                            <th>Model</th>
+                                            <th>Manufacturer</th>
+                                            <th>Color</th>
+                                            <th>Name</th>
+                                            <th>Contact No.</th>
+                                            <th>Email</th>
+                                            <th>Installments</th>
+                                            <th>Amount</th>
+                                            <th>Action</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody data-plus-as-tab="false">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions hide">
+                        <div class="btn-set pull-right">
+
+                            <button type="button" class="btn btn-primary green" onclick="VehicleRecovery.ProcessRecovery()">
+                                <i class="fa fa-check"></i>
+                                ProcessRecover</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+<div id="jsondata" class="hide">
+    <p id="data">@ViewBag.FormSetting</p>
+</div>
+
+
+<div id="reovery-modal-container" class="modal fade hidden-print bs-modal-lg" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"><span class='caption-subject font-green-sharp bold'>Settlement</span>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row installment-form">
+                    <div class="form-horizontal" data-save="save">
+                        <div class="form-group">
+
+                            <div class="col-md-1"></div>
+                            <div class="col-md-10">
+                                <div class="portlet">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <i class="fa fa-list"></i>Instalment Detail
+                                        </div>
+                                        <div class="hide caption pay-installment pull-right">
+                                            <a href="javascript:;" onclick="VehicleSale.LoadInstallmentDetails()">Pay Installment</a>
+                                        </div>
+                                    </div>
+                                    <table id="insatallment-container" class="table table-bordered">
+                                        <thead>
+                                            <tr>
+
+                                                <th style="width: 20%;">Instlment No.</th>
+                                                <th>Date</th>
+                                                <th>Amount</th>
+                                                <th>Recieved</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody data-plus-as-tab="false">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-md-1"></div>
+
+                        </div>
+                        <div class="form-group">
+
+                            <label class="col-md-2 control-label" for="prefix">Total outstanding</label>
+                            <div class="col-md-2">
+                                <input type="text" readonly class="form-control input-small" id="TotalOutStanding" />
+                                <input type="hidden" id="Id" class="Id" />
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">Penalty</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control input-small" id="Amount" data-required="false" data-message="Penalty is required.">
+                            </div>
+
+
+
+                        </div>
+                        @*   <div class="form-group hide">
+                            <label class="col-md-2 control-label" for="prefix"></label>
+                            <div class="col-md-2">
+                             
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">Discount</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control input-small" id="Discount" readonly="readonly">
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+
+                            <label class="col-md-2 control-label" for="prefix">Receiving Date</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control date-picker input-small" id="RecievedDate" data-required="false" data-message="Receiving date is required." />
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">Payment Mode</label>
+                            <div class="col-md-2">
+                                <select class="form-control select2 input-small" id="PaymentMode">
+                                    <option value="Cash">Cash</option>
+                                    <option value="Bank">Bank</option>
+
+                                </select>
+                            </div>
+                        </div>*@
+
+                        @* @Html.Partial("../manage/_CashBankAccounts", new ViewDataDictionary { { "Labelcolspan", 2 }, { "Divcolspan", 3 } })*@
+
+
+                        @*  <div class="form-group banks-options hide">
+                            <label class="col-md-2 control-label" for="prefix">Cheque Date</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control date-picker input-small" id="ChequeDate" data-required="false" data-message="Receiving date is required." />
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">Check No</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control input-small" id="ChequeNo" />
+                            </div>
+                        </div>*@
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Agreement Remarks</label>
+                            <div class="col-md-8">
+                                <textarea rows="4" class="form-control" id="Remarks" data-required="required" data-message="Remarks are required."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix"></label>
+                    <button type="button" style="margin-right: 15px;" class="btn btn-primary green contacts-form" onclick="VehicleRecovery.ProcessSettlement()" data-plus-as-tab="false">Settlement</button>
+                    <button type="button" data-dismiss="modal" class="btn btnclose-model">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-possession-letter" class="modal fade hidden-print" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"><span class='caption-subject font-green-sharp bold'>Issue Possession Letter</span>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-horizontal" data-save="save">
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="prefix">Auctioneer</label>
+                            <div class="col-md-7">
+                                <select id="AcutionerId" class="form-control select2 suppliers" data-required="required" data-message="Auctioneer is required">
+                                    <option></option>
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            <label class="col-md-3 control-label" for="prefix">Charges</label>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control num3" id="Charges" data-required="required" data-message="charges are required." />
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+
+                            <label class="col-md-3 control-label" for="prefix">Letter Date</label>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control date-picker" id="LetterDate" data-required="required" data-message="Letter date is required." />
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="prefix">Mail To</label>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" id="MailTo" />
+                            </div>
+                        </div>
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix"></label>
+                    <button type="button" style="margin-right: 15px;" class="btn btn-primary green contacts-form" onclick="VehicleRecovery.IssueLetter()" data-plus-as-tab="false">Issue Possession letter</button>
+                    <button type="button" data-dismiss="modal" class="btn btnclose-model">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modal-notification-letter" class="modal fade hidden-print" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"><span class='caption-subject font-green-sharp bold'>Notification Letter</span>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-horizontal" data-save="save">
+
+
+                        <div class="form-group">
+
+                            <label class="col-md-2 control-label" for="prefix">Days</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control num5 input-xsmall" id="NotificationDays" data-required="required" data-message="Notification days are required." />
+                            </div>
+
+
+                        </div>
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix"></label>
+                    <button type="button" style="margin-right: 15px;" class="btn btn-primary green contacts-form" onclick="VehicleRecovery.CreateNotification()" data-plus-as-tab="false">Create Notification</button>
+                    <button type="button" data-dismiss="modal" class="btn btnclose-model">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modal-auctionner-charges-finalization" class="modal fade hidden-print" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"><span class='caption-subject font-green-sharp bold'>Auctioneer Charges Finalization</span>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-horizontal" data-save="save">
+
+
+                        <div class="form-group">
+
+                            <label class="col-md-2 control-label" for="prefix">Charges</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control num3 input-xsmall" id="Charges" data-required="required" data-message="Chargess are required." />
+                            </div>
+                            <label class="col-md-1 control-label" for="prefix">Date</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control date-picker" id="AuctionerFinalizationDate" data-required="required" data-message="date is required." />
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix"></label>
+                    <button type="button" style="margin-right: 15px;" class="btn btn-primary green contacts-form" onclick="VehicleRecovery.FinalizeAuctionnerCharges()" data-plus-as-tab="false">Finalize</button>
+                    <button type="button" data-dismiss="modal" class="btn btnclose-model">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modal-advertisement" class="modal fade hidden-print" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"><span class='caption-subject font-green-sharp bold'>Advertisement</span>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-horizontal" data-save="save">
+
+
+                        <div class="form-group">
+
+                            <label class="col-md-2 control-label" for="prefix">Days</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control num5 input-xsmall" id="AdvertisementDays" data-required="required" data-message="Advertisement days are required." />
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">Date</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control date-picker" id="AdvertisementDate" data-required="required" data-message="Advertisement date is required." />
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Newspaper</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" id="Newspaper" />
+                            </div>
+                        </div>
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix"></label>
+                    <button type="button" style="margin-right: 15px;" class="btn btn-primary green contacts-form" onclick="VehicleRecovery.CreateAdvertisement()" data-plus-as-tab="false">Advertise</button>
+                    <button type="button" data-dismiss="modal" class="btn btnclose-model">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modal-settlement" class="modal fade hidden-print" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"><span class='caption-subject font-green-sharp bold'>Settlement</span>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-horizontal" data-save="save">
+
+
+                        <div class="form-group">
+
+                            <label class="col-md-2 control-label" for="prefix">Penalty</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control num3 input-small" id="Penalty" data-required="required" data-message="Penalty is required." />
+                            </div>
+
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Agreement Remarks</label>
+                            <div class="col-md-8">
+                                <textarea rows="4" class="form-control" id="AgreementRemarks12" data-required="required" data-message="Remarks are required."></textarea>
+
+                            </div>
+                        </div>
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix"></label>
+                    <button type="button" style="margin-right: 15px;" class="btn btn-primary green contacts-form" onclick="VehicleRecovery.CreateAdvertisement()" data-plus-as-tab="false">Advertise</button>
+                    <button type="button" data-dismiss="modal" class="btn btnclose-model">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modal-history" class="modal fade hidden-print bs-modal-lg" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title"><span class='caption-subject font-green-sharp bold'>History</span> </h4>
+            </div>
+            <div class="modal-body form-horizontal" data-save="save">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-striped table-hover table-col1-bold" style="margin: 0;">
+                            <tbody>
+
+                                <tr class="head">
+                                    <td colspan="4" style="text-align: center;">Repossession Detail
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>Auctionner</td>
+                                    <td><span class="lblAuAuctionner"></span></td>
+                                    <td>Letter Date</td>
+                                    <td><span class="lblAuLetterDate" data-db-type="date"></span></td>
+                                </tr>
+
+                                <tr>
+                                    <td>Status</td>
+                                    <td><span class="lblAuStatus"></span></td>
+                                    <td>Mail to</td>
+                                    <td><span class="lblAuMailTo"></span></td>
+                                </tr>
+                                <tr>
+                                    <td>Advertisement Days</td>
+                                    <td><span class="lblAuAdvertisementDays"></span></td>
+                                    <td>Notification Days</td>
+                                    <td><span class="lblAuNotificationDays"></span></td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-12">
+
+                        <table id="tbl-followUps" class="table table-bordered table-hover">
+                            <thead>
+                                <tr class="head">
+                                    <td colspan="3" style="text-align: center;">Follow Up Detail
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Remarks</th>
+                                    <th>Next Follow Up</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+    </div>
+</div>
+<script type="text/html" id="template-installments">
+    <tr>
+        <td class="align-center">{{InstalmentNo}}
+            <input type="text" class="InstalmentNo hide" value="1" data-db-column="InstalmentNo" data-db-type="int">
+            <input type="text" class="Id hide" value="0" data-db-column="Id" data-db-type="int"></td>
+        <td>
+            <input type="text" class="InstallmentDate date-picker hide" value="06/12/2016" data-db-column="InstallmentDate" data-db-type="date">{{InstallmentDate}}</td>
+        <td>
+            <input type="text" class="Amount num3 hide" value="4000" data-db-column="Amount" data-db-type="decimal">{{Amount}}</td>
+        <td>{{RecievedAmount}}</td>
+        <td>{{Status}}</td>
+    </tr>
+</script>
+<script type="text/html" id="template-item">
+    <tr>
+        <td>
+            <input type="hidden" class="VehicleId" data-db-column="VehicleId">
+            <input type="hidden" class="AccountId" data-db-column="AccountId">
+            <input type="hidden" class="SaleId" data-db-column="SaleId">
+            <input type="hidden" class="Id" data-db-column="Id">
+            <span class="pull-left"></span>{{ChassisNo}}<span class="pull-right">
+                <button type="button" class="btn btn-success btn-xs btn-view-ledger" onclick="VehicleRecovery.ViewHistory(this)">View History</button></span></td>
+        <td>{{RegNo}}
+        </td>
+        <td>{{Model}}
+        </td>
+        <td>{{Manufacturer}}
+        </td>
+        <td>{{Color}}
+        </td>
+        <td>{{Name}}
+        </td>
+        <td>{{ContactNumber}}
+        </td>
+        <td>{{Email}}
+        </td>
+        <td>{{TotalInstallment}}
+        </td>
+        <td>{{TotalAmount}}
+        </td>
+        <td class="td-actions">
+            <button type="button" class="btn btn-danger btn-xs btn-recovery-process hide" onclick="VehicleRecovery.ProcessRecovery(this,@((byte)RecoveryStatus.InProcess))">Process Recovery</button>
+            <button type="button" class="btn btn-danger btn-xs btn-recovery-notifictaion-letter hide" onclick="VehicleRecovery.ProcessRecovery(this,@((byte)RecoveryStatus.NotficationLetter))">Create Notfication Letter</button>
+            <button type="button" class="btn btn-info btn-xs btn-recovery-print hide" onclick="VehicleRecovery.ProcessRecovery(this,@((byte)RecoveryStatus.PrintPossession))">Print Possession Letter</button>
+            <button type="button" class="btn btn-info btn-xs btn-recovery-print-notification-letter hide" onclick="VehicleRecovery.ProcessRecovery(this,@((byte)RecoveryStatus.PrintNotficationLetter))">Print Notification Letter</button>
+            <button type="button" class="btn btn-success btn-xs btn-recovery-recovered hide" onclick="VehicleRecovery.ProcessRecovery(this,@((byte)RecoveryStatus.Recovered))">Vehicle Repossessed</button>
+            <button type="button" class="btn btn-primary btn-xs btn-recovery-inventory-return hide" onclick="VehicleRecovery.ConfirmInventoryReturn(this,@((byte)RecoveryStatus.InventoryReturn))">Available for Sale</button>
+            <button type="button" class="btn btn-danger btn-xs btn-recovery-advertisement hide" onclick="VehicleRecovery.ProcessRecovery(this,@((byte)RecoveryStatus.Advertisement))">Advertisement</button>
+            <button type="button" class="btn btn-warning btn-xs btn-recovery-customer-return hide" onclick="VehicleRecovery.ProcessRecovery(this,@((byte)RecoveryStatus.CustomerReturn))">Settlement</button>
+            <button type="button" class="btn btn-warning btn-xs btn-recovery-final-charges hide" onclick="VehicleRecovery.ProcessRecovery(this,@((byte)RecoveryStatus.FinalAuctionnerCharges))">Final Auctionner Charges</button>
+            <button type="button" class="btn btn-info btn-xs btn-recovery-print-further-agreement hide" onclick="VehicleRecovery.ProcessRecovery(this,@((byte)RecoveryStatus.PrintFurtherAgreement))">Print Agreement</button>
+        </td>
+    </tr>
+</script>
+<div class="main-print-container">
+    <div id="print-repossession-letter-container" class="row hide print-area visible-print">
+        <div class="letter-head-margin"></div>
+
+        <h4 style="text-align: center">SECOND SCHEDULE</h4>
+        <h4 style="margin-left: 600PX">SALE FORM 1</h4>
+        <h4 style="text-align: center">THE AUCTIONNERS ACT<br />
+            (NO.5 OF 1996)
+        <br />
+            LETTER OF INSTRUCTION </h4>
+        <h4 style="margin-left: 600PX">DATE: @DateTime.Now.ToString("dd-MM-yyyy")</h4>
+        <div style="margin-left: 50px">
+            <p>
+                (Sale form 1 in the schedule to the Auctioneer rules, 1997)<br />
+                To: Name and address of auctioneer: <b><span class="lblPAuctioneerName"></span>&nbsp; P.O.BOX<br />
+                    <span class="lblPAuctioneerPoBoxNo"></span>&nbsp;,TEL: <span class="lblPAuctioneerContactNumber"></span>.</b>
+            </p>
+            <ol style="margin-left: -20px">
+                <li>Name and address of property advocate:<b> NILL</b></li>
+                <li>Name and address of instructing party:<b> ALI CARS LTD P.O.BOX 99945-80107 MOMBASA,<br />
+                    &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;KENYA TEL: 0711-382393.</b></li>
+                <li>Name and address of property owner: <b>ALI CARS LTD.</b></li>
+                <li>Name and address of principal debtor: <b><span class="lblPCustomerName"></span>&nbsp;P.O.BOX: <span class="lblPCustomerPoBoxNo"></span>,&nbsp;TEL: <span class="lblPCustomerContactNumber"></span>.</b></li>
+                <li>Physical address of property to be repossessed:<b><span class="lblPCustomerRoute"></span>.</b> </li>
+                <li>Person to point out locality and property:<b>ALI CARS LTD.</b></li>
+                <li>Legal description of property to be repossessed:<b> M/V REG.NO: <span class="lblPRegNo"></span>&nbsp;(<span class="lblPManufacturer"></span>&nbsp;<span class="lblPModel"></span>).</b></li>
+                <li>Statutory provision under which sales is authorized:<b>HIRE PURCHASE.</b> </li>
+                <li>Amount to be recovered<b> KSHS <span class="lblPOutStandingAmount" data-db-type="decimal" data-formating="true"></span>/=</b></li>
+                <li>Delay fee of<b> 30% PENALITIES.</b></li>
+                <li>Additional charges to be recovered: <b>EXPENCES.</b></li>
+                <li>Estimate legal cost:<b> NILL.</b></li>
+                <li>Estimate auctioneer charges fee&nbsp;<b>KSHS: <span class="lblPCharges" data-db-type="decimal" data-formating="true"></span>/=</b></li>
+                <li>Reserve price <b>AS PER THE AUCTIONEER CHARGES.</b></li>
+                <li>Advertisement instruction <b>AS PER AUCTIONEER RULES.</b></li>
+                <p style="margin-left: -10px">
+                    As soon as practicable after expiry of not less than 7 (seven) days after removal of good the auction<br />
+                    sale is to be advertised once in a local daily, all which newspaper advertisement shall stipulate a date<br />
+                    of sale not earlier than 7 days after the date of publication first of them.
+                </p>
+
+                <li>We the party’s Vendor on its behalf hereby:</li>
+                <ol type="a" style="margin-left: -30px">
+                    <li>Confirm that all statutory conditions precedent to sale have been complied with.</li>
+                    <li>I request you to sell the property described in paragraph 7 by public auction at the best price obtainable subject to the reserved price.</li>
+                    <li>I hereby agree to indemnify you against all costs, damages, losses and expenses you may incur in the lawful exercise of your duties as a licensed auctioneer.</li>
+                    <li>Agree to pay your charges as per fees already agreed*/as specifies in the auctioneer rules.</li>
+                </ol>
+            </ol>
+        </div>
+    </div>
+    <div id="print-notification-letter" class="row hide print-area visible-print" style="margin: 0px 70px 0px 70px;">
+        <div class="letter-head-margin"></div>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <div class="pull-right">
+            <h4>@DateTime.Now.ToString("dd-MM-yyyy")</h4>
+        </div>
+        <div class="text-justify">
+            <div>
+                <div>
+                    <h4>Dear sir/madam</h4>
+                </div>
+                <div>
+                    <h4><span class="lblPCustomerName"></span>&nbsp;</h4>
+                </div>
+                <div>
+                    <h4><span class="lblPCustomerPoBoxNo"></span></h4>
+                </div>
+                <div>
+                    <h4><span class="lblPCustomerContactNumber"></span></h4>
+                </div>
+            </div>
+            <div class="text-center" style="font-size: 14px">
+                <p><strong><u>REF: NOTIFICATION OF SALE FOR MOTOR VEHICLE REG# <span class="lblPRegNo"></span>&nbsp;(<span class="lblPManufacturer"></span>&nbsp;<span class="lblPModel"></span>.</u></strong></p>
+                <br />
+                <br />
+            </div>
+            <div style="font-size: 14px">
+                <div>
+                    <p>We hereby give you a <span class="lblPNotificationDaysWords"></span>&nbsp;(<span class="lblPNotificationDays"></span>) days’ notice to settle the entire debt of your repossessed vehicle.</p>
+
+                    <br />
+                    <br />
+                </div>
+                <div>
+                    <p>
+                        Failure to which we shall have to advertise and sale your above mentioned vehicle by public  auction.
+                    </p>
+                    <br />
+                </div>
+                <div>
+                    <p>Thank You in advance for your co-operation</p>
+                    <br />
+                    <br />
+                    <br />
+                </div>
+                <div>
+                    <p>On behalf of Ali Cars Limited</p>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div id="print-Agreement-letter" class="row hide  print-area visible-print" style="margin: 0px 70px 0px 70px;">
+        <div class="letter-head-margin"></div>
+        <div class="text-justify">
+            <div>
+                <div class="text-center col-xs-12">
+                    <h4><strong>FURTHER AGREEMENT BETWEEN</strong> </h4>
+                    <h4><strong>ALI CAR LIMITED.</strong></h4>
+                    <h4><strong>&</strong></h4>
+                    <h4 class="lblPCustomerName"></h4>
+                </div>
+                <div class="col-xs-12">
+                    <p>
+                        I <span class="lblPCustomerName"></span>holder of I.D #, <span class="lblPLocalId"></span>, bought the vehicle from ALI CAR LIMITED REG. #,<span class="lblPRegNo"></span> CHASISS # <span class="lblPChassisNo"></span>
+                    </p>
+                    <p>The vehicle has outstanding balance of KES, <span class="lblPBalance" data-db-type="int" data-formating="true"></span>/-including repossession fee </p>
+                    <h4><strong>BALANCE TO BE PAID AS FOLLOWS :</strong></h4>
+                    <p class="lblPAgreementRemarks"></p>
+                    <p><strong>Further I agree that in case fail to pay any single instalment , the company has authority to reossess the vehicle</strong></p>
+                    <h5></h5>
+                    <h4>ALI CAR LIMITED</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section FooterScript
+{
+
+    <script src="~/Content/AppJS/Vehicle/VehicleRecovery.js"></script>
+
+    <script>
+        jQuery(document).ready(function () {
+            VehicleRecovery.init();
+        });
+    </script>
+}
+

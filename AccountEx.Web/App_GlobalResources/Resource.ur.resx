@@ -1,0 +1,378 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Action" xml:space="preserve">
+    <value>ایکشن</value>
+  </data>
+  <data name="AddItem" xml:space="preserve">
+    <value>جنس شامل کریں</value>
+  </data>
+  <data name="AllItemInCurrentVoucher" xml:space="preserve">
+    <value>موجودہ واؤچر میں تمام اشیاء</value>
+  </data>
+  <data name="Amount" xml:space="preserve">
+    <value>رقم</value>
+  </data>
+  <data name="BillNumber" xml:space="preserve">
+    <value>بل نمبر</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>منسوخ کریں</value>
+  </data>
+  <data name="Commission" xml:space="preserve">
+    <value>کمیشن</value>
+  </data>
+  <data name="Customer" xml:space="preserve">
+    <value>گاہک</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>تاریخ</value>
+  </data>
+  <data name="Expenses" xml:space="preserve">
+    <value>اخراجات</value>
+  </data>
+  <data name="Fare" xml:space="preserve">
+    <value>کرایہ</value>
+  </data>
+  <data name="GrassBikri" xml:space="preserve">
+    <value>خام بکری</value>
+  </data>
+  <data name="item" xml:space="preserve">
+    <value>جنس</value>
+  </data>
+  <data name="Labour" xml:space="preserve">
+    <value>مزدوری</value>
+  </data>
+  <data name="Laga" xml:space="preserve">
+    <value>لاگا</value>
+  </data>
+  <data name="Mark" xml:space="preserve">
+    <value>مارکہ</value>
+  </data>
+  <data name="MarkeetFee" xml:space="preserve">
+    <value>مارکیٹ فیس</value>
+  </data>
+  <data name="Misc" xml:space="preserve">
+    <value>متفرق</value>
+  </data>
+  <data name="Munshyiana" xml:space="preserve">
+    <value>منشیانہ</value>
+  </data>
+  <data name="NetSale" xml:space="preserve">
+    <value>پختہ بکری</value>
+  </data>
+  <data name="PendingVoucher" xml:space="preserve">
+    <value>آمد</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>تعداد</value>
+  </data>
+  <data name="QuantityTotal" xml:space="preserve">
+    <value>کل تعداد</value>
+  </data>
+  <data name="Rate" xml:space="preserve">
+    <value>نرخ</value>
+  </data>
+  <data name="SaleType" xml:space="preserve">
+    <value>فروخت کی قسم</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>محفوظ کریں</value>
+  </data>
+  <data name="Supplier" xml:space="preserve">
+    <value>بیوپاری</value>
+  </data>
+  <data name="TotalAmount" xml:space="preserve">
+    <value>کل رقم</value>
+  </data>
+  <data name="Vehicle" xml:space="preserve">
+    <value>گاڑی</value>
+  </data>
+  <data name="VoucherNumber" xml:space="preserve">
+    <value>واؤچر نمبر</value>
+  </data>
+  <data name="AccountNameisrequired" xml:space="preserve">
+    <value>اکاؤنٹ نمبرمنتخب کریں</value>
+  </data>
+  <data name="AddNew" xml:space="preserve">
+    <value>نیا واؤچر</value>
+  </data>
+  <data name="amountisrequired" xml:space="preserve">
+    <value>رقم منتخب کریں</value>
+  </data>
+  <data name="BillNumberisrequired" xml:space="preserve">
+    <value>بل نمبر کی ضرورت ہے</value>
+  </data>
+  <data name="ChartofAccounts" xml:space="preserve">
+    <value>چارٹ آف اکاوّنٹ</value>
+  </data>
+  <data name="Customerisrequired" xml:space="preserve">
+    <value>گاہک منتخب کریں</value>
+  </data>
+  <data name="DetailItem" xml:space="preserve">
+    <value>تفصیل جنس</value>
+  </data>
+  <data name="Icon" xml:space="preserve">
+    <value>آئکن</value>
+  </data>
+  <data name="InvoiceNo" xml:space="preserve">
+    <value>انوائس نمبر</value>
+  </data>
+  <data name="Itemisrequired" xml:space="preserve">
+    <value>جنس منتخب کریں</value>
+  </data>
+  <data name="LabourStore" xml:space="preserve">
+    <value>مزدوری سٹور</value>
+  </data>
+  <data name="ManagePurchase" xml:space="preserve">
+    <value>آمد</value>
+  </data>
+  <data name="ManageSales" xml:space="preserve">
+    <value>فروخت</value>
+  </data>
+  <data name="PendingVoucherRequired" xml:space="preserve">
+    <value>آمد منتخب کریں</value>
+  </data>
+  <data name="Period" xml:space="preserve">
+    <value>مدت سٹور</value>
+  </data>
+  <data name="Purchase" xml:space="preserve">
+    <value>آمد</value>
+  </data>
+  <data name="qtyisrequired" xml:space="preserve">
+    <value>تعداد منتخب کریں</value>
+  </data>
+  <data name="rateisrequired" xml:space="preserve">
+    <value>ریٹ متنخب کریں</value>
+  </data>
+  <data name="Sale" xml:space="preserve">
+    <value>فروخت</value>
+  </data>
+  <data name="Saledateisrequired" xml:space="preserve">
+    <value>فروخت کے تاریخ کی ضرورت ہے</value>
+  </data>
+  <data name="SelectAccountType" xml:space="preserve">
+    <value>اکاؤنٹ کی قسم منتخب کریں</value>
+  </data>
+  <data name="SelectStorePeriod" xml:space="preserve">
+    <value>متخب مدت سٹور</value>
+  </data>
+  <data name="SelectSupplier" xml:space="preserve">
+    <value>بیوپاری</value>
+  </data>
+  <data name="Store" xml:space="preserve">
+    <value>سٹور</value>
+  </data>
+  <data name="StoreIsRequired" xml:space="preserve">
+    <value>سٹور منتخب کریں</value>
+  </data>
+  <data name="StoreRent" xml:space="preserve">
+    <value>کرایہ سٹور</value>
+  </data>
+  <data name="Supplierisrequired" xml:space="preserve">
+    <value>بیوپاری منتخب کریں</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>ٹوٹل</value>
+  </data>
+  <data name="VehicleNumberisrequired" xml:space="preserve">
+    <value>گاڑی نمبر منتخب کریں۔</value>
+  </data>
+  <data name="Voucherisrequired" xml:space="preserve">
+    <value>واؤچر کی ضرورت ہے</value>
+  </data>
+  <data name="AccountStructure" xml:space="preserve">
+    <value>اکاؤنٹ کی ساخت</value>
+  </data>
+  <data name="AddAccoun" xml:space="preserve">
+    <value>اکاؤنٹ</value>
+  </data>
+  <data name="AddEdit" xml:space="preserve">
+    <value>شامل کریں / ترمیم کریں</value>
+  </data>
+  <data name="AddParentAccount" xml:space="preserve">
+    <value>سب اکاؤنٹ</value>
+  </data>
+  <data name="AddRouteAccount" xml:space="preserve">
+    <value>مین اکاؤنٹ</value>
+  </data>
+  <data name="All" xml:space="preserve">
+    <value>تمام</value>
+  </data>
+  <data name="Auto" xml:space="preserve">
+    <value>آٹو</value>
+  </data>
+  <data name="CashPayments" xml:space="preserve">
+    <value>ادائیگی کیش</value>
+  </data>
+  <data name="CashReceipts" xml:space="preserve">
+    <value>کیش وصولی</value>
+  </data>
+  <data name="Challan" xml:space="preserve">
+    <value>چالان</value>
+  </data>
+  <data name="Challanisrequired" xml:space="preserve">
+    <value>چالان کی ضرورت ہے</value>
+  </data>
+  <data name="DetailedLedger" xml:space="preserve">
+    <value>تفصیلا لیجر</value>
+  </data>
+  <data name="FromAccount" xml:space="preserve">
+    <value>جمع</value>
+  </data>
+  <data name="GeneralLedger" xml:space="preserve">
+    <value>جنرل لیجر</value>
+  </data>
+  <data name="MarkaIsRequired" xml:space="preserve">
+    <value>مارکہ منتخب کریں</value>
+  </data>
+  <data name="Reports" xml:space="preserve">
+    <value>رپورٹ</value>
+  </data>
+  <data name="SaleDetail" xml:space="preserve">
+    <value>فروخت کے تفصیل</value>
+  </data>
+  <data name="SaleLedger" xml:space="preserve">
+    <value>سیلز لیجر</value>
+  </data>
+  <data name="SaleSummary" xml:space="preserve">
+    <value>فروخت خلاصہ</value>
+  </data>
+  <data name="StorePurchase" xml:space="preserve">
+    <value>سٹور خریداری</value>
+  </data>
+  <data name="ToAccount" xml:space="preserve">
+    <value>بنام</value>
+  </data>
+  <data name="Voucher" xml:space="preserve">
+    <value>واؤچر</value>
+  </data>
+  <data name="Mezaan" xml:space="preserve">
+    <value>میزان</value>
+  </data>
+  <data name="OpeningBalance" xml:space="preserve">
+    <value>اوپننگ بیلنس</value>
+  </data>
+  <data name="RecoveryForm" xml:space="preserve">
+    <value>ریکوری رپورٹ/فارم</value>
+  </data>
+  <data name="TrialBalance" xml:space="preserve">
+    <value>ٹرائل بیلنس</value>
+  </data>
+</root>

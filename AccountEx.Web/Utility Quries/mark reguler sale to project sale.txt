@@ -1,0 +1,31 @@
+UPDATE II
+SET	II.ProjectId=p.Id,II.SaleType=1
+FROM dbo.CRMProjects p INNER JOIN dbo.CRMSaleInvoices I ON I.CustomerId=p.CustomerId INNER JOIN dbo.CRMSaleInvoiceItems II ON
+I.Id=II.CRMSaleInvoiceId AND II.ItemId=p.ProductId
+WHERE p.FiscalId=193 AND I.FiscalId=193 AND II.SaleType=2
+
+
+
+
+
+
+
+
+SELECT I.CustomerId,II.ItemId,II.SaleType,II.ProjectId, p.Id AS ProjectId,p.ProductId,p.CustomerId FROM dbo.CRMProjects p INNER JOIN dbo.CRMSaleInvoices I ON I.CustomerId=p.CustomerId INNER JOIN dbo.CRMSaleInvoiceItems II ON
+I.Id=II.CRMSaleInvoiceId AND II.ItemId=p.ProductId
+WHERE p.FiscalId=193 AND I.FiscalId=193 AND II.SaleType=2
+
+
+
+
+
+
+
+
+
+SELECT C.Name AS customer,pro.Name AS Product FROM dbo.CRMProjects p INNER JOIN dbo.CRMSaleInvoices I ON I.CustomerId=p.CustomerId INNER JOIN dbo.CRMSaleInvoiceItems II ON
+I.Id=II.CRMSaleInvoiceId AND II.ItemId=p.ProductId
+
+INNER JOIN	dbo.CRMCustomers C ON C.Id=p.CustomerId INNER JOIN	 dbo.CRMProducts pro ON pro.Id=II.ItemId
+WHERE p.FiscalId=193 AND I.FiscalId=193 AND II.SaleType=2
+ORDER BY customer,pro.Name

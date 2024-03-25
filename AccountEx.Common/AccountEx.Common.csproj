@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2AC11C97-C09E-4023-AB64-122F899E2A1E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AccountEx.Common</RootNamespace>
+    <AssemblyName>AccountEx.Common</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AutoMapper">
+      <HintPath>..\packages\AutoMapper.4.2.1\lib\net45\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AccountBalance.cs" />
+    <Compile Include="AccountCode.cs" />
+    <Compile Include="AgreementEditingState.cs" />
+    <Compile Include="AmexException.cs" />
+    <Compile Include="ApiResponse.cs" />
+    <Compile Include="AppSetting.cs" />
+    <Compile Include="AutoMapperConfiguration.cs" />
+    <Compile Include="CRM\CRMCRMComplaintExtra.cs" />
+    <Compile Include="CRM\CRMProductWithOwnerShip.cs" />
+    <Compile Include="CRM\CRMListing.cs" />
+    <Compile Include="CRM\CRMSaleByProductExtra.cs" />
+    <Compile Include="CRM\CRMInvoiceImportExtra.cs" />
+    <Compile Include="CRM\ImportRequisitionHisotryExtra.cs" />
+    <Compile Include="CRM\CRMCustomerProject.cs" />
+    <Compile Include="CRM\CRMCalendarEventExtra.cs" />
+    <Compile Include="CurrencyRateExtra.cs" />
+    <Compile Include="Cast.cs" />
+    <Compile Include="ChallanInfoExtra.cs" />
+    <Compile Include="BLTransactionExtra.cs" />
+    <Compile Include="ContactDetailExtra.cs" />
+    <Compile Include="AccountSummary.cs" />
+    <Compile Include="GetCustomerCollections.cs" />
+    <Compile Include="GetSecuirtyPossessionAccountStatementExtra.cs" />
+    <Compile Include="GetVehicleFollowUpReport.cs" />
+    <Compile Include="GetVehiclePostDatedCheque.cs" />
+    <Compile Include="GetVehicleSale.cs" />
+    <Compile Include="GetVehicleWithSaleInforReports.cs" />
+    <Compile Include="CustomReportParameter.cs" />
+    <Compile Include="Integrations\IntegrationError.cs" />
+    <Compile Include="Integrations\GoogleCalendarEvent.cs" />
+    <Compile Include="Integrations\IntegrationSetting.cs" />
+    <Compile Include="Lab\Class1.cs" />
+    <Compile Include="Lab\TestResultExtra.cs" />
+    <Compile Include="NexusSyncRequest.cs" />
+    <Compile Include="Nexus\ReportExtra.cs" />
+    <Compile Include="Nexus\NexusUnpostedCaseSave.cs" />
+    <Compile Include="Nexus\NexusUnpostedCases.cs" />
+    <Compile Include="ProductionDetail.cs" />
+    <Compile Include="RentalAgreement\GetOverallRecoveryReport.cs" />
+    <Compile Include="RentalAgreement\GetOverallRecoveryDetail.cs" />
+    <Compile Include="RentalAgreement\GetRecoveryOfPossessionCharge.cs" />
+    <Compile Include="RentalAgreement\GetRentAccountStatement.cs" />
+    <Compile Include="RentalAgreement\GetRentRecoveryDetail.cs" />
+    <Compile Include="RentDetailExtra.cs" />
+    <Compile Include="Sha2Sign.cs" />
+    <Compile Include="SiteContextExtra.cs" />
+    <Compile Include="VehicleSystem\BLPaymentExtra.cs" />
+    <Compile Include="VehicleSystem\PrintFurtherAgreement.cs" />
+    <Compile Include="VehicleSystem\PrintVehicleVoucherById.cs" />
+    <Compile Include="VehicleSystem\VehicleRepossessions.cs" />
+    <Compile Include="VehicleSystem\VehicleFollowUpReport.cs" />
+    <Compile Include="VehicleSystem\GetVehicleCustomerCollection.cs" />
+    <Compile Include="VehicleSystem\VehicleMonthlyCredit.cs" />
+    <Compile Include="VehicleSystem\VehiclePeriodicalActivity.cs" />
+    <Compile Include="VehicleSystem\VehicleIncomeStatment.cs" />
+    <Compile Include="VehicleSystem\GetVehicleCustomerBalances.cs" />
+    <Compile Include="VehicleSystem\PrintRepossessionLetter.cs" />
+    <Compile Include="VehicleSystem\VehicleStockExtra.cs" />
+    <Compile Include="VoucherPostingExtra.cs" />
+    <Compile Include="VehicleConfigExtra.cs" />
+    <Compile Include="GetDailyProfitLoss.cs" />
+    <Compile Include="GetNTPurchaseDataExport.cs" />
+    <Compile Include="GetNTSaleDataExport.cs" />
+    <Compile Include="ChallanExtra.cs" />
+    <Compile Include="GetSalePurchaseDateWiseSummaryByVoucherTypeExtra.cs" />
+    <Compile Include="ObjectCopier.cs" />
+    <Compile Include="CommonHelper.cs" />
+    <Compile Include="ConfigurationReader.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="ConverotEnum.cs" />
+    <Compile Include="COAHeadIdExtra.cs" />
+    <Compile Include="AccountDetailExtra.cs" />
+    <Compile Include="DcWithQuantityExtra.cs" />
+    <Compile Include="LatestSoldItemExtra.cs" />
+    <Compile Include="Logger.cs" />
+    <Compile Include="OrderByVoucherExtra.cs" />
+    <Compile Include="RentChallanExta.cs" />
+    <Compile Include="InvoiceClearingExtra.cs" />
+    <Compile Include="SalePurchaseSummary.cs" />
+    <Compile Include="OrderExtra.cs" />
+    <Compile Include="DataTableExtra.cs" />
+    <Compile Include="ListExtensions.cs" />
+    <Compile Include="PrintExtra.cs" />
+    <Compile Include="SalaryCalculation.cs" />
+    <Compile Include="EmployeeOverTimeHourExtra.cs" />
+    <Compile Include="EmployeeleavesExtra.cs" />
+    <Compile Include="TransactionScopeBuilder.cs" />
+    <Compile Include="VehicleFollowUpExtra.cs" />
+    <Compile Include="VehicleInstallmentDetailExtra.cs" />
+    <Compile Include="VehicleRecovery.cs" />
+    <Compile Include="TrialBalanceExtra.cs" />
+    <Compile Include="Encrypt.cs" />
+    <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="SettingExtra.cs" />
+    <Compile Include="CurrentUser.cs" />
+    <Compile Include="CustomerExtra.cs" />
+    <Compile Include="CustomerRecoveryEntry.cs" />
+    <Compile Include="DateConverter.cs" />
+    <Compile Include="DynamicLinq.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="FileUploadResponse.cs" />
+    <Compile Include="IdName.cs" />
+    <Compile Include="JQueryResponse.cs" />
+    <Compile Include="Numerics.cs" />
+    <Compile Include="ParameterExtra.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryableExtensions.cs" />
+    <Compile Include="ReportData.cs" />
+    <Compile Include="ReportParameterExtra.cs" />
+    <Compile Include="SaleAgingItem.cs" />
+    <Compile Include="Sha1Sign.cs" />
+    <Compile Include="SiteConfig.cs" />
+    <Compile Include="SiteContext.cs" />
+    <Compile Include="TrialBalanceEntry.cs" />
+    <Compile Include="VoucherDetail.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ConnectionStrings.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

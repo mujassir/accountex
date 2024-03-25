@@ -1,0 +1,382 @@
+﻿@{
+   
+}
+
+@using AccountEx.Common;
+<div class="row-fluid">
+    <div class="span12">
+        <h2 class="page-title">&nbsp<span class="formtitle12">@Resources.Resource.StorePurchase</span> @*<small>manage and receive &nbsp<span class="formtitle12">Purchase</span></small>*@</h2>
+    </div>
+</div>
+
+<div class="row-fluid" id="masterdetail">
+    <section class="widget">
+        @* <header>
+            <h4>
+                <i class="icon-file-alt"></i>
+                Show All purchase orders
+            </h4>
+        </header>*@
+
+
+        <div class="body">
+
+            <div id="form-info" data-save='Save' class="form-horizontal label-left hide">
+                <input type="text" id="Id" class="hide" />
+                <input type="text" data-checktrack='false' value="false" id="IsReceived" class="hide" />
+
+
+                <fieldset>
+
+                    <legend class="section">@Resources.Resource.AddEdit&nbsp<span class="formtitle12">@Resources.Resource.StorePurchase</span></legend>
+                    <div id="mainform">
+                        <div class="row-fluid">
+                            <div class="span4">
+                                <label class="control-label" for="prefix">@Resources.Resource.VoucherNumber</label>
+                                <div class="controls controls-row">
+                                    <label id="lblVoucherNumber" class="label label-info"></label>
+                                    <input type="text" class="span12 hide" id="VoucherNumber" disabled="disabled" readonly="readonly" data-required="required" data-validate="true" data-message="P.O Number is required" >
+                                </div>
+                            </div>
+                            <div class="span4">
+                                <label class="control-label" for="prefix">@Resources.Resource.BillNumber</label>
+                                <div class="controls controls-row">
+                                    <input type="text" id="InvoiceNumber" disabled="disabled" data-validate="true" data-required="required" data-message="Bill Number is required"  class="number span12">
+                                </div>
+                            </div>
+                            <div class="span4">
+                                <label class="control-label datetime" for="prefix">@Resources.Resource.Date</label>
+                                <div class="controls controls-row">
+                                    <input type="text" id="Date" data-required="required" data-message="@Resources.Resource.Saledateisrequired" class="date-picker span12" data-hide-dropdown="true">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row-fluid">
+                            <div class="span8">
+                                <label class="control-label" for="prefix">@Resources.Resource.Supplier</label>
+                                <div class="controls controls-row">
+                                    <select id="AccountId" class="span12" data-trackchange='true' data-required="required" data-message="@Resources.Resource.Supplierisrequired" data-placeholder="@Resources.Resource.Supplier">
+                                        <option></option>
+                                        @foreach (var cat in ViewBag.Suppliers as List<IdName>)
+                                        {
+                                            <option data-custom="@cat.Id" value="@cat.Id">@cat.Name</option>
+                                        }
+                                    </select>
+                                    @* <input type="hidden" id="SubCategoryId" value="0" />*@
+
+                                </div>
+                            </div>
+                            <div class="span4">
+                                <label class="control-label" for="prefix">@Resources.Resource.Vehicle</label>
+                                <div class="controls controls-row">
+
+                                    <input type="text" id="Vehicle" data-validate="true" data-required="required" data-message="Vehicle Number is required"  class="span12">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row-fluid">
+
+                            <div class="span8" id="storediv">
+                                <label class="control-label" for="prefix">@Resources.Resource.Store</label>
+                                <div class="controls controls-row">
+                                    <select id="StoreId" class="span12" data-trackchange='true' data-required="required" data-placeholder="@Resources.Resource.Store" data-message="@Resources.Resource.StoreIsRequired">
+                                        <option></option>
+                                        @foreach (var item in ViewBag.Stores as List<IdName>)
+                                        {
+                                            <option data-custom="@item.Id" value="@item.Id">@item.Name</option>
+                                        }
+                                    </select>
+
+                                </div>
+                            </div>
+                            <div class="span4">
+                                <label class="control-label" for="prefix">@Resources.Resource.Period</label>
+                                <div class="controls controls-row">
+                                    <select id="Period" class="span12" data-trackchange='true' data-required="required" data-placeholder="@Resources.Resource.Period" data-message="@Resources.Resource.SelectStorePeriod">
+                                        <option></option>
+                                        @for (var i = 31; i <= 91; )
+                                        {
+                                            <option data-custom="@i" value="@i">@i</option>
+                                            if (i == 31)
+                                            {
+                                                i = 30;
+                                            }
+                                            i = i + 15;
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row-fluid">
+
+                            <div class="span4">
+                                <label class="control-label" for="prefix">@Resources.Resource.StoreRent</label>
+                                <div class="controls controls-row">
+                                    <input type="text" id="StoreFare" value="1500" data-validate="true" data-required="required" data-message="@Resources.Resource.StoreRent"  class="number span12">
+                                </div>
+                            </div>
+                            <div class="span4">
+                                <label class="control-label datetime" for="prefix">@Resources.Resource.LabourStore</label>
+                                <div class="controls controls-row">
+                                    <input type="text" id="StoreLaboreCharges" class="span12">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <fieldset>
+                        <legend>@Resources.Resource.AllItemInCurrentVoucher
+
+                        </legend>
+                        <div data-save='false'>
+
+
+                            <table id="tbladdall">
+                                <tr>
+                                    <td class="label_td">@Resources.Resource.item</td>
+                                    <td>
+                                        <select id="Itemall" data-trackchange="true" data-validate="true" data-required="required" data-placeholder="@Resources.Resource.item" data-message="@Resources.Resource.Itemisrequired" class="chooseninner">
+                                            <option></option>
+                                            @foreach (var cat in ViewBag.Items as List<IdName>)
+                                            {
+                                                <option data-custom="@cat.Id" value="@cat.Id">@cat.Name</option>
+                                            }
+                                        </select>
+
+                                    </td>
+
+                                    <td class="label_td">
+                                        @Resources.Resource.Quantity</td>
+                                    <td>
+                                        <input type="text" placeholder="@Resources.Resource.Quantity" id="qtyall" data-required="required" data-validate="true" data-message="@Resources.Resource.qtyisrequired" >
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-primary btn-mini" onclick="AddAllItem()" type="button"><i class="icon-plus"></i>@Resources.Resource.AddItem</button>
+
+                                    </td>
+                                </tr>
+
+                            </table>
+                            <br />
+
+
+                            <section class="widget">
+
+                                <table id="saleitemall" class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>@Resources.Resource.item</th>
+                                            <th>@Resources.Resource.Quantity</th>
+                                            <th>@Resources.Resource.Action</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+
+                            </section>
+                        </div>
+                        <br />
+
+
+                    </fieldset>
+                    <fieldset>
+                        <legend>@Resources.Resource.DetailItem
+
+                        </legend>
+                        <div data-save='false'>
+                            <table id="tbladd">
+                                <tr>
+                                    <td class="label_td">@Resources.Resource.item</td>
+                                    <td>
+                                        <select id="Item" data-trackchange="true" data-validate="true" data-required="required" data-placeholder="@Resources.Resource.item" data-message="@Resources.Resource.Itemisrequired" class="chooseninner">
+                                            <option></option>
+                                            @* @foreach (var cat in ViewBag.Items as List<IdName>)
+                                            {
+                                                <option data-custom="@cat.Id" value="@cat.Id">@cat.Name</option>
+                                            }*@
+                                        </select>
+
+                                    </td>
+                                    <td class="label_td">@Resources.Resource.Mark </td>
+                                    <td>
+                                        <select id="Marka" data-trackchange="true" data-required="required" data-placeholder="@Resources.Resource.Mark" data-message="@Resources.Resource.MarkaIsRequired" class="chooseninner">
+                                            <option></option>
+                                            @foreach (var item in ViewBag.Markas as List<IdName>)
+                                            {
+                                                <option data-custom="@item.Id" value="@item.Id">@item.Name</option>
+                                            }
+                                        </select>
+
+                                    </td>
+                                    <td class="label_td">
+                                        @Resources.Resource.Quantity</td>
+                                    <td>
+                                        <input type="text" placeholder="@Resources.Resource.Quantity" id="qty" data-required="required" data-validate="true" data-message="@Resources.Resource.qtyisrequired" >
+                                        &nbsp<input type="checkbox" id="chkchangeitem" />
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-primary btn-mini" onclick="AddItem()" type="button"><i class="icon-plus"></i>@Resources.Resource.AddItem</button>
+                                    </td>
+                                </tr>
+                                <tr class="hide">
+
+                                    @* <td class="label_td">
+                                        @Resources.Resource.Rate</td>
+                                    <td>
+                                        <input type="text" placeholder="@Resources.Resource.Rate" id="Rate" data-validate="true" data-required="required" data-message="@Resources.Resource.rateisrequired"  class="number">
+                                    </td>
+                                    <td class="label_td">
+                                        @Resources.Resource.Amount</td>
+                                    <td>
+                                        <input type="text" placeholder="@Resources.Resource.Amount" id="Amount" data-validate="true" data-required="required" data-message="@Resources.Resource.amountisrequired"  class="number">
+                                    </td>*@
+                                    @*<td>@Resources.Resource.Challan</td>
+                                    <td>
+                                        <input type="text" placeholder="@Resources.Resource.Challan" id="Challan" data-validate="true" data-required="required" data-message="@Resources.Resource.Challanisrequired"></td>
+
+                                    <td>*@
+
+                                </tr>
+                            </table>
+
+                            <section class="widget">
+
+                                <table id="saleitem" class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>@Resources.Resource.item</th>
+                                            <th>@Resources.Resource.Mark</th>
+                                            <th>@Resources.Resource.Challan</th>
+                                            <th>@Resources.Resource.Quantity</th>
+                                            @* <th>@Resources.Resource.Rate</th>
+                                            <th>@Resources.Resource.Amount</th>*@
+                                            <th>@Resources.Resource.Action</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+
+                            </section>
+                            <table class="pull-right">
+                                <tr>
+                                    <td>@Resources.Resource.QuantityTotal</td>
+                                    <td>
+                                        <input id="qtytotal" type="text" disabled="disabled" readonly="readonly" value="0" /></td>
+                                </tr>
+                                <tr class="hide">
+
+                                    <td>@Resources.Resource.TotalAmount</td>
+                                    <td>
+                                        <input id="amounttotal" disabled="disabled" readonly="readonly" type="text" value="0" /></td>
+                                </tr>
+                                <tr class="hide">
+                                    <td>Discount</td>
+                                    <td>
+                                        <input id="Discount" type="text" value="0" /></td>
+                                </tr>
+                                <tr class="hide">
+                                    <td>Net Total</td>
+                                    <td>
+                                        <input id="Nettotal" disabled="disabled" readonly="readonly" type="text" value="0" /></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </fieldset>
+                </fieldset>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-primary" onclick="Save()">@Resources.Resource.Save</button>
+                    @*<button type="submit" class="btn btn-primary"  onclick="SaveNClose()">Save & Close</button>*@
+                    <button type="button" class="btn" onclick="Close()">@Resources.Resource.Cancel</button>
+                </div>
+            </div>
+
+            <div id="div-table">
+
+                <fieldset>
+                    <legend class="section">&nbsp<span class="formtitle12">@Resources.Resource.StorePurchase</span>
+
+                        <button type="submit" class="btn btn-danger pull-right" onclick="Add()">
+                            <span class="small-circle"><i class="icon-plus"></i></span>
+                            @Resources.Resource.AddNew
+                        </button>
+
+                    </legend>
+                    <table id="datatable-table" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>@Resources.Resource.VoucherNumber</th>
+                                <th>@Resources.Resource.BillNumber</th>
+                                <th>@Resources.Resource.Supplier</th>
+                                <th>@Resources.Resource.Date</th>
+                                <th style="width: 100px;" class="no-sort"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </fieldset>
+            </div>
+
+
+        </div>
+    </section>
+</div>
+<div class="hide">
+    <table>
+        <tbody id="source">
+            <tr>
+
+                <td>
+                    <select id="ItemItemId" data-trackchange="true" class="hide">
+                        <option></option>
+                        @foreach (var cat in ViewBag.Items as List<IdName>)
+                        {
+                            <option data-custom="@cat.Id" value="@cat.Id">@cat.Name</option>
+                        }
+                    </select>
+
+                </td>
+                <td>
+                    <select id="MarkaId" data-trackchange="true" class="hide">
+                        <option></option>
+                        @foreach (var item in ViewBag.Markas as List<IdName>)
+                        {
+                            <option data-custom="@item.Id" value="@item.Id">@item.Name</option>
+                        }
+                    </select>
+
+                </td>
+                <td>
+                    <input type="text" id="CallanhId" class="hide" />
+
+                </td>
+                <td>
+                    <input type="text" id="QuantityItemId" class="number hide" />
+
+                </td>
+                @* <td>
+                    <input type="text" id="RateItemId" class="number hide" />
+                </td>
+                <td>
+                    <input type="text" id="AmountItemId" class="number hide" />
+                </td>*@
+                <td class="hide">
+                    <input type="text" id="IdItemId" class="number hide" value="0" />
+                </td>
+                <td>
+                    <span class="action"><i class='icon-remove' onclick="DeleteRow(this)" data-original-title='Delete Item'></i></span>
+
+                </td>
+
+            </tr>
+        </tbody>
+
+    </table>
+
+</div>
+<div id="jsondata" class="hide">
+    <input id="FormSetting"  type="text" value="@ViewBag.FormSettings" />
+    <input id="Voucher"  type="text" value="@ViewBag.Voucher" />
+
+</div>
+<script src="~/Scripts/app/storetransaction.js"></script>

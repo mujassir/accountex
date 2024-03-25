@@ -1,0 +1,68 @@
+﻿@{
+    Layout = "_Layout.cshtml";
+    ViewBag.Title = "Products";   
+}
+<style>
+    .tbl-product thead tr th:nth-child(n+3),.tbl-product tbody tr td:nth-child(n+3) {
+        text-align:right
+    }
+</style>
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">Prodcut List </h1>
+}
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title hidden-print">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Report Data
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                    <a href="javascript:;" class="remove hide"></a>
+                </div>
+                <div class="tools pull-right">
+                    @{ Html.RenderPartial("_Export_Button");  }
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover tbl-product" id="mainTable" data-export='true'>
+                    <thead>
+                        <tr>
+                            @*<th>SN</th>*@
+                            <th>Group</th>
+                            <th class="no-sort">Code</th>
+                            <th class="no-sort">Title</th>
+                             <th class="no-sort">Packing/Carton</th>
+                            <th class="no-sort">Unit</th>
+                            <th class="no-sort">Purchase Price</th>
+                            <th class="no-sort">Sale Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="11" class="align-center">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Shared/jquery.dataTables.rowGrouping.js"></script>
+    <script src="~/Content/AppJS/Reports/Listing.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            Listing.init("Product", function () {
+                DataTable.RowGroup("mainTable", 0);
+            });
+        });
+    </script>
+}

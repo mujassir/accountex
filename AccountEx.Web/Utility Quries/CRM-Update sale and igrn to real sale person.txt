@@ -1,0 +1,74 @@
+
+
+
+SELECT cc.Name AS Customer,CP.Name AS Product,  II.SalePersonId,CSP.UserId FROM dbo.CRMSaleInvoices S  INNER JOIN dbo.CRMSaleInvoiceItems II ON S.Id=II.CRMSaleInvoiceId
+INNER JOIN dbo.CRMProducts CP ON CP.Id = II.ItemId
+LEFT  JOIN dbo.CRMCustomerSalePersons CSP ON CSP.CRMCustomerId = S.CustomerId AND CSP.CategroyId=CP.CategoryId
+LEFT  JOIN dbo.Users U ON U.Id = CSP.UserId
+LEFT JOIN dbo.CRMCustomers cc	 ON	cc.Id=S.CustomerId
+WHERE S.FiscalId=169 AND II.SalePersonId=3261 AND	CSP.UserId<>II.SalePersonId
+
+
+
+
+SELECT cc.Name AS Customer,CP.Name AS Product,SPReal.FirstName+'' +SPReal.LastName AS SalePerson,SPWrong.FirstName+' ' +SPWrong.LastName AS InvalidSalePerson FROM dbo.CRMSaleInvoices S  INNER JOIN dbo.CRMSaleInvoiceItems II ON S.Id=II.CRMSaleInvoiceId
+INNER JOIN dbo.CRMProducts CP ON CP.Id = II.ItemId
+LEFT  JOIN dbo.CRMCustomerSalePersons CSP ON CSP.CRMCustomerId = S.CustomerId AND CSP.CategroyId=CP.CategoryId
+LEFT  JOIN dbo.Users U ON U.Id = CSP.UserId
+LEFT JOIN dbo.CRMCustomers cc	 ON	cc.Id=S.CustomerId
+LEFT JOIN dbo.Users SPReal	 ON	SPReal.Id = CSP.UserId
+LEFT JOIN dbo.Users SPWrong	 ON	SPWrong.Id = II.SalePersonId
+WHERE 	CSP.UserId<>II.SalePersonId
+
+
+
+UPDATE 
+II SET II.SalePersonId=CSP.UserId
+ FROM dbo.CRMSaleInvoices S  INNER JOIN dbo.CRMSaleInvoiceItems II ON S.Id=II.CRMSaleInvoiceId
+INNER JOIN dbo.CRMProducts CP ON CP.Id = II.ItemId
+LEFT  JOIN dbo.CRMCustomerSalePersons CSP ON CSP.CRMCustomerId = S.CustomerId AND CSP.CategroyId=CP.CategoryId
+LEFT  JOIN dbo.Users U ON U.Id = CSP.UserId
+LEFT JOIN dbo.CRMCustomers cc	 ON	cc.Id=S.CustomerId
+LEFT JOIN dbo.Users SPReal	 ON	SPReal.Id = CSP.UserId
+LEFT JOIN dbo.Users SPWrong	 ON	SPWrong.Id = II.SalePersonId
+WHERE 	CSP.UserId<>II.SalePersonId
+
+
+
+
+
+SELECT cc.Name AS Customer,CP.Name AS Product,SPReal.FirstName+'' +SPReal.LastName AS SalePerson,SPWrong.FirstName+' ' +SPWrong.LastName AS InvalidSalePerson FROM dbo.CRMImportGRNS S
+INNER JOIN dbo.CRMProducts CP ON CP.Id = S.ProductId
+LEFT  JOIN dbo.CRMCustomerSalePersons CSP ON CSP.CRMCustomerId = S.CustomerId AND CSP.CategroyId=CP.CategoryId
+LEFT  JOIN dbo.Users U ON U.Id = CSP.UserId
+LEFT JOIN dbo.CRMCustomers cc	 ON	cc.Id=S.CustomerId
+LEFT JOIN dbo.Users SPReal	 ON	SPReal.Id = CSP.UserId
+LEFT JOIN dbo.Users SPWrong	 ON	SPWrong.Id = S.SalePersonId
+WHERE 	CSP.UserId<>S.SalePersonId
+
+
+
+
+UPDATE 
+S SET S.SalePersonId=CSP.UserId
+ FROM dbo.CRMImportGRNS S
+INNER JOIN dbo.CRMProducts CP ON CP.Id = S.ProductId
+LEFT  JOIN dbo.CRMCustomerSalePersons CSP ON CSP.CRMCustomerId = S.CustomerId AND CSP.CategroyId=CP.CategoryId
+LEFT  JOIN dbo.Users U ON U.Id = CSP.UserId
+LEFT JOIN dbo.CRMCustomers cc	 ON	cc.Id=S.CustomerId
+LEFT JOIN dbo.Users SPReal	 ON	SPReal.Id = CSP.UserId
+LEFT JOIN dbo.Users SPWrong	 ON	SPWrong.Id = S.SalePersonId
+WHERE 	CSP.UserId<>S.SalePersonId
+
+
+
+
+
+
+
+
+
+
+
+
+--S.FiscalId=169 AND II.SalePersonId=3261 AND

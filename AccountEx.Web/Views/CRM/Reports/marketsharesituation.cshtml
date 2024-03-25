@@ -1,0 +1,280 @@
+﻿@{
+    Layout = "~/Views/Reports/_Layout.cshtml";
+    ViewBag.Title = "Market Share Situation";
+}
+@using AccountEx.Common;
+@using AccountEx.BussinessLogic;
+
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">
+
+        <span class="main-title">@ViewBag.Title</span>
+        <small id="lblReportDate" class="pull-right small visible-print">
+        </small>
+
+    </h1>
+}
+
+<div class="row hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-filter"></i>Report Filters
+                </div>
+
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                    @*<a href="javascript:;" class="remove"></a>*@
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal" data-save="save">
+                    <input type="text" id="Id" class="hide" />
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Year</label>
+                            <div class="col-md-8">
+                                <select id="Year" class="form-control select2" placeholder="Select year" data-required="required" data-message="year is required" data-clear='true'>
+                                    @Html.Raw(FiscalYearManager.GetFiscalYearsDropDownOptions())
+                                </select>
+
+                            </div>
+                        </div>
+                        @if (UtilityFunctionManager.ShowCRMRegion())
+                        {
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">Region</label>
+                                <div class="col-md-6">
+                                    <select id="RegionIds" multiple="multiple" class="form-control select2" placeholder="Select Region" data-required="false" data-message="Region is required" data-clear='true'>
+                                        <option></option>
+                                        @foreach (var p in (List<IdName>)ViewBag.Regions)
+                                        {
+                                            <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                        }
+                                    </select>
+
+                                </div>
+                                <div class="col-md-2">
+                                    <label id="lblselectAll" class="control-label" for="chkselect_all-select2-option-1">
+                                        <input type="checkbox" id="chkselect_all-select2-option-1" class="chkselect_all-select2-option" data-checktrack='false' />
+                                        Select All
+                                    </label>
+                                </div>
+                            </div>
+                        }
+                        @if (UtilityFunctionManager.ShowCRMDivision())
+                        {
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">Division</label>
+                                <div class="col-md-6">
+                                    <select id="DivisionIds" multiple="multiple" class="form-control select2" placeholder="Select division" data-required="false" data-message="division is required" data-clear='true'>
+                                        <option></option>
+                                        @foreach (var p in (List<IdName>)ViewBag.Divisions)
+                                        {
+                                            <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                        }
+                                    </select>
+
+                                </div>
+                                <div class="col-md-2">
+                                    <label id="lblselectAll" class="control-label" for="chkselect_all-select2-option-2">
+                                        <input type="checkbox" id="chkselect_all-select2-option-2" class="chkselect_all-select2-option" data-checktrack='false' />
+                                        Select All
+                                    </label>
+                                </div>
+                            </div>
+                        }
+                        <div class="form-group">
+                            <label class="col-md-2 control-label master-account-label" for="prefix">Group</label>
+                            <div class="col-md-3">
+                                <select class="form-control select2" id="GroupId" data-required="false" data-message="Group is required" placeholder="select group">
+                                    <option></option>
+                                    @foreach (var p in (List<IdName>)ViewBag.Groups)
+                                    {
+                                        <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                    }
+                                </select>
+
+                            </div>
+                            <label class="col-md-1 control-label master-account-label" for="prefix">Sub Group</label>
+                            <div class="col-md-2">
+                                <select class="form-control select2" id="SubGroupId" data-required="false" data-message="Sub group is required" placeholder="select sub group"></select>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label master-account-label" for="prefix">Delivery Type</label>
+                            <div class="col-md-4">
+                                <select multiple="multiple" class="form-control select2" id="DeliveryTypeIds">
+                                    <option value="@((byte)CRMSaleDeliveryType.ExStock)">Ex-Stock</option>
+                                    <option value="@((byte)CRMSaleDeliveryType.Import)">Import</option>
+
+
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label master-account-label" for="prefix">Report Type</label>
+                            <div class="col-md-4">
+                                <select class="form-control select2" id="ReportType">
+                                    <option value="0">Sale Wise</option>
+                                    <option value="1">Quantity Wise</option>
+
+
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label master-account-label" for="prefix">Top</label>
+                            <div class="col-md-4">
+                                <select class="form-control select2" id="RecordCount">
+                                    <option value="5">5</option>
+                                    <option value="10" selected="selected">10</option>
+                                    <option value="15">15</option>
+                                    <option value="20">20</option>
+
+
+                                </select>
+
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+                    <div class="form-actions">
+                        <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+                        <div class="col-md-8">
+                            <button id="btnShowReport" type="submit" class="btn btn-primary">Show Report</button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title hidden-print">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Projects
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                    @*<a href="javascript:;" class="remove"></a>*@
+                </div>
+                <div class="tools pull-right">
+                    @{ Html.RenderPartial("_Export_Button");  }
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div style="width: 75%">
+                    <canvas id="canvas"></canvas>
+                </div>
+                <div class="table-responsive">
+                    <table id="tbl-report" class="table table-striped table-bordered table-hover report-table" data-export='true'>
+                        <thead>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+@section FooterScript
+{
+    <script src="~/Content/metronic/assets/global/plugins/Chart.js-master/src/Chart.bundle.min.js"></script>
+    <script src="~/Content/metronic/assets/global/plugins/Chart.js-master/src/utils.js"></script>
+    <script src="~/Content/AppJS/CRM/Reports/MarketShare.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            MarketShare.init();
+        });
+    </script>
+    @*<script>
+        var barChartData = {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+            datasets: [{
+                label: 'Dataset 1',
+                backgroundColor: window.chartColors.red,
+                data: [
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor()
+                ]
+            }, {
+                label: 'Dataset 2',
+                backgroundColor: window.chartColors.blue,
+                data: [
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor()
+                ]
+            }, {
+                label: 'Dataset 3',
+                 backgroundColor: window.chartColors.green,
+                data: [
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor()
+                ]
+            }]
+
+        };
+        window.onload = function () {
+            var ctx = document.getElementById('canvas').getContext('2d');
+            window.myBar = new Chart(ctx, {
+                type: 'bar',
+                data: barChartData,
+                options: {
+                    title: {
+                        display: true,
+                        text: 'Market Share Situation'
+                    },
+                    tooltips: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    responsive: true,
+                    scales: {
+                        xAxes: [{
+                            stacked: true,
+                        }],
+                        yAxes: [{
+                            stacked: true
+                        }]
+                    }
+                }
+            });
+        };
+    </script>*@
+}

@@ -1,0 +1,82 @@
+﻿@model AccountEx.CodeFirst.Models.Sale
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold"><span class="formtitle">Reports				</span></h1>
+}
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-filter"></i>Report Filters
+        </div>
+        <div class="tools">
+            <a href="javascript:;" class="collapse"></a>
+            <a href="javascript:;" class="remove"></a>
+        </div>
+        <div class="actions">
+            <button class="btn blue hidden-print" onclick="window.print();"><i class="fa fa-print"></i>&nbsp;Print </button>
+        </div>
+    </div>
+    <div class="portlet-body form">
+
+        <div class="row-fluid" id="masterdetail">
+            <section class="widget">
+                <div class="body">
+
+                    <br />
+                    <br />
+                    <br />
+
+
+                    <div class="body">
+                        <section>
+                            <fieldset>
+                                <legend>All Repots</legend>
+                                <div id="divreportbutton">
+                                </div>
+
+                            </fieldset>
+
+
+                        </section>
+                        <div id="form-info" data-save='Save' class="form-horizontal label-left ">
+                            <section>
+                                <fieldset>
+                                    <legend id="paramlegend">Report Parameter</legend>
+                                    <div id="divparam">
+                                    </div>
+                                    <div id="divloadbutton" class="hide">
+                                        <div class="row-fluid">
+                                            <div class="span2">
+                                                <input type="button" onclick="LoadReport()" value="Display Report" class="btn btn-primary btn-large" />
+
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </section>
+                        </div>
+
+                        <br />
+
+                        <section>
+                            <fieldset>
+                                <legend>Report Detail</legend>
+                                <div id="reportContainer" class="report-container">
+                                </div>
+                            </fieldset>
+                        </section>
+                    </div>
+
+                    <br />
+                    <br />
+                    <br />
+                </div>
+
+            </section>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/app/ReportSummary.js"></script>

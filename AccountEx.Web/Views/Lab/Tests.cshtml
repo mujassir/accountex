@@ -1,0 +1,221 @@
+﻿@using BussinessLogic;
+@using AccountEx.Common;
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">Manage Tests </h1>
+}
+@{
+    ViewBag.Title = "Manage Tests";
+}
+<style>
+    tr.paid td {
+        /*padding: inherit 5px;*/
+    }
+
+    td.paid {
+        padding-left: 5px;
+    }
+</style>
+<div class="row hide" id="form-info">
+    <div class="col-md-12 col-sm-12" id="Doctors">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+
+                <div class="caption">
+                    <i class="fa fa-edit"></i>Add/Edit Test
+
+                </div>
+                <div class="actions">
+                    <a href="javascript:;" class="btn green" onclick="Test.ListView();">
+                        <i class="fa fa-angle-left"></i>&nbsp;Back to list
+                    </a>
+                </div>
+            </div>
+            <div class="portlet-body form">
+
+                <div id="mainform" class="form-horizontal" data-save="save">
+
+                    <input type="text" id="Id" class="hide" />
+
+                    <div class="form-body">
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="prefix">Category</label>
+                            <div class="col-md-3">
+                                <select id="MainCategoryId" class="form-control select2" data-required="required" data-message="Test Category is required" data-clear='true'>
+                                    <option></option>
+                                    @foreach (var item in (List<IdName>)ViewBag.TestGroup)
+                                    {
+                                        <option data-custom="@item.Id" value="@item.Id">@(item.Name)</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="prefix">Sub Category</label>
+                            <div class="col-md-3">
+                                <select id="SubCategoryId" class="form-control select2" data-required="required" data-message="Sub Category is required" data-clear='true'>
+                                    <option></option>
+                                    @foreach (var item in (List<IdName>)ViewBag.TestGroup)
+                                    {
+                                        <option data-custom="@item.Id" value="@item.Id">@(item.Name)</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        @*<div class="form-group">
+                                <label class="col-md-3 control-label" for="prefix">Price</label>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control number input-small" id="ApprovedRate">
+                                </div>
+                            </div>*@
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="prefix">Name</label>
+                            <div class="col-md-3">
+
+                                <input type="text" class="form-control" id="Name" data-plus-as-tab="false"  data-required="required" data-message="Name is required">
+                            </div>
+                        </div>
+                        @*  <div class="form-group">
+                                <label class="col-md-3 control-label" for="prefix">Test Type</label>
+                                <div class="col-md-3">
+                                    <select id="Type" class="form-control select2" data-required="required" data-message="Test type is required" >
+                                        <option value="@((byte)TestType.Pathology))">Pathology</option>
+                                        <option value="@((byte)TestType.Radiology))">Radiology</option>
+                                    </select>
+                                </div>
+                            </div>*@
+                        <div id="parameter-container" class="form-group" data-save="false">
+                            <div class="col-md-3"></div>
+                            <div class="col-md-4 test-parameter-container" style="min-height: 200px !important" data-always-visible="1" data-rail-visible1="1">
+
+                                <table id="Investitem" class="table table-bordered griditem">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:20%">Parameter Name</th>
+                                            <th style="width:2%" class='td-width align-right'>Price</th>
+                                            <th style="width:2%" class='td-width'>Unit</th>
+                                            <th style="width:2%" class='td-width'>Min Val</th>
+                                            <th style="width:2%" class='td-width'>Max Val</th>
+                                            <th style="width:2%"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody data-plus-as-tab="false"></tbody>
+
+                                </table>
+                                <a href="javascript:;" onclick="Test.AddItem()" style="position: absolute; margin-top: -20px;">Add Row</a>
+                            </div>
+
+                        </div>
+                        <div class="form-group" data-save="false">
+                            <div class="col-md-3"></div>
+                            <div class="col-md-6 department-container">
+
+                                <table id="tbl-department" class="table table-bordered griditem">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:2%"></th>
+                                            <th style="width:60%">Department</th>
+                                            <th style="width:10%" class='td-width align-right'>Price</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody data-plus-as-tab="false"></tbody>
+
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+                        <div class="col-md-8">
+                            <button id="btnSave" type="button" onclick="Test.Save();" class="btn btn-primary green" data-plus-as-tab="false">Save</button>
+                            <button id="btnSaveClose" type="button" onclick="Test.SaveClose();" class="btn btn-primary green">Save & Close</button>
+                            <button id="btnCancelTest" type="button" onclick="Test.CustomClear();" class="btn btn-default">Cancel</button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+
+<div class="row hide" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Test Listing
+                </div>
+                @* <div class="actions hide">
+                        <button id="btnEdit" type="button" class="btn green" onclick="Test.Add()"><i class="fa fa-plus"></i>&nbsp;New</button>
+                        <button id="btnSave" type="button" class="btn green hide" onclick="Test.Save()"><i class="fa fa-check"></i>&nbsp;Save Changes</button>
+                    </div>*@
+                <div class="actions">
+                    <button id="btnAdd" type="button" class="btn green" onclick="Test.Add()"><i class="fa fa-plus"></i>&nbsp;New</button>
+
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover" id="mainTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 8px;" class="no-sort">
+                                <input type="checkbox" class="group-checkable" data-set="#mainTable .checkboxes" />
+                            </th>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th style="width: 75px;" class="no-sort"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="7" class="center">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+
+<div id="jsondata" class="hide">
+    <p id="data">@ViewBag.FormSetting</p>
+    <input id="FormSetting" type="text" value="@ViewBag.FormSetting" />
+    <span id="jsonParameters">
+        @ViewBag.Parameters
+    </span>
+</div>
+
+
+@section FooterScript
+{
+
+    <script src="~/Content/AppJS/Lab/Test.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            Test.init();
+
+
+            //var names = res.Data.ParameterNames;
+            var names = JSON.parse($("#jsonParameters").html());
+            Common.SetData("ParameterNames", names);
+            AppData.ParameterNames = names;
+
+
+
+        });
+    </script>
+}
+

@@ -1,0 +1,396 @@
+﻿@{
+    Layout = null;
+}
+@using AccountEx.Common
+@using AccountEx.BussinessLogic;
+<div class="form-horizontal" data-save="save">
+    <div class="form-body">
+
+        <div class="portlet">
+            <div class="portlet-title">
+                <div class="caption">
+                    Url Settings
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">DashBoard Url </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Other.DashBoardUrl">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Sale Url </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name='@("Other.Trans-" + VoucherType.Sale + "-Url")' />
+@*                        <select class="form-control select2" name='@("Other.Trans-" + VoucherType.Sale + "-Url")'>
+                            <option value="transaction/trans?type=Sale">transaction/trans?type=Sale</option>
+                            <option value="transaction/GstTransaction?type=Sale">transaction/GstTransaction?type=Sale</option>
+                            <option value="transaction/POS?type=Sale">transaction/POS?type=Sale</option>
+                            <option value="transaction/Index?type=Sale">transaction/Index?type=Sale</option>
+                            <option value="transaction/WeightSale?type=Sale">transaction/WeightSale?type=Sale</option>
+                            <option value="transaction/WeightSale?type=Sale">transaction/UltratechSale?type=Sale</option>
+
+                        </select>*@
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">GST Sale Url </label>
+                    <div class="col-md-6">
+                          <input type="text" class="form-control " name='@("Other.Trans-" + VoucherType.GstSale + "-Url")' />
+@*                        <select class="form-control select2" name='@("Other.Trans-" + VoucherType.GstSale + "-Url")'>
+                            <option value="transaction/trans?type=Sale">transaction/trans?type=Sale</option>
+                            <option value="transaction/GstTransaction?type=Sale">transaction/GstTransaction?type=Sale</option>
+                            <option value="transaction/POS?type=Sale">transaction/POS?type=Sale</option>
+                            <option value="transaction/Index?type=Sale">transaction/Index?type=Sale</option>
+                            <option value="transaction/WeightSale?type=Sale">transaction/WeightSale?type=Sale</option>
+                            <option value="transaction/UltratechSale?type=Sale">transaction/UltratechSale?type=Sale</option>
+
+                        </select>*@
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Sale Print Url</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Url.SalePrintUrl" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Sale Js Function</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Url.SaleJsFunction" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Purchase Url </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="@("Other.Trans-" + VoucherType.Purchase + "-Url")" />
+@*                        <select  class="form-control select2" name="@("Other.Trans-" + VoucherType.Purchase + "-Url")">
+                            <option value="transaction/trans?type=Purchase">transaction/trans?type=Purchase</option>
+                            <option value="transaction/GstTransaction?type=Purchase">transaction/GstTransaction?type=Purchase</option>
+                            <option value="transaction/POS?type=Purchase">transaction/POS?type=Purchase</option>
+                            <option value="transaction/WeightSale?type=Purchase">transaction/WeightSale?type=Purchase</option>
+                            <option value="transaction/WeightSale?type=Purchase">transaction/UltratechPurchase?type=Purchase</option>
+                        </select>*@
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">GST Purchase Url </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="@("Other.Trans-" + VoucherType.GstPurchase + "-Url")" />
+@*                        <select  class="form-control select2" name="@("Other.Trans-" + VoucherType.GstPurchase + "-Url")">
+                            <option value="transaction/trans?type=Purchase">transaction/trans?type=Purchase</option>
+                            <option value="transaction/GstTransaction?type=Purchase">transaction/GstTransaction?type=Purchase</option>
+                            <option value="transaction/POS?type=Purchase">transaction/POS?type=Purchase</option>
+                            <option value="transaction/WeightSale?type=Purchase">transaction/WeightSale?type=Purchase</option>
+                            <option value="transaction/UltratechPurchase?type=Purchase">transaction/UltratechPurchase?type=Purchase</option>
+                        </select>*@
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Purchase Print Url</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Url.PurchasePrintUrl" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Purchase Js Function</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Url.PurchaseJsFunction" />
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Sale Return Url </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name='@("Other.Trans-" + VoucherType.SaleReturn + "-Url")' />
+@*                        <select  class="form-control select2" name="@("Other.Trans-" + VoucherType.SaleReturn + "-Url")">
+                            <option value="transaction/trans?type=SaleReturn">transaction/trans?type=SaleReturn</option>
+                            <option value="transaction/GstTransaction?type=SaleReturn">transaction/GstTransaction?type=SaleReturn</option>
+                            <option value="transaction/POS?type=SaleReturn">transaction/POS?type=SaleReturn</option>
+                            <option value="transaction/Index?type=SaleReturn">transaction/Index?type=SaleReturn</option>
+                            <option value="transaction/WeightSale?type=SaleReturn">transaction/WeightSale?type=SaleReturn</option>
+                        </select>*@
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">GST Sale Return Url </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name='@("Other.Trans-" + VoucherType.GstSaleReturn + "-Url")' />
+@*                        <select  class="form-control select2" name="@("Other.Trans-" + VoucherType.GstSaleReturn + "-Url")">
+                            <option value="transaction/trans?type=SaleReturn">transaction/trans?type=SaleReturn</option>
+                            <option value="transaction/GstTransaction?type=SaleReturn">transaction/GstTransaction?type=SaleReturn</option>
+                            <option value="transaction/POS?type=SaleReturn">transaction/POS?type=SaleReturn</option>
+                            <option value="transaction/Index?type=SaleReturn">transaction/Index?type=SaleReturn</option>
+                            <option value="transaction/WeightSale?type=SaleReturn">transaction/WeightSale?type=SaleReturn</option>
+                            <option value="transaction/UltratechSale?type=Purchase">transaction/UltratechSale?type=SaleReturn</option>
+                        </select>*@
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Sale Return Print Url</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Url.SaleReturnPrintUrl" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Sale Return Js Function</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Url.SaleReturnJsFunction" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Purchase Return Url </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="@("Other.Trans-" + VoucherType.PurchaseReturn + "-Url")" />
+@*                        <select class="form-control select2" name="@("Other.Trans-" + VoucherType.PurchaseReturn + "-Url")">
+                            <option value="transaction/trans?type=PurchaseReturn">transaction/trans?type=PurchaseReturn</option>
+                            <option value="transaction/POS?type=SaleReturn">transaction/POS?type=PurchaseReturn</option>
+                            <option value="transaction/WeightSale?type=Sale">transaction/WeightSale?type=PurchaseReturn</option>
+                        </select>*@
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">GST Purchase Return Url </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="@("Other.Trans-" + VoucherType.GstPurchaseReturn + "-Url")" />
+@*                        <select class="form-control select2" name="@("Other.Trans-" + VoucherType.GstPurchaseReturn + "-Url")">
+                            <option value="transaction/trans?type=GstPurchaseReturn">transaction/trans?type=PurchaseReturn</option>
+                            <option value="transaction/POS?type=GstPurchaseReturn">transaction/POS?type=PurchaseReturn</option>
+                            <option value="transaction/WeightSale?type=GstPurchaseReturn">transaction/WeightSale?type=PurchaseReturn</option>
+                            <option value="transaction/UltratechPurchase?type=GstPurchaseReturn">transactionUltratechPurchase?type=GstPurchaseReturn</option>
+                        </select>*@
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Purchase Return Print Url</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Url.PurchaseReturnPrintUrl" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Purchase Return Js Function</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Url.PurchaseReturnJsFunction" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Service Url</label>
+                    <div class="col-md-6">
+                        <select class="form-control select2" name="@("Other.Trans-" + VoucherType.Services + "-Url")">
+                            <option value="/transaction/JobCard?type=Services">transaction/JobCard?type=Services</option>
+
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Service Print Url</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Url.ServicePrintUrl" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Service Js Function</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Url.ServiceJsFunction" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Cash Receipts Url </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="@("Other.Trans-" + VoucherType.CashReceipts + "-Url")" />
+@*                        <select  class="form-control select2" name="@("Other.Trans-" + VoucherType.CashReceipts + "-Url")">
+                            <option value="transaction/voucher?type=CashReceipts">transaction/voucher?type=CashReceipts</option>
+                            <option value="transaction/vouchertrans?type=CashReceipts">transaction/vouchertrans?type=CashReceipts</option>
+                        </select>*@
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Cash Receipt Print Url</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Url.CashReceiptPrintUrl" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Cash Receipt Js Function</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Url.CashReceiptJsFunction" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Cash Payment Url </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="@("Other.Trans-" + VoucherType.CashPayments + "-Url")" />
+                        @*                        <select class="form-control select2" name="@("Other.Trans-" + VoucherType.CashPayments + "-Url")">
+                    <option value="transaction/vouchertrans?type=CashPayments">transaction/vouchertrans?type=CashPayments</option>
+                    <option value="transaction/voucher?type=CashPayments">transaction/voucher?type=CashPayments</option>
+                </select>*@
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Cash Payment Print Url</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Url.CashPaymentPrintUrl" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Cash Payment Js Function</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Url.CashPaymentJsFunction" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Bank Payment Url </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="@("Other.Trans-" + VoucherType.BankPayments + "-Url")" />
+                        @*                        <select class="form-control select2" name="@("Other.Trans-" + VoucherType.BankPayments + "-Url")">
+                    <option value="transaction/VoucherWithTax?type=BankPayments">transaction/VoucherWithTax?type=BankPayments</option>
+                    <option value="transaction/vouchertrans?type=BankPayments">transaction/vouchertrans?type=BankPayments</option>
+                    <option value="transaction/bankvoucher?type=BankPayments">transaction/bankvoucher?type=BankPayments</option>
+
+
+                </select>*@
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Bank Payment Print Url</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Url.BankPaymentPrintUrl" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Bank Payment Js Function</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Url.BankPaymentJsFunction" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Bank Receipts Url </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="@("Other.Trans-" + VoucherType.BankReceipts + "-Url")" />
+                        @*                        <select class="form-control select2" name="@("Other.Trans-" + VoucherType.BankReceipts + "-Url")">
+                    <option value="transaction/VoucherWithTax?type=BankReceipts">transaction/VoucherWithTax?type=BankReceipts</option>
+                    <option value="transaction/vouchertrans?type=BankReceipts">transaction/vouchertrans?type=BankReceipts</option>
+                    <option value="transaction/bankvoucher?type=BankReceipts">transaction/bankvoucher?type=BankPayments</option>
+
+                </select>*@
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Bank Receipts Print Url</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Url.BankReceiptPrintUrl" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Bank Receipt Js Function</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Url.BankReceiptJsFunction" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Transfer Voucher Url </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="@("Other.Trans-" + VoucherType.TransferVoucher + "-Url")" />
+                        @*                        <select class="form-control select2" name="@("Other.Trans-" + VoucherType.TransferVoucher + "-Url")">
+                    <option value="transaction/jv?type=TransferVoucher">transaction/jv?type=TransferVoucher</option>
+                    <option value="transaction/voucher?type=TransferVoucher">transaction/voucher?type=TransferVoucher</option>
+                </select>*@
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Transfer Voucher Print Url</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Url.TransferVoucherPrintUrl" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Transfer Voucher Js Function</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Url.TransferVoucherJsFunction" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Salary Voucher Url </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="@("Other.Trans-" + VoucherType.Salary + "-Url")" />
+                        @*                        <select class="form-control select2" name="@("Other.Trans-" + VoucherType.Salary + "-Url")">
+                    <option value="payroll/salary?">payroll/salary?</option>
+
+                </select>*@
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Salary Voucher Print Url</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Url.SalaryVoucherPrintUrl" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Salary Voucher Js Function</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="Url.SalaryVoucherJsFunction" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Leave Bank Start</label>
+                    <div class="col-md-6">
+                        <select class="form-control select2" name="HRM.LeaveBankStart">
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Per day Cost</label>
+                    <div class="col-md-6">
+                        <select class="form-control select2" name="HRM.PerDayCost">
+                            <option value="DivideBy30">Divide by 30</option>
+                            <option value="DivideByWorkingDays">Divide by working days</option>
+                            <option value="DivideByMonthDays">Divide by Month days</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prefix">Labours Voucher Url </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control " name="@("Other.Trans-" + VoucherType.Labours + "-Url")" />
+                        @*                        <select class="form-control select2" name="@("Other.Trans-" + VoucherType.Salary + "-Url")">
+                    <option value="payroll/salary?">payroll/salary?</option>
+
+                </select>*@
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>

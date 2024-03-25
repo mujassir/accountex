@@ -1,0 +1,156 @@
+﻿@{
+    Layout = "_Layout.cshtml";
+    ViewBag.Title = "Trial Balance";  
+}
+<style type="text/css">
+    #tbldetail tfoot {
+        font-weight: bold;
+    }
+
+    .report-table tbody tr td:nth-last-child(1),
+    .report-table tbody tr td:nth-last-child(2),
+    .report-table tfoot tr td:nth-last-child(1),
+    .report-table tfoot tr td:nth-last-child(2) {
+        text-align: right;
+    }
+
+    @@media print {
+        table {
+            page-break-after: auto;
+        }
+
+        tr {
+            page-break-inside: avoid;
+            page-break-after: auto;
+        }
+
+        td {
+            page-break-inside: avoid;
+            page-break-after: auto;
+        }
+
+        thead {
+            display: table-header-group;
+        }
+
+        tfoot {
+            display: table-footer-group;
+        }
+    }
+</style>
+<h3 class="page-title"></h3>
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">Trial Balance
+    <small id="lblReportDate" class="pull-right small visible-print">Date: 24/10/2014</small></h1>
+}
+<div class="row hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-filter"></i>Report Filters
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                    <a href="javascript:;" class="remove"></a>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal" data-save="Save">
+                    <input type="text" id="Id" class="hide" />
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Date</label>
+                            <div class="col-md-3">
+                                <div class="input-group input-medium">
+                                    <input class="date-picker form-control date-picker" type="text" id="txtdate" data-validate="true" data-required="required" data-fiscal-date="true">
+                                    <span class="input-group-btn date-icon">
+                                        <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix"></label>
+                            <div class="col-md-3">
+                                <label class="checkbox-inline" for="FilterZeroBalance">
+                                    <input type="checkbox" id="FilterZeroBalance" data-checktrack='false' value="false" />
+                                    Filter Zero Balance
+                                </label>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                    <div class="form-actions">
+                        <div class="form-group">
+
+                            <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+                            <div class="col-md-8">
+                                <button id="btnShowReport" type="submit" class="btn btn-primary">Show Report</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title hidden-print">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Report Data
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                    <a href="javascript:;" class="remove"></a>
+                </div>
+                <div class="tools pull-right">
+                    @{ Html.RenderPartial("_Export_Button");  }
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table id="tbldetail" class="table table-striped table-bordered table-hover report-table" data-export='true'>
+                    <thead>
+                        <tr>
+                            <th style="width: 70px;">Code</th>
+                            <th>Account Name</th>
+                            <th style="width: 150px;">Debit</th>
+                            <th style="width: 150px;">Credit</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot></tfoot>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+
+<div id="jsondata" class="hide">
+    @* <input id="FormSetting"  type="text" value="@ViewBag.FormSettings" />*@
+    @* <input id="OpeningBalances"  type="text" value="@ViewBag.OpeningBalances" />*@
+    <input id="Voucher"  type="text" value="@ViewBag.Voucher" />
+</div>
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Reports/TrialBalance.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            TrialBalance.init();
+        });
+    </script>
+}

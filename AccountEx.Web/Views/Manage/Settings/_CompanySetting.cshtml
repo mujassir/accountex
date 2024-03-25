@@ -1,0 +1,503 @@
+﻿@{
+    Layout = null;
+}
+<div class="portlet light">
+
+    <div class="portlet-body form">
+        <div class="form-horizontal" data-save="save">
+            <div class="form-body">
+                <div class="hide alert alert-danger container-message">
+                    <i class="close" onclick="$(this).parent().hide();"></i>
+                    <strong></strong>
+                    <div class="form-body message-content"></div>
+                </div>
+                <div class="portlet">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            Global Settings 
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="prefix">Application Logo</label>
+                            <div class="col-md-9">
+                                <div class="form-group storeimg">
+                                    <input id="LogoUrl" accept="image/x-png, image/gif, image/jpeg" type="file" name="...">
+                                    <input id="PictureUrl" type="text" name="Application.LogoUrl" class="hide">
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="prefix">Login Logo</label>
+                            <div class="col-md-9">
+                                <div class="form-group storeimg">
+                                    <input id="LoginLogoUrl" accept="image/x-png, image/gif, image/jpeg" type="file" name="...">
+                                    <input id="LoginPictureUrl" type="text" name="Application.LoginLogoUrl" class="hide">
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="prefix">Bill Logo</label>
+                            <div class="col-md-9">
+                                <div class="form-group">
+                                    <input id="BillLogoUrl" accept="image/x-png, image/gif, image/jpeg" type="file" name="...">
+                                    <input id="BillPictureUrl" type="text" name="Application.BillLogoUrl" class="hide">
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Show/Hide Application Logo</label>
+                            <div class="col-md-6">
+                                <select name="Application.ShowHideAppLogo" class="form-control select2" placeholder="Select MenuType">
+                                    <option value="false">Hide</option>
+                                    <option value="true">Show</option>
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Application Title </label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control " name="Application.Title">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Application Print Title </label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control " name="Application.PrintTitle">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Delete Password</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control " name="Application.DeletePassword">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Require Delete Password?</label>
+                            <div class="col-md-6">
+                                <select name="Application.RequireDeletePassword" class="form-control select2" placeholder="Require Delete Password?">
+                                    <option value="true">Yes</option>
+                                    <option value="false">No</option>
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Vehicle Validation</label>
+                            <div class="col-md-6">
+                                <select name="Application.AllowVehicleValidation" class="form-control select2" placeholder="Vehicle Validation">
+                                    <option value="false">No</option>
+                                    <option value="true">Yes</option>
+
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Menu Type</label>
+                            <div class="col-md-6">
+                                <select name="Application.MenuType" class="form-control select2" placeholder="Select MenuType">
+                                    <option value="Vertical">Vertical</option>
+                                    <option value="Horizontal">Horizontal</option>
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">BarCode Enabled</label>
+                            <div class="col-md-6">
+                                <select name="Application.BarCodeEnabled" class="form-control select2">
+                                    <option value="false">No</option>
+                                    <option value="true">Yes</option>
+
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Vehicle Company</label>
+                            <div class="col-md-6">
+                                <select name="Application.IsVehicleCompany" class="form-control select2">
+                                    <option value="false">No</option>
+                                    <option value="true">Yes</option>
+
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">BarCode Type</label>
+                            <div class="col-md-6">
+                                <select name="Application.BarcodeType" class="form-control select2">
+                                    <option value="CODE39">CODE39</option>
+                                    <option value="CODE39">Code128</option>
+
+
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Report Export</label>
+                            <div class="col-md-6">
+                                <select name="Application.ReportExportEnabled" class="form-control select2">
+                                    <option value="false">No</option>
+                                    <option value="true">Yes</option>
+
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Allow CGS</label>
+                            <div class="col-md-6">
+                                <select name="Application.AllowCGS" class="form-control select2">
+                                    <option value="false">No</option>
+                                    <option value="true">Yes</option>
+
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Check Stock Availability</label>
+                            <div class="col-md-6">
+                                <select name="Application.CheckStockAvailability" class="form-control select2">
+                                    <option value="false">No</option>
+                                    <option value="true">Yes</option>
+
+                                </select>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Duplicate Batch No Allowed On Purchase</label>
+                            <div class="col-md-6">
+                                <select name="Purchase.DuplicateBatchNoAllowed" class="form-control select2">
+                                    <option value="false">No</option>
+                                    <option value="true">Yes</option>
+
+                                </select>
+
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Lock Sale Forecast</label>
+                            <div class="col-md-6">
+                                <select name="Application.LockSaleForecast" class="form-control select2">
+                                    <option value="false">No</option>
+                                    <option value="true">Yes</option>
+
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Duplicate Batch No Allowed On Production</label>
+                            <div class="col-md-6">
+                                <select name="Production.DuplicateBatchNoAllowed" class="form-control select2">
+                                    <option value="false">No</option>
+                                    <option value="true">Yes</option>
+
+                                </select>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Allowed  Batch Wise Consuming Raw Material  On Production</label>
+                            <div class="col-md-6">
+                                <select name="Production.BatchWiseConsumingRawMaterialAllowed" class="form-control select2">
+                                    <option value="false">No</option>
+                                    <option value="true">Yes</option>
+
+                                </select>
+
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Check Batch Wise Stock Availability</label>
+                            <div class="col-md-6">
+                                <select name="Application.CheckBatchWiseStockAvailability" class="form-control select2">
+                                    <option value="false">No</option>
+                                    <option value="true">Yes</option>
+
+                                </select>
+
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Company Logo Details Show</label>
+                            <div class="col-md-6">
+                                <select name="Application.Reports.CompanyLogoDetailsShow" class="form-control select2">
+                                    <option value="false">No</option>
+                                    <option value="true">Yes</option>
+
+                                </select>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Product TDS And MSDS Hide</label>
+                            <div class="col-md-6">
+                                <select name="Product.ProductTDSAndMSDSHide" class="form-control select2">
+                                    <option value="false">No</option>
+                                    <option value="true">Yes</option>
+
+                                </select>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix"> DR,CR,Balance in Decimal General Ledger Reports</label>
+                            <div class="col-md-6">
+                                <select name="Application.DRCRBalanceinDecimalGeneralLedger" class="form-control select2">
+                                    <option value="0">Zero</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                    <option value="4">Four</option>
+                                </select>
+
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Approved By</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control " name="Application.ApprovedBy">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Local / Import GST</label>
+                            <div class="col-md-6">
+                                <select name="Purchase.LocalORImportGST" class="form-control select2">
+                                    <option value="Import">Import</option>
+                                    <option value="Local">Local</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Session Timeout(in minutes)</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control form" name="Application.SessionTimeOut" data-toggle="tooltip" title="Spcifie session timeout in minutes.Zero(0) mean unlimited.">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Subscribe Email </label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control form" name="Application.Email">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Company NTN</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control form" name="Application.NTN">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Sale Tax Reg #</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control form" name="Application.SaleTaxRegNo">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Bank A/C No</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control form" name="Application.BankAccountNo">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix"> Warrenty Invoice Text </label>
+                            <div class="col-md-6">
+                                <textarea class="form-control " name="Invoice.WarrentyInvoiceText" data-plus-as-tab="false"></textarea>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">About</label>
+                            <div class="col-md-6">
+                                <textarea class="form-control " name="Application.About" data-plus-as-tab="false"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Sale Tax Invoice First Header Text</label>
+                            <div class="col-md-6">
+                                <textarea class="form-control " name="Sale.SaleTaxInvoiceFirstHeaderText" data-plus-as-tab="false"></textarea>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Sale Tax Invoice Second Header Text</label>
+                            <div class="col-md-6">
+                                <textarea class="form-control " name="Sale.SaleTaxInvoiceSecondHeaderText" data-plus-as-tab="false"></textarea>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Sale Tax Invoice NTN And STRN Text</label>
+                            <div class="col-md-6">
+                                <textarea class="form-control " name="Sale.SaleTaxInvoiceNTNNoAndSTRNText" data-plus-as-tab="false"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Fiscal Year Show/Hide</label>
+                            <div class="col-md-6">
+                                <select name="Company.FiscalYearShow/Hide" class="form-control select2">
+                                    <option value="false">No</option>
+                                    <option value="true">Yes</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="portlet">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    CONTACTS
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Address  </label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control " name="CONTACTS.Address" data-coa="coa">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">License#  </label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control " name="CONTACTS.License" data-coa="coa">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">City/State  </label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control " name="CONTACTS.CityState" data-coa="coa">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Phone  </label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control " name="CONTACTS.Phone" data-coa="coa">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Phone1  </label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control " name="CONTACTS.Phone1" data-coa="coa">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Fax  </label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control " name="CONTACTS.Fax" data-coa="coa">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Email  </label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control " name="CONTACTS.Email" data-coa="coa">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Web  </label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control " name="CONTACTS.Web" data-coa="coa">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="portlet">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    FOLLOW US ON
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">RSS </label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control " name="Follow.RSS">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Facebook </label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control " name="Follow.Facebook">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Twitter </label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control " name="Follow.Twitter">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Gmail </label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control " name="Follow.Gmail">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">LinkedIn </label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control " name="Follow.LinkedIn">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="prefix">Youtube </label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control " name="Follow.Youtube">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END EXAMPLE TABLE PORTLET-->
+</div>

@@ -1,0 +1,310 @@
+﻿@using AccountEx.Common
+@{
+    ViewBag.Title = "Post Cases";
+}
+
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">Manage Post Cases</h1>
+}
+
+
+<!-- END PAGE HEADER-->
+
+<div class="row hide" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-edit"></i>Add/Edit Post Cases
+                </div>
+
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal" data-save="save">
+                    <input type="text" id="Id" class="hide" data-include-in-item="true" data-item-id="PostedCaseId" />
+                    <input type="text" id="CaseId" class="hide" />
+                    <div class="form-body">
+
+                        <div class="row">
+                            <div class="col-md-6 nexus-info" data-save="false" data-plus-as-tab="false">
+                                <h4>Nexu Information</h4>
+                                <hr />
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="prefix">Case No</label>
+                                    <div class="col-md-5">
+                                        <input type="text" class="form-control CaseNumber" disabled="disabled" readonly="readonly" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="prefix">Patient Name</label>
+                                    <div class="col-md-5">
+                                        <input type="text" class="form-control PatientName" disabled="disabled" readonly="readonly" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="prefix">Reference</label>
+                                    <div class="col-md-5">
+                                        <input type="text" class="form-control ReferenceName" disabled="disabled" readonly="readonly" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="prefix">Registration Date</label>
+                                    <div class="col-md-5">
+                                        <input type="text" class="form-control RegistrationDate date-picker" disabled="disabled" readonly="readonly" />
+                                    </div>
+                                </div>
+                                <table id="item-nexus-container" class="table table-bordered griditem">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 50%">Test Name</th>
+                                            <th class="align-right" style="width: 10%">Price</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                    <tfoot class="hide">
+                                        <tr>
+                                            <td class="align-right">
+                                                <strong>
+                                                    Total
+                                                    &nbsp;
+                                                </strong>
+
+                                            </td>
+                                            <td colspan="1">
+                                                <input id="NetTotal" type="text" class="form-control input-small bold" readonly="readonly" disabled="disabled" />
+                                            </td>
+
+
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="prefix">Total Amount</label>
+                                    <div class="col-md-5">
+                                        <input type="text" class="form-control TotalAmount" disabled="disabled" readonly="readonly" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="prefix">Discount %</label>
+                                    <div class="col-md-5">
+                                        <input type="text" class="form-control Discount" disabled="disabled" readonly="readonly" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="prefix">Less</label>
+                                    <div class="col-md-5">
+                                        <input type="text" class="form-control Less" disabled="disabled" readonly="readonly" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="prefix">Net Amount</label>
+                                    <div class="col-md-5">
+                                        <input type="text" class="form-control NetAmount" disabled="disabled" readonly="readonly" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="prefix">Paid</label>
+                                    <div class="col-md-5">
+                                        <input type="text" class="form-control PaidAmount" disabled="disabled" readonly="readonly" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 posted-info">
+                                <h4>Post Information</h4>
+                                <hr />
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="prefix">Employee Id</label>
+                                    <div class="col-md-5">
+                                        <input type="text" id="EmployeeId" class="form-control" data-required="required" data-message="Employee Id is required"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="prefix">Relation to Employee</label>
+                                    <div class="col-md-5">
+                                        <input type="text" id="Relationship" class="form-control" data-required="required" data-message="Relation to Employee is required" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="prefix">Department</label>
+                                    <div class="col-md-5">
+                                        <select class="form-control select2" id="DepartmentId" data-required="required" data-message="Department is required" placeholder="select department">
+                                            <option></option>
+                                            @foreach (var p in (List<IdName>)ViewBag.Departments)
+                                            {
+                                                <option data-custom="@p.Id" value="@p.Id">@p.Name</option>
+                                            }
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <label class="col-md-3 control-label" for="prefix">Date</label>
+                                <div class="col-md-5">
+                                    <input id="Date" type="text" class="form-control date-picker input-small" data-clear-type='date' data-required="required" data-message="Date is required" data-hide-dropdown1="true" data-plus-as-tab="false" data-fiscal-date="true" />
+                                </div>
+                                <table id="item-container" class="table table-bordered griditem" data-plus-as-tab="false">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 50%">Test Name</th>
+                                            <th style="width: 10%">Price</th>
+                                            <th style="width: 2%"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                    <tfoot class="hide">
+                                        <tr>
+                                            <td class="align-right">
+                                                <strong>
+                                                    Total
+                                                    &nbsp;
+                                                </strong>
+                                            </td>
+                                            <td colspan="2">
+                                                <input type="text" class="form-control input-small bold net-total" readonly="readonly" disabled="disabled" />
+                                            </td>
+
+
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="prefix">Total Amount</label>
+                                    <div class="col-md-5">
+                                        <input type="text" id="TotalAmount" class="form-control num4" readonly="readonly" disabled="disabled" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="prefix">Discount %</label>
+                                    <div class="col-md-5">
+                                        <input type="text" id="Discount" class="form-control num2" readonly="readonly" disabled="disabled" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="prefix">Less</label>
+                                    <div class="col-md-5">
+                                        <input type="text" id="Less" class="form-control num4" readonly="readonly" disabled="disabled" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="prefix">Net Amount</label>
+                                    <div class="col-md-5">
+                                        <input type="text" id="NetAmount" class="form-control num4" readonly="readonly" disabled="disabled" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="prefix">Paid</label>
+                                    <div class="col-md-5">
+                                        <input type="text" id="PaidAmount" class="form-control num4" readonly="readonly" disabled="disabled" />
+                                    </div>
+                                </div>
+                                <div class="form-group hide">
+                                    <label class="col-md-3 control-label" for="prefix">Due</label>
+                                    <div class="col-md-5">
+                                        <input type="text" id="Due" class="form-control num4" readonly="readonly" disabled="disabled" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-actions">
+                        <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+
+                        <div class="col-md-8">
+                            <button type="button" id="btn-save" class="btn btn-primary">Save</button>
+                            <button id="btnCancel" type="button" class="btn btn-default">Cancel</button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Record Listing
+                </div>
+            </div>
+
+            <div class="portlet-body">
+
+                <table class="table table-striped table-bordered table-hover" id="mainTable">
+                    <thead>
+                        <tr>
+
+                            <th>Case Number</th>
+                            <th>Patient Name</th>
+                            <th>Registration Date</th>
+                            <th>Reporting Date</th>
+                            <th>Reference Name</th>
+                            <th>Consultant Name</th>
+                            <th>Total Amount</th>
+                            <th>Discount %</th>
+                            <th>Less</th>
+                            <th>Net Amount</th>
+                            <th>Paid Amount</th>
+                            <th>Due</th>
+                            <th style="width: 75px;" class="no-sort"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="2">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+<script type="text/html" id="template-item">
+    <tr>
+        <td>
+            <input type="hidden" class="Id" data-db-column="Id">
+            <input type="hidden" class="TestId" data-db-column="TestId">
+            <input type="text" class="TestName form-control input-small ui-autocomplete-input" data-db-column="TestName">
+        </td>
+        <td class="align-right">
+            <input type="text" class="Price form-control input-small num3" data-db-column="Price" disabled12="disabled" readonly12="readonly">
+        </td>
+        <td class="td-delete">
+            <span class="action"><i class="fa fa-trash-o" onclick="Cases.DeleteRow(this)" data-original-title="Delete Item"></i></span>
+        </td>
+    </tr>
+</script>
+<script type="text/html" id="template-nexus-item">
+    <tr>
+        <td>
+            <input type="hidden" class="Id" data-db-column="Id">
+            <input type="hidden" class="TestID" data-db-column="TestID">
+            <input type="text" class="TestName form-control input-small ui-autocomplete-input" data-db-column="TestName" disabled="disabled" readonly="readonly">
+        </td>
+        <td class="align-right">
+            <input type="text" class="Rate form-control input-small num3" data-db-column="Rate" disabled="disabled" readonly="readonly">
+        </td>
+    </tr>
+</script>
+
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Nexus/Cases.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            Cases.init();
+        });
+    </script>
+}

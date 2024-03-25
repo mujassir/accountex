@@ -1,0 +1,156 @@
+﻿@using AccountEx.Common;
+
+@{
+    Layout = "~/Views/Reports/_Layout.cshtml";
+    ViewBag.Title = "Repossessed Stocks";   
+   
+}
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">
+
+        <span class="main-title">@ViewBag.Title</span>
+
+
+    </h1>
+}
+
+@section VehicleBranchesDropdown
+{
+
+    @Html.Partial("../Vehicle/_UserBranches_Dropdown", new ViewDataDictionary { { "Labelcolspan", 2 }, { "Divcolspan",12 }, { "showLabel", false } })
+}
+<div class="row hidden-print hide" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                @* <div class="caption">
+                    <i class="fa fa-filter"></i>Report Filters
+                </div>*@
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                    @*<a href="javascript:;" class="remove"></a>*@
+                </div>
+                <div class="actions">
+                    <button class="btn blue hidden-print" onclick="window.print();"><i class="fa fa-print"></i>&nbsp;Print </button>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal" data-save="Save">
+                    <input type="text" id="Id" class="hide" />
+                    @* <div class="form-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">From Date</label>
+                            <div class="col-md-3">
+                                <div class="input-group input-medium">
+                                    <input class="date-picker form-control date-picker" value="@SiteContext.Current.Fiscal.FromDate.ToString(AppSetting.DateFormat)" type="text" id="FromDate" data-validate="true" data-required="required"  data-fiscal-date="true">
+                                    <span class="input-group-btn date-icon">
+                                        <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                            <label class="col-md-2 control-label" for="prefix">To Date</label>
+                            <div class="col-md-3">
+                                <div class="input-group input-medium">
+                                    <input class="date-picker form-control date-picker" type="text" value="@SiteContext.Current.Fiscal.ToDate.ToString(AppSetting.DateFormat)" id="ToDate" data-validate="true" data-required="required"  data-fiscal-date="true">
+                                    <span class="input-group-btn date-icon">
+                                        <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>*@
+                    <div class="form-actions">
+                        <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+                        <div class="col-md-8">
+                            <button type="button" id="btnShowReport" class="btn btn-primary">Show Report</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+
+
+
+
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title hidden-print">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Report Data
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                    @*<a href="javascript:;" class="remove"></a>*@
+                </div>
+                <div class="tools pull-right">
+                    @{ Html.RenderPartial("_Export_Button");  }
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover report-table" data-export='true'>
+                        <thead>
+                            <tr>
+                                <th>FILE NO</th>
+                                <th>CHASSIS NO.</th>
+                                <th>REG NO.</th>
+                                <th>VEHICLE NAME</th>
+                                <th>SUPLLIER NAME</th>
+                                <th>DATE OF BL RECEIVED </th>
+                                <th>CONSIGNEE</th>
+                                <th>VESSEL NAME.</th>
+                                <th>BL NO.</th>
+                                <th>ENGINE NO.</th>
+                                <th>COLOUR</th>
+                                <th>YEAR</th>
+                                <th>C.C</th>
+                                <th>CLEARING AGENT</th>
+                                <th class="text-right">PURCHASE PRICE (KSH)</th>
+                                <th class="text-right">DUTY & TAXES </th>
+                                <th class="text-right">BL CHARGES </th>
+                                <th class="text-right">MISC- EXPENSES </th>
+                                <th class="text-right">TOTAL COST </th>
+                                <th class="text-right">STATUSES </th>
+
+
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Vehicle/Reports/RepossedStocks.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            RepossedStocks.init();
+        });
+    </script>
+}
+
+
+
+
+
+
