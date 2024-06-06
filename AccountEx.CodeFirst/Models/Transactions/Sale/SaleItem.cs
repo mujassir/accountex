@@ -58,6 +58,28 @@ namespace AccountEx.CodeFirst.Models
         public decimal TotalMeters { get; set; }
         public decimal StandardWeight { get; set; }
         public string UnitType { get; set; }
+   
         public string BatchNo { get; set; }
+
+        public decimal WHTAmount { get; set; }
+        public decimal WHTPercent { get; set; }
+
+
+        public Nullable<decimal> MaximumRetailPrice { get; set; }
+        public Nullable<decimal> TradePrice { get; set; }
+        public string PKG { get; set; }
+        public Nullable<decimal> PackingPerCarton { get; set; }
+        public Nullable<int> DeliveryChallanDetailId { get; set; }
+        public Nullable<int> OrderDetailId { get; set; }
+        public Nullable<int> Morning { get; set; }
+        public Nullable<int> Afternoon { get; set; }
+        public Nullable<int> Evening { get; set; }
+        public Nullable<int> Days { get; set; }
+
+        public Nullable<decimal> AvQty { get; set; }
+
+        public Nullable<decimal> AvRate { get; set; }
+
+        public Nullable<decimal> AvAmount { get; set; }
     }
 }

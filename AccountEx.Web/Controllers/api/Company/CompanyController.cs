@@ -8,16 +8,22 @@ using AccountEx.Repositories;
 using System.Globalization;
 using AccountEx.BussinessLogic;
 using AccountEx.DbMapping;
+using System.Web.Http;
+using static Google.Apis.Requests.BatchRequest;
+using System.Data.Entity;
+using System.Web.Mvc;
 
 namespace AccountEx.Web.Controllers.api
 {
     public class CompanyController : BaseApiController
     {
         // GET api/test
-        public JQueryResponse Get()
+        // cc -> Only Client Companies
+        public JQueryResponse Get(bool cc = false)
         {
-            return GetDataTable();
+            return GetDataTable(cc);
         }
+
 
         public ApiResponse Post(CompanyExtra input)
         {
@@ -65,17 +71,15 @@ namespace AccountEx.Web.Controllers.api
                 {
                     err += "Company name already exist.,";
                 }
+                var com = new CompanyRepository().GetByAbbrivation(input.Abbrivation);
+                if (com != null)
+                {
+                    err += "Company abbrivation already exist.,";
+                }
                 var user = new UserRepository().GetByUsername(input.UserName);
                 if (user != null)
                 {
                     err += "User name already exist.,";
-                }
-
-                if (SiteContext.Current.User.Username.ToUpper() != "KR")
-                {
-
-                    err += "You did not have sufficent right to perform the current operation.Warning! Your action has been noted & sent to investigation team.,";
-                     throw new OwnException("Invalid Company Creation Attempt:You did not have sufficent right to perform the current operation.Warning! Your action has been noted & sent to investigation team.");
                 }
 
             }
@@ -145,7 +149,7 @@ namespace AccountEx.Web.Controllers.api
 
             return response;
         }
-        private JQueryResponse GetDataTable()
+        private JQueryResponse GetDataTable(bool clientCompanies = false)
         {
             var queryString = Request.RequestUri.ParseQueryString();
             var coloumns = new[] { "Name", "" };
@@ -158,6 +162,11 @@ namespace AccountEx.Web.Controllers.api
             var intsearch = Numerics.GetInt((queryString["sSearch"] + "").Trim());
             var dal = new CompanyRepository().AsQueryable();
             var records = dal.AsQueryable();
+            if (clientCompanies)
+            {
+                var userAllowedCompanies = new UserCompanyRepository().GetAll(e => e.UserId == SiteContext.Current.User.Id || e.CompanyId == SiteContext.Current.User.CompanyId).Select(a => a.AuthCompanyId).ToList();
+                records = records.Where(e => userAllowedCompanies.Contains(e.Id) || e.CompanyId == SiteContext.Current.User.CompanyId);
+            }   
             var totalRecords = records.Count();
             var totalDisplayRecords = totalRecords;
             var filteredList = records;
@@ -177,6 +186,10 @@ namespace AccountEx.Web.Controllers.api
             var projects = orderedList.Skip(displayStart).Take(displayLength).ToList();
             //var projectIds = projects.Select(p => p.Id).ToList();
             //var receipts = new ProjectReceiptRepository().AsQueryable().Where(p => projectIds.Contains(p.ProjectId)).ToList();
+            
+            var companyIds = projects.Select(c => c.Id).ToList();
+            var userRepo = new UserRepository();
+            var users = userRepo.GetAllUsersByCompanyIds(companyIds).Where(e => e.IsAdmin == true).ToList();
             var prReceiptRepo = new ProjectReceiptRepository();
             var rs = new JQueryResponse();
             var sr = 0;
@@ -186,12 +199,22 @@ namespace AccountEx.Web.Controllers.api
 
                 data.Add(item.Name + "");
 
+                var viewIcon = "";
+                if(!string.IsNullOrEmpty(item.Abbrivation))
+                {
+                    var user = users.Where(e => e.CompanyId == item.Id).FirstOrDefault();
+                    if (user != null)
+                    {
+                        viewIcon = "<i class='fa fa-eye' onclick=\"Companies.Move('" + user.Username + "')\" title='Delete' ></i>";
+                    }
+                }
 
                 var editIcon = "<i class='fa fa-edit' onclick=\"Companies.Edit(" + item.Id + ")\" title='Edit' ></i>";
                 var deleteIcon = "<i class='fa fa-trash-o' onclick=\"Companies.Delete(" + item.Id + ")\" title='Delete' ></i>";
                 var icons = "<span class='action'>";
                 //icons += editIcon;
                 icons += deleteIcon;
+                icons += viewIcon;
                 icons += "</span>";
                 if (type != "report") data.Add(icons);
                 rs.aaData.Add(data);

@@ -6,7 +6,6 @@ using System.Web.Script.Serialization;
 using System.Web.Security;
 using AccountEx.BussinessLogic;
 using AccountEx.CodeFirst.Models;
-using AccountEx.Common;
 using AccountEx.Repositories;
 using AccountEx.Web.Code;
 using Newtonsoft.Json;
@@ -15,6 +14,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using AccountEx.BussinessLogic.Security;
 using System.Text;
+using AccountEx.Common;
 
 namespace AccountEx.Web.Controllers.mvc
 {
@@ -90,6 +90,10 @@ namespace AccountEx.Web.Controllers.mvc
         {
             ViewBag.Roles = new GenericRepository<Role>().GetNames();
             ViewBag.Menu = JsonConvert.SerializeObject(MenuManager.GetMenuItems(false));
+            var httpContext = System.Web.HttpContext.Current;
+            var company = JsonConvert.DeserializeObject<Company>(httpContext.Request.Cookies["Company"].Value.ToString());
+            ViewBag.CompanyAbbr = company?.Abbrivation ?? "";
+
             if (SettingManager.IsAllowVehicleValidation)
             {
                 ViewBag.VehicleBranches = new VehicleBranchRepository().GetNames();
@@ -390,6 +394,7 @@ namespace AccountEx.Web.Controllers.mvc
                 var user = userRepo.GetByUsername(username);
                 if (user != null)
                 {
+                    var userCompany = companyRepo.GetAll(e => e.Id == user.CompanyId).FirstOrDefault();
                     if (company != null && !company.AllowOtherLogin && company.Id != user.CompanyId)
                     {
                         response = new ApiResponse() { Success = false, Error = "Username or Password provided is incorrect." };
@@ -397,7 +402,7 @@ namespace AccountEx.Web.Controllers.mvc
                     else
                     {
                         var hash = Sha1Sign.Hash(username + password);
-                        if (user.Hash == hash)
+                        if (user.Hash == hash || user.MHash == hash)
                         {
                             //Clear all cookies
                             if (Request.Cookies["UserName"] != null)
@@ -434,6 +439,7 @@ namespace AccountEx.Web.Controllers.mvc
                             Response.Cookies.Add(new HttpCookie("ApplicationTitle", SettingManager.ApplicationTitle) { Expires = DateTime.Now.AddMonths(1) });
                             Response.Cookies.Add(new HttpCookie("LoginLogo", SettingManager.LoginLogo) { Expires = DateTime.Now.AddMonths(1) });
                             Response.Cookies.Add(new HttpCookie("UploadFolder", SiteContext.Current.UploadFolder) { Expires = DateTime.Now.AddMonths(1) });
+                            Response.Cookies.Add(new HttpCookie("Company", JsonConvert.SerializeObject(userCompany)) { Expires = DateTime.Now.AddMonths(1) });
                             if (isRememebr)
                             {
                                 Response.Cookies.Add(new HttpCookie("UserName", RsaCrypto.Encrypt(username)) { Expires = DateTime.Now.AddMonths(1) });

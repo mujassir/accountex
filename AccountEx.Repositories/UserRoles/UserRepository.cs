@@ -20,6 +20,10 @@ namespace AccountEx.Repositories
         {
             return Collection.Where(p => ids.Contains(p.Id)).ToDictionary(p => p.Id, q => q.Username);
         }
+        public IList<User> GetAllUsersByCompanyIds(List<int> ids)
+        {
+            return Db.Users.Where(p => ids.Contains((int)p.CompanyId)).ToList();
+        }
         public Dictionary<int, string> GetFullNames(List<int> ids)
         {
             return Collection.Where(p => ids.Contains(p.Id)).ToDictionary(p => p.Id, q => (q.FirstName + " " + q.LastName).Trim());

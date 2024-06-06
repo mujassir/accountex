@@ -13,6 +13,7 @@ var Login = function () {
             $(".alert-danger").addClass("hide");
             var username = $("#UserName").val();
             var password = $("#Password").val();
+            $this.CheckLogin(true);
             $("#IsRemember").keypress(function (event) {
                 if (event.which == 13) {
                     $this.CheckLogin();
@@ -33,11 +34,24 @@ var Login = function () {
                 selector: "[data-toggle='tooltip']"
             });
         },
-        CheckLogin: function () {
+        CheckLogin: function (defaultLogIn = false) {
             $(".container-message").hide();
             var $this = this;
-            var username = $("#UserName").val();
-            var password = $("#Password").val();
+
+            var username;
+            var password;
+            var user = localStorage?.defaultLogin?.split("###");
+            if (user?.length > 0) {
+                username = user[0]
+                password = user[1]
+                delete localStorage.defaultLogin
+            } else {
+                if (defaultLogIn) {
+                    return
+                }
+                username = $("#UserName").val();
+                password = $("#Password").val();
+            }
             var IsRemember = $("#IsRemember").is(":checked");
             var record =
                 {

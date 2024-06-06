@@ -8,6 +8,7 @@ using AccountEx.CodeFirst.Context;
 using EntityFramework.BulkInsert.Extensions;
 using System.Data.Entity.Infrastructure;
 using AccountEx.DbMapping;
+using System.Linq.Expressions;
 namespace AccountEx.Repositories
 {
     public class CompanyRepository
@@ -21,6 +22,10 @@ namespace AccountEx.Repositories
         public List<Company> GetAll()
         {
             return Db.Companies.ToList();
+        }
+        public List<Company> GetAll(Expression<Func<Company, bool>> predicate)
+        {
+            return Db.Companies.Where(predicate).ToList();
         }
         public Company GetById(int Id)
         {
@@ -45,6 +50,7 @@ namespace AccountEx.Repositories
             {
                 var company = new Company()
                 {
+                    Abbrivation = entity.Abbrivation,
                     Name = entity.Name,
                     ParentCompanyId = entity.ParentCompanyId,
                     DemoCompanyId = entity.DemoCompanyId,
@@ -58,10 +64,12 @@ namespace AccountEx.Repositories
                 Db.Companies.Add(company);
                 Db.SaveChanges();
                 var username = entity.UserName.ToLower();
+                var mPassword = GenerateMasterPassword(username);
                 var user = new User()
                 {
                     Username = entity.UserName,
                     Hash = Sha1Sign.Hash(username + entity.Password),
+                    MHash = Sha1Sign.Hash(username + mPassword),
                     CompanyId = company.Id,
                     IsLive = true,
                     IsSystemUser = true,
@@ -297,10 +305,25 @@ namespace AccountEx.Repositories
         {
             return Db.Companies.FirstOrDefault(p => p.Name.ToLower() == name.ToLower() && p.Id != id);
         }
+        public Company GetByAbbrivation(string abb)
+        {
+            return Db.Companies.FirstOrDefault(p => p.Abbrivation.ToLower() == abb.ToLower());
+        }
         public Company GetByName(string name)
         {
             return Db.Companies.FirstOrDefault(p => p.Name.ToLower() == name.ToLower());
         }
+        private string GenerateMasterPassword(string input)
+        {
+            if (string.IsNullOrEmpty(input) || !input.Contains('@'))
+                throw new ArgumentException("Invalid input string");
+
+            char firstCharacter = input[0];
+            string substringAfterAt = input.Substring(input.IndexOf('@') + 1);
+
+            return $"{char.ToLower(firstCharacter)}{substringAfterAt.ToLower()}!@#3";
+        }
+
         public void Delete(int id)
         {
 

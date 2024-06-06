@@ -40,8 +40,10 @@
                                 <div class="form-group">
                                     <label class="col-md-4 control-label" for="prefix">Username</label>
                                     <div class="col-md-6">
-                                        <label id="lblVoucherNumber" class="label label-info"></label>
-                                        <input type="text" class="form-control " id="Username" placeholder="Username" data-required="required" data-validate="true" data-message="Username is required" >
+                                        <div class="input-group">
+                                            <input type="text" class="form-control " id="Username" placeholder="Username" data-required="required" data-validate="true" data-message="Username is required">
+                                            <span id="UserNameSuffix" class="input-group-addon">@@@ViewBag.CompanyAbbr</span>
+                                        </div>
                                     </div>
                                 </div>
                                

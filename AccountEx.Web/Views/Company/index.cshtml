@@ -63,7 +63,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group display-none">
                             <label class="col-md-2 control-label">Demo Company</label>
                             <div class="col-md-3">
                                 <select id="DemoCompanyId" class='form-control select2' data-required="required" data-message="Parent Company is required">
@@ -74,7 +74,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group display-none">
                             <label class="col-md-2 control-label">Type</label>
                             <div class="col-md-3">
                                 <select id="Type" class='form-control select2'>
@@ -168,11 +168,11 @@
 
 </div>
 
-
+ 
 
 @section FooterScript
 {
-    <script src="~/Content/AppJS/Company/Companies.js"></script>
+    <script src="~/Content/AppJS/Company/Companies.js?v=1"></script>
     <script>
         jQuery(document).ready(function () {
             Companies.init();

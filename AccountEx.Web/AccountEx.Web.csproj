@@ -331,6 +331,7 @@
     <Compile Include="Controllers\api\Transaction\ProductionController.cs" />
     <Compile Include="Controllers\api\Transaction\VatStockTransferController.cs" />
     <Compile Include="Controllers\api\Transaction\VatTransController.cs" />
+    <Compile Include="Controllers\api\UserCompany\UserCompanyController.cs" />
     <Compile Include="Controllers\api\Vehicle\VehiclePostDatedChequeController.cs" />
     <Compile Include="Controllers\api\Vehicle\ForexVoucherController.cs" />
     <Compile Include="Controllers\api\Vehicle\VehicleVoucherController.cs" />
@@ -8387,6 +8388,8 @@
     <Content Include="Views\Transaction\Labours.cshtml" />
     <Content Include="Views\Manage\Labour.cshtml" />
     <Content Include="Views\Reports\Labour.cshtml" />
+    <Content Include="Views\Company\index.cshtml" />
+    <Content Include="Views\Company\UserCompanies.cshtml" />
     <None Include="Web.config">
       <SubType>Designer</SubType>
     </None>
@@ -8754,7 +8757,6 @@
     <Folder Include="Content\metronic\assets\global\plugins\select2\css\" />
     <Folder Include="Content\metronic\assets\global\plugins\select2\js\i18n\" />
     <Folder Include="Content\metronic\assets\global\plugins\select2\sass\" />
-    <Folder Include="Controllers\api\NewFolder1\" />
     <Folder Include="Controllers\api\Vehicle\Reports\" />
     <Folder Include="Utility Quries\New folder\" />
     <Folder Include="Views\Manage\Maintenance\" />

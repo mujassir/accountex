@@ -7,6 +7,7 @@ namespace AccountEx.CodeFirst.Models
 
         public Nullable<int> ParentCompanyId { get; set; }
         public Nullable<int> DemoCompanyId { get; set; }
+        public string Abbrivation { get; set; }
         public string Name { get; set; }
         public string DomainName { get; set; }
         public string UploadFolder { get; set; }

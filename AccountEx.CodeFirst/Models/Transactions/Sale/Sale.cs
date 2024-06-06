@@ -93,6 +93,19 @@ namespace AccountEx.CodeFirst.Models
         public int ServiceSaleTaxNo { get; set; }
         public Nullable<int> CompanyPartnerId { get; set; }
         public bool IsCleared { get; set; }
+
+        public Nullable<int> WarrantyNo { get; set; }
+        public Nullable<int> TotalCartons { get; set; }
+        public decimal NetOtherTotal { get; set; }
+        public string PatientID { get; set; }
+        public decimal WHTaxTotal { get; set; }
+        public Nullable<DateTime> RequisitionDate { get; set; }
+        public string RequisitionNo { get; set; }
+        public Nullable<int> ReferenceId { get; set; }
+        public bool IsLock { get; set; }
+        public string Type { get; set; }
+        public string PatientVoucherNumber { get; set; }
+        public string PatientNo { get; set; }
         public virtual ICollection<SaleItem> SaleItems { get; set; }
         public virtual ICollection<SaleServicesItem> SaleServicesItems { get; set; }
         public virtual ICollection<ServiceExpense> ServiceExpenses { get; set; }

@@ -101,6 +101,7 @@ namespace AccountEx.CodeFirst.Context
         public DbSet<WheatPurchase> WheatPurchases { get; set; }
         public DbSet<WheatPurchaseItem> WheatPurchaseItems { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<UserCompany> UserCompanies { get; set; }
         public DbSet<RoleAccess> RoleAccesses { get; set; }
         public DbSet<RoleAction> RoleActions { get; set; }
         public DbSet<Transporter> Transporters { get; set; }
@@ -280,6 +281,11 @@ namespace AccountEx.CodeFirst.Context
             modelBuilder.Configurations.Add(new ServiceItemMap());
             modelBuilder.Configurations.Add(new WPItemMap());
             modelBuilder.Entity<WPItem>().Property(p => p.Rate).HasPrecision(18, 4);
+
+            modelBuilder.Entity<UserCompany>()
+                .HasRequired(uc => uc.Company) 
+                .WithMany()
+                .HasForeignKey(uc => uc.AuthCompanyId);
 
 
 

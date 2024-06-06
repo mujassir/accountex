@@ -1,6 +1,6 @@
 ﻿@using AccountEx.CodeFirst.Models
 @{
-    ViewBag.Title = "Companies";   
+    ViewBag.Title = "User Companies";   
 }
 
 @section PageTitle
@@ -41,21 +41,9 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-md-2 control-label">Name</label>
+                            <label class="col-md-2 control-label">Company</label>
                             <div class="col-md-3">
-                                <input type="text" class="form-control " id="Name" data-required="required" data-message="Name is required" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">Abbrivation</label>
-                            <div class="col-md-3">
-                                <input type="text" class="form-control " id="Abbrivation" data-required="required" data-message="Abbrivation is required" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">Parent Company</label>
-                            <div class="col-md-3">
-                                <select id="ParentCompanyId" class='form-control select2' data-required="required" data-message="Parent Company is required">
+                                <select id="AuthCompanyId" class='form-control select2' data-required="required" data-message="Company is required">
                                     @foreach (var Company in (List<Company>)ViewBag.Companies)
                                     {
                                         <option value="@Company.Id">@Company.Name</option>
@@ -63,45 +51,17 @@
                                 </select>
                             </div>
                         </div>
+
                         <div class="form-group">
-                            <label class="col-md-2 control-label">Demo Company</label>
+                            <label class="col-md-2 control-label">User</label>
                             <div class="col-md-3">
-                                <select id="DemoCompanyId" class='form-control select2' data-required="required" data-message="Parent Company is required">
-                                    @foreach (var Company in (List<Company>)ViewBag.Companies)
+                                <select id="UserId" class='form-control select2' data-required="required" data-message="User is required">
+                                    @foreach (var User in (List<User>)ViewBag.Users)
                                     {
-                                        <option value="@Company.Id">@Company.Name</option>
+                                        <option value="@User.Id">@User.Username</option>
                                     }
                                 </select>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">Type</label>
-                            <div class="col-md-3">
-                                <select id="Type" class='form-control select2'>
-                                    <option value="Baseline">Baseline (it contains data must requied to run a company eg. MenuItems, SettingManager etc.) </option>
-                                    <option value="Demo">Demo (it contains all above data and also demo data in Sales/Purchases/CashPayments etc.)</option>
-                                </select>
-                            </div>
-                        </div>
-
-
-
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">User Name</label>
-                            <div class="col-md-3">
-                                <div class="input-group">
-                                    <input type="text" class="form-control " id="UserName" placeholder="User Name" data-required="required" data-message="User Name is required" />
-                                    <span id="UserNameSuffix" class="input-group-addon"></span>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">Password</label>
-                            <div class="col-md-3">
-                                <input type="password" class="form-control " id="Password" placeholder="Password" data-required="required" data-message="Password is required" />
-                            </div>
-
                         </div>
 
 
@@ -110,7 +70,7 @@
                         <label class="col-md-2 control-label">&nbsp;</label>
 
                         <div class="col-md-8">
-                            <button id="btnSave" type="button" class="btn btn-primary">Save</button>
+                            <button id="btnAuthCompany" type="button" class="btn btn-primary">Save</button>
                             <button id="btnCancel" type="button" class="btn btn-default">Cancel</button>
                         </div>
                     </div>
@@ -133,7 +93,7 @@
                     <i class="fa fa-list"></i>Record Listing
                 </div>
                 <div class="actions">
-                    <button id="btnEdit" type="button" class="btn blue" onclick="Companies.Add()"><i class="fa fa-plus"></i>&nbsp;New</button>
+                    <button id="btnEdit" type="button" class="btn blue" onclick="Companies.Add()"><i class="fa fa-plus"></i>&nbsp;Authorize Company</button>
 
 
                 </div>
@@ -151,7 +111,8 @@
                     <thead>
                         <tr>
 
-                            <th>Name</th>
+                            <th>User Name</th>
+                            <th>Company</th>
                             <th style="width: 75px;" class="no-sort"></th>
                         </tr>
                     </thead>
@@ -168,11 +129,11 @@
 
 </div>
 
-
+ 
 
 @section FooterScript
 {
-    <script src="~/Content/AppJS/Company/Companies.js"></script>
+    <script src="~/Content/AppJS/Company/Companies.js?v=1"></script>
     <script>
         jQuery(document).ready(function () {
             Companies.init();

@@ -81,6 +81,7 @@ var Users = function () {
             var $this = this;
             if (Common.Validate($("#form-info"))) {
                 var record = Common.SetValue($("#form-info"));
+                record.Username += document.getElementById("UserNameSuffix").innerHTML
                 if (record.RoleIds == null || record.RoleIds.length <= 0) {
                     var err = "Role is required."
                     Common.ShowError(err);
@@ -140,6 +141,7 @@ var Users = function () {
                 success: function (res) {
                     if (res.Success) {
                         var j = res.Data;
+                        j.Username = j.Username.split("@")[0]
                         Common.MapEditData(j, $("#form-info"));
                         $(".date-picker").each(function () {
                             Common.SetDate(this, $(this).val());
