@@ -54,16 +54,26 @@
                     <div class="form-body">
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="prefix">Date</label>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <div class="input-group input-medium">
-                                    <input class="date-picker form-control date-picker" type="text" id="FromDate" data-validate="true" data-required="required" value="@DateTime.Now.ToString(AppSetting.DateFormat)" data-message="From Date"  data-fiscal-date="true" >
+                                    <input class="date-picker form-control date-picker" type="text" id="FromDate" data-validate="true" data-required="required" value="@DateTime.Now.ToString(AppSetting.DateFormat)" data-message="From Date" data-fiscal-date="true">
 
                                     <span class="input-group-btn date-icon">
                                         <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
                                     </span>
                                 </div>
                             </div>
-                            <div class="col-md-2" id="account-type-conatiner">
+                            <label class="col-md-1 control-label" for="prefix">Group</label>
+                            <div class="col-md-3">
+                                <select id="GroupName" class="form-control select2">
+                                    <option value="0" selected="selected">All Groups</option>
+                                    @foreach (var p in (List<IdName>)ViewBag.Groups)
+                                    {
+                                        <option data-custom="@p.Name.Trim()">@p.Name.Trim()</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-2 display-none" id="account-type-conatiner">
                                 <div class="radio-list">
                                     <label class="radio-inline">
 

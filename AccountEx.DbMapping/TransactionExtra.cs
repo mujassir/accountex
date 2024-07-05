@@ -330,6 +330,7 @@ namespace AccountEx.DbMapping
     {
         public string Code { get; set; }
         public string Name { get; set; }
+        public string GroupName { get; set; }
         public decimal Current { get; set; }
         public decimal Day7 { get; set; }
         public decimal Day15 { get; set; }

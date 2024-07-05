@@ -10,6 +10,11 @@
 
                 $this.LoadData();
             });
+
+            $("#GroupName").change(function (e) {
+                $this.FilterReport()
+            });
+
             var id = Common.GetQueryStringValue("accountId");
             if (id == undefined || id == "") {
                 //$("#AccountId").select2("val", id);
@@ -111,15 +116,38 @@
                         var amount = 0;
                         var data = res.Data.Records;
                         var account = "";
-                        for (var i in data) {
+                        var records = Enumerable.From(data).GroupBy("$.GroupName", null,
+                            function (key, g) {
+                                var result =
+                                {
+                                    GroupName: key,
+                                    Transactions: g.ToArray(),
+                                };
+                                return result;
+                            }).ToArray();
 
+                        console.log(records)
+                        for (var i in records) {
 
+                            var record = records[i];
+                            html += "<tr data-group='" + record.GroupName + "' style='font-weight: bold;'><td class='group' colspan='4'>Group Name: " + record.GroupName + "</td></tr>";
+                            for (var y in record.Transactions) {
+                                const tran = record.Transactions[y]
+                                html += "<tr data-group='" + record.GroupName + "'><td>" + tran.Code + "-" + tran.Name + "</td><td class='align-right'>" + tran.Current.format()
+                                    + "</td><td class='align-right'>" + tran.Day7.format() + "</td><td class='align-right'>" + tran.Day15.format()
+                                    + "</td><td class='align-right'>" + tran.Day30.format() + "</td><td class='align-right'>" + tran.Day60.format()
+                                    + "</td><td class='align-right'>" + tran.Day90.format() + "</td><td class='align-right'>" + tran.Day120.format() + "</td></tr>";
+                            }
 
-                            html += "<tr><td>" + data[i].Code + "-" + data[i].Name + "</td><td class='align-right'>" + data[i].Current.format()
-                                + "</td><td class='align-right'>" + data[i].Day7.format() + "</td><td class='align-right'>" + data[i].Day15.format()
-                                  + "</td><td class='align-right'>" + data[i].Day30.format() + "</td><td class='align-right'>" + data[i].Day60.format()
-                                    + "</td><td class='align-right'>" + data[i].Day90.format() + "</td><td class='align-right'>" + data[i].Day120.format() + "</td></tr>";
-
+                            let Current = Enumerable.From(record.Transactions).Sum("$.Current").format();
+                            let Day7 = Enumerable.From(record.Transactions).Sum("$.Day7").format();
+                            let Day15 = Enumerable.From(record.Transactions).Sum("$.Day15").format();
+                            let Day30 = Enumerable.From(record.Transactions).Sum("$.Day30").format();
+                            let Day60 = Enumerable.From(record.Transactions).Sum("$.Day60").format();
+                            let Day90 = Enumerable.From(record.Transactions).Sum("$.Day90").format();
+                            let Day120 = Enumerable.From(record.Transactions).Sum("$.Day120").format();
+                            
+                            html += "<tr data-group='" + record.GroupName + " class='bold'><td class='align-right'>Total</td><td class='align-right'>" + Current + "</td><td class='align-right'>" + Day7 + "</td><td class='align-right'>" + Day15 + "</td><td class='align-right'>" + Day30 + "</td><td class='align-right'>" + Day60 + "</td><td class='align-right'>" + Day90 + "</td><td class='align-right'>" + Day120 + "</td></tr>";
                         }
                         
                         if (res.Data.Records.length == 0)
@@ -139,6 +167,20 @@
                 error: function (e) {
                 }
             });
+        },
+        FilterReport: function () {
+
+            var group = $("#GroupName").val();
+            
+            if (group == "0") {
+                $("[data-group]").removeClass("hide");
+            }
+            else {
+                $("[data-group]").addClass("hide");
+                $("[data-group='" + group + "']").removeClass("hide");
+            }
+            $("#div-table").removeClass("hide");
+
         }
     };
 }();

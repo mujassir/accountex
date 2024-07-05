@@ -384,6 +384,7 @@ namespace AccountEx.Web.Controllers.mvc
             setting.Add(new FormSetting() { KeyName = "Customers", Value = SettingManager.CustomerHeadId + "" });
             var data = JsonConvert.SerializeObject(setting.ToList());
             ViewBag.FormSetting = data;
+            ViewBag.Groups = new GenericRepository<CustomerGroup>().GetNames();
             return View();
         }
 
