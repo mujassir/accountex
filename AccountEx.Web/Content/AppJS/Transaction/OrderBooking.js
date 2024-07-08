@@ -58,7 +58,7 @@ var OrderBooking = function () {
                             }
                         }
                         else {
-                            $("#item-container tbody tr:nth-last-child(1) td:nth-child(4) input.Quantity").focus().select();
+                            $("#item-container tbody tr:nth-last-child(1) td:nth-child(5) input.Quantity").focus().select();
                         }
                     }
                     else {
@@ -474,8 +474,8 @@ var OrderBooking = function () {
             var Price = 0.0;
             var discount = 0.0;
             $("#item-container tbody tr").each(function () {
-                Quantity += Common.GetInt($(this).find(":nth-child(4) input.Quantity").val());
-                Price += Common.GetInt($(this).find(":nth-child(7) input.Amount").val());
+                Quantity += Common.GetInt($(this).find(":nth-child(5) input.Quantity").val());
+                Price += Common.GetInt($(this).find(":nth-child(8) input.Amount").val());
             });
             $("#QuantityTotal").val(Quantity);
             $("#NetTotal").val(Price);
@@ -525,8 +525,8 @@ var OrderBooking = function () {
             for (var i in items) {
                 var item = items[i];
                 html += "<tr>";
-                html += "<td>" + (index++) + "</td>";
-                html += "<td>" + (item.ArticleNo != null ? item.ArticleNo : "") + "</td>";
+                html += `<td rowspan="${item.ItemRemarks ? 2 : 1}">${index++}</td>`;
+                html += `<td rowspan="${item.ItemRemarks ? 2 : 1}">${item.ArticleNo != null ? item.ArticleNo : ""}</td>`;
                 html += "<td>" + item.ItemName + "</td>";
                 html += "<td class='align-right'>" + item.Quantity + "</td>";
                 if (item.Unit == null)
@@ -538,6 +538,9 @@ var OrderBooking = function () {
                 //html += "<td>" + item.DiscountAmount.format() + "</td>";
                 //html += "<td>" + item.NetAmount.format() + "</td>";
                 html += "</tr>";
+                if (item.ItemRemarks) {
+                    html += `<tr><td colspan="4">${item.ItemRemarks}</td></tr>`
+                }
                 totalamount += item.Amount;
 
             }
@@ -619,7 +622,7 @@ var OrderBooking = function () {
                             $(".form-actions .first,.form-actions .previous").addClass("disabled");
                         $this.AddItem();
                         $this.LoadReportData(res);
-                        Common.SetPageAccess(d);
+                        //Common.SetPageAccess(d);
                     } else {
                         Common.ShowError(res.Error);
                     }

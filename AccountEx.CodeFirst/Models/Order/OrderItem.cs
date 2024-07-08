@@ -19,6 +19,7 @@ namespace AccountEx.CodeFirst.Models
         public int DcNo { get; set; }
         public string ItemCode { get; set; }
         public string ItemName { get; set; }
+        public string ItemRemarks { get; set; }
         public int ItemId { get; set; }
         public byte EntryType { get; set; }
         public int InvoiceNumber { get; set; }

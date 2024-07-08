@@ -287,7 +287,7 @@ else
                                                 <th style="width: 30%;">Name</th>
                                                 <th style="width: 15%;">Article</th>
                                                 <th style="width: 20%;" colspan="2" class="align-center">Unit</th>
-                                                @if (settingAllowRate && !roleHideRateAmount)
+                                                @if (settingAllowRate)
                                                 {
                                                     <th class="align-right">Rate</th>
                                                     <th class="align-right">Amount</th>
@@ -946,7 +946,7 @@ else
         <td>
             <input type="text" class="Unit form-control input-small" data-db-column="Unit" disabled>
         </td>
-        @if (settingAllowRate && !roleHideRateAmount)
+        @if (settingAllowRate)
         {
             <td class="align-right">
                 <input type="text" class="Rate form-control input-small num3" data-db-column="Rate" data-db-type="decimal">

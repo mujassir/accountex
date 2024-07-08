@@ -322,15 +322,16 @@ else
                                 </div>
                             </div>
                             <div class="col-md-2"></div>
-                            <div class="form-group" data-save="false"@* style="width: 700px; display: block;  margin-right: auto;"*@>
-                                <div class="col-md-6 saleitem-container">
+                            <div class="form-group" data-save="false"@*style="width: 700px; display: block;  margin-right: auto;"*@>
+                                <div class="col-md-7 saleitem-container">
 
                                     <table id="item-container" class="table table-bordered griditem">
                                         <thead>
                                             <tr>
                                                 <th style="width: 12%;">Code</th>
-                                                <th style="width: 30%;">Name</th>
+                                                <th style="width: 20%;">Name</th>
                                                 <th style="width: 15%;">Article</th>
+                                                <th style="width: 20%;">Remarks</th>
                                                 <th colspan="2" style="text-align: center">Unit</th>
                                                 @if (@allowRate)
                                                 {
@@ -512,7 +513,7 @@ else
             if (type.ToLower() == "purchaseorder")
             {
             <div class="col-xs-8" style="font-size: 20px;">
-                <p style="margin-left: 222px; margin-top: 20px; padding: 0px; line-height: 0px; position: absolute; font-size: 20px !important;"
+                <p style="margin-left: 120px; margin-top: 20px; margin-bottom: 50px; padding: 0px; line-height: 0px; font-size: 20px !important;"
                     class="po-title-color">
                     PURCHASE ORDER
                 </p>
@@ -521,7 +522,7 @@ else
             else
             {
             <div class="col-xs-8" style="font-size: 20px;">
-                <p style="margin-left: 222px; margin-top: 20px; padding: 0px; line-height: 0px; position: absolute; font-size: 20px !important;" class="po-title-color">SALE ORDER</p>
+                <p style="margin-left: 120px; margin-top: 20px; margin-bottom: 50px; padding: 0px; line-height: 0px; font-size: 20px !important;" class="po-title-color">SALE ORDER</p>
             </div>
             }
         }
@@ -730,7 +731,7 @@ else
     </div>
     <div class="col-md-6 col-xs-6">
     </div>
-    <div class="row-bottom" style="position: fixed; border-top: 1px #000; width: 420px; right: 0px; bottom: 100px; padding-top: 5px;">
+    <div class="row-bottom" style="border-top: 1px #000; width: 420px; float: right; margin-top: 100px;">
         <table class="full-width">
             <tr>
                 <td style="width: 0px;"></td>
@@ -743,7 +744,7 @@ else
             </tr>
         </table>
     </div>
-    <div class="row-bottom " style="position: fixed; border-top: 1px #000; bottom: 30px; padding-top: 5px; font-size: 10px; padding-left: 190px;">
+    <div class="row-bottom " style="position: absolute; border-top: 1px #000; bottom: 30px; padding-top: 5px; font-size: 10px; padding-left: 190px;">
         For any discrepancy please contact us at info@ultratecpak.com
     </div>
 
@@ -762,26 +763,35 @@ else
         <td>
             <input type="hidden" class="Id" data-db-column="Id">
             <input type="hidden" class="ItemId" id="ItemId" data-db-column="ItemId">
-            <input type="hidden"  class="EntryType" id="EntryType" data-db-column="EntryType" value="@((int)EntryType.Item)">
+            <input type="hidden" class="EntryType" id="EntryType" data-db-column="EntryType" value="@((int)EntryType.Item)">
             <input type="text" class="Code form-control typeahead input-small ui-autocomplete-input" data-db-column="ItemCode" autocomplete="off">
         </td>
         <td>
-            <input type="text" disabled="disabled" class="Name form-control input-medium" data-db-column="ItemName"></td>
+            <input type="text" disabled="disabled" class="Name form-control input-medium" data-db-column="ItemName" >
+        </td>
         <td>
-            <input type="text" disabled="disabled" class="ArticleNo form-control input-medium" data-db-column="ArticleNo"></td>
+            <input type="text" disabled="disabled" class="ArticleNo form-control input-medium" data-db-column="ArticleNo" data-permanent-disabled= >
+        </td>
+        <td>
+            <input type="text" class="ItemRemarks form-control input-medium" data-db-column="ItemRemarks">
+        </td>
         <td class="align-right">
-            <input type="text" class="Quantity form-control input-small num3" data-db-column="Quantity" data-db-type="decimal"></td>
+            <input type="text" class="Quantity form-control input-small num3" data-db-column="Quantity" data-db-type="decimal">
+        </td>
         <td>
-            <input type="text" class="Unit form-control input-small" data-db-column="Unit" disabled></td>
+            <input type="text" class="Unit form-control input-small" data-db-column="Unit" disabled>
+        </td>
         @if (@allowRate)
         {
             <td class="align-right">
-                <input type="text" class="Rate form-control input-small num3" data-db-column="Rate" data-db-type="decimal"></td>
+                <input type="text" class="Rate form-control input-small num3" data-db-column="Rate" data-db-type="decimal">
+            </td>
 
             <td class="align-right">
-                <input type="text" class="Amount form-control input-small" data-db-column="Amount" data-db-type="decimal" disabled></td>
+                <input type="text" class="Amount form-control input-small" data-db-column="Amount" data-db-type="decimal" disabled>
+            </td>
 
-          
+
         }
 
         <td class="td-delete">

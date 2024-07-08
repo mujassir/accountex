@@ -168,7 +168,7 @@ input[type='text'].form-control, input[type='password'].form-control, select.for
 
     tr {
         page-break-inside: avoid;
-        page-break-after: always;
+        page-break-after: auto;
     }
 
     td {
@@ -879,4 +879,10 @@ table#item-container-summary tr:nth-child(even) {
 
 thead.tableFloatingHeaderOriginal {
     background-color: #eee;
+}
+@media print {
+    tr {
+        page-break-inside: avoid;
+        page-break-after: auto !important;
+    }
 }
