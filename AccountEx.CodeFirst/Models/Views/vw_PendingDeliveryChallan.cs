@@ -16,6 +16,7 @@ namespace AccountEx.CodeFirst.Models
         public Nullable<int> OrderNumber { get; set; }
         public byte Status { get; set; }
         public byte InvoiceTransactionType { get; set; }
+        public byte TransactionType { get; set; }
         public int DCQuatityTotal { get; set; }
         public Nullable<int> CompanyId { get; set; }
         public int FiscalId { get; set; }

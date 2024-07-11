@@ -589,22 +589,28 @@ var Trans = function () {
                 dataType: "json",
                 success: function (res) {
                     if (res.Success) {
+                        const data = res.Data;
+                        $("#AccountName").val(data.AccountName);
+                        $("#AccountCode").val(data.AccountCode);
+                        $("#AccountId").val(data.AccountId);
+                        $("#PartyAddress").val(data.PartyAddress);
+                        $("#Comments").val(data.Comments);
 
-                        var items = res.Data;
+                        var items = data.Items;
                         $("#item-container tbody").html("");
                         if (items != null && items.length > 0) {
                             var html = "";
                             for (var i in items) {
                                 var item = items[i];
                                 var account = Common.GetByCode(item.ItemCode);
-                                var product = Common.GetAccountDetailByAccountId(account.Id);
-                                var price = 0;
+                                //var product = Common.GetAccountDetailByAccountId(account.Id);
+                                var price = item.Rate;
 
                                 items[i].Quantity = item.Quantity = item.Quantity;
                                 var qty = item.Quantity;
-                                if (typeof product != "undefined" && product != null) {
-                                    price = Common.GetFloat(product.SalePrice);
-                                }
+                                //if (typeof product != "undefined" && product != null) {
+                                //    price = Common.GetFloat(product.SalePrice);
+                                //}
 
                                 var amount = qty * price;
                                 //var gstpercent = PageSetting.GSTPercent;

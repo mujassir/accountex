@@ -146,22 +146,32 @@ namespace AccountEx.Web.Controllers.api.Transaction
                 var queryString = Request.RequestUri.ParseQueryString();
                 var vouchertype = (byte)((VoucherType)Enum.Parse(typeof(VoucherType), queryString["type"], true));
                 var Ids = dcIds.Split(',').Select(p => Numerics.GetInt(p)).ToList();
-                var data = new DeliveryChallanRepository().AsQueryable(true).Where(p => Ids.Contains(p.Id)).SelectMany(p => p.DCItems).GroupBy(q => new { q.ItemId, q.ItemCode, q.ItemName }).Select(r => new
+                var query = new DeliveryChallanRepository().AsQueryable(true).Where(p => Ids.Contains(p.Id));
+                var mRecord = query.FirstOrDefault();
+                var data = query.SelectMany(p => p.DCItems).GroupBy(q => new { q.ItemId, q.ItemCode, q.ItemName }).Select(r => new
                 {
 
                     r.Key.ItemId,
                     r.Key.ItemCode,
                     r.Key.ItemName,
                     Quantity = r.Sum(m => m.Quantity),
-
-
+                    Rate = r.Sum(m => m.Rate),
+                    Amount = r.Sum(m => m.Amount)
                 }).ToList();
 
 
                 response = new ApiResponse
                 {
                     Success = true,
-                    Data = data
+                    Data = new
+                    {
+                        mRecord.AccountId,
+                        mRecord.AccountCode,
+                        mRecord.AccountName,
+                        mRecord.PartyAddress,
+                        mRecord.Comments,
+                        Items = data
+                    }
 
                 };
             }

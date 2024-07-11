@@ -197,7 +197,7 @@ namespace AccountEx.Web.Controllers.api.Transaction
             if (!string.IsNullOrWhiteSpace(queryString["dcNumbers"]))
                 dcNumbers = (queryString["dcNumbers"].Split(',')).ToList().Select(p => Numerics.GetInt(p)).ToList();
             //var records = new DeliveryChallanRepository().GetPendingDeliveryChallan(type);
-            var records = new GenericRepository<vw_PendingDeliveryChallan>().AsQueryable(true).Where(p => p.Status != (byte)TransactionStatus.Delivered);
+            var records = new GenericRepository<vw_PendingDeliveryChallan>().AsQueryable(true).Where(p => p.Status != (byte)TransactionStatus.Delivered && p.TransactionType == (byte)type);
             if (pageType > 0)
                 records = records.Where(p => p.InvoiceTransactionType == pageType);
 
