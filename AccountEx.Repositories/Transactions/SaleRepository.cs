@@ -264,23 +264,26 @@ namespace AccountEx.Repositories
 
                     var transactionType = sale.TransactionType == VoucherType.Sale || sale.TransactionType == VoucherType.GstSale ? VoucherType.GoodIssue : VoucherType.GoodReceive;
                     var dc = dbDcs.FirstOrDefault(p => p.Id == invoiceDc.DcId);
-                    foreach (var item in dc.DCItems)
+                    if(dc != null)
                     {
+                        foreach (var item in dc.DCItems)
+                        {
 
-                        item.QtyDelivered = 0;
-                        if (item.QtyDelivered >= item.Quantity)
-                            item.Status = (byte)AccountEx.Common.TransactionStatus.Delivered;
-                        else if (item.QtyDelivered > 0)
-                            item.Status = (byte)AccountEx.Common.TransactionStatus.PartialyDelivered;
+                            item.QtyDelivered = 0;
+                            if (item.QtyDelivered >= item.Quantity)
+                                item.Status = (byte)AccountEx.Common.TransactionStatus.Delivered;
+                            else if (item.QtyDelivered > 0)
+                                item.Status = (byte)AccountEx.Common.TransactionStatus.PartialyDelivered;
+                            else
+                                item.Status = (byte)AccountEx.Common.TransactionStatus.Pending;
+                        }
+                        if (dc.DCItems.Any(p => p.Status == (byte)AccountEx.Common.TransactionStatus.PartialyDelivered))
+                            dc.Status = (byte)AccountEx.Common.TransactionStatus.PartialyDelivered;
+                        else if (!dc.DCItems.Any(p => p.Status == (byte)AccountEx.Common.TransactionStatus.PartialyDelivered) && !dc.DCItems.Any(p => p.Status == (byte)AccountEx.Common.TransactionStatus.Pending))
+                            dc.Status = (byte)AccountEx.Common.TransactionStatus.Delivered;
                         else
-                            item.Status = (byte)AccountEx.Common.TransactionStatus.Pending;
+                            dc.Status = (byte)AccountEx.Common.TransactionStatus.Pending;
                     }
-                    if (dc.DCItems.Any(p => p.Status == (byte)AccountEx.Common.TransactionStatus.PartialyDelivered))
-                        dc.Status = (byte)AccountEx.Common.TransactionStatus.PartialyDelivered;
-                    else if (!dc.DCItems.Any(p => p.Status == (byte)AccountEx.Common.TransactionStatus.PartialyDelivered) && !dc.DCItems.Any(p => p.Status == (byte)AccountEx.Common.TransactionStatus.Pending))
-                        dc.Status = (byte)AccountEx.Common.TransactionStatus.Delivered;
-                    else
-                        dc.Status = (byte)AccountEx.Common.TransactionStatus.Pending;
 
                 }
 

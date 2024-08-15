@@ -24,7 +24,7 @@ var Stock = function () {
                 $("#tbldetail tbody tr").removeClass("hide");
             }
             else {
-                var gr = group.replace(/\s+/g, "-").toLowerCase();
+                var gr = group.replace(/\s+/g, "-").replace(/\\|\//g, "-").toLowerCase();
                 $("#tbldetail tbody tr:not(.grouptr" + gr + ")").addClass("hide");
                 $("#tbldetail tbody tr.grouptr" + gr).removeClass("hide");
             }
@@ -84,7 +84,7 @@ var Stock = function () {
                             var group = "";
                             var stockbyGroup = stockbyGroups[i];
                             if (stockbyGroup.GroupName != undefined && stockbyGroup.GroupName != null && stockbyGroup.GroupName != "null")
-                                group = stockbyGroup.GroupName;
+                                group = stockbyGroup.GroupName.replace(/\\|\//g, "-");
                             html += "<tr class='grouptr" + group.replace(/\s+/g, "-").toLowerCase() + " group-tr'><td colspan='8' class='group'>" + group + "</td></tr>";
                             var stocks = stockbyGroup.Stocks;
                             for (var i in stocks) {
