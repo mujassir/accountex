@@ -290,6 +290,7 @@ namespace AccountEx.Web.Controllers.api.Transaction
                 data.Add("<input type='text' class='OrderNo form-control hide' value='" + item.VoucherNumber + "' />" + item.VoucherNumber + "");
                 data.Add(item.AccountName);
                 data.Add(item.SalesmanName);
+                data.Add(item.PartyPONumber);
                 data.Add(item.Date.ToString(AppSetting.GridDateFormat));
                 data.Add((item.DeliveryDate.HasValue ? item.DeliveryDate.Value.ToString(AppSetting.GridDateFormat) : ""));
                 rs.aaData.Add(data);
