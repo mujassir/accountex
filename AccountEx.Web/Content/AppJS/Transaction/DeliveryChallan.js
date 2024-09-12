@@ -713,8 +713,10 @@ var DeliveryChallan = function () {
                     break;
             }
 
-
-            var tokens = Common.GetLeafAccounts(id);
+            var exids = new Array();
+            exids.push(Common.GetInt(PageSetting.Products));
+            var tokens = Common.GetAllLeafAccounts(exids);
+            
             var suggestion = new Array();
             for (var i in tokens) {
                 var token = tokens[i];
