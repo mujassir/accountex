@@ -321,6 +321,20 @@ namespace AccountEx.Web.Controllers.mvc
         {
             return View();
         }
+        public ActionResult Locations()
+        {
+            return View();
+        }
+        public ActionResult UserLocations()
+        {
+            ViewBag.Users = new UserRepository().GetAll();
+            ViewBag.Locations = new GenericRepository<Location>().GetAll();
+            return View();
+        }
+        public ActionResult Warehouses()
+        {
+            return View();
+        }
         public ActionResult UnitTypes()
         {
             return View();

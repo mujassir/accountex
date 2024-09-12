@@ -296,6 +296,7 @@
     <Compile Include="Controllers\api\Lab\ParameterController.cs" />
     <Compile Include="Controllers\api\Lab\TestController.cs" />
     <Compile Include="Controllers\api\Lab\TestCategoryController.cs" />
+    <Compile Include="Controllers\api\Manage\LocationController.cs" />
     <Compile Include="Controllers\api\Manage\TemplateController.cs" />
     <Compile Include="Controllers\api\Manage\SupplierCurrenciesController.cs" />
     <Compile Include="Controllers\api\Manage\CurrencyRateController.cs" />
@@ -309,6 +310,8 @@
     <Compile Include="Controllers\api\Config\EnginePowerController.cs" />
     <Compile Include="Controllers\api\Config\ModelController.cs" />
     <Compile Include="Controllers\api\Config\YearsController.cs" />
+    <Compile Include="Controllers\api\Manage\UserLocationController.cs" />
+    <Compile Include="Controllers\api\Manage\WarehouseController.cs" />
     <Compile Include="Controllers\api\Nexus\NexusCashPostedCaseController.cs" />
     <Compile Include="Controllers\api\Nexus\NexusBulkPostedCaseController.cs" />
     <Compile Include="Controllers\api\Nexus\NexusInvoiceController.cs" />
@@ -689,6 +692,7 @@
     <Content Include="Content\AppJS\Manage\Banks.js" />
     <Content Include="Content\AppJS\Manage\Brands.js" />
     <Content Include="Content\AppJS\Manage\Labour.js" />
+    <Content Include="Content\AppJS\Manage\Locations.js" />
     <Content Include="Content\AppJS\Manage\Templates.js" />
     <Content Include="Content\AppJS\Manage\SupplierCurrencies.js" />
     <Content Include="Content\AppJS\Manage\CurrencyRates.js" />
@@ -696,6 +700,8 @@
     <Content Include="Content\AppJS\Manage\Expences.js" />
     <Content Include="Content\AppJS\Manage\BarcodePrinting.js" />
     <Content Include="Content\AppJS\Manage\Documents.js" />
+    <Content Include="Content\AppJS\Manage\UserLocations.js" />
+    <Content Include="Content\AppJS\Manage\Warehouses.js" />
     <Content Include="Content\AppJS\Nexus\UpdateBulkPostedCases.js" />
     <Content Include="Content\AppJS\Nexus\CashPostedCases.js" />
     <Content Include="Content\AppJS\Nexus\BulkPostedCases.js" />
@@ -8390,6 +8396,9 @@
     <Content Include="Views\Reports\Labour.cshtml" />
     <Content Include="Views\Company\index.cshtml" />
     <Content Include="Views\Company\UserCompanies.cshtml" />
+    <Content Include="Views\Manage\locations.cshtml" />
+    <Content Include="Views\Manage\warehouses.cshtml" />
+    <Content Include="Views\Manage\UserLocations.cshtml" />
     <None Include="Web.config">
       <SubType>Designer</SubType>
     </None>

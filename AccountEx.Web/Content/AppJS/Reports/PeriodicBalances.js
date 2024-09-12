@@ -82,7 +82,7 @@
                                 for (var i in SubAccounts) {
                                     var SubAccount = SubAccounts[i];
                                     //if (SubAccount.BALANCE == 0) continue;
-                                    html += "<tr class='controlheads'><td colspan='7'>" + SubAccount.SUBACCOUNT + "<span class='headBalance'></span></td></tr>";
+                                    html += "<tr class='controlheads controlheads-" + SubAccount.SUBACCOUNTID + "' onclick='PeriodicBalances.toggleDetail(" + SubAccount.SUBACCOUNTID  + ")'><td colspan='7'>" + SubAccount.SUBACCOUNT + "<span class='headBalance'></span></td></tr>";
                                     var Accounts = Enumerable.From(data).Where(function (x) { return x.LEVEL == 4 && x.PARENTID == SubAccount.SUBACCOUNTID }).ToArray();
                                     var Accountsheadtotal = 0;
                                     var totalOpeningCredit = 0;
@@ -93,7 +93,6 @@
                                     html += "<tr><td>Account</td><td colspan='2' class='align-center'>OPENING BALANCE</td><td>DEBIT</td><td>CREDIT</td><td class='align-center' colspan='2'>BALANCE</td></tr>";
                                     html += "<tr><td></td> <td>DEBIT</td> <td>CREDIT</td><td></td><td></td><td class='align-right'>DEBIT</td><td class='align-right'>CREDIT</td></tr>";
                                     for (var k in Accounts) {
-
                                         var account = Accounts[k];
                                         if (account.BALANCE == 0) continue;
                                         if (account.YTDBALANCE == null)
@@ -105,7 +104,7 @@
                                         if (account.BALANCE == null)
                                             account.BALANCE = 0;
 
-                                        html += "<tr><td>" + account.ACCOUNT + "</td>";
+                                        html += "<tr class='leaf-acc-" + account.SUBACCOUNTID + " hidden'><td>" + account.ACCOUNT + "</td>";
 
                                         if (account.YTDBALANCE > 0) {
                                             html += "<td class='align-right'>" + account.YTDBALANCE.format() + "</td><td></td>";
@@ -184,6 +183,16 @@
                 },
                 error: function (e) {
                 }
+            });
+        },
+        toggleDetail(id) {
+            const headers = document.querySelectorAll(`.controlheads-${id}`);
+            headers.forEach(header => {
+                header.classList.toggle('opened');
+            });
+            const elements = document.querySelectorAll(`tr[class^="leaf-acc-${id}"]`);
+            elements.forEach(element => {
+                element.classList.toggle('hidden');
             });
         }
     };

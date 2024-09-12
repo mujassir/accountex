@@ -85,17 +85,30 @@
             text-align: right !important;
         }
 
-    tr.head-total td
-    {
-        font-weight: 800;
-        font-size: 15px;
-        font-style: italic;
-        background-color: lightsteelblue;
-    }
+        tr.head-total td
+        {
+            font-weight: 800;
+            font-size: 15px;
+            font-style: italic;
+            background-color: lightsteelblue;
+        }
 
         tr.head-total td:nth-child(2)
         {
             text-indent: 90px;
+        }
+        tr.controlheads[class^='controlheads'] td::before {
+            width: 10px;
+            display: inline-block;
+            content: '+';
+            padding-right: 5px;
+        }
+        tr.controlheads[class^='controlheads']:hover td::before {
+           color: #fff;
+        }
+        tr.controlheads[class^='controlheads'].opened td::before {
+            color: #fff;
+            content: '-';
         }
 </style>
 @section PageTitle
