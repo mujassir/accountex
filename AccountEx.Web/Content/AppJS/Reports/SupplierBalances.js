@@ -75,7 +75,11 @@ var SupplierBalances = function () {
                                 for (var j in balances) {
                                     var data = balances[j];
                                     html += "<tr data-group='" + record.GroupName + "'>";
-                                    html += "<td>" + data.Code + "</td>";
+
+                                    const maxAmountThreshold = data?.MaxAmountThreshold ?? Infinity;
+                                    const creditAmount = data?.Credit ?? 0;
+                                    html += `<td${maxAmountThreshold < creditAmount ? " class='red-flag'" : ""}>${data.Code}</td>`;
+
                                     html += " <td><a href='general-ledger?accountId=" + data.AccountId + "&fromDate=" + date1 + "&toDate=" + date2 + "'>" + data.Name + "</td>";
                                     html += "<td class='align-right'>" + (data.Debit > 0 ? data.Debit.format() : "") + "</td>";
                                     html += "<td class='align-right'>" + (data.Credit > 0 ? data.Credit.format() : "") + "</td>";

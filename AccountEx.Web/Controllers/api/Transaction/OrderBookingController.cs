@@ -34,6 +34,13 @@ namespace AccountEx.Web.Controllers.api.Transaction
                 var queryString = Request.RequestUri.ParseQueryString();
                 var type = queryString["type"];
                 var key = queryString["key"].ToLower();
+
+                int locationId = 0;
+                if (queryString["locationId"] != null)
+                {
+                    int.TryParse(queryString["locationId"], out locationId);
+                }
+
                 var bookNo = Numerics.GetInt(queryString["bookNo"]);
                 var vouchertype = (VoucherType)Convert.ToByte(type);
                 //var data = TransactionManager.GetVocuherDetail(voucher, vouchertype, queryString["key"]);
@@ -42,15 +49,15 @@ namespace AccountEx.Web.Controllers.api.Transaction
                 var currRepo = new CurrencyRepository(orderbookingRepo);
                 if (voucherNumber == 0) key = "nextvouchernumber";
                 if (key == "nextvouchernumber")
-                    voucherNumber = orderbookingRepo.GetNextVoucherNumber(vouchertype);
+                    voucherNumber = orderbookingRepo.GetNextVoucherNumber(vouchertype, locationId);
 
                 if (key == "byorderno")
                 {
                     key = "same";
-                    voucherNumber = orderbookingRepo.GetVoucherNoByBookNumber(bookNo, vouchertype);
+                    voucherNumber = orderbookingRepo.GetVoucherNoByBookNumber(bookNo, vouchertype, locationId);
                 }
 
-                var data = orderbookingRepo.GetByVoucherNumber(voucherNumber, vouchertype, key, out next, out previous);
+                var data = orderbookingRepo.GetByVoucherNumber(voucherNumber, vouchertype, key, locationId, out next, out previous);
                 if (data != null)
                     currency = currRepo.GetCurrencyById(data.CurrencyId);
                 response = new ApiResponse
@@ -162,7 +169,7 @@ namespace AccountEx.Web.Controllers.api.Transaction
                 var jobORRepo = new JobOrderRequisitionRepository(orderbookingRepo);
 
                 var goodsNoteType = input.TransactionType == VoucherType.SaleOrder ? VoucherType.GoodIssue : VoucherType.GoodReceive;
-                var record = orderbookingRepo.GetByVoucherNumber(input.VoucherNumber, input.TransactionType, input.Id);
+                var record = orderbookingRepo.GetByVoucherNumber(input.VoucherNumber, input.TransactionType, input.Id, input.AuthLocationId);
                 if (!SiteContext.Current.User.IsAdmin)
                 {
                     if (input.Id == 0)

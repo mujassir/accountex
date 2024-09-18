@@ -570,9 +570,16 @@ namespace AccountEx.Web.Controllers.mvc
             setting.Add(new SettingExtra() { Key = "Suppliers", Value = SettingManager.SupplierHeadId + "" });
             setting.Add(new SettingExtra() { Key = "Products", Value = SettingManager.ProductHeadId + "" });
             setting.Add(new SettingExtra() { Key = "BarCodeEnabled", Value = SettingManager.BarCodeEnabled });
+            setting.Add(new SettingExtra() { Key = "IsMultipleLocationEnabled", Value = SettingManager.IsMultipleLocationEnabled });
+            setting.Add(new SettingExtra() { Key = "RequiredPurchaseRequisition", Value = SettingManager.IsRequiredPurchaseRequisition });
             //if (SettingManager.BarCodeEnabled)
             setting.Add(new SettingExtra() { Key = "AccountDetails", Value = new AccountDetailRepository().GetAll<OrderDcEx>((byte)AccountDetailFormType.Products) });
             ViewBag.FormSetting = JsonConvert.SerializeObject(setting.ToList());
+            ViewBag.Locations = new GenericRepository<UserLocation>().AsQueryable()
+                .Where(x => x.UserId == (int)SiteContext.Current.User.Id)
+                .Include(x => x.Location)
+                .Select(x => x.Location)
+                .ToList();
             return View();
         }
         public ActionResult Adjustment()
@@ -1157,10 +1164,17 @@ namespace AccountEx.Web.Controllers.mvc
             // setting.ForEach(p => p.VoucherType = p.VoucherType.ToLower());
             var setting = new List<SettingExtra>();
             setting.Add(new SettingExtra() { Key = "Products", Value = SettingManager.ProductHeadId });
+            setting.Add(new SettingExtra() { Key = "isMultipleLocationEnabled", Value = SettingManager.IsMultipleLocationEnabled });
             //setting.Add(new SettingExtra() { Key = "AccountDetails", Value = new AccountDetailRepository().GetAll().Where(p => p.Code != null) });
             setting.Add(new SettingExtra() { Key = "AccountDetails", Value = new AccountDetailRepository().GetAll<RequisitionEx>((byte)AccountDetailFormType.Products) });
             setting.Add(new SettingExtra() { Key = "BarCodeEnabled", Value = SettingManager.BarCodeEnabled });
+            setting.Add(new SettingExtra() { Key = "ProductHeadId", Value = new AccountRepository().GetAccountTree(SettingManager.ProductHeadId).FirstOrDefault()?.Id ?? 0 });
             ViewBag.FormSetting = JsonConvert.SerializeObject(setting);
+            ViewBag.Locations = new GenericRepository<UserLocation>().AsQueryable()
+                .Where(x => x.UserId == (int)SiteContext.Current.User.Id)
+                .Include(x => x.Location)
+                .Select(x => x.Location)
+                .ToList();
             return View();
         }
         //

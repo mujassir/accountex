@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using AccountEx.BussinessLogic;
+using AccountEx.CodeFirst.Models;
 using AccountEx.Common;
+using AccountEx.Repositories;
 
 namespace AccountEx.Web.Controllers.api.Manage
 {
@@ -15,11 +18,44 @@ namespace AccountEx.Web.Controllers.api.Manage
             AccountDetailFormId = (int)AccountDetailFormType.Suppliers;
             HeadAccountId = SettingManager.SupplierHeadId;
         }
+        public override ApiResponse Get(int id)
+        {
+            ApiResponse response;
+            try
+            {
+                var item = Repository.GetById(id);
+                var LocationName = "";
+                if (item.AuthLocationId != null)
+                {
+                    LocationName = new GenericRepository<Location>()
+                        .GetAll(x => x.Id == item.AuthLocationId)
+                        .Select(x => x.Name)
+                        .FirstOrDefault();
+                }
+                IDictionary<string, object> newObj = new ExpandoObject();
+                foreach (var property in item.GetType().GetProperties())
+                {
+                    newObj[property.Name] = property.GetValue(item);
+                }
+                newObj["AuthLocationName"] = LocationName;
 
+                response = new ApiResponse
+                {
+                    Success = true,
+                    Data = newObj
+
+                };
+            }
+            catch (Exception ex)
+            {
+                response = new ApiResponse { Success = false, Error = ErrorManager.Log(ex) }; ;
+            }
+            return response;
+        }
         protected override JQueryResponse GetDataTable()
         {
             var queryString = Request.RequestUri.ParseQueryString();
-            var coloumns = new[] { "Id", "Code", "Name", "BankName", "NTN", "GST", "ContactNumber", "ContactPerson", "Email", "" };
+            var coloumns = new[] { "Id", "Code", "Name", "BankName", "NTN", "GST", "ContactNumber", "ContactPerson", "Email", "LocationId", "MaxAmountThreshold", "" };
             var echo = Convert.ToInt32(queryString["sEcho"]);
             var displayLength = Convert.ToInt32(queryString["iDisplayLength"]);
             var colIndex = Convert.ToInt32(queryString["iSortCol_0"]);
@@ -52,10 +88,16 @@ namespace AccountEx.Web.Controllers.api.Manage
             var sb = new StringBuilder();
             sb.Clear();
 
+            var locations = GetLocations();
             var sr = 0;
             var rs = new JQueryResponse();
             foreach (var item in orderedList.Skip(displayStart).Take(displayLength))
             {
+                var locationName = "";
+                if (item.AuthLocationId != null)
+                {
+                    locationName = locations.FirstOrDefault(x => x.Id == item.AuthLocationId)?.Name;
+                }
                 var data = new List<string>();
                 if (type == "report") data.Add((++sr) + "");
                 //else data.Add("<td><input type='checkbox' class='checkboxes' value='1' /></td>");
@@ -66,7 +108,9 @@ namespace AccountEx.Web.Controllers.api.Manage
                 data.Add(item.GST);
                 data.Add(item.ContactNumber);
                 data.Add(item.ContactPerson);
-                data.Add(item.Email);
+                data.Add(item.Email); 
+                data.Add(locationName);
+                data.Add(item.MaxAmountThreshold.ToString());
                 var editIcon = "<i class='fa fa-edit' onclick=\"Suppliers.Edit(" + item.Id + ")\" title='Edit' ></i>";
                 var deleteIcon = "<i class='fa fa-trash-o' onclick=\"Suppliers.Delete(" + item.Id + ")\" title='Delete' ></i>";
                 var icons = "<span class='action'>";
@@ -80,6 +124,11 @@ namespace AccountEx.Web.Controllers.api.Manage
             rs.iTotalRecords = totalRecords;
             rs.iTotalDisplayRecords = totalDisplayRecords;
             return rs;
+        }
+        private IEnumerable<Location> GetLocations()
+        {
+            var locationRepo = new GenericRepository<Location>();
+            return locationRepo.GetAll();
         }
     }
 }

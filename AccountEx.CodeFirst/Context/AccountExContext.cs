@@ -102,6 +102,7 @@ namespace AccountEx.CodeFirst.Context
         public DbSet<WheatPurchaseItem> WheatPurchaseItems { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<UserCompany> UserCompanies { get; set; }
+        public DbSet<UserLocation> UserLocations { get; set; }
         public DbSet<RoleAccess> RoleAccesses { get; set; }
         public DbSet<RoleAction> RoleActions { get; set; }
         public DbSet<Transporter> Transporters { get; set; }
@@ -116,6 +117,8 @@ namespace AccountEx.CodeFirst.Context
         public DbSet<DeliveryChallan> DeliveryChallans { get; set; }
 
         public DbSet<Company> Companies { get; set; }
+        public DbSet<Location> Locations { get; set; }
+        public DbSet<WareHouse> WareHouses { get; set; }
         public DbSet<ServiceItem> ServiceItems { get; set; }
         public DbSet<SaleServicesItem> SaleServicesItems { get; set; }
         public DbSet<SystemLog> SystemLogs { get; set; }
@@ -286,6 +289,11 @@ namespace AccountEx.CodeFirst.Context
                 .HasRequired(uc => uc.Company) 
                 .WithMany()
                 .HasForeignKey(uc => uc.AuthCompanyId);
+
+            modelBuilder.Entity<UserLocation>()
+                .HasRequired(uc => uc.Location) 
+                .WithMany()
+                .HasForeignKey(uc => uc.AuthLocationId);
 
 
 

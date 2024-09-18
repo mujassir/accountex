@@ -27,5 +27,8 @@ namespace AccountEx.CodeFirst.Models
         public string ArticleNo { get; set; }
        
         public string Unit { get; set; }
+        public byte Status { get; set; }
+        public decimal QuantityDelivered { get; set; }
+        public Decimal? StockBalance { get; set; }
     }
 }

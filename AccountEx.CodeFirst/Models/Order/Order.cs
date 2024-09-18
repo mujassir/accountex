@@ -27,6 +27,7 @@ namespace AccountEx.CodeFirst.Models
         public string AccountTitle { get; set; }
         public int InvoiceNumber { get; set; }
         public int VoucherNumber { get; set; }
+        public string VoucherCode { get; set; }
         public Nullable<int> ReceivingVoucher { get; set; }
         public string AccountCode { get; set; }
         public string AccountName { get; set; }
@@ -90,6 +91,7 @@ namespace AccountEx.CodeFirst.Models
         public string AirFilterCondition { get; set; }
         public string OilCondition { get; set; }
         public string Condition { get; set; }
+        public int AuthLocationId { get; set; }
 
         public virtual ICollection<OrderItem> OrderItems { get; set; }
         public virtual ICollection<OrderExpenseItem> OrderExpenseItems { get; set; }

@@ -1,8 +1,9 @@
 ﻿@{
     Layout = "_Layout.cshtml";
-    ViewBag.Title = "Supplier Balances";  
+    ViewBag.Title = "Supplier Balances";
 }
 @using AccountEx.Common;
+<link href="~/Content/site-v1.css" rel="stylesheet" />
 <style type="text/css">
     .report-table tfoot {
         font-weight: bold;
@@ -18,7 +19,8 @@
 @section PageTitle
 {
 
-    <h1 class="font-green-sharp bold">Supplier Balances
+    <h1 class="font-green-sharp bold">
+        Supplier Balances
         <small id="lblReportDate" class="pull-right small visible-print">Date: 24/10/2014</small>
     </h1>
 }
@@ -46,7 +48,7 @@
                             <label class="col-md-2 control-label" for="prefix">From Date</label>
                             <div class="col-md-3">
                                 <div class="input-group input-medium">
-                                    <input class="date-picker form-control date-picker" type="text" id="FromDate" data-validate="true" data-required="required" value="@SiteContext.Current.Fiscal.FromDate.ToString(AppSetting.DateFormat)" data-message="@Resources.Resource.Date"  data-fiscal-date="true" >
+                                    <input class="date-picker form-control date-picker" type="text" id="FromDate" data-validate="true" data-required="required" value="@SiteContext.Current.Fiscal.FromDate.ToString(AppSetting.DateFormat)" data-message="@Resources.Resource.Date" data-fiscal-date="true">
                                     <span class="input-group-btn date-icon">
                                         <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
                                     </span>
@@ -55,7 +57,7 @@
                             <label class="col-md-2 control-label" for="prefix">To Date</label>
                             <div class="col-md-3">
                                 <div class="input-group input-medium">
-                                    <input class="date-picker form-control date-picker" type="text" id="ToDate" data-validate="true" data-required="required" value="@SiteContext.Current.Fiscal.ToDate.ToString(AppSetting.DateFormat)" data-message="@Resources.Resource.Date"  data-fiscal-date="true" >
+                                    <input class="date-picker form-control date-picker" type="text" id="ToDate" data-validate="true" data-required="required" value="@SiteContext.Current.Fiscal.ToDate.ToString(AppSetting.DateFormat)" data-message="@Resources.Resource.Date" data-fiscal-date="true">
                                     <span class="input-group-btn date-icon">
                                         <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
                                     </span>
@@ -102,7 +104,7 @@
                     <a href="javascript:;" class="remove"></a>
                 </div>
                 <div class="tools pull-right">
-                    @{ Html.RenderPartial("_Export_Button");  }
+                    @{ Html.RenderPartial("_Export_Button"); }
                 </div>
             </div>
             <div class="portlet-body report-div">

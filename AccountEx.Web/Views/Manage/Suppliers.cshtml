@@ -1,8 +1,9 @@
 ﻿
 @using AccountEx.Common;
 @using AccountEx.BussinessLogic;
+@using AccountEx.CodeFirst.Models
 @{
-    ViewBag.Title = "Suppliers";   
+    ViewBag.Title = "Suppliers";
 }
 @section PageTitle
 {
@@ -32,8 +33,8 @@
         <div class="tab-content " data-save="save">
             <div id="CustomerInfo" class="tab-pane active">
                 <input type="text" id="Id" class="hide" />.
-                  <input type="text" id="TempCode" class="hide" />
-                
+                <input type="text" id="TempCode" class="hide" />
+
                 <div class="portlet-body">
                     <div class="row" id="div-formPartyInfo">
                         <div class="col-md-12 col-sm-12">
@@ -44,7 +45,7 @@
                                         <div class="form-body">
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    @Html.Partial("_ParentAccount", new ViewDataDictionary { { "HeadId", SettingManager.SupplierHeadId }, { "Labelcolspan", 4 }, { "Divcolspan",6 } })
+                                                    @Html.Partial("_ParentAccount", new ViewDataDictionary { { "HeadId", SettingManager.SupplierHeadId }, { "Labelcolspan", 4 }, { "Divcolspan", 6 } })
                                                     <div class="form-group">
                                                         <label class="col-md-4 control-label" for="prefix">Account Code</label>
                                                         <div class="col-md-2">
@@ -60,7 +61,7 @@
                                                     <div class="form-group">
                                                         <label class="col-md-4 control-label" for="prefix">Contact Number</label>
                                                         <div class="col-md-6">
-                                                            <input type="text" class="form-control " id="ContactNumber" placeholder="Contact Number" data-validate="true" data-message="Contact Number is required" >
+                                                            <input type="text" class="form-control " id="ContactNumber" placeholder="Contact Number" data-validate="true" data-message="Contact Number is required">
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
@@ -534,16 +535,36 @@
 
                                                         <label class="col-md-4 control-label" for="prefix">Contact Person</label>
                                                         <div class="col-md-6">
-                                                            <input type="text" class="form-control " id="ContactPerson" placeholder="Contact Person" data-validate="true" data-message="Contact Person is required" >
+                                                            <input type="text" class="form-control " id="ContactPerson" placeholder="Contact Person" data-validate="true" data-message="Contact Person is required">
                                                         </div>
 
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="col-md-4 control-label" for="prefix">Contact Person Number</label>
                                                         <div class="col-md-6">
-                                                            <input type="text" class="form-control " id="ContactPersonNumber" placeholder="Contact Number" data-validate="true" data-message="Contact Number is required" >
+                                                            <input type="text" class="form-control " id="ContactPersonNumber" placeholder="Contact Number" data-validate="true" data-message="Contact Number is required">
                                                         </div>
 
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-md-4 control-label" for="prefix">Max Amount Threshold</label>
+                                                        <div class="col-md-6">
+                                                            <input type="text" class="form-control " id="MaxAmountThreshold" placeholder="Max Amount Threshold">
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-md-4 control-label" for="prefix">Location</label>
+                                                        <div class="col-md-6">
+                                                            <select id="AuthLocationName" class="form-control select2" data-placeholder="Select Location" data-trackchange="true">
+                                                                <option></option>
+                                                                @foreach (var item in (List<Location>)ViewBag.Locations)
+                                                                {
+                                                                    <option data-custom="@item.Id">@item.Name</option>
+                                                                }
+                                                            </select>
+                                                            <input type="text" class="hide" id="AuthLocationId" />
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
@@ -695,6 +716,8 @@
                             <th>Phone</th>
                             <th>Contact Person</th>
                             <th>Email</th>
+                            <th>Location</th>
+                            <th>Max Amount Threshold </th>
                             <th style="width: 75px;" class="no-sort"></th>
                         </tr>
                     </thead>
