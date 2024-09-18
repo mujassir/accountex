@@ -27,12 +27,17 @@ namespace AccountEx.Web.Controllers.api.Transaction
                 var voucherNumber = id;
                 var queryString = Request.RequestUri.ParseQueryString();
                 var key = queryString["key"].ToLower();
+                int locationId = 0;
+                if (queryString["locationId"] != null)
+                {
+                    int.TryParse(queryString["locationId"], out locationId);
+                }
                 //var data = TransactionManager.GetVocuherDetail(voucher, vouchertype, queryString["key"]);
                 bool next, previous;
                 if (voucherNumber == 0) key = "nextvouchernumber";
                 if (key == "nextvouchernumber")
-                    voucherNumber = repo.GetNextVoucherNumber();
-                var data = repo.GetByVoucherNumber(voucherNumber, key, out next, out previous);
+                    voucherNumber = repo.GetNextVoucherNumber(locationId);
+                var data = repo.GetByVoucherNumber(voucherNumber, key, locationId, out next, out previous);
                 response = new ApiResponse
                 {
                     Success = true,
@@ -86,10 +91,15 @@ namespace AccountEx.Web.Controllers.api.Transaction
             try
             {
                 var queryString = Request.RequestUri.ParseQueryString();
-                var err = ServerValidateDelete(id);
+                int locationId = 0;
+                if (queryString["locationId"] != null)
+                {
+                    int.TryParse(queryString["locationId"], out locationId);
+                }
+                var err = ServerValidateDelete(id, locationId);
                 if (err == "")
                 {
-                    new StockRequisitionRepository().DeleteByVoucherNumber(id);
+                    new StockRequisitionRepository().DeleteByVoucherNumber(id, locationId);
                     response = new ApiResponse { Success = true };
                 }
                 else
@@ -113,7 +123,7 @@ namespace AccountEx.Web.Controllers.api.Transaction
             try
             {
                 var repo = new StockRequisitionRepository();
-                var record = repo.CheckIsVoucherNoExist(input.VoucherNumber, input.Id);
+                var record = repo.CheckIsVoucherNoExist(input.VoucherNumber, input.Id, input.AuthLocationId);
                 foreach (var item in input.StockRequisitionItems.Where(p => p.ItemId == 0))
                 {
                     err += item.ItemCode + "-" + item.ItemName + " is no valid.,";
@@ -134,7 +144,7 @@ namespace AccountEx.Web.Controllers.api.Transaction
                 {
                     err += "Voucher no already exist.,";
                 }
-                record = repo.CheckIdInvoiceNoExist(input.InvoiceNumber, input.Id);
+                record = repo.CheckIdInvoiceNoExist(input.InvoiceNumber, input.Id, input.AuthLocationId);
 
                 if (record)
                 {
@@ -168,7 +178,7 @@ namespace AccountEx.Web.Controllers.api.Transaction
             err = err.Trim(',');
             return err;
         }
-        private string ServerValidateDelete(int id)
+        private string ServerValidateDelete(int id, int locationId)
         {
             var err = ",";
             try
@@ -176,7 +186,7 @@ namespace AccountEx.Web.Controllers.api.Transaction
                 //here id is voucher no
                 var repo = new StockRequisitionRepository();
                 var orderbookingrepo = new OrderBookingRepository();
-                var stockRequestion = repo.GetByVoucherNo(id);
+                var stockRequestion = repo.GetByVoucherNo(id, locationId);
 
                 if (stockRequestion != null)
                 {
@@ -197,7 +207,7 @@ namespace AccountEx.Web.Controllers.api.Transaction
         protected JQueryResponse GetDataTable()
         {
             var queryString = Request.RequestUri.ParseQueryString();
-            var coloumns = new[] { "SRN No", "Date" };
+            var coloumns = new[] { "SRN No", "Date", "AuthLocationId" };
             var echo = Convert.ToInt32(queryString["sEcho"]);
             var displayLength = Convert.ToInt32(queryString["iDisplayLength"]);
             var colIndex = Convert.ToInt32(queryString["iSortCol_0"]);
@@ -228,7 +238,7 @@ namespace AccountEx.Web.Controllers.api.Transaction
             foreach (var item in orderedList)
             {
                 var data = new List<string>();
-                data.Add("<input type='text' class='VoucherNumber form-control hide' value='" + item.VoucherNumber + "' />" + item.VoucherNumber + "");
+                data.Add("<input type='text' class='VoucherNumber form-control hide' value='" + item.VoucherNumber + "' />" + (item.VoucherCode != null ? item.VoucherCode + "-" : "") + item.VoucherNumber + "");
                 //data.Add(item.AccountName);
                 //data.Add(item.SalesmanName);
                 data.Add(item.Date.ToString(AppSetting.GridDateFormat));

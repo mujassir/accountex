@@ -6836,6 +6836,7 @@
     <Content Include="Content\plugins\datatables\images\sort_both.png" />
     <Content Include="Content\plugins\datatables\images\sort_desc.png" />
     <Content Include="Content\plugins\datatables\images\sort_desc_disabled.png" />
+    <Content Include="Content\site-v1.css" />
     <Content Include="Content\StockRequisition.css" />
     <Content Include="Content\ReportPrint1.css" />
     <Content Include="Content\pharmaciepurchase.css" />

@@ -1,0 +1,21 @@
+﻿.red-flag {
+    background: #ff000026;
+    color: #a70000;
+}
+
+.select2.input-small .select2-choice {
+    border-color: #c2cad8 !important;
+    height: 28px !important;
+    font-size: 13px !important;
+    line-height: 22px !important;
+    padding-left: 5px;
+}
+
+.select2.input-small .select2-choice .select2-arrow b {
+    background-position: 0 0;
+    font-size: 13px !important;
+}
+
+.select2.input-small .select2-result {
+    font-size: 13px !important;
+}

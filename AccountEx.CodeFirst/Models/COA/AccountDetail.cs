@@ -157,6 +157,8 @@ namespace AccountEx.CodeFirst.Models
         public Nullable<bool> IsVehicleRequired { get; set; }
         public Nullable<int> CurrencyId { get; set; }
         public bool IsForex { get; set; }
+        public int AuthLocationId { get; set; }
+        public decimal? MaxAmountThreshold { get; set; }
 
     }
 }
