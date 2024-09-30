@@ -90,7 +90,7 @@ var Stock = function () {
                             for (var i in stocks) {
                                 var product = stocks[i];
                                 html += "<tr class='grouptr" + group.replace(/\s+/g, "-").toLowerCase() + "'>";
-                                html += "<td>" + product.Code + "</td>";
+                                html += `<td${product.MinimumStock > product.Balance ? " class='red-flag'" : ""}>${product.Code}</td>`;
                                 html += "<td>" + product.Name + "</td>";
                                 if (typeof Url.format != 'undefined' && Url.format != null && Url.format == "1") {
                                     html += "<td>" + (product.ArticleNo != null ? product.ArticleNo : "") + "</td>";

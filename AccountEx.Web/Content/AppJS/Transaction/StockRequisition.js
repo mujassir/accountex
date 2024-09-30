@@ -319,6 +319,9 @@ var StockRequisition = function () {
             var d = res.Data.Order;
             if (d == null)
                 return;
+            console.log(d)
+            if (d.VoucherCode)
+                d.VoucherCode = d.VoucherCode + "-"
             Common.MapDataWithPrefixF(d, "#div-report", "lbl", "html");
             var instruction = $("#Instructions").val().replace(/\r?\n/g, '<br />');
             $("#lblInstructions").html(instruction);
@@ -418,7 +421,7 @@ var StockRequisition = function () {
                         $this.AddItem();
                         $this.LoadReportData(res);
 
-                        if (d)
+                        if (d && d.AuthLocationId > 0)
                             $(`#AuthLocationName`).select2("val", d.AuthLocationId)
                     } else {
                         Common.ShowError(res.Error);

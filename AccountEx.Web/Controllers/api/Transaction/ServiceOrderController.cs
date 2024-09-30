@@ -27,6 +27,11 @@ namespace AccountEx.Web.Controllers.api.Transaction
                 var queryString = Request.RequestUri.ParseQueryString();
                 var type = Convert.ToByte(queryString["type"]);
                 var key = queryString["key"].ToLower();
+                int locationId = 0;
+                if (queryString["locationId"] != null)
+                {
+                    int.TryParse(queryString["locationId"], out locationId);
+                }
                 //var data = TransactionManager.GetVocuherDetail(voucher, vouchertype, queryString["key"]);
                 bool next, previous;
                 var orderBookingRepo = new OrderBookingRepository();
@@ -35,8 +40,8 @@ namespace AccountEx.Web.Controllers.api.Transaction
 
                 if (voucherNumber == 0) key = "nextvouchernumber";
                 if (key == "nextvouchernumber")
-                    voucherNumber = orderBookingRepo.GetNextVoucherNumber(vouchertype);
-                var data = orderBookingRepo.GetByVoucherNumber(voucherNumber, vouchertype, key, out next, out previous);
+                    voucherNumber = orderBookingRepo.GetNextVoucherNumber(vouchertype, locationId);
+                var data = orderBookingRepo.GetByVoucherNumber(voucherNumber, vouchertype, key, locationId, out next, out previous);
                 var dcs = new object();
                 var Avgbalances = new object();
                 if (data != null)

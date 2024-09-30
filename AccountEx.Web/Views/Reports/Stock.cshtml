@@ -3,6 +3,7 @@
     ViewBag.Title = "Stock";
 }
 @using AccountEx.Common;
+<link href="~/Content/site-v1.css" rel="stylesheet" />
 <style type="text/css">
     #tbldetail tfoot {
         font-weight: bold;
@@ -151,7 +152,7 @@
                     </div>
                 </div>
                 <div class="tools pull-right">
-                    @{ Html.RenderPartial("_Export_Button");  }
+                    @{ Html.RenderPartial("_Export_Button"); }
                 </div>
             </div>
             <div class="portlet-body">

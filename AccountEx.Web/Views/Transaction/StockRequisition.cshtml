@@ -83,14 +83,15 @@ else
                                 // Check if any location is marked as default
                                 var locations = (List<Location>)ViewBag.Locations;
                                 bool hasDefault = locations.Any(x => x.IsDefault);
-                                int firstItemId = (locations.First()).Id;
+                                var firstLocation = locations.FirstOrDefault();
+                                int firstItemId = firstLocation != null ? firstLocation.Id : 0;
                             }
                             @if (locations.Count > 0 && SettingManager.IsMultipleLocationEnabled)
                             {
                                 <div class="form-group">
                                     <label class="col-md-2 control-label" for="prefix">Location</label>
                                     <div class="col-md-1">
-                                        <select id="AuthLocationName" class="form-control select2 input-small" data-clear="false" data-placeholder="Select Location" data-trackchange="true">
+                                        <select id="AuthLocationName" class="form-control select2 input-small" data-clear="false" show-clear="false" data-placeholder="Select Location" data-trackchange="true">
                                             <option></option>
                                             @foreach (var item in locations)
                                             {
@@ -146,7 +147,7 @@ else
                                                 <th style="width: 15%;">Code</th>
                                                 <th style="width: 35%;">Items</th>
                                                 <th style="width: 20%;">ArticleNo</th>
-                                                <th style="width: 10%;">Stock</th>
+                                                <th style="width: 11%;">Avail. Qty</th>
                                                 <th style="width: 15%;" colspan="2" style="text-align: center">Unit</th>
 
                                                 @*<th>Quantity</th>*@
@@ -384,7 +385,7 @@ else
                         <tr>
                             <td class="font-size"><b>SRN # :</b></td>
                             <td>
-                                <span id="lblVoucherNumber"></span>
+                                <span id="lblVoucherCode"></span><span id="lblVoucherNumber"></span>
                             </td>
                         </tr>
                     </table>

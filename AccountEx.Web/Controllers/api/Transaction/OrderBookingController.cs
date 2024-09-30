@@ -212,13 +212,13 @@ namespace AccountEx.Web.Controllers.api.Transaction
                 {
                     err += "Date should be within current fiscal year.,";
                 }
-                record = orderbookingRepo.GetByBookNumber(input.InvoiceNumber, input.TransactionType, input.Id);
+                record = orderbookingRepo.GetByBookNumber(input.InvoiceNumber, input.TransactionType, input.Id, input.AuthLocationId);
 
                 if (record != null)
                 {
                     err += "Book no already exist.,";
                 }
-                record = orderbookingRepo.GetBySRN(input.VoucherNumber, VoucherType.SaleOrder, input.Id);
+                record = orderbookingRepo.GetBySRN(input.VoucherNumber, VoucherType.SaleOrder, input.Id, input.AuthLocationId);
                 if (input.TransactionType == VoucherType.PurchaseOrder)
                 {
                     if (record != null)

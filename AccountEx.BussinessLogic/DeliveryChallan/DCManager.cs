@@ -312,7 +312,7 @@ namespace AccountEx.BussinessLogic
 
                 if (input.OrderNo > 0)
                 {
-                    var order = orderbookingrepo.GetByVoucherNumber(input.OrderNo, type);
+                    var order = orderbookingrepo.GetByVoucherNumber(input.OrderNo, type, 0);
                     if (order == null)
                     {
                         err += "Invalid order no.,";
@@ -381,7 +381,7 @@ namespace AccountEx.BussinessLogic
                     }
                     if (input.OrderNo > 0)
                     {
-                        var order = orderbookingrepo.GetByVoucherNumber(input.OrderNo, type);
+                        var order = orderbookingrepo.GetByVoucherNumber(input.OrderNo, type, 0);
                         if (order != null && order.Status == (byte)TransactionStatus.Invoiced)
                         {
                             err += "Order is already processed and goods note can't be updated.,";

@@ -139,10 +139,10 @@ namespace AccountEx.Repositories
                 scope.Complete();
             }
         }
-        public void Update(int srnno)
+        public void Update(int srnno, int locationId)
         {
 
-            var srn = FiscalCollection.FirstOrDefault(p => p.VoucherNumber == srnno);
+            var srn = FiscalCollection.FirstOrDefault(p => p.VoucherNumber == srnno && p.AuthLocationId == locationId);
             if (srn != null)
             {
                 srn.Status = (byte)AccountEx.Common.TransactionStatus.Delivered;

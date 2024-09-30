@@ -124,8 +124,13 @@ namespace AccountEx.Web.Controllers.api.Transaction
                 var dcRepo = new DCItemRepository(orderBookingRepo);
 
                 var queryString = Request.RequestUri.ParseQueryString();
+                int locationId = 0;
+                if (queryString["locationId"] != null)
+                {
+                    int.TryParse(queryString["locationId"], out locationId);
+                }
                 var rawmaterial = dcRepo.GetByOrderNo(orderno, type);
-                var order = orderBookingRepo.GetByVoucherNumber(orderno, VoucherType.SaleOrder);
+                var order = orderBookingRepo.GetByVoucherNumber(orderno, VoucherType.SaleOrder, locationId);
                 response = new ApiResponse
                 {
                     Success = true,

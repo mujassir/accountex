@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Text;
 using System.Web.Http;
 using AccountEx.BussinessLogic;
+using Elmah.ContentSyndication;
 
 namespace AccountEx.Web.Controllers.api.Transaction
 {
@@ -27,6 +28,7 @@ namespace AccountEx.Web.Controllers.api.Transaction
                 var voucherNumber = id;
                 var queryString = Request.RequestUri.ParseQueryString();
                 var key = queryString["key"].ToLower();
+                var voucher = queryString["voucher"];
                 int locationId = 0;
                 if (queryString["locationId"] != null)
                 {
@@ -190,7 +192,7 @@ namespace AccountEx.Web.Controllers.api.Transaction
 
                 if (stockRequestion != null)
                 {
-                    var order = orderbookingrepo.GetBySRN(stockRequestion.VoucherNumber, VoucherType.PurchaseOrder);
+                    var order = orderbookingrepo.GetBySRN(stockRequestion.VoucherNumber, VoucherType.PurchaseOrder, stockRequestion.AuthLocationId);
                     if (order != null)
                     {
                         err += "SRN is used in order and can't be deleted.(Order no:" + order.VoucherNumber + ").,";
@@ -238,7 +240,8 @@ namespace AccountEx.Web.Controllers.api.Transaction
             foreach (var item in orderedList)
             {
                 var data = new List<string>();
-                data.Add("<input type='text' class='VoucherNumber form-control hide' value='" + item.VoucherNumber + "' />" + (item.VoucherCode != null ? item.VoucherCode + "-" : "") + item.VoucherNumber + "");
+                var code = (item.VoucherCode != null ? item.VoucherCode + "-" : "") + item.VoucherNumber;
+                data.Add("<input type='text' class='VoucherNumber form-control hide' value='" + code + "' data-location-Id='" + item.AuthLocationId +"' data-location-code='" + item.VoucherCode +"' />" + code + "");
                 //data.Add(item.AccountName);
                 //data.Add(item.SalesmanName);
                 data.Add(item.Date.ToString(AppSetting.GridDateFormat));

@@ -102,7 +102,7 @@ namespace AccountEx.Repositories
             if (wp != null)
             {
                 ObjectSet.Remove(wp);
-                new OrderBookingRepository().Update(wp.OrderNo, VoucherType.SaleOrder, (byte)TransactionStatus.PendingProduction);
+                new OrderBookingRepository().Update(wp.OrderNo, VoucherType.SaleOrder, (byte)TransactionStatus.PendingProduction, 0);
                 Db.SaveChanges();
             }
         }
