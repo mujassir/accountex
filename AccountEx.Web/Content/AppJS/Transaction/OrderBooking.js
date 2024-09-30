@@ -826,7 +826,11 @@ var OrderBooking = function () {
                 $("#DCNo,#lbldc,#lblorderno,#OrderNo").addClass("hide");
                 $("#data-srn-no").removeClass("hide");
             }
-            requiredRequisition = PageSetting?.RequiredPurchaseRequisition || false;
+            if (this.GetType() == "purchaseorder") {
+                requiredRequisition = PageSetting?.RequiredPurchaseRequisition;
+            } else if (this.GetType() == "saleorder") {
+                requiredRequisition = PageSetting?.RequiredSaleRequisition;
+            }
             this.LoadAccounts();
 
         },

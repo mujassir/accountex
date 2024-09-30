@@ -572,6 +572,7 @@ namespace AccountEx.Web.Controllers.mvc
             setting.Add(new SettingExtra() { Key = "BarCodeEnabled", Value = SettingManager.BarCodeEnabled });
             setting.Add(new SettingExtra() { Key = "IsMultipleLocationEnabled", Value = SettingManager.IsMultipleLocationEnabled });
             setting.Add(new SettingExtra() { Key = "RequiredPurchaseRequisition", Value = SettingManager.IsRequiredPurchaseRequisition });
+            setting.Add(new SettingExtra() { Key = "RequiredSaleRequisition", Value = SettingManager.IsRequiredSaleRequisition });
             //if (SettingManager.BarCodeEnabled)
             setting.Add(new SettingExtra() { Key = "AccountDetails", Value = new AccountDetailRepository().GetAll<OrderDcEx>((byte)AccountDetailFormType.Products) });
             ViewBag.FormSetting = JsonConvert.SerializeObject(setting.ToList());
