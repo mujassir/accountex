@@ -184,7 +184,7 @@ namespace AccountEx.Web.Controllers.api.Transaction
             {
                 var repo = new DeliveryChallanRepository();
                 var wipRepo = new WorkInProgressRepository();
-                var record = repo.GetByVoucherNumber(input.VoucherNumber, input.TransactionType, input.Id);
+                var record = repo.GetByVoucherNumber(input.VoucherNumber, input.TransactionType, input.Id, 0);
                 if (record != null)
                 {
                     err += "Voucher no already exist.,";

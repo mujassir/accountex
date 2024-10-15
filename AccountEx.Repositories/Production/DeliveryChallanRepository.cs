@@ -25,9 +25,9 @@ namespace AccountEx.Repositories
         {
             return FiscalCollection.FirstOrDefault(p => p.OrderId == orderId);
         }
-        public List<DeliveryChallan> GetByOrderNumber(VoucherType vtype, int orderNo)
+        public List<DeliveryChallan> GetByOrderNumber(VoucherType vtype, int orderNo, int locationId)
         {
-            return FiscalCollection.Where(p => p.OrderNo == orderNo && p.TransactionType == vtype).ToList();
+            return FiscalCollection.Where(p => p.OrderNo == orderNo && p.TransactionType == vtype && p.AuthLocationId == locationId).ToList();
         }
         public List<DcWithQuantityExtra> GetItemWithQuantity(VoucherType vtype, int orderNo)
         {
@@ -42,9 +42,9 @@ namespace AccountEx.Repositories
             return FiscalCollection.FirstOrDefault(p => p.OrderNo == orderNo && p.TransactionType == vtype && p.Id != Id);
         }
 
-        public DeliveryChallan GetByVoucherNumber(int voucherno, VoucherType type, int id)
+        public DeliveryChallan GetByVoucherNumber(int voucherno, VoucherType type, int id, int locationId)
         {
-            return FiscalCollection.FirstOrDefault(p => p.VoucherNumber == voucherno && p.TransactionType == type && p.Id != id);
+            return FiscalCollection.FirstOrDefault(p => p.VoucherNumber == voucherno && p.TransactionType == type && p.Id != id && p.AuthLocationId == locationId);
         }
         public bool CheckIsVoucherNumberExist(int voucherno, VoucherType type, int id)
         {
@@ -54,9 +54,9 @@ namespace AccountEx.Repositories
         {
             return FiscalCollection.Any(p => p.VoucherNumber == voucherno && types.Contains(p.TransactionType) && p.Id != id);
         }
-        public DeliveryChallan GetByBookNumber(int bookNo, VoucherType type, int id)
+        public DeliveryChallan GetByBookNumber(int bookNo, VoucherType type, int id, int locationId)
         {
-            return FiscalCollection.FirstOrDefault(p => p.InvoiceNumber == bookNo && p.TransactionType == type && p.Id != id);
+            return FiscalCollection.FirstOrDefault(p => p.InvoiceNumber == bookNo && p.TransactionType == type && p.Id != id && p.AuthLocationId == locationId);
         }
         public bool CheckIsBookNumberExist(int bookNo, VoucherType type, int id)
         {
@@ -91,18 +91,18 @@ namespace AccountEx.Repositories
         {
             return Collection.Any(p => p.Id == id);
         }
-        public int GetNextVoucherNumber(VoucherType vouchertype)
+        public int GetNextVoucherNumber(VoucherType vouchertype, int locationId)
         {
             var maxnumber = 1;
-            if (!FiscalCollection.Any(p => p.TransactionType == vouchertype))
+            if (!FiscalCollection.Any(p => p.TransactionType == vouchertype && p.AuthLocationId == locationId))
                 return maxnumber;
-            return FiscalCollection.Where(p => p.TransactionType == vouchertype).OrderByDescending(p => p.VoucherNumber).FirstOrDefault().VoucherNumber + 1;
+            return FiscalCollection.Where(p => p.TransactionType == vouchertype && p.AuthLocationId == locationId).OrderByDescending(p => p.VoucherNumber).FirstOrDefault().VoucherNumber + 1;
         }
         public override void Save(DeliveryChallan dc)
         {
             if (dc.OrderNo > 0)
             {
-                var order = AsQueryable<Order>(true).FirstOrDefault(p => p.VoucherNumber == dc.OrderNo && p.TransactionType == (dc.TransactionType  == VoucherType.GoodIssue ? VoucherType.SaleOrder : VoucherType.PurchaseOrder));
+                var order = AsQueryable<Order>(true).FirstOrDefault(p => p.VoucherNumber == dc.OrderNo && p.AuthLocationId == dc.AuthLocationId && p.TransactionType == (dc.TransactionType  == VoucherType.GoodIssue ? VoucherType.SaleOrder : VoucherType.PurchaseOrder));
                 foreach (var item in order.OrderItems)
                 {
                     var dcitem = dc.DCItems.FirstOrDefault(p => p.ItemId == item.ItemId);
@@ -224,28 +224,28 @@ namespace AccountEx.Repositories
 
             base.Update(dc, true, false);
         }
-        public DeliveryChallan GetByVoucherNumber(int voucherno, VoucherType vtype, string key, out bool next, out bool previous)
+        public DeliveryChallan GetByVoucherNumber(int voucherno, VoucherType vtype, string key, int locationId, out bool next, out bool previous)
         {
             DeliveryChallan v = null;
             switch (key)
             {
                 case "first":
-                    v = FiscalCollection.Where(p => p.TransactionType == vtype).OrderBy(p => p.VoucherNumber).FirstOrDefault();
+                    v = FiscalCollection.Where(p => p.TransactionType == vtype && p.AuthLocationId == locationId).OrderBy(p => p.VoucherNumber).FirstOrDefault();
                     break;
                 case "last":
-                    v = FiscalCollection.Where(p => p.TransactionType == vtype).OrderByDescending(p => p.VoucherNumber).FirstOrDefault();
+                    v = FiscalCollection.Where(p => p.TransactionType == vtype && p.AuthLocationId == locationId).OrderByDescending(p => p.VoucherNumber).FirstOrDefault();
                     break;
                 case "next":
-                    v = FiscalCollection.Where(p => p.TransactionType == vtype && p.VoucherNumber > voucherno).OrderBy(p => p.VoucherNumber).FirstOrDefault();
+                    v = FiscalCollection.Where(p => p.TransactionType == vtype && p.VoucherNumber > voucherno && p.AuthLocationId == locationId).OrderBy(p => p.VoucherNumber).FirstOrDefault();
                     break;
                 case "previous":
-                    v = FiscalCollection.Where(p => p.TransactionType == vtype && p.VoucherNumber < voucherno).OrderByDescending(p => p.VoucherNumber).FirstOrDefault(); ;
+                    v = FiscalCollection.Where(p => p.TransactionType == vtype && p.VoucherNumber < voucherno && p.AuthLocationId == locationId).OrderByDescending(p => p.VoucherNumber).FirstOrDefault(); ;
                     break;
                 case "same":
-                    v = FiscalCollection.FirstOrDefault(p => p.TransactionType == vtype && p.VoucherNumber == voucherno);
+                    v = FiscalCollection.FirstOrDefault(p => p.TransactionType == vtype && p.VoucherNumber == voucherno && p.AuthLocationId == locationId);
                     break;
                 case "challan":
-                    v = FiscalCollection.FirstOrDefault(p => p.TransactionType == vtype && p.VoucherNumber == voucherno);
+                    v = FiscalCollection.FirstOrDefault(p => p.TransactionType == vtype && p.VoucherNumber == voucherno && p.AuthLocationId == locationId);
                     break;
 
             }
@@ -254,9 +254,9 @@ namespace AccountEx.Repositories
                 voucherno = v.VoucherNumber;
             else if (key != "nextvouchernumber" && key != "challan")
             {
-                v = FiscalCollection.Where(p => p.TransactionType == vtype).OrderByDescending(p => p.VoucherNumber).FirstOrDefault();
+                v = FiscalCollection.Where(p => p.TransactionType == vtype && p.AuthLocationId == locationId).OrderByDescending(p => p.VoucherNumber).FirstOrDefault();
             }
-            if (v == null && !FiscalCollection.Any(p => p.TransactionType == vtype))
+            if (v == null && !FiscalCollection.Any(p => p.TransactionType == vtype && p.AuthLocationId == locationId))
             {
                 v = new DeliveryChallan();
                 v.VoucherNumber = 1;
@@ -264,8 +264,8 @@ namespace AccountEx.Repositories
                 v.Date = DateTime.Now;
                 v.CreatedDate = DateTime.Now;
             }
-            next = FiscalCollection.Any(p => p.TransactionType == vtype && p.VoucherNumber > voucherno);
-            previous = FiscalCollection.Any(p => p.TransactionType == vtype && p.VoucherNumber < voucherno);
+            next = FiscalCollection.Any(p => p.TransactionType == vtype && p.VoucherNumber > voucherno && p.AuthLocationId == locationId);
+            previous = FiscalCollection.Any(p => p.TransactionType == vtype && p.VoucherNumber < voucherno && p.AuthLocationId == locationId);
             return v;
         }
         public void DeleteByVoucherNumber(int voucherno)

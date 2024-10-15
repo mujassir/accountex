@@ -21,6 +21,7 @@ namespace AccountEx.CodeFirst.Models
         public string ItemName { get; set; }
         public int ItemId { get; set; }
         public int InvoiceNumber { get; set; }
+        public string BatchNo { get; set; }
         public int RequisitionNo { get; set; }
         public int OrderNo { get; set; }
         public int VoucherNumber { get; set; }

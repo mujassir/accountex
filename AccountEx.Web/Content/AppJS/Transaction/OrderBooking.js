@@ -138,6 +138,7 @@ var OrderBooking = function () {
                         $(tr).find("input.Name").val(account.Name);
 
                         var product = Common.GetAccountDetailByAccountId(account.Id);
+                        var discount = Common.GetDiscountDetail(product.AccountId);
                         //$(tr).find("input.ItemId").val(account.Id);
                         //$(tr).find("input.Name").val(account.Name);
 
@@ -145,7 +146,7 @@ var OrderBooking = function () {
                         $(tr).find(":nth-child(2) input.Name").val(account.Name);
                         $(tr).find(":nth-child(3) input.Article").val(product.Article);
                         $(tr).find(":nth-child(5) input.Unit").val(product.UnitType);
-                        $(tr).find(":nth-child(6) input.Rate").val((voucher == "saleorder" ? product.SalePrice : product.PurchasePrice));
+                        $(tr).find(":nth-child(6) input.Rate").val((voucher == "saleorder" ? product.SalePrice : product.PurchasePrice) - ( discount || 0));
                         //$(".container-message").hide();
 
                         $(".container-message").hide();
@@ -209,6 +210,7 @@ var OrderBooking = function () {
                 if (typeof party != "undefined" && party != null) {
                     //     $this.GetPreviousBalance(party.Id);
                     $(".container-message").hide();
+                    Common.LoadDiscount(party.Id, $this.AutoCompleteInit)
                 }
 
                 else {
@@ -585,7 +587,6 @@ var OrderBooking = function () {
             //   $("#lblNetTotal").html(nettotal);
         },
 
-
         LoadVoucher: function (key) {
             var $this = this;
             var voucherno = Common.GetInt($("#VoucherNumber").val());
@@ -610,7 +611,10 @@ var OrderBooking = function () {
                         if (!d?.AuthLocationId) {
                             defaultLocationId = $("#AuthLocationName")?.find(":selected")?.data("custom")
                         }
+                        const srn = $("#SRN").val();
                         Common.MapEditData(d, "#form-info");
+                        $("#SRN").val(srn);
+
                         $this.MarkRequiredRequisition();
                         $(`#AuthLocationId`).val(defaultLocationId)
                         if (d == null) {
@@ -619,7 +623,9 @@ var OrderBooking = function () {
                             $("#SRN").prop("disabled", false);
                             $("#SRNSearchIcon").removeClass("hide");
                             $("#VoucherNumber,#InvoiceNumber").val(res.Data.VoucherNumber);
-                            $this.LoadStockRequisition("challan");
+
+                            if (getRequisition)
+                                $this.LoadStockRequisition("challan");
                         }
                         else {
 
@@ -834,9 +840,18 @@ var OrderBooking = function () {
             this.LoadAccounts();
 
         },
+        onCustomerLoad: function () {
+            this.AutoCompleteInit()
+            $this.AutoCompleteInit()
+        },
         AutoCompleteInit: function (partyid) {
             var $this = this;
-            var products = Common.GetLeafAccounts(PageSetting.Products);
+            let products = Common.GetLeafAccounts(PageSetting.Products);
+            const EnableProductIds = Common.GetData("CustomerDiscount" + Common.LocalStoragePrefix)
+                ?.filter(x => x.Enable)?.map(x => x.COAProductId) || []
+            if (PageSetting.ShowOnlyCustomerProducts) {
+                products = products.filter(x => EnableProductIds.includes(x.Id))
+            }
             var suggestion = new Array();
             for (var i in products) {
                 var product = products[i];
@@ -861,11 +876,12 @@ var OrderBooking = function () {
                     var tr = $(this).closest("tr");
                     if (typeof account != "undefined" && account != null) {
                         var product = Common.GetAccountDetailByAccountId(account.Id);
+                        var discount = Common.GetDiscountDetail(product.AccountId);
                         $(tr).find(":nth-child(1) input.ItemId").val(account.Id);
                         $(tr).find(":nth-child(2) input.Name").val(account.Name);
                         $(tr).find(":nth-child(3) input.ArticleNo").val(product.ArticleNo);
                         $(tr).find(":nth-child(5) input.Unit").val(product.UnitType);
-                        $(tr).find(":nth-child(6) input.Rate").val((voucher == "saleorder" ? product.SalePrice : product.PurchasePrice));
+                        $(tr).find(":nth-child(7) input.Rate").val((voucher == "saleorder" ? product.SalePrice : product.PurchasePrice) - (discount || 0));
 
                         $(".container-message").hide();
                     }
@@ -909,15 +925,27 @@ var OrderBooking = function () {
             var srn = $(tr).find("input.VoucherNumber").val();
             var locationId = Common.GetInt($(tr).find("input.VoucherNumber").attr("data-location-id"));
             var locationCode = $(tr).find("input.VoucherNumber").attr("data-location-code");
+
+            if (locationId > 0 && !PageSetting.IsMultipleLocationEnabled) {
+                Common.ShowError("Multiple location wise voucher not enabled.");
+                return
+            }
+            if (locationId == 0 && PageSetting.IsMultipleLocationEnabled) {
+                Common.ShowError("Location is not selected in this voucher");
+                return
+            }
             if (srn.trim() != "" && srn != null) {
                 $("#SRN").val(srn);
-                $("#AuthLocationId").val(null)
-                const existingAutLocId = $("#AuthLocationId").val();
-                if (locationId && existingAutLocId != locationId) {
-                    getRequisition = true
-                    $("#AuthLocationId").val(locationId)
-                    $('#AuthLocationName').select2('val', locationCode);
-                    $this.LoadStockRequisition("challan");
+                if (PageSetting.IsMultipleLocationEnabled) {
+                    const existingAutLocId = $("#AuthLocationId").val();
+                    if (existingAutLocId != locationId) {
+                        getRequisition = true
+                        $("#AuthLocationId").val(locationId)
+                        $('#AuthLocationName').select2('val', locationCode);
+                        this.LoadVoucher("nextvouchernumber");
+                    } else {
+                        $this.LoadStockRequisition("challan");
+                    }
                 } else {
                     $this.LoadStockRequisition("challan");
                 }
@@ -925,7 +953,6 @@ var OrderBooking = function () {
             }
         },
         MarkRequiredRequisition: function () {
-            $("#AuthLocationName").select2("enable", false);
         }
     };
 }();

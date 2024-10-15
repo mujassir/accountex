@@ -1556,6 +1556,10 @@ namespace AccountEx.BussinessLogic
         {
             get { return Get<bool>("VOUCHER.CASHRECEIPT.allowVehicle", false); }
         }
+        public static bool ShowOnlyCustomerProducts
+        {
+            get { return Get<bool>("VOUCHER.ShowOnlyCustomerProducts", false); }
+        }
         public static bool IsCashPaymentAllowVehicle
         {
             get { return Get<bool>("VOUCHER.CASHPAYMENT.allowVehicle", false); }

@@ -276,7 +276,7 @@ namespace AccountEx.Web.Controllers.api.Transaction
 
                     }
 
-                    var GoodsNotes = dcRepo.GetByOrderNumber(goodsNoteType, input.VoucherNumber)
+                    var GoodsNotes = dcRepo.GetByOrderNumber(goodsNoteType, input.VoucherNumber, input.AuthLocationId)
                   .SelectMany(p => p.DCItems).GroupBy(p => p.ItemId).Select(p => new
                   {
                       ItemId = p.Key,

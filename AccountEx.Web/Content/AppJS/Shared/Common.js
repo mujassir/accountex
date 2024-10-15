@@ -104,8 +104,6 @@ var Common = function () {
             $this.SetCheckChange();
             $this.AllowNumerics();
             $this.InitNumerics();
-
-
             //$this.HighlightMenu();
             //Get SiteBase url(global varaible) from Layout page with Razor
             Common["BaseUrl"] = SiteBaseUrl;
@@ -122,10 +120,11 @@ var Common = function () {
             $this.InitDatePicker();
             $this.InitTooltip();
             AppData["COA"] = Common.GetData("COA" + Common.LocalStoragePrefix);
-            AppData["CustomerDiscount"] = Common.GetData("CustomerDiscount");
+            AppData["CustomerDiscount"] = Common.GetData("CustomerDiscount" + Common.LocalStoragePrefix);
             AppData["AccountDetail"] = Common.GetData("AccountDetail" + Common.LocalStoragePrefix);
             $this.SetPageAccess();
 
+            localStorage.removeItem("CustomerDiscount" + Common.LocalStoragePrefix)
             //Common.BindShortKeys([{}])
             $("#btnsave").click(function () {
                 // $this.Save();
@@ -2191,8 +2190,10 @@ var Common = function () {
                 blockMessage: "Validating chart of accounts...please wait",
                 success: function (res) {
                     if (res.Success) {
-                        if (res.Data.LoadCOA)
+                        if (res.Data.LoadCOA) {
                             Common.LoadCOA(callback, blockUI);
+                        }
+                            
                         else if (typeof callback != "undefined")
                             callback();
                     }
@@ -2277,6 +2278,31 @@ var Common = function () {
                         if (typeof callback != "undefined")
                             callback();
 
+                    }
+                    else {
+                        Common.ShowError(res.Error);
+                    }
+                },
+                error: function (e) {
+                }
+            });
+        },
+        LoadDiscount: function (accountId, callback) {
+            var $this = this;
+            Common.WrapAjax({
+                url: Setting.APIBaseUrl + "CustomerDiscount?account="+accountId,
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                blockElement: "body",
+                blockMessage: "Loading chart of accounts...please wait",
+                success: function (res) {
+                    if (res.Success) {
+
+                        Common.SetData("CustomerDiscount" + Common.LocalStoragePrefix, res.Data);
+                        AppData["CustomerDiscount"] = Common.GetData("CustomerDiscount" + Common.LocalStoragePrefix);
+                        if (typeof callback != "undefined")
+                            callback();
                     }
                     else {
                         Common.ShowError(res.Error);

@@ -22,6 +22,7 @@ namespace AccountEx.CodeFirst.Models
         public Nullable<int> CompanyPartnerId { get; set; }
         public int InvoiceNumber { get; set; }
         public int VoucherNumber { get; set; }
+        public string VoucherCode { get; set; }
         public string OBNo { get; set; }
         public int OrderNo { get; set; }
         public Nullable<int> AccountId { get; set; }
@@ -71,6 +72,7 @@ namespace AccountEx.CodeFirst.Models
         public decimal Discount { get; set; }
         public decimal DiscountPercent { get; set; }
         public decimal NetTotal { get; set; }
+        public int AuthLocationId { get; set; }
         public virtual ICollection<DCItem> DCItems { get; set; }
     }
 }

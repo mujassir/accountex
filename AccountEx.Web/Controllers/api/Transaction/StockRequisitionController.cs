@@ -28,7 +28,6 @@ namespace AccountEx.Web.Controllers.api.Transaction
                 var voucherNumber = id;
                 var queryString = Request.RequestUri.ParseQueryString();
                 var key = queryString["key"].ToLower();
-                var voucher = queryString["voucher"];
                 int locationId = 0;
                 if (queryString["locationId"] != null)
                 {

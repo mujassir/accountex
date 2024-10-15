@@ -33,12 +33,17 @@ namespace AccountEx.Web.Controllers.api.Transaction
                 var cpRepo = new CompanyPartnerRepository(orderRepo);
                 var companyPartner = new CompanyPartner();
                 Object orderinfo = "";
+                int locationId = 0;
+                if (queryString["locationId"] != null)
+                {
+                    int.TryParse(queryString["locationId"], out locationId);
+                }
                 //var data = TransactionManager.GetVocuherDetail(voucher, vouchertype, queryString["key"]);
                 bool next, previous;
                 if (voucherNumber == 0) key = "nextvouchernumber";
                 if (key == "nextvouchernumber")
-                    voucherNumber = dcRepo.GetNextVoucherNumber(vouchertype);
-                var data = dcRepo.GetByVoucherNumber(voucherNumber, vouchertype, key, out next, out previous);
+                    voucherNumber = dcRepo.GetNextVoucherNumber(vouchertype, locationId);
+                var data = dcRepo.GetByVoucherNumber(voucherNumber, vouchertype, key, locationId, out next, out previous);
                 if (data != null && data.CompanyPartnerId != null)
                     companyPartner = cpRepo.GetById(data.CompanyPartnerId.Value);
 

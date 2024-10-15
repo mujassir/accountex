@@ -93,6 +93,7 @@ namespace AccountEx.Repositories
                         CustomerId = customer.AccountId,
                         CustomerTitle = customer.Code + "-" + customer.AccountTitle,
                         COAProductId = p.COAProductId,
+                        Enable = p.Enable,
                         ProductCode = p.ProductCode,
                         ProductTitle = p.ProductTitle,
                         ProductId = p.ProductId,
