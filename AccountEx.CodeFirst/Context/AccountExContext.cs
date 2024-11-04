@@ -11,6 +11,7 @@ using AccountEx.CodeFirst.Models.Transactions;
 using AccountEx.CodeFirst.Models.Vehicles;
 using AccountEx.CodeFirst.Models.Pharmaceutical;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using AccountEx.CodeFirst.Models.Stock;
 
 
 
@@ -129,6 +130,8 @@ namespace AccountEx.CodeFirst.Context
         public DbSet<EmployeeIncomeConfig> EmployeeIncomeConfigs { get; set; }
         public DbSet<StockRequisition> StockRequisitions { get; set; }
         public DbSet<StockRequisitionItem> StockRequisitionItems { get; set; }
+        public DbSet<InternalStockTransfer> InternalStockTransfers { get; set; }
+        public DbSet<InternalStockTransferItem> InternalStockTransferItems { get; set; }
 
 
         public DbSet<ESalary> ESalaries { get; set; }

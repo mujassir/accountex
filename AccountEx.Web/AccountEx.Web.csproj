@@ -329,6 +329,8 @@
     <Compile Include="Controllers\api\RentalSystem\ElectricityChallanController.cs" />
     <Compile Include="Controllers\api\Reports\LabourController.cs" />
     <Compile Include="Controllers\api\Reports\NexusReportController.cs" />
+    <Compile Include="Controllers\api\Transaction\InternalStockTransferController.cs" />
+    <Compile Include="Controllers\api\Transaction\InternalStockTransferReceiveController.cs" />
     <Compile Include="Controllers\api\Transaction\LaboursController.cs" />
     <Compile Include="Controllers\api\Transaction\OstricSaleController.cs" />
     <Compile Include="Controllers\api\Transaction\ProductionController.cs" />
@@ -796,7 +798,9 @@
     <Content Include="Content\AppJS\Reports\AccountBalances1.js" />
     <Content Include="Content\AppJS\Reports\BLs.js" />
     <Content Include="Content\AppJS\Reports\GeneralLedgerWithMultiAccount.js" />
+    <Content Include="Content\AppJS\Reports\InternalStockTransfer.js" />
     <Content Include="Content\AppJS\Reports\LabourRegister.js" />
+    <Content Include="Content\AppJS\Reports\LocationWiseStock.js" />
     <Content Include="Content\AppJS\Reports\ProductionDetail.js" />
     <Content Include="Content\AppJS\Reports\ProfitLossFormat1.js" />
     <Content Include="Content\AppJS\Reports\ProfitLossAM.js" />
@@ -869,6 +873,8 @@
     <Content Include="Content\AppJS\Transaction\BLStatuses.js" />
     <Content Include="Content\AppJS\Transaction\BLPayments.js" />
     <Content Include="Content\AppJS\Reports\VehiclePostDatedCheque.js" />
+    <Content Include="Content\AppJS\Transaction\InternalStockTransfer.js" />
+    <Content Include="Content\AppJS\Transaction\InternalStockTransferReceive.js" />
     <Content Include="Content\AppJS\Transaction\Labours.js" />
     <Content Include="Content\AppJS\Transaction\LiquiMolySale.js" />
     <Content Include="Content\AppJS\Transaction\OstricSale.js" />
@@ -8400,6 +8406,10 @@
     <Content Include="Views\Manage\locations.cshtml" />
     <Content Include="Views\Manage\warehouses.cshtml" />
     <Content Include="Views\Manage\UserLocations.cshtml" />
+    <Content Include="Views\Transaction\InternalStockTransfer.cshtml" />
+    <Content Include="Views\Transaction\InternalStockTransferReceive.cshtml" />
+    <Content Include="Views\Reports\InternalStockTransfer.cshtml" />
+    <Content Include="Views\Reports\LocationWiseStock.cshtml" />
     <None Include="Web.config">
       <SubType>Designer</SubType>
     </None>

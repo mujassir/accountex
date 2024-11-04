@@ -64,6 +64,7 @@
     <Compile Include="SaleServiceExtra.cs" />
     <Compile Include="SaveServicesExtra.cs" />
     <Compile Include="SiteSettingContainer.cs" />
+    <Compile Include="StockWarehouseAndLocationWise.cs" />
     <Compile Include="TenantExtra.cs" />
     <Compile Include="TransactionExtra.cs" />
     <Compile Include="UserExtra.cs" />

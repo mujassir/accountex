@@ -1,25 +1,21 @@
-﻿using AccountEx.CodeFirst.Models;
+﻿using AccountEx.CodeFirst.Models.Stock;
 using AccountEx.Common;
 using AccountEx.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Transaction = AccountEx.CodeFirst.Models.Transaction;
 
 namespace AccountEx.BussinessLogic
 {
-    public static class StockRequisitionManager
+    public static class InternalStockTransferManager
     {
-       public static void Save(StockRequisition input) 
+       public static void Save(InternalStockTransfer input, bool received = false) 
        {
            using (var scope = TransactionScopeBuilder.Create())
            {
-               var repo = new StockRequisitionRepository();
+               var repo = new InternalStockTransferRepository();
                if (input.Id == 0)
                {
                     input.Status = (byte)TransactionStatus.Pending;
 
-                    foreach (var item in input.StockRequisitionItems)
+                    foreach (var item in input.InternalStockTransferItems)
                     {
                         item.Status = input.Status;
                         item.QuantityDelivered = 0;
@@ -28,7 +24,7 @@ namespace AccountEx.BussinessLogic
                }
                else
                {
-                   repo.Update(input);
+                   repo.Update(input, received);
                }
                repo.SaveChanges();
                scope.Complete();

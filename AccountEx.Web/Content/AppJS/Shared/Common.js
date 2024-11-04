@@ -2341,6 +2341,35 @@ var Common = function () {
                 }
             });
         },
+        LoadProductStockWarehouseAndLocationWise: function (callback, blockUI) {
+            var $this = this;
+            var fromDate = Common.Fiscal.FromDate;
+            var toDate = Common.Fiscal.ToDate;
+            Common.WrapAjax({
+                url: `${Setting.APIBaseUrl}/Stock?key=StockWarehouseAndLocationWise`,
+                type: "GET",
+                data: null,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                blockUI: blockUI,
+                blockElement: "body",
+                blockMessage: "Loading chart of accounts...please wait",
+                success: function (res) {
+                    if (res.Success) {
+                        Common.SetData("ProductStockWarehouseAndLocationWise" + Common.LocalStoragePrefix, res.Data);
+
+                        if (typeof callback != "undefined")
+                            callback();
+
+                    }
+                    else {
+                        Common.ShowError(res.Error);
+                    }
+                },
+                error: function (e) {
+                }
+            });
+        },
         GetNextAccountCode: function (api_controller) {
             var $this = this;
             var accountId = 0;

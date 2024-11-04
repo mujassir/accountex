@@ -614,6 +614,9 @@ namespace AccountEx.Web.Controllers.mvc
                 .Include(x => x.Location)
                 .Select(x => x.Location)
                 .ToList();
+            ViewBag.Warehouses = new GenericRepository<WareHouse>().AsQueryable()
+                .ToList();
+
             return View();
         }
         public ActionResult NTDeliveryChallan()
@@ -1185,6 +1188,40 @@ namespace AccountEx.Web.Controllers.mvc
                 .Where(x => x.UserId == (int)SiteContext.Current.User.Id)
                 .Include(x => x.Location)
                 .Select(x => x.Location)
+                .ToList();
+            return View();
+        }
+        public ActionResult InternalStockTransfer()
+        {
+            var setting = new List<SettingExtra>();
+            setting.Add(new SettingExtra() { Key = "Products", Value = SettingManager.ProductHeadId });
+            setting.Add(new SettingExtra() { Key = "isMultipleLocationEnabled", Value = SettingManager.IsMultipleLocationEnabled });
+            setting.Add(new SettingExtra() { Key = "AccountDetails", Value = new AccountDetailRepository().GetAll<RequisitionEx>((byte)AccountDetailFormType.Products) });
+            setting.Add(new SettingExtra() { Key = "ProductHeadId", Value = new AccountRepository().GetAccountTree(SettingManager.ProductHeadId).FirstOrDefault()?.Id ?? 0 });
+            ViewBag.FormSetting = JsonConvert.SerializeObject(setting);
+            ViewBag.Locations = new GenericRepository<UserLocation>().AsQueryable()
+                .Where(x => x.UserId == (int)SiteContext.Current.User.Id)
+                .Include(x => x.Location)
+                .Select(x => x.Location)
+                .ToList();
+            ViewBag.Warehouses = new GenericRepository<WareHouse>().AsQueryable()
+                .ToList();
+            return View();
+        }
+        public ActionResult InternalStockTransferReceive()
+        {
+            var setting = new List<SettingExtra>();
+            setting.Add(new SettingExtra() { Key = "Products", Value = SettingManager.ProductHeadId });
+            setting.Add(new SettingExtra() { Key = "isMultipleLocationEnabled", Value = SettingManager.IsMultipleLocationEnabled });
+            setting.Add(new SettingExtra() { Key = "AccountDetails", Value = new AccountDetailRepository().GetAll<RequisitionEx>((byte)AccountDetailFormType.Products) });
+            setting.Add(new SettingExtra() { Key = "ProductHeadId", Value = new AccountRepository().GetAccountTree(SettingManager.ProductHeadId).FirstOrDefault()?.Id ?? 0 });
+            ViewBag.FormSetting = JsonConvert.SerializeObject(setting);
+            ViewBag.Locations = new GenericRepository<UserLocation>().AsQueryable()
+                .Where(x => x.UserId == (int)SiteContext.Current.User.Id)
+                .Include(x => x.Location)
+                .Select(x => x.Location)
+                .ToList();
+            ViewBag.Warehouses = new GenericRepository<WareHouse>().AsQueryable()
                 .ToList();
             return View();
         }

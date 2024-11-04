@@ -8,6 +8,7 @@ using System.Configuration;
 using AccountEx.CodeFirst.Models;
 using AccountEx.Repositories.Vehicles;
 using AccountEx.DbMapping;
+using System.Data.SqlClient;
 
 namespace AccountEx.Repositories
 {
@@ -753,6 +754,24 @@ namespace AccountEx.Repositories
             var sqlquery = string.Format("EXEC [dbo].[GetItemAveragePurchasePrice] @CompanyId = {0},@FiscalId = {1},@ItemIds = '{2}',@ToDate='{3}'", SiteContext.Current.User.CompanyId, SiteContext.Current.Fiscal.Id, string.Join(",", itemIds), toDate.ToString("yyyy-MM-dd"));
             return Db.Database.SqlQuery<ItemAvgRates>(sqlquery).ToList();
         }
+        public List<StockWarehouseAndLocationWise> GetStockWarehouseAndLocationWise(string locationIds = null)
+        {
+            var sqlquery = "EXEC [dbo].[GetStockWarehouseAndLocationWise] @CompanyId";
+
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@CompanyId", SiteContext.Current.User.CompanyId)
+            };
+
+            if (!string.IsNullOrEmpty(locationIds))
+            {
+                sqlquery += ", @LocationIds"; // Append LocationIds parameter
+                parameters.Add(new SqlParameter("@LocationIds", locationIds));
+            }
+
+            return Db.Database.SqlQuery<StockWarehouseAndLocationWise>(sqlquery, parameters.ToArray()).ToList();
+        }
+
 
         public decimal GetSummary(VoucherType type1, VoucherType type2)
         {

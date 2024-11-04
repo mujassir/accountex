@@ -126,18 +126,40 @@ else
                                 bool hasDefault = locations.Any(x => x.IsDefault);
                                 var firstLocation = locations.FirstOrDefault();
                                 int firstItemId = firstLocation != null ? firstLocation.Id : 0;
+
+                                // Check if any Warehouse is marked as default
+                                var Warehouses = (List<WareHouse>)ViewBag.Warehouses;
+                                bool hasWDefault = Warehouses.Any(x => x.IsDefault);
+                                var firstWarehouse = Warehouses.FirstOrDefault();
+                                int firstWItemId = firstWarehouse != null ? firstWarehouse.Id : 0;
                             }
                             <div class="form-group @(locations.Count > 0 && SettingManager.IsMultipleLocationEnabled ? "" : "hide")">
                                 <label class="col-md-2 control-label" for="prefix">Location</label>
                                 <div class="col-md-1">
-                                    <select id="AuthLocationName" class="form-control select2 input-small" data-clear="false" data-placeholder="Select Location" data-trackchange="true">
-                                        <option></option>
+                                    <select id="AuthLocationName" class="form-control input-small" data-clear="false" data-placeholder="Select Warehouse" data-trackchange="true">
                                         @if (SettingManager.IsMultipleLocationEnabled)
                                         {
                                             foreach (var item in locations)
                                             {
                                                 <option data-custom="@item.Id" data-code="@item.Code"
                                                         @(item.IsDefault || (!hasDefault && item.Id == firstItemId) ? "selected" : "")>
+                                                    @item.Name
+                                                </option>
+                                            }
+                                        }
+                                    </select>
+                                    <input type="text" class="hide" id="AuthLocationId" data-clear="false" />
+                                </div>
+                                
+                                <label class="col-md-2 control-label" for="prefix">Warehouse</label>
+                                <div class="col-md-1">
+                                    <select id="WarehouseName" class="form-control input-small" data-clear="false" data-placeholder="Select Location" data-trackchange="true">
+                                        @if (SettingManager.IsMultipleLocationEnabled)
+                                        {
+                                            foreach (var item in Warehouses)
+                                            {
+                                                <option data-custom="@item.Id" data-code="@item.Code"  data-location="@item.LocationId"
+                                                        @(item.IsDefault || (!hasWDefault && item.Id == firstWItemId) ? "selected" : "")>
                                                     @item.Name
                                                 </option>
                                             }

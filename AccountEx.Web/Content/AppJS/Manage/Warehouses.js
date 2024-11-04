@@ -6,12 +6,14 @@ var Warehouses = function () {
     return {
         init: function () {
             var $this = this;
+            $('#LocationName').trigger('change');
             $this.ListView();
 
         },
 
         Add: function () {
             var $this = this;
+            $('#LocationName').trigger('change');
             $this.DetailView();
             Common.Clear();
             $this.CustomClear();
@@ -26,6 +28,8 @@ var Warehouses = function () {
         ListView: function () {
             //$('#form-info').addClass('hide');
             //$('#div-table').removeClass('hide');
+
+            $('#LocationName').trigger('change');
             if (!LIST_LOADED) {
                 var url = Setting.APIBaseUrl + API_CONTROLLER;
                 LIST_LOADED = true;
@@ -38,7 +42,6 @@ var Warehouses = function () {
         },
 
         Save: function () {
-            debugger;
             var $this = this;
             if (Common.Validate($("#form-info"))) {
                 var record = Common.SetValue($("#form-info"));
@@ -81,6 +84,10 @@ var Warehouses = function () {
                 success: function (res) {
                     if (res.Success) {
                         var j = res.Data;
+                        if (j.LocationId)
+                            $("LocationName").select2("val", j.LocationId)
+
+                        $('#LocationName').trigger('change');
                         Common.MapEditData(j, $("#form-info"));
                         Common.SetCheckValue(j);
                         $(".date-picker").each(function () {

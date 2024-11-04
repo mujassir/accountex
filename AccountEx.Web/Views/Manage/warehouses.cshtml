@@ -1,3 +1,4 @@
+@using AccountEx.CodeFirst.Models
 @using AccountEx.Common
 @{
     ViewBag.Title = "Warehouses";
@@ -38,6 +39,29 @@
                             <i class="close" onclick="$(this).parent().hide();"></i>
                             <strong></strong>
                             <div class="form-body message-content"></div>
+                        </div>
+                        @{
+                            // Check if any location is marked as default
+                            var locations = (List<Location>)ViewBag.Locations;
+                            bool hasDefault = locations.Any(x => x.IsDefault);
+                            var firstLocation = locations.FirstOrDefault();
+                            int firstItemId = firstLocation != null ? firstLocation.Id : 0;
+                        }
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="prefix">Location</label>
+                            <div class="col-md-1">
+                                <select id="LocationName" class="form-control select2 input-small" data-clear="false" show-clear="false" data-placeholder="Select Location" data-trackchange="true">
+                                    <option></option>
+                                    @foreach (var item in locations)
+                                    {
+                                        <option data-custom="@item.Id" value="@item.Id" data-code="@item.Code"
+                                                @(item.IsDefault || (!hasDefault && item.Id == firstItemId) ? "selected" : "")>
+                                            @item.Name
+                                        </option>
+                                    }
+                                </select>
+                                <input type="text" class="hide" id="LocationId" data-clear="false" />
+                            </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="prefix">Warehouse Code</label>

@@ -1,0 +1,489 @@
+@using AccountEx.CodeFirst.Models
+@section PageStyle
+{
+    <link href="~/Content/InternalStockTransferReceive.css" rel="stylesheet" />
+}
+@{
+    ViewBag.Title = "Receive Internal Stock Transfer";
+}
+@using AccountEx.BussinessLogic;
+@using AccountEx.Common;
+
+@{
+
+    var error = "";
+    if (SettingManager.ProductHeadId == 0)
+    {
+        error += "<li>Product Account is Missing.</li>";
+
+    }
+    if (SiteContext.Current.Fiscal == null)
+    {
+        error += "<li>No Fiscal year found.</li>";
+    }
+}
+@if (!string.IsNullOrWhiteSpace(error))
+{
+    <div class="note note-danger note-bordered">
+        <h4 class="block">Head Account Missing</h4>
+        <div>
+            <i class="fa-lg fa fa-warning"></i>Head Account is missing in the application settings.In order to complete current transaction head accounts must be added in settings.<br />
+
+
+            <ul>
+                @Html.Raw(error)
+            </ul>
+
+
+            Add missing head accounts in settings and then try again by <a href="@Request.Url"><i class="fa fa-refresh"></i>&nbsp;Relaoding</a>&nbsp;the current page.
+        </div>
+    </div>
+}
+else
+{
+    @section PageTitle
+{
+        <h1 class="font-green-sharp bold hidden-print">Receive Internal Stock Transfer</h1>
+    }
+    //hide
+    <div class="hidden-print" id="form-info">
+        <div class="col-md-12 col-sm-12">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <div class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-edit"></i>Receive Internal Stock Transfer
+                    </div>
+                    <div class="actions hide">
+                        <a href="javascript:;" onclick="InternalStockTransferReceive.LoadVoucher('previous')" class="btn blue">
+                            <i class="fa fa-angle-left"></i>&nbsp;Back
+                        </a>
+                        <a href="javascript:;" onclick="InternalStockTransferReceive.LoadVoucher('next')" class="btn blue">
+                            <i class="fa fa-angle-left"></i>&nbsp;Next
+                        </a>
+
+                    </div>
+                </div>
+                <div class="portlet-body form">
+
+                    <div id="mainform" class="form-horizontal" data-save="save">
+
+                        <input type="text" id="Id" class="hide" data-include-in-item="true" data-item-id="InternalStockTransferId" />
+                        <input type="text" id="CreatedDate" class="hide date-picker" data-clear-type="date" />
+                        <input type="text" id="IsDeleted" class="hide" />
+                        <input type="text" id="Status" class="hide" />
+                        <input type="text" id="PreVoucherNumber" class="hide" />
+                        <div class="form-body">
+                            <div class="hide alert alert-danger container-message">
+                                <i class="close" onclick="$(this).parent().hide();"></i>
+                                <strong></strong>
+                                <div class="form-body message-content"></div>
+                            </div>
+                            @{
+                                // Check if any location is marked as default
+                                var locations = (List<Location>)ViewBag.Locations;
+                                bool hasDefault = locations.Any(x => x.IsDefault);
+                                var firstLocation = locations.FirstOrDefault();
+                                int firstItemId = firstLocation != null ? firstLocation.Id : 0;
+                            }
+                            @if (locations.Count > 0 && SettingManager.IsMultipleLocationEnabled)
+                            {
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label" for="prefix">From Location</label>
+                                    <div class="col-md-1">
+                                        <select id="FromLocationName" disabled="disabled" class="form-control input-small" data-clear="false" show-clear="false" data-placeholder="Select Location" data-trackchange="true">
+                                            @foreach (var item in locations)
+                                            {
+                                                <option data-custom="@item.Id" value="@item.Id" data-code="@item.Code"
+                                                        @(item.IsDefault || (!hasDefault && item.Id == firstItemId) ? "selected" : "")>
+                                                    @item.Name
+                                                </option>
+                                            }
+                                        </select>
+                                        <input type="text" class="hide" id="FromLocationId" data-clear="false" />
+                                    </div>
+                                    <label class="col-md-2 control-label" for="prefix">To Location</label>
+                                    <div class="col-md-2">
+                                        <select id="ToLocationName" class="form-control input-small" data-clear="false" show-clear="false" data-placeholder="Select Location" data-trackchange="true">
+                                            @foreach (var item in locations)
+                                            {
+                                                <option data-custom="@item.Id" value="@item.Id" data-code="@item.Code"
+                                                        @(item.IsDefault || (!hasDefault && item.Id == firstItemId) ? "selected" : "")>
+                                                    @item.Name
+                                                </option>
+                                            }
+                                        </select>
+                                        <input type="text" class="hide" id="ToLocationId" data-clear="false" />
+                                    </div>
+                                </div>
+                            }
+                            @{
+                                // Check if any location is marked as default
+                                var warehouses = (List<WareHouse>)ViewBag.Warehouses;
+                                bool hasWDefault = warehouses.Any(x => x.IsDefault);
+                                var firstWarehouse = warehouses.FirstOrDefault();
+                                int firstWItemId = firstWarehouse != null ? firstWarehouse.Id : 0;
+                            }
+                            @if (warehouses.Count > 0)
+                            {
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label" for="prefix">From Warehouse</label>
+                                    <div class="col-md-1">
+                                        <select id="FromWarehouseName" class="form-control input-small" data-clear="false" show-clear="false" data-placeholder="Select Warehouse" data-trackchange="true">
+                                            @foreach (var item in warehouses)
+                                            {
+                                                <option data-custom="@item.Id" value="@item.Id" data-code="@item.Code"
+                                                        @(item.IsDefault || (!hasWDefault && item.Id == firstWItemId) ? "selected" : "")>
+                                                    @item.Name
+                                                </option>
+                                            }
+                                        </select>
+                                        <input type="text" class="hide" id="FromWarehouseId" data-clear="false" />
+                                    </div>
+                                    <label class="col-md-2 control-label" for="prefix">To Warehouse</label>
+                                    <div class="col-md-2">
+                                        <select id="ToWarehouseName" class="form-control input-small" data-clear="false" show-clear="false" data-placeholder="Select Warehouse" data-trackchange="true">
+                                            @foreach (var item in warehouses)
+                                            {
+                                                <option data-custom="@item.Id" value="@item.Id" data-code="@item.Code"
+                                                        @(item.IsDefault || (!hasWDefault && item.Id == firstWItemId) ? "selected" : "")>
+                                                    @item.Name
+                                                </option>
+                                            }
+                                        </select>
+                                        <input type="text" class="hide" id="ToWarehouseId" data-clear="false" />
+                                    </div>
+                                </div>
+                            }
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">SRN.</label>
+                                <div class="col-md-1 container-voucher">
+                                    <label id="lblVoucherNumber" class="label label-info label-voucher hide"></label>
+                                    <input type="text" class="form-control number input-small" id="VoucherNumber" data-required="required" data-plus-as-tab="false" data-validate="true" data-message="Voucher Number is required" data-include-in-item="true">
+                                </div>
+
+                                <label class="col-md-2 control-label" for="prefix">Date</label>
+                                <div class="col-md-2">
+                                    <input id="Date" type="text" class="form-control date-picker input-small" data-clear-type='date' data-validate="true" data-required="required" data-message="Date is required" data-hide-dropdown="true" data-fiscal-date="true">
+                                </div>
+
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label master-account-label" for="prefix">Description</label>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" id="Description">
+                                </div>
+
+                            </div>
+                            <div class="col-md-2"></div>
+                            <div class="form-group" data-save="false">
+
+                                <div class="col-md-6 saleitem-container">
+
+                                    <table id="item-container" class="table table-bordered griditem">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 15%;">Code</th>
+                                                <th style="width: 35%;">Items</th>
+                                                <th style="width: 20%;">ArticleNo</th>
+                                                <th style="width: 11%;">Avail. Qty</th>
+                                                <th style="width: 15%;" colspan="2" style="text-align: center">Unit</th>
+
+                                                @*<th>Quantity</th>*@
+
+                                                <th class="hide">Rate</th>
+                                                <th class="hide">Amount</th>
+                                                <th style="width: 5%;"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody data-plus-as-tab="false">
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                            @*<div class="col-md-4"></div> *@
+                            <div class="form-group">
+
+                                <label class="control-label col-md-2">Special Instructions</label>
+                                <div class="col-md-5">
+                                    <textarea id="Instructions" class="form-control" data-plus-as-tab="false" style="height: 80px;"></textarea>
+                                </div>
+                                <label class="control-label col-md-3">Qty Total</label>
+                                <div class="col-md-2">
+                                    <input id="QuantityTotal" class="form-control align-right" type="text" disabled="disabled" readonly="readonly" data-required="required" data-message="Please add atleast one item" />
+                                </div>
+
+                            </div>
+                            <div class="form-actions">
+                                <div class="btn-set pull-left">
+
+                                    @*<button class="btn tooltips" data-container="body" data-placement="top" data-original-title="Tooltip in top">Top</button>*@
+                                    <a href="javascript:;" onclick="InternalStockTransferReceive.LoadVoucher('first')" class="btn blue tooltips disabled first" data-original-title="First">
+                                        <i class="fa fa-angle-double-left"></i>
+                                    </a>
+                                    <a href="javascript:;" onclick="InternalStockTransferReceive.LoadVoucher('previous')" class="btn blue tooltips disabled previous" data-original-title="Previous">
+                                        <i class="fa fa-angle-left"></i>
+                                    </a>
+                                    <a href="javascript:;" onclick="InternalStockTransferReceive.LoadVoucher('next')" class="btn blue tooltips disabled next" data-original-title="Next">
+                                        <i class="fa fa-angle-right"></i>
+                                    </a>
+                                    <a href="javascript:;" onclick="InternalStockTransferReceive.LoadVoucher('last')" class="btn blue tooltips disabled last" data-original-title="Last">
+                                        <i class="fa fa-angle-double-right"></i>
+                                    </a>
+                                </div>
+                                <div class="btn-set pull-right">
+                                    @if (!SiteContext.Current.Fiscal.IsClosed)
+                                    {
+                                        <button id="saveBtn" type="button" class="btn btn-primary green" onclick="InternalStockTransferReceive.Save()">
+                                            <i class="fa fa-check"></i>
+                                            Receive
+                                        </button>
+                                    }
+                                    <button type="button" id="btnprint" class="btn yellow" onclick="InternalStockTransferReceive.Print()">
+                                        <i class="fa fa-print"></i>
+
+                                        Print
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+            </div>
+        </div>
+    </div>
+    <div class="hide" id="div-table">
+        <div class="col-md-12 col-sm-12">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <div class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-list"></i>Record Listing
+                    </div>
+                    <div class="actions">
+                        <a href="javascript:;" onclick="InternalStockTransferReceive.Add()" class="btn blue">
+                            <i class="fa fa-plus"></i>&nbsp;New
+                        </a>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="hide alert alert-danger container-message">
+                        <i class="close" onclick="$(this).parent().hide();"></i>
+                        <strong></strong>
+                        <div class="form-body message-content"></div>
+                    </div>
+                    <table class="table table-striped table-bordered table-hover" id="mainTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 8px;" class="no-sort">
+                                    <input type="checkbox" class="group-checkable" data-set="#mainTable .checkboxes" />
+                                </th>
+                                <th>
+                                    Vou #
+                                </th>
+                                <th>Book #</th>
+                                <th>Party</th>
+                                <th>Total</th>
+                                <th>Date</th>
+                                <th>Remarks</th>
+                                <th style="width: 75px;" class="no-sort"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="8">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- END EXAMPLE TABLE PORTLET-->
+        </div>
+    </div>
+    <div id="jsondata" class="hide">
+        <p id="data">@ViewBag.FormSetting</p>
+    </div>
+}
+<script type="text/html" id="template-item">
+    <tr>
+        <td>
+            <input type="hidden" class="ItemId" id="ItemId" data-db-column="ItemId">
+            <input type="hidden" class="EntryType" id="EntryType" data-db-column="EntryType" value="@((int)EntryType.Item)"><input type="hidden">
+            <input type="text" disabled="disabled" class="Code form-control typeahead input-small ui-autocomplete-input" data-db-column="ItemCode" autocomplete="off">
+        </td>
+        <td>
+            <input type="text" disabled="disabled" class="Name form-control input-medium" data-db-column="ItemName">
+        </td>
+        <td>
+            <input type="text" disabled="disabled" class="ArticleNo form-control input-medium" data-db-column="ArticleNo">
+        </td>
+        <td>
+            <input type="text" disabled="disabled" class="Stock form-control input-medium" data-db-column="StockBalance">
+        </td>
+        <td class="align-right">
+            <input type="text" disabled="disabled" class="Quantity form-control input-small num3" data-db-column="Quantity" data-db-type="decimal">
+        </td>
+        <td>
+            <input type="text" disabled="disabled" class="Unit form-control input-small" data-db-column="Unit" disabled>
+        </td>
+
+        @* <td class="hide">
+                <input type="text" class="Rate form-control input-small" data-db-column="Rate" data-db-type="decimal"></td>
+            <td class="hide">
+                <input type="text" class="Amount form-control input-small" data-db-column="Amount" data-db-type="decimal" disabled></td>*@
+        <td style="width: 8px;">
+            @*<span class="action"><i class="fa fa-trash-o" onclick="InternalStockTransferReceive.DeleteRow(this)" data-original-title="Delete Item"></i></span>*@
+
+        </td>
+    </tr>
+</script>
+<script type="text/html" id="template-item-print">
+    <tr>
+        <td>
+            <span>{{ItemName}}</span>
+        </td>
+        <td>
+            <span>{{Quantity}}</span>
+        </td>
+    </tr>
+</script>
+
+<div class="row"></div>
+<div id="div-report" style="padding-top: 40px" class="visible-print">
+    <div class=" row form-group">
+        <div class="col-md-4 col-xs-4 " id="img-container">
+            @* <span style="font-size:8px"><img alt="" src="../Upload/ApplicationLogo/1583086699logomain.png" style="height: 76px;width: 350px;"></span>*@
+            @if (!string.IsNullOrWhiteSpace(SettingManager.ReportHeader))
+            {
+                @(new HtmlString(SettingManager.ReportHeader))
+            }
+        </div>
+        <div class="col-xs-5">
+        </div>
+        <div class="col-xs-7" style="margin-top: 70px;"><b style="font-size: 25px; float: right;">Receive Internal Stock Transfer</b></div>
+    </div>
+
+
+    @*  <div class="PoHead"><b>STOCK REQUISITION</b></div>*@
+    <br />
+    <table class="report-summary-infor information full-width">
+        <tbody>
+            <tr>
+                <td style="width: 60%; vertical-align: top;">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td class="PoAddress">@SettingManager.Address </td>
+
+                            </tr>
+                            <tr>
+                                <td class="PoAddress">@SettingManager.CityState</td>
+                            <tr>
+                                <td class="PoAddress">
+                                    @SettingManager.Phone
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="PoAddress">@SettingManager.Fax</td>
+                            </tr>
+                            <tr>
+                                <td class="PoAddress">@SettingManager.Email</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-11">
+                    </div>
+                </td>
+                <td style="border-top-width: 0;"></td>
+                <td>
+                    <table>
+                        <tr>
+                            <td class="font-size"><b>Date :</b></td>
+                            <td>
+                                <span id="lblDate"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="font-size"><b>SRN # :</b></td>
+                            <td>
+                                <span id="lblVoucherCode"></span><span id="lblVoucherNumber"></span>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br />
+    <br />
+    <div class="col-md-1 col-xs-1">
+    </div>
+    <div class="col-md-12 col-xs-12" style="margin-top: 10px;">
+        <table id="report-saleitem" class="table table-bordered full-width">
+            <thead>
+                <tr>
+                    <th>Item #</th>
+                    <th>ArticleNo #</th>
+                    <th>Description</th>
+                    <th>Quantity</th>
+                    @*   <th>Unit Price</th>
+                        <th>Line Total</th>*@
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" class="align-right" style="border-bottom: 0px;">Total</td>
+                    <td><span id="lblTotalAmount"></span></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <div class="col-md-6 col-xs-6">
+        <b class="font-size">Special Instructions:</b>
+        <p><span id="lblInstructions"></span></p>
+    </div>
+
+    <div class="col-md-6 col-xs-6">
+    </div>
+    <div class="col-md-6 col-xs-6">
+    </div>
+    <div class="row-bottom" style="position: fixed; border-top: 1px #000; width: 420px; right: 0px; bottom: 100px; padding-top: 5px;">
+        <table class="full-width">
+            <tr>
+                <td style="width: 0px;"></td>
+                <td>
+                    <div class="authorized-by"><span>Authorized by</span></div>
+                </td>
+                <td>
+                    <div class="authorized-date"><span>Date</span></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="row-bottom" style="position: fixed; border-top: 1px #000; bottom: 45px; padding-top: 5px; font-size: 10px; padding-left: 190px;">
+        For any discrepancy please contact us at info@ultratecpak.com
+    </div>
+</div>
+
+
+@section FooterScript
+{
+    <script src="~/Content/AutoComplete/jquery-ui.js"></script>
+    <link href="~/Content/AutoComplete/jquery-ui.css" rel="stylesheet" />
+    @* <script src="~/Content/HotKey/jquery.hotkeys.js"></script>*@
+    <script src="~/Content/AppJS/Transaction/InternalStockTransferReceive.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            InternalStockTransferReceive.init();
+        });
+    </script>
+}

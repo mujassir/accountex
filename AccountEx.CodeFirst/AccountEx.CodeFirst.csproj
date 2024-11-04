@@ -191,6 +191,8 @@
     <Compile Include="Models\Production\vw_ProductReceipes.cs" />
     <Compile Include="Models\Production\ProductReceipe.cs" />
     <Compile Include="Models\Production\WPItemWithParentDetail.cs" />
+    <Compile Include="Models\Stock\InternalStockTransfer.cs" />
+    <Compile Include="Models\Stock\InternalStockTransferItem.cs" />
     <Compile Include="Models\System\FiscalSetting.cs" />
     <Compile Include="Models\System\Location.cs" />
     <Compile Include="Models\System\WareHouse.cs" />

@@ -34,6 +34,8 @@ var DeliveryChallan = function () {
             });
             $("#AuthLocationName").change(function (e) {
                 $this.LoadVoucher("nextvouchernumber");
+                $this.ResetWarehouse();
+
             });
 
             if (requiredOrder) {
@@ -200,6 +202,7 @@ var DeliveryChallan = function () {
             Common.Clear();
             this.CustomClear();
             $('#AuthLocationName').trigger('change');
+            $('#WarehouseName').trigger('change');
             this.GetNextVoucherNumber();
             $(".container-message").hide();
         },
@@ -272,6 +275,7 @@ var DeliveryChallan = function () {
                             defaultLocationId = $("#AuthLocationName")?.find(":selected")?.data("custom")
                         }
                         $(`#AuthLocationId`).val(defaultLocationId)
+                        $this.ResetWarehouse();
                         if (d == null) {
                             if (!getOrder)
                                 $this.CustomClear();
@@ -288,8 +292,11 @@ var DeliveryChallan = function () {
                             $("#OrderId").val(d.Id);
                             $("#VoucherNumber").val(voucherno);
                             if (d.VoucherCode) {
-                                $(`#AuthLocationName`).select2('val', d.VoucherCode)
+                                $(`#AuthLocationName`).val(d.VoucherCode)
                                 $(`#AuthLocationId`).val(d.AuthLocationId)
+                            }
+                            if (d?.WareHouseId) {
+                                $(`#WarehouseName`).val(d.WareHouseId)
                             }
                             $("#Date").val(date);
                             $("#InvoiceNumber").val(invoiceno);
@@ -413,7 +420,13 @@ var DeliveryChallan = function () {
                 if (typeof party == "undefined" || party == null) {
                     err += $("#AccountCode").val() + " is not valid party code.";
                 }
-
+                var warehouse = $("#WarehouseName")?.find(":selected")?.data("custom") || null;
+                var authLocationId = $("#AuthLocationName")?.find(":selected")?.data("custom") || null;
+                if (!warehouse && PageSetting.IsMultipleLocationEnabled) {
+                    err += " Please select warehouse.";
+                }
+                record["WarehouseId"] = warehouse || 0;
+                record["AuthLocationId"] = authLocationId || 0;
                 for (var i in Items) {
                     Items[i]["BatchNo"] = batchNumber;
                     var item = Items[i];
@@ -656,6 +669,12 @@ var DeliveryChallan = function () {
 
                         $this.MarkRequiredOrder();
                         $(`#AuthLocationId`).val(defaultLocationId)
+
+                        if (d?.WareHouseId) {
+                            const warehouseCode = $(`#WarehouseName option[data-custom='${d.WareHouseId }']`)?.attr("data-code")
+                            $('#WarehouseId').val(d.WareHouseId)
+                            if (warehouseCode) $('#WarehouseName').val(warehouseCode)
+                        }
                         if (d == null || !d.AccountId) {
                             if (!getOrder)
                                 $this.CustomClear();
@@ -829,11 +848,10 @@ var DeliveryChallan = function () {
                 var token = tokens[i];
                 PageSetting[token.Key] = token.Value;
             }
-            console.log(this.GetType())
             if (this.GetType() == "goodreceive") {
-                requiredOrder = !PageSetting?.RequiredPurchaseOrder;
+                requiredOrder = PageSetting?.RequiredPurchaseOrder || false;
             } else if (this.GetType() == "goodissue") {
-                requiredOrder = PageSetting?.RequiredSaleOrder;
+                requiredOrder = PageSetting?.RequiredSaleOrder || false;
             }
             this.LoadAccounts();
 
@@ -933,7 +951,7 @@ var DeliveryChallan = function () {
                     if (existingAutLocId != locationId) {
                         getOrder = true
                         $("#AuthLocationId").val(locationId)
-                        $('#AuthLocationName').select2('val', locationCode);
+                        $('#AuthLocationName').val(locationCode);
                         this.LoadVoucher("nextvouchernumber");
                     } else {
                         $this.LoadOrder("challan");
@@ -982,8 +1000,18 @@ var DeliveryChallan = function () {
         MarkRequiredOrder: function () {
             if (!requiredOrder) return
             setTimeout(() => {
-                $("#AuthLocationName").select2("enable", false);
+                //$("#AuthLocationName").select2("enable", false);
             }, 200)
+        },
+        ResetWarehouse: function() {
+            $(`#WarehouseName`).val(null);
+            const locId = $("#AuthLocationId").val();
+            document.querySelectorAll('#WarehouseName option').forEach(el => {
+                el.style.display = 'none';
+                if (el.getAttribute('data-location') == locId) {
+                    el.style.display = 'block';
+                }
+            });
         }
 
 

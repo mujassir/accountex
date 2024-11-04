@@ -18,6 +18,8 @@ namespace AccountEx.Web.Controllers.api
                 return GetStockByQuantity();
             else if (Key == "GetStockByWeight")
                 return GetStockByWeight();
+            else if (Key == "StockWarehouseAndLocationWise")
+                return GetStockWarehouseAndLocationWise();
             else
                 return GetStock();
         }
@@ -67,6 +69,16 @@ namespace AccountEx.Web.Controllers.api
             {
                 item.GroupName = !string.IsNullOrWhiteSpace(item.GroupName) ? item.GroupName.Trim() : "";
             }
+            var response = new ApiResponse
+             {
+                 Success = true,
+                 Data = transactions
+             };
+            return response;
+        }
+        private ApiResponse GetStockWarehouseAndLocationWise()
+        {
+            var transactions = new TransactionRepository().GetStockWarehouseAndLocationWise();
             var response = new ApiResponse
              {
                  Success = true,

@@ -73,6 +73,7 @@ namespace AccountEx.CodeFirst.Models
         public decimal DiscountPercent { get; set; }
         public decimal NetTotal { get; set; }
         public int AuthLocationId { get; set; }
+        public int WareHouseId { get; set; }
         public virtual ICollection<DCItem> DCItems { get; set; }
     }
 }

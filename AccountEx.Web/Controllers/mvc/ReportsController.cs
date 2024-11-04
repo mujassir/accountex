@@ -13,6 +13,7 @@ using Newtonsoft.Json.Converters;
 using SelectPdf;
 using AccountEx.Repositories.Transactions;
 using AccountEx.DbMapping;
+using System.Data.Entity;
 
 namespace AccountEx.Web.Controllers.mvc
 {
@@ -100,6 +101,23 @@ namespace AccountEx.Web.Controllers.mvc
             var setting = new List<SettingExtra>();
             setting.Add(new SettingExtra() { Key = "Salesman", Value = SettingManager.SalemanHeadId + "" });
             ViewBag.FormSetting = JsonConvert.SerializeObject(setting);
+            return View();
+        }
+        public ActionResult InternalStockTransfer()
+        {
+            var setting = new List<SettingExtra>();
+            ViewBag.FormSetting = JsonConvert.SerializeObject(setting);
+            return View();
+        }
+        public ActionResult LocationWiseStock()
+        {
+            var setting = new List<SettingExtra>();
+            ViewBag.FormSetting = JsonConvert.SerializeObject(setting);
+            ViewBag.Locations = new GenericRepository<UserLocation>().AsQueryable()
+                .Where(x => x.UserId == (int)SiteContext.Current.User.Id)
+                .Include(x => x.Location)
+                .Select(x => x.Location)
+                .ToList();
             return View();
         }
         public ActionResult Labour()

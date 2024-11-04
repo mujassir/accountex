@@ -137,6 +137,7 @@
     <Compile Include="Integrations\Google\Calendar\OAuth2Helper.cs" />
     <Compile Include="Lab\TestManager.cs" />
     <Compile Include="Nexus\NexusCaseManager.cs" />
+    <Compile Include="Production\InternalStockTransferManager.cs" />
     <Compile Include="Production\LaboursManager.cs" />
     <Compile Include="Production\StockRequisitionManager.cs" />
     <Compile Include="RentalSystem\RentOpeningBalanceManager.cs" />
