@@ -1,4 +1,5 @@
-﻿@section PageStyle
+﻿@using AccountEx.CodeFirst.Models
+@section PageStyle
 {
     <link href="~/Content/StockRequisition.css" rel="stylesheet" />
 }
@@ -9,7 +10,7 @@
 @using AccountEx.Common;
 
 @{
-   
+
     var error = "";
     if (SettingManager.ProductHeadId == 0)
     {
@@ -58,7 +59,7 @@ else
                             <i class="fa fa-angle-left"></i>&nbsp;Back
                         </a>
                         <a href="javascript:;" onclick="StockRequisition.LoadVoucher('next')" class="btn blue">
-                            <i class="fa fa-angle-left"></i>&nbsp;Next 
+                            <i class="fa fa-angle-left"></i>&nbsp;Next
                         </a>
 
                     </div>
@@ -78,6 +79,32 @@ else
                                 <strong></strong>
                                 <div class="form-body message-content"></div>
                             </div>
+                            @{
+                                // Check if any location is marked as default
+                                var locations = (List<Location>)ViewBag.Locations;
+                                bool hasDefault = locations.Any(x => x.IsDefault);
+                                var firstLocation = locations.FirstOrDefault();
+                                int firstItemId = firstLocation != null ? firstLocation.Id : 0;
+                            }
+                            @if (locations.Count > 0 && SettingManager.IsMultipleLocationEnabled)
+                            {
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label" for="prefix">Location</label>
+                                    <div class="col-md-1">
+                                        <select id="AuthLocationName" class="form-control select2 input-small" data-clear="false" show-clear="false" data-placeholder="Select Location" data-trackchange="true">
+                                            <option></option>
+                                            @foreach (var item in locations)
+                                            {
+                                                <option data-custom="@item.Id" value="@item.Id" data-code="@item.Code"
+                                                        @(item.IsDefault || (!hasDefault && item.Id == firstItemId) ? "selected" : "")>
+                                                    @item.Name
+                                                </option>
+                                            }
+                                        </select>
+                                        <input type="text" class="hide" id="AuthLocationId" data-clear="false" />
+                                    </div>
+                                </div>
+                            }
                             <div class="form-group">
                                 <label class="col-md-2 control-label" for="prefix">SRN.</label>
                                 <div class="col-md-1 container-voucher">
@@ -94,7 +121,7 @@ else
                             <div class="form-group">
                                 <label class="col-md-2 control-label" for="prefix">Book No.</label>
                                 <div class="col-md-1">
-                                    <input type="text" id="InvoiceNumber" data-validate="true" data-required="required" data-message="OB Number is required"  class="number form-control input-small" data-include-in-item="true" />
+                                    <input type="text" id="InvoiceNumber" data-validate="true" data-required="required" data-message="OB Number is required" class="number form-control input-small" data-include-in-item="true" />
                                 </div>
                                 <label class="col-md-2 control-label" for="prefix">Required Date</label>
                                 <div class="col-md-2">
@@ -105,7 +132,7 @@ else
                             <div class="form-group">
                                 <label class="col-md-2 control-label master-account-label" for="prefix">Description</label>
                                 <div class="col-md-5">
-                                    <input type="text" class="form-control" id="Description" >
+                                    <input type="text" class="form-control" id="Description">
                                 </div>
 
                             </div>
@@ -120,6 +147,7 @@ else
                                                 <th style="width: 15%;">Code</th>
                                                 <th style="width: 35%;">Items</th>
                                                 <th style="width: 20%;">ArticleNo</th>
+                                                <th style="width: 11%;">Avail. Qty</th>
                                                 <th style="width: 15%;" colspan="2" style="text-align: center">Unit</th>
 
                                                 @*<th>Quantity</th>*@
@@ -170,22 +198,27 @@ else
                                     {
                                         <button type="button" class="btn purple-plum" onclick="StockRequisition.New()">
                                             <i class="fa  fa-plus-circle"></i>
-                                            New</button>
+                                            New
+                                        </button>
                                         <button type="button" class="btn btn-primary green" onclick="StockRequisition.Save()">
                                             <i class="fa fa-check"></i>
-                                            Save</button>
+                                            Save
+                                        </button>
                                         <button type="button" id="btndelete" class="btn red" onclick="StockRequisition.Delete()">
                                             <i class="fa fa-trash-o"></i>
-                                            Delete</button>
+                                            Delete
+                                        </button>
                                     }
                                     <button type="button" id="btnprint" class="btn yellow" onclick="StockRequisition.Print()">
                                         <i class="fa fa-print"></i>
 
-                                        Print</button>
+                                        Print
+                                    </button>
                                     <button type="button" class="btn blue" onclick="window.location='@(Url.Content(SettingManager.DashBoardUrl))'">
                                         <i class="fa  fa-times-circle"></i>
 
-                                        Close</button>
+                                        Close
+                                    </button>
                                 </div>
                             </div>
 
@@ -207,7 +240,7 @@ else
                     </div>
                     <div class="actions">
                         <a href="javascript:;" onclick="StockRequisition.Add()" class="btn blue">
-                            <i class="fa fa-plus"></i>&nbsp;New 
+                            <i class="fa fa-plus"></i>&nbsp;New
                         </a>
                     </div>
                 </div>
@@ -223,7 +256,8 @@ else
                                 <th style="width: 8px;" class="no-sort">
                                     <input type="checkbox" class="group-checkable" data-set="#mainTable .checkboxes" />
                                 </th>
-                                <th>Vou #
+                                <th>
+                                    Vou #
                                 </th>
                                 <th>Book #</th>
                                 <th>Party</th>
@@ -252,22 +286,29 @@ else
     <tr>
         <td>
             <input type="hidden" class="ItemId" id="ItemId" data-db-column="ItemId">
-            <input type="hidden"  class="EntryType" id="EntryType" data-db-column="EntryType" value="@((int)EntryType.Item)"><input type="hidden">
+            <input type="hidden" class="EntryType" id="EntryType" data-db-column="EntryType" value="@((int)EntryType.Item)"><input type="hidden">
             <input type="text" class="Code form-control typeahead input-small ui-autocomplete-input" data-db-column="ItemCode" autocomplete="off">
         </td>
         <td>
-            <input type="text" disabled="disabled" class="Name form-control input-medium" data-db-column="ItemName"></td>
+            <input type="text" disabled="disabled" class="Name form-control input-medium" data-db-column="ItemName">
+        </td>
         <td>
-            <input type="text" disabled="disabled" class="ArticleNo form-control input-medium" data-db-column="ArticleNo"></td>
+            <input type="text" disabled="disabled" class="ArticleNo form-control input-medium" data-db-column="ArticleNo">
+        </td>
+        <td>
+            <input type="text" disabled="disabled" class="Stock form-control input-medium" data-db-column="StockBalance">
+        </td>
         <td class="align-right">
-            <input type="text" class="Quantity form-control input-small num3" data-db-column="Quantity" data-db-type="decimal"></td>
+            <input type="text" class="Quantity form-control input-small num3" data-db-column="Quantity" data-db-type="decimal">
+        </td>
         <td>
-            <input type="text" class="Unit form-control input-small" data-db-column="Unit" disabled></td>
+            <input type="text" class="Unit form-control input-small" data-db-column="Unit" disabled>
+        </td>
 
         @* <td class="hide">
-            <input type="text" class="Rate form-control input-small" data-db-column="Rate" data-db-type="decimal"></td>
-        <td class="hide">
-            <input type="text" class="Amount form-control input-small" data-db-column="Amount" data-db-type="decimal" disabled></td>*@
+                <input type="text" class="Rate form-control input-small" data-db-column="Rate" data-db-type="decimal"></td>
+            <td class="hide">
+                <input type="text" class="Amount form-control input-small" data-db-column="Amount" data-db-type="decimal" disabled></td>*@
         <td style="width: 8px;">
             <span class="action"><i class="fa fa-trash-o" onclick="StockRequisition.DeleteRow(this)" data-original-title="Delete Item"></i></span>
 
@@ -277,9 +318,11 @@ else
 <script type="text/html" id="template-item-print">
     <tr>
         <td>
-            <span>{{ItemName}}</span></td>
+            <span>{{ItemName}}</span>
+        </td>
         <td>
-            <span>{{Quantity}}</span></td>
+            <span>{{Quantity}}</span>
+        </td>
     </tr>
 </script>
 
@@ -313,10 +356,11 @@ else
                             </tr>
                             <tr>
                                 <td class="PoAddress">@SettingManager.CityState</td>
-                                <tr>
-                                    <td class="PoAddress">@SettingManager.Phone
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td class="PoAddress">
+                                    @SettingManager.Phone
+                                </td>
+                            </tr>
                             <tr>
                                 <td class="PoAddress">@SettingManager.Fax</td>
                             </tr>
@@ -341,7 +385,7 @@ else
                         <tr>
                             <td class="font-size"><b>SRN # :</b></td>
                             <td>
-                                <span id="lblVoucherNumber"></span>
+                                <span id="lblVoucherCode"></span><span id="lblVoucherNumber"></span>
                             </td>
                         </tr>
                     </table>
@@ -362,7 +406,7 @@ else
                     <th>Description</th>
                     <th>Quantity</th>
                     @*   <th>Unit Price</th>
-                    <th>Line Total</th>*@
+                        <th>Line Total</th>*@
                 </tr>
             </thead>
             <tbody>

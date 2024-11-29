@@ -275,7 +275,7 @@ namespace AccountEx.Web.Controllers.api.Transaction
                 //if order is processed, then no one GINP can be added
                 if (input.Id == 0)
                 {
-                    var order = orderRepo.GetByVoucherNumber(input.OrderNo, voucherType, ordertype);
+                    var order = orderRepo.GetByVoucherNumber(input.OrderNo, voucherType, ordertype, 0);
                     if (ordertype == (byte)OrderType.Production && order.Status != (byte)TransactionStatus.PendingProduction)
                     {
                         err += "Order is already processed and good issue note can't be added.";
@@ -342,7 +342,7 @@ namespace AccountEx.Web.Controllers.api.Transaction
                     }
 
                     /////code for serviceorder addition
-                    var orderdata = new OrderBookingRepository().GetByVoucherNumber(input.OrderNo, voucherType, ordertype);
+                    var orderdata = new OrderBookingRepository().GetByVoucherNumber(input.OrderNo, voucherType, ordertype, 0);
 
                     if (ordertype == (byte)OrderType.Production && orderdata.Status != (byte)TransactionStatus.PendingProduction)
                     {
@@ -418,7 +418,7 @@ namespace AccountEx.Web.Controllers.api.Transaction
                         type = GINP.TransactionType;
                         ordertype = (byte)OrderType.Services;
                     }
-                    var order = new OrderBookingRepository().GetByVoucherNumber(GINP.OrderNo, type, ordertype);
+                    var order = new OrderBookingRepository().GetByVoucherNumber(GINP.OrderNo, type, ordertype, 0);
                     if (order != null)
                     {
                         if (ordertype == (byte)OrderType.Production && order.Status != (byte)TransactionStatus.PendingProduction)

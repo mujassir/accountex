@@ -1,4 +1,5 @@
-﻿@section PageStyle
+﻿﻿﻿@using AccountEx.CodeFirst.Models
+@section PageStyle
 {
     <link href="~/Content/deliverychallan.css" rel="stylesheet" />
 }
@@ -118,6 +119,54 @@ else
                                 <i class="close" onclick="$(this).parent().hide();"></i>
                                 <strong></strong>
                                 <div class="form-body message-content"></div>
+                            </div>
+                            @{
+                                // Check if any location is marked as default
+                                var locations = (List<Location>)ViewBag.Locations;
+                                bool hasDefault = locations.Any(x => x.IsDefault);
+                                var firstLocation = locations.FirstOrDefault();
+                                int firstItemId = firstLocation != null ? firstLocation.Id : 0;
+
+                                // Check if any Warehouse is marked as default
+                                var Warehouses = (List<WareHouse>)ViewBag.Warehouses;
+                                bool hasWDefault = Warehouses.Any(x => x.IsDefault);
+                                var firstWarehouse = Warehouses.FirstOrDefault();
+                                int firstWItemId = firstWarehouse != null ? firstWarehouse.Id : 0;
+                            }
+                            <div class="form-group @(locations.Count > 0 && SettingManager.IsMultipleLocationEnabled ? "" : "hide")">
+                                <label class="col-md-2 control-label" for="prefix">Location</label>
+                                <div class="col-md-1">
+                                    <select id="AuthLocationName" class="form-control input-small" data-clear="false" data-placeholder="Select Warehouse" data-trackchange="true">
+                                        @if (SettingManager.IsMultipleLocationEnabled)
+                                        {
+                                            foreach (var item in locations)
+                                            {
+                                                <option data-custom="@item.Id" data-code="@item.Code"
+                                                        @(item.IsDefault || (!hasDefault && item.Id == firstItemId) ? "selected" : "")>
+                                                    @item.Name
+                                                </option>
+                                            }
+                                        }
+                                    </select>
+                                    <input type="text" class="hide" id="AuthLocationId" data-clear="false" />
+                                </div>
+                                
+                                <label class="col-md-2 control-label" for="prefix">Warehouse</label>
+                                <div class="col-md-1">
+                                    <select id="WarehouseName" class="form-control input-small" data-clear="false" data-placeholder="Select Location" data-trackchange="true">
+                                        @if (SettingManager.IsMultipleLocationEnabled)
+                                        {
+                                            foreach (var item in Warehouses)
+                                            {
+                                                <option data-custom="@item.Id" data-code="@item.Code"  data-location="@item.LocationId"
+                                                        @(item.IsDefault || (!hasWDefault && item.Id == firstWItemId) ? "selected" : "")>
+                                                    @item.Name
+                                                </option>
+                                            }
+                                        }
+                                    </select>
+                                    <input type="text" class="hide" id="AuthLocationId" data-clear="false" />
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-md-2 control-label" for="prefix">@label No.</label>
@@ -345,10 +394,10 @@ else
                                         <i class="fa fa-check"></i>
                                         Save
                                     </button>
-                                        <button type="button" id="btndelete" class="btn red" onclick="DeliveryChallan.Delete()">
-                                            <i class="fa fa-trash-o"></i>
-                                            Delete
-                                        </button>
+                                    <button type="button" id="btndelete" class="btn red" onclick="DeliveryChallan.Delete()">
+                                        <i class="fa fa-trash-o"></i>
+                                        Delete
+                                    </button>
                                 }
                                 <button type="button" id="btnprint" class="btn yellow" onclick="DeliveryChallan.Print()">
                                     <i class="fa fa-print"></i>
@@ -454,7 +503,7 @@ else
     <div id="jsondata" class="hide">
         <input id="FormSetting" type="text" value="@ViewBag.FormSetting" />
     </div>
-                                }
+}
 
 <div id="div-report" class="hide">
     <div class=" row form-group">

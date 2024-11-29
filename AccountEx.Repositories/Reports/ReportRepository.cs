@@ -432,6 +432,12 @@ namespace AccountEx.Repositories
                            SiteContext.Current.User.CompanyId, SiteContext.Current.Fiscal.Id);
             return Db.Database.SqlQuery<ProductionDetail>(query).ToList();
         }
+        public List<InternalStockTransferDetail> GetInternalStockTransferDetail(DateTime fromDate, DateTime toDate)
+        {
+            string query = string.Format("EXEC [DBO].[GetInternalStockTransferDetail] @FROMDATE='{0}',@TODATE='{1}',@COMPANYID={2},@FiscalId={3}", fromDate.ToString("yyyy-MM-dd"), toDate.ToString("yyyy-MM-dd"),
+                           SiteContext.Current.User.CompanyId, SiteContext.Current.Fiscal.Id);
+            return Db.Database.SqlQuery<InternalStockTransferDetail>(query).ToList();
+        }
         public List<VehicleInstallmentDetailExtra> GetVehicleInstallmentDetail(DateTime fromDate, DateTime toDate)
         {
             string query = string.Format("EXEC [DBO].[VehicleInstallmentDetail] @FROMDATE='{0}',@TODATE='{1}'", fromDate.ToString("yyyy-MM-dd"), toDate.ToString("yyyy-MM-dd"));

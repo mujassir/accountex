@@ -67,14 +67,20 @@ namespace AccountEx.Web.Controllers.api.Transaction
                 var queryString = Request.RequestUri.ParseQueryString();
                 var type = queryString["type"];
                 var key = queryString["key"].ToLower();
+                int locationId = 0;
+                if (queryString["locationId"] != null)
+                {
+                    int.TryParse(queryString["locationId"], out locationId);
+                }
+
                 var vouchertype = (VoucherType)Convert.ToByte(type);
                 Object orderinfo = "";
                 //var data = TransactionManager.GetVocuherDetail(voucher, vouchertype, queryString["key"]);
                 bool next, previous;
                 if (voucherNumber == 0) key = "nextvouchernumber";
                 if (key == "nextvouchernumber")
-                    voucherNumber = repo.GetNextVoucherNumber(vouchertype);
-                var data = repo.GetByVoucherNumber(voucherNumber, vouchertype, key, out next, out previous);
+                    voucherNumber = repo.GetNextVoucherNumber(vouchertype, locationId);
+                var data = repo.GetByVoucherNumber(voucherNumber, vouchertype, key, locationId, out next, out previous);
                 var detail = new AccountDetail();
                 var salesmanInfo = "";
                 var productMappings = new List<ProductMapping>();
@@ -133,7 +139,7 @@ namespace AccountEx.Web.Controllers.api.Transaction
                 if (err == "")
                 {
                     input.FiscalId = SiteContext.Current.Fiscal.Id;
-                    DCManager.Save(input, false);
+                    DCManager.Save(input, true);
                     response = new ApiResponse { Success = true, Data = input.Id };
                 }
                 else
@@ -286,8 +292,10 @@ namespace AccountEx.Web.Controllers.api.Transaction
             var rs = new JQueryResponse();
             foreach (var item in orderedList)
             {
+                var code = (item.VoucherCode != null ? item.VoucherCode + "-" : "") + item.VoucherNumber;
                 var data = new List<string>();
-                data.Add("<input type='text' class='OrderNo form-control hide' value='" + item.VoucherNumber + "' />" + item.VoucherNumber + "");
+                data.Add("<input type='text' class='OrderNo form-control hide' value='" + code + 
+                    "' data-location-Id='" + item.AuthLocationId +"' data-location-code='" + item.VoucherCode +"'/>" + code + "");
                 data.Add(item.AccountName);
                 data.Add(item.SalesmanName);
                 data.Add(item.PartyPONumber);

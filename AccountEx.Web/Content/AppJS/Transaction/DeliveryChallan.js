@@ -9,11 +9,14 @@ var DeliveryChallan = function () {
     var PageSetting = new Object();
     var PageData = new Object();
     var focusElement = "#Date";
+    var requiredOrder = false;
+    var getOrder = false;
     return {
         init: function () {
 
             var $this = this;
             jQuery('.dataTable').wrap('<div class="dataTables_scroll" />');
+            $this.LoadPageSetting();
             $("#VoucherNumber").keypress(function (e) {
                 if (e.which == 13) {
                     $(this).val() == "0" ? focusElement = "#Date" : "#Date";
@@ -29,6 +32,16 @@ var DeliveryChallan = function () {
 
                 }
             });
+            $("#AuthLocationName").change(function (e) {
+                $this.LoadVoucher("nextvouchernumber");
+                $this.ResetWarehouse();
+
+            });
+
+            if (requiredOrder) {
+                this.MarkRequiredOrder();
+            }
+
             $(document).on("keyup", "input.Code", function (event) {
                 if (event.which == 13) {
                     if ($(this).val().trim() != "") {
@@ -170,7 +183,6 @@ var DeliveryChallan = function () {
             $(document).on("click", "#OrderTable > tbody tr", function () {
                 $this.SelectOrder(this);
             });
-            $this.LoadPageSetting();
             var url = Setting.APIBaseUrl + API_CONTROLLER + "?type=" + $this.GetType();
             if (Setting.PageLandingView == "DetailView") {
                 $this.Add();
@@ -189,10 +201,13 @@ var DeliveryChallan = function () {
         Add: function () {
             Common.Clear();
             this.CustomClear();
+            $('#AuthLocationName').trigger('change');
+            $('#WarehouseName').trigger('change');
             this.GetNextVoucherNumber();
             $(".container-message").hide();
         },
         AddItem: function () {
+            if (requiredOrder) return
             var $this = this;
             var code = $("#item-container tbody tr:nth-last-child(1) td:nth-child(1) input.Code").val();
             if (typeof code != "undefined" && code.trim() == "") {
@@ -227,7 +242,16 @@ var DeliveryChallan = function () {
         },
         LoadOrder: function (key) {
             var $this = this;
-            var orderno = Common.GetInt($("#OrderNo").val());
+            getOrder = false;
+            var orderno = $("#OrderNo").val();
+            if (!orderno) return;
+            var locationId = $("#AuthLocationId").val();
+            const token = orderno.split("-");
+            var voucherNumber = orderno;
+            if (token.length > 1) {
+                voucherNumber = token.slice(1).join("-");
+            }
+
             var type = VoucherType[$this.GetType()]
             if (type == VoucherType.goodissue)
                 type = VoucherType.saleorder;
@@ -235,7 +259,7 @@ var DeliveryChallan = function () {
                 type = VoucherType.purchaseorder
 
             Common.WrapAjax({
-                url: Setting.APIBaseUrl + "OrderBooking/" + orderno + "?type=" + type + "&key=" + key + "&voucher=" + orderno,
+                url: Setting.APIBaseUrl + "OrderBooking/" + voucherNumber + "?type=" + type + "&key=" + key + "&voucher=" + orderno + "&locationId=" + locationId,
                 type: "GET",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -246,8 +270,16 @@ var DeliveryChallan = function () {
                         var invoiceno = $("#InvoiceNumber").val();
                         var date = $("#Date").val();
                         var d = res.Data.Order;
+                        var defaultLocationId = d?.AuthLocationId || 0;
+                        if (!d?.AuthLocationId) {
+                            defaultLocationId = $("#AuthLocationName")?.find(":selected")?.data("custom")
+                        }
+                        $(`#AuthLocationId`).val(defaultLocationId)
+                        $this.ResetWarehouse();
                         if (d == null) {
-                            $this.CustomClear();
+                            if (!getOrder)
+                                $this.CustomClear();
+
                             $("#VoucherNumber,#InvoiceNumber").val(res.Data.VoucherNumber);
                             Common.ShowError("Order no is not valid.");
                         }
@@ -259,6 +291,13 @@ var DeliveryChallan = function () {
                             Common.MapEditData(d, "#form-info");
                             $("#OrderId").val(d.Id);
                             $("#VoucherNumber").val(voucherno);
+                            if (d.VoucherCode) {
+                                $(`#AuthLocationName`).val(d.VoucherCode)
+                                $(`#AuthLocationId`).val(d.AuthLocationId)
+                            }
+                            if (d?.WareHouseId) {
+                                $(`#WarehouseName`).val(d.WareHouseId)
+                            }
                             $("#Date").val(date);
                             $("#InvoiceNumber").val(invoiceno);
                             $("#Id").val(0);
@@ -282,15 +321,16 @@ var DeliveryChallan = function () {
                                 $this.GetWholeTotal();
                             }
                         }
-                        if (res.Data.Next)
-                            $(".form-actions .next,.form-actions .last").removeClass("disabled");
-                        else
-                            $(".form-actions .next,.form-actions .last").addClass("disabled");
-                        if (res.Data.Previous)
-                            $(".form-actions .first,.form-actions .previous").removeClass("disabled");
-                        else
-                            $(".form-actions .first,.form-actions .previous").addClass("disabled");
+                        //if (res.Data.Next)
+                        //    $(".form-actions .next,.form-actions .last").removeClass("disabled");
+                        //else
+                        //    $(".form-actions .next,.form-actions .last").addClass("disabled");
+                        //if (res.Data.Previous)
+                        //    $(".form-actions .first,.form-actions .previous").removeClass("disabled");
+                        //else
+                        //    $(".form-actions .first,.form-actions .previous").addClass("disabled");
                         $this.AddItem();
+                        $this.MarkRequiredOrder();
                     } else {
                         Common.ShowError(res.Error);
                     }
@@ -364,6 +404,15 @@ var DeliveryChallan = function () {
             }
 
             if (Common.Validate($("#mainform"))) {
+                const voucherCode = $("#AuthLocationName")?.find(":selected")?.data("code") || null;
+
+                let batchNumber = "";
+                if (voucherCode) batchNumber += voucherCode
+                if (record["VoucherNumber"]) batchNumber += record["VoucherNumber"]
+                if (record["Date"]) batchNumber += record["Date"].replace(/\//g, '');
+
+                console.log(batchNumber)
+
                 Items = Common.SaveItemData();
                 Items = Enumerable.From(Items).Where("$.ItemCode.trim()!=''").ToArray();
                 var err = "";
@@ -371,8 +420,15 @@ var DeliveryChallan = function () {
                 if (typeof party == "undefined" || party == null) {
                     err += $("#AccountCode").val() + " is not valid party code.";
                 }
-
+                var warehouse = $("#WarehouseName")?.find(":selected")?.data("custom") || null;
+                var authLocationId = $("#AuthLocationName")?.find(":selected")?.data("custom") || null;
+                if (!warehouse && PageSetting.IsMultipleLocationEnabled) {
+                    err += " Please select warehouse.";
+                }
+                record["WarehouseId"] = warehouse || 0;
+                record["AuthLocationId"] = authLocationId || 0;
                 for (var i in Items) {
+                    Items[i]["BatchNo"] = batchNumber;
                     var item = Items[i];
                     if (item.Quantity <= 0) {
                         err += "Item " + item.ItemCode + "(" + item.ItemName + ") must have quantity greater than zero(0).";
@@ -391,6 +447,13 @@ var DeliveryChallan = function () {
                     return;
                 }
                 record["TransactionType"] = VoucherType[$this.GetType()];
+                record["VoucherCode"] = voucherCode
+                if (record["OrderNo"]) {
+                    const token = record["OrderNo"].split("-");
+                    if (token.length > 1) {
+                        record["OrderNo"] = token.splice(1).join("-")
+                    }
+                }
                 record["DCItems"] = Items;
                 LIST_CHANGED = true;
                 Common.WrapAjax({
@@ -576,8 +639,9 @@ var DeliveryChallan = function () {
         LoadVoucher: function (key) {
             var $this = this;
             var voucherno = Common.GetInt($("#VoucherNumber").val());
+            var locationId = Common.GetInt($("#AuthLocationId").val());
             Common.WrapAjax({
-                url: Setting.APIBaseUrl + API_CONTROLLER + "/" + voucherno + "?type=" + VoucherType[$this.GetType()] + "&key=" + key + "&voucher=" + voucherno,
+                url: Setting.APIBaseUrl + API_CONTROLLER + "/" + voucherno + "?type=" + VoucherType[$this.GetType()] + "&key=" + key + "&voucher=" + voucherno + "&locationId=" + locationId,
                 type: "GET",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -586,15 +650,39 @@ var DeliveryChallan = function () {
                 blockMessage: "Loading delivery challan ...please wait",
                 success: function (res) {
                     if (res.Success) {
-                        $this.CustomClear();
+                        if (!getOrder)
+                            $this.CustomClear();
                         $("#item-container tbody").html("");
                         var d = res.Data.Order;
+                        var defaultLocationId = d?.AuthLocationId || 0;
+                        if (!d?.AuthLocationId) {
+                            defaultLocationId = $("#AuthLocationName")?.find(":selected")?.data("custom")
+                        }
+                        const orderNo = $("#OrderNo").val();
                         Common.MapEditData(d, "#form-info");
-                        if (d == null) {
-                            $this.CustomClear();
+                        if (orderNo)
+                            $("#OrderNo").val(orderNo);
+
+                        if (d?.OrderNo && d?.VoucherCode) {
+                            $("#OrderNo").val(d.VoucherCode + '-' + d.OrderNo);
+                        }
+
+                        $this.MarkRequiredOrder();
+                        $(`#AuthLocationId`).val(defaultLocationId)
+
+                        if (d?.WareHouseId) {
+                            const warehouseCode = $(`#WarehouseName option[data-custom='${d.WareHouseId }']`)?.attr("data-code")
+                            $('#WarehouseId').val(d.WareHouseId)
+                            if (warehouseCode) $('#WarehouseName').val(warehouseCode)
+                        }
+                        if (d == null || !d.AccountId) {
+                            if (!getOrder)
+                                $this.CustomClear();
                             $("#OrderNo").prop("disabled", false);
                             $("#SearchIconOrder").removeClass("hide");
                             $("#VoucherNumber,#InvoiceNumber").val(res.Data.VoucherNumber);
+                            if (getOrder)
+                                $this.LoadOrder("challan");
                         }
                         else {
                             $("#PreVoucherNumber").val(d.VoucherNumber);
@@ -672,7 +760,8 @@ var DeliveryChallan = function () {
             Common.ConfirmDelete(function () {
                 var voucherno = Common.GetInt($("#VoucherNumber").val());
                 var id = Common.GetInt($("#Id").val());
-                var url = Setting.APIBaseUrl + API_CONTROLLER + "/" + id + "?type=" + type + "&voucher=" + voucherno;
+                var locationId = Common.GetInt($("#AuthLocationId").val());
+                var url = Setting.APIBaseUrl + API_CONTROLLER + "/" + id + "?type=" + type + "&voucher=" + voucherno + "&locationId=" + locationId;
                 //var url = Setting.APIBaseUrl + API_CONTROLLER + "/" + voucherno;
 
                 if (id <= 0) {
@@ -759,7 +848,11 @@ var DeliveryChallan = function () {
                 var token = tokens[i];
                 PageSetting[token.Key] = token.Value;
             }
-
+            if (this.GetType() == "goodreceive") {
+                requiredOrder = PageSetting?.RequiredPurchaseOrder || false;
+            } else if (this.GetType() == "goodissue") {
+                requiredOrder = PageSetting?.RequiredSaleOrder || false;
+            }
             this.LoadAccounts();
 
         },
@@ -841,9 +934,31 @@ var DeliveryChallan = function () {
         SelectOrder: function (tr) {
             var $this = this;
             var orderno = $(tr).find("input.OrderNo ").val();
+            var locationId = Common.GetInt($(tr).find("input.OrderNo ").attr("data-location-id"));
+            var locationCode = $(tr).find("input.OrderNo ").attr("data-location-code");
+            if (locationId > 0 && !PageSetting.IsMultipleLocationEnabled) {
+                Common.ShowError("Multiple location wise voucher not enabled.");
+                return
+            }
+            if (locationId == 0 && PageSetting.IsMultipleLocationEnabled) {
+                Common.ShowError("Location is not selected in this voucher");
+                return
+            }
             if (orderno.trim() != "" && orderno != null) {
                 $("#OrderNo").val(orderno);
-                $this.LoadOrder("challan");
+                if (PageSetting.IsMultipleLocationEnabled) {
+                    const existingAutLocId = $("#AuthLocationId").val();
+                    if (existingAutLocId != locationId) {
+                        getOrder = true
+                        $("#AuthLocationId").val(locationId)
+                        $('#AuthLocationName').val(locationCode);
+                        this.LoadVoucher("nextvouchernumber");
+                    } else {
+                        $this.LoadOrder("challan");
+                    }
+                } else {
+                    $this.LoadOrder("challan");
+                }
                 $('#btnOrderClose').click();
             }
         },
@@ -882,6 +997,22 @@ var DeliveryChallan = function () {
 
 
         },
+        MarkRequiredOrder: function () {
+            if (!requiredOrder) return
+            setTimeout(() => {
+                //$("#AuthLocationName").select2("enable", false);
+            }, 200)
+        },
+        ResetWarehouse: function() {
+            $(`#WarehouseName`).val(null);
+            const locId = $("#AuthLocationId").val();
+            document.querySelectorAll('#WarehouseName option').forEach(el => {
+                el.style.display = 'none';
+                if (el.getAttribute('data-location') == locId) {
+                    el.style.display = 'block';
+                }
+            });
+        }
 
 
     };

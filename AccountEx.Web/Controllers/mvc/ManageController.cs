@@ -12,6 +12,7 @@ using AccountEx.Repositories.COA;
 using Entities.CodeFirst;
 using AccountEx.Repositories.Config;
 using AccountEx.CodeFirst.Models.CRM;
+using System.Data.Entity;
 
 namespace AccountEx.Web.Controllers.mvc
 {
@@ -41,6 +42,11 @@ namespace AccountEx.Web.Controllers.mvc
             ViewBag.Salesman = new AccountRepository().GetLeafAccounts(SettingManager.SalemanHeadId);
             ViewBag.CustomerGroups = new GenericRepository<CustomerGroup>().GetAll();
             ViewBag.Cities = new GenericRepository<City>().GetNames();
+            ViewBag.Locations = new GenericRepository<UserLocation>().AsQueryable()
+                .Where(x => x.UserId == (int)SiteContext.Current.User.Id)
+                .Include(x => x.Location)
+                .Select(x => x.Location)
+                .ToList();
             return View();
         }
 
@@ -145,6 +151,11 @@ namespace AccountEx.Web.Controllers.mvc
         {
             ViewBag.SupplierGroups = new GenericRepository<SupplierGroup>().GetNames();
             ViewBag.Salesman = new AccountRepository().GetLeafAccounts(SettingManager.SalemanHeadId);
+            ViewBag.Locations = new GenericRepository<UserLocation>().AsQueryable()
+                .Where(x => x.UserId == (int)SiteContext.Current.User.Id)
+                .Include(x => x.Location)
+                .Select(x => x.Location)
+                .ToList();
             return View();
         }
         [OutputCache(CacheProfile = "Medium")]
@@ -319,6 +330,25 @@ namespace AccountEx.Web.Controllers.mvc
         }
         public ActionResult Designations()
         {
+            return View();
+        }
+        public ActionResult Locations()
+        {
+            return View();
+        }
+        public ActionResult UserLocations()
+        {
+            ViewBag.Users = new UserRepository().GetAll();
+            ViewBag.Locations = new GenericRepository<Location>().GetAll();
+            return View();
+        }
+        public ActionResult Warehouses()
+        {
+            ViewBag.Locations = new GenericRepository<UserLocation>().AsQueryable()
+                .Where(x => x.UserId == (int)SiteContext.Current.User.Id)
+                .Include(x => x.Location)
+                .Select(x => x.Location)
+                .ToList();
             return View();
         }
         public ActionResult UnitTypes()

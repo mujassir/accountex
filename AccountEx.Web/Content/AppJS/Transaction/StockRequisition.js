@@ -33,6 +33,9 @@ var StockRequisition = function () {
                     $("#Date").focus();
                 }
             });
+            $("#AuthLocationName").change(function (e) {
+                $this.LoadVoucher("nextvouchernumber");
+            });
             $(document).on("keyup", ".Code", function (event) {
                 var type = $this.GetType();
                 if (event.which == 13) {
@@ -42,6 +45,7 @@ var StockRequisition = function () {
                     else {
                         if (PageSetting.BarCodeEnabled) {
                             var product = Common.GetByBarCode($(this).val());
+                            var productStock = $this.GetProductStock(account.Id);
                             var tr = $(this).closest("tr");
                             if (typeof product != "undefined" && product != null) {
                                 var account = Common.GetById(product.AccountId);
@@ -62,7 +66,7 @@ var StockRequisition = function () {
                             }
                         }
                         else {
-                            $("#item-container tbody tr:nth-last-child(1) td:nth-child(4) input.Quantity").focus().select();
+                            $("#item-container tbody tr:nth-last-child(1) td input.Quantity").focus().select();
                         }
                     }
 
@@ -70,27 +74,8 @@ var StockRequisition = function () {
             });
             $(document).on("blur", ".Code", function () {
                 if (!PageSetting.BarCodeEnabled) {
-                    var voucher = Common.GetQueryStringValue("type").toLowerCase();
                     var account = Common.GetByCode($(this).val());
-                    console.log(account);
-                    var tr = $(this).closest("tr");
                     if (typeof account != "undefined" && account != null) {
-                        var product = Common.GetAccountDetailByAccountId(account.Id);
-
-                        $(tr).find(":nth-child(1) input.ItemId").val(account.Id);
-                        $(tr).find(":nth-child(2) input.Name").val(account.Name);
-                        $(tr).find(":nth-child(3) input.ArticleNo").val(product.ArticleNo);
-                        $(tr).find(":nth-child(5) input.Unit").val(product.UnitType);
-                        $(tr).find(":nth-child(6) input.Rate").val((voucher == "saleorder" ? product.SalePrice : product.PurchasePrice));
-                        $(tr).find("input.Quantity").val(1);
-                      
-
-                        //$(tr).find("input.ItemId").val(product.Id);
-                        //$(tr).find("input.Name").val(product.Name);
-                       
-                        //$(tr).find("input.ArticleNo").val(product.ArticleNo);
-                        //$(tr).find(":nth-child(5) input.Rate").val((voucher == "saleorder" ? product.SalePrice : product.PurchasePrice));
-                        $(".container-message").hide();
                     }
                     else {
                         if ($(this).val().trim() != "") {
@@ -131,6 +116,7 @@ var StockRequisition = function () {
                 }
             });
             $this.LoadPageSetting();
+            Common.LoadProductStock(PageSetting.ProductHeadId);
             var url = Setting.APIBaseUrl + API_CONTROLLER + "?type=" + $this.GetType();
             if (Setting.PageLandingView == "DetailView") {
                 this.Add();
@@ -153,19 +139,24 @@ var StockRequisition = function () {
             focusElement = "#InvoiceNumber";
             $this.LoadVoucher("nextvouchernumber");
         },
+        GetProductStock: function (accountId) {
+            const products = Common.GetData("ProductStock" + Common.LocalStoragePrefix)
+            return products.find(x => x.AccountId === accountId)
+        },
         Add: function () {
             Common.Clear();
             this.CustomClear();
+            $('#AuthLocationName').trigger('change');
             this.GetNextVoucherNumber();
             $(".container-message").hide();
         },
         AddItem: function () {
             var $this = this;
             //if (Common.Validate($("#addrow"))) {
-            var code = $("#item-container tbody tr:nth-last-child(1) td:nth-child(1) input.Code").val();
+            var code = $("#item-container tbody tr:nth-last-child(1) td input.Code").val();
             if (typeof code != "undefined" && code.trim() == "") {
                 setTimeout(function () {
-                    $("#item-container tbody tr:nth-last-child(1) td:nth-child(1) input.Code").focus().select();
+                    $("#item-container tbody tr:nth-last-child(1) td input.Code").focus().select();
                 }, 300);
                 focusElement = "";
                 return;
@@ -259,6 +250,7 @@ var StockRequisition = function () {
                     Common.ShowError(err);
                     return;
                 }
+                record["VoucherCode"] = $("#AuthLocationName")?.find(":selected")?.data("code") || null
                 record["TransactionType"] = VoucherType[voucher],
                 record["StockRequisitionItems"] = Items;
                 LIST_CHANGED = true;
@@ -307,7 +299,7 @@ var StockRequisition = function () {
             var Price = 0.0;
             var discount = 0.0;
             $("#item-container tbody tr").each(function () {
-                Quantity += Common.GetInt($(this).find(":nth-child(4) input.Quantity").val());
+                Quantity += Common.GetInt($(this).find("input.Quantity").val());
             });
             $("#QuantityTotal").val(Quantity);
         },
@@ -319,6 +311,7 @@ var StockRequisition = function () {
             $("#lblpreviousbalance").html("00");
             $("#AccountCode").removeAttr("disabled");
             $("#btndelete,#btnprint").prop("disabled", true);
+
             Common.Clear();
         },
         LoadReportData: function (res) {
@@ -326,6 +319,9 @@ var StockRequisition = function () {
             var d = res.Data.Order;
             if (d == null)
                 return;
+            console.log(d)
+            if (d.VoucherCode)
+                d.VoucherCode = d.VoucherCode + "-"
             Common.MapDataWithPrefixF(d, "#div-report", "lbl", "html");
             var instruction = $("#Instructions").val().replace(/\r?\n/g, '<br />');
             $("#lblInstructions").html(instruction);
@@ -365,8 +361,9 @@ var StockRequisition = function () {
         LoadVoucher: function (key) {
             var $this = this;
             var voucherno = Common.GetInt($("#VoucherNumber").val());
+            var locationId = Common.GetInt($("#AuthLocationId").val());
             Common.WrapAjax({
-                url: Setting.APIBaseUrl + API_CONTROLLER + "/" + voucherno +  "?&key=" + key + "&voucher=" + voucherno,
+                url: Setting.APIBaseUrl + API_CONTROLLER + "/" + voucherno + "?&key=" + key + "&voucher=" + voucherno + "&locationId=" + locationId,
                 type: "GET",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -375,7 +372,6 @@ var StockRequisition = function () {
                 blockMessage: "Loading  " + $this.GetType() + " ...please wait",
                 success: function (res) {
                     if (res.Success) {
-
                         $("#item-container tbody").html("");
                         $this.CustomClear();
                         var d = res.Data.Order;
@@ -408,7 +404,7 @@ var StockRequisition = function () {
                                 $("#qtytotal1").val(d.QuantityTotal);
                                 Common.MapItemData(d.StockRequisitionItems);
                                 setTimeout(function () {
-                                    $("#item-container tbody tr:nth-last-child(1) td:nth-child(1) input.Code").focus().select();
+                                    $("#item-container tbody tr:nth-last-child(1) td input.Code").focus().select();
                                 }, 500);
                                 $this.GetWholeTotal();
 
@@ -424,6 +420,9 @@ var StockRequisition = function () {
                             $(".form-actions .first,.form-actions .previous").addClass("disabled");
                         $this.AddItem();
                         $this.LoadReportData(res);
+
+                        if (d && d.AuthLocationId > 0)
+                            $(`#AuthLocationName`).select2("val", d.AuthLocationId)
                     } else {
                         Common.ShowError(res.Error);
                     }
@@ -443,7 +442,8 @@ var StockRequisition = function () {
             var type = VoucherType[$this.GetType()];
             Common.ConfirmDelete(function () {
                 var voucherno = Common.GetInt($("#VoucherNumber").val());
-                var url = Setting.APIBaseUrl + API_CONTROLLER + "/" + voucherno + "?type=" + type + "&voucher=" + voucherno;
+                var locationId = Common.GetInt($("#AuthLocationId").val());
+                var url = Setting.APIBaseUrl + API_CONTROLLER + "/" + voucherno + "?type=" + type + "&voucher=" + voucherno + "&locationId=" + locationId;
                 var id = Common.GetInt($("#Id").val());
                 if (id <= 0) {
                     Common.ShowError("No Voucher found for deletion.");
@@ -507,11 +507,14 @@ var StockRequisition = function () {
                     var tr = $(this).closest("tr");
                     if (typeof account != "undefined" && account != null) {
                         var product = Common.GetAccountDetailByAccountId(account.Id);
-                        $(tr).find(":nth-child(1) input.ItemId").val(account.Id);
-                        $(tr).find(":nth-child(2) input.Name").val(account.Name);
-                        $(tr).find(":nth-child(3) input.ArticleNo").val(product.ArticleNo);
-                        $(tr).find(":nth-child(5) input.Unit").val(product.UnitType);
-                        $(tr).find(":nth-child(6) input.Rate").val((voucher == "saleorder" ? product.SalePrice : product.PurchasePrice));
+                        var productStock = $this.GetProductStock(account.Id);
+                        console.log(productStock)
+                        $(tr).find("input.ItemId").val(account.Id);
+                        $(tr).find("input.Name").val(account.Name);
+                        $(tr).find("input.ArticleNo").val(product.ArticleNo);
+                        $(tr).find("input.Stock").val(productStock?.Balance || 0);
+                        $(tr).find("input.Unit").val(product.UnitType);
+                        $(tr).find("input.Rate").val((voucher == "saleorder" ? product.SalePrice : product.PurchasePrice));
                         $(".container-message").hide();
                     }
                 }

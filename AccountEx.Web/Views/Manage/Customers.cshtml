@@ -63,7 +63,7 @@
                                                     <div class="form-group">
                                                         <label class="col-md-4 control-label" for="prefix">Party Contact Number</label>
                                                         <div class="col-md-6">
-                                                            <input type="text" maxlength="11" class="form-control " id="ContactNumber" data-validate="true" data-message="Contact Number is required" >
+                                                            <input type="text" maxlength="11" class="form-control " id="ContactNumber" data-validate="true" data-message="Contact Number is required">
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
@@ -107,14 +107,21 @@
                                                     <div class="form-group">
                                                         <label class="col-md-4 control-label" for="prefix">Contact Person</label>
                                                         <div class="col-md-6">
-                                                            <input type="text" class="form-control" id="ContactPerson" data-validate="true" data-message="Contact Person is required" >
+                                                            <input type="text" class="form-control" id="ContactPerson" data-validate="true" data-message="Contact Person is required">
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="col-md-4 control-label" for="prefix">Contact Number</label>
                                                         <div class="col-md-6">
-                                                            <input type="text" maxlength="11" class="form-control" id="ContactPersonNumber" data-validate="true" data-message="Contact Number is required" >
+                                                            <input type="text" maxlength="11" class="form-control" id="ContactPersonNumber" data-validate="true" data-message="Contact Number is required">
                                                         </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-md-4 control-label" for="prefix">Max Amount Threshold</label>
+                                                        <div class="col-md-6">
+                                                            <input type="text" class="form-control " id="MaxAmountThreshold" placeholder="Max Amount Threshold">
+                                                        </div>
+
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
@@ -224,6 +231,19 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
+                                                        <label class="col-md-4 control-label" for="prefix">Location</label>
+                                                        <div class="col-md-6">
+                                                            <select id="AuthLocationName" class="form-control select2" data-placeholder="Select Location" data-trackchange="true">
+                                                                <option></option>
+                                                                @foreach (var item in (List<Location>)ViewBag.Locations)
+                                                                {
+                                                                    <option data-custom="@item.Id">@item.Name</option>
+                                                                }
+                                                            </select>
+                                                            <input type="text" class="hide" id="AuthLocationId" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
                                                         <label class="col-md-4 control-label" for="prefix">Salesman</label>
                                                         <div class="col-md-6">
                                                             <select id="SalemanName" class="form-control select2" data-placeholder="Select Salesman" data-message="Salesman is required" data-required="false" data-trackchange="true">
@@ -239,7 +259,7 @@
                                                     <div class="form-group">
                                                         <label class="col-md-4 control-label" for="prefix">Saleman Cell No</label>
                                                         <div class="col-md-6">
-                                                            <input type="text" maxlength="11" class="form-control " id="SalemanCell" data-validate="true" data-message="Contact Number is required" >
+                                                            <input type="text" maxlength="11" class="form-control " id="SalemanCell" data-validate="true" data-message="Contact Number is required">
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
@@ -265,7 +285,7 @@
                                                     <div class="form-group">
                                                         <label class="col-md-4 control-label" for="prefix">Vendor Code</label>
                                                         <div class="col-md-2">
-                                                            <input type="text" class="form-control " id="VendorCode"  disabled="disabled" />
+                                                            <input type="text" class="form-control " id="VendorCode" disabled="disabled" />
                                                         </div>
                                                         <div class="col-md-4" id="account-type-conatiner">
                                                             <div class="radio-list">
@@ -284,11 +304,11 @@
                                                     <div class="form-group">
                                                         <label class="col-md-4 control-label master-account-label" for="prefix">Parent Vendor Code</label>
                                                         <div class="col-md-1">
-                                                            <input type="text" class="form-control input-small" id="ParentVendorCode" >
+                                                            <input type="text" class="form-control input-small" id="ParentVendorCode">
                                                             <input type="text" class="hide" id="ParentVendorAccountId" />
                                                         </div>
                                                         <div class="col-md-5">
-                                                            <input type="text" class="form-control" id="ParentVendorCustomerName"  disabled="disabled">
+                                                            <input type="text" class="form-control" id="ParentVendorCustomerName" disabled="disabled">
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
@@ -310,7 +330,7 @@
                                                     <div class="form-group">
                                                         <label class="col-md-4 control-label" for="prefix">GST Jurisdiction</label>
                                                         <div class="col-md-6">
-                                                            <input type="text" class="form-control " id="GSTJurisdiction" >
+                                                            <input type="text" class="form-control " id="GSTJurisdiction">
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
@@ -318,7 +338,8 @@
                                                         </div>
                                                         <label class="checkbox-inline">
                                                             <input type="checkbox" data-checktrack="true" class="form-control" data-value="ShowBarcodeBox" name="ShowBarcodeBox" id="ShowBarcodeBox" />
-                                                            Show Barcode Box</label>
+                                                            Show Barcode Box
+                                                        </label>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
@@ -672,8 +693,8 @@
                     <thead>
                         <tr>
                             @* <th style="width: 8px;" class="no-sort">
-                                <input type="checkbox" class="group-checkable" data-set="#mainTable .checkboxes" />
-                            </th>*@
+            <input type="checkbox" class="group-checkable" data-set="#mainTable .checkboxes" />
+        </th>*@
                             <th>Code</th>
                             <th>Name</th>
                             <th>Bank</th>
@@ -682,6 +703,8 @@
                             <th>Phone</th>
                             <th>Contact Person</th>
                             <th>Email</th>
+                            <th>Location</th>
+                            <th>Max Amount Threshold </th>
                             <th style="width: 75px;" class="no-sort"></th>
                         </tr>
                     </thead>

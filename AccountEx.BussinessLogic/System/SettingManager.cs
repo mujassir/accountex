@@ -1196,6 +1196,10 @@ namespace AccountEx.BussinessLogic
         {
             get { return Get<bool>("Company.FiscalYearShow/Hide", false); }
         }
+        public static bool IsMultipleLocationEnabled
+        {
+            get { return Get<bool>("Company.MultipleLocation", false); }
+        }
         public static bool IsCompanyLogoDetailsShow
         {
             get { return Get<bool>("Application.Reports.CompanyLogoDetailsShow", true); }
@@ -1552,6 +1556,10 @@ namespace AccountEx.BussinessLogic
         {
             get { return Get<bool>("VOUCHER.CASHRECEIPT.allowVehicle", false); }
         }
+        public static bool ShowOnlyCustomerProducts
+        {
+            get { return Get<bool>("VOUCHER.ShowOnlyCustomerProducts", false); }
+        }
         public static bool IsCashPaymentAllowVehicle
         {
             get { return Get<bool>("VOUCHER.CASHPAYMENT.allowVehicle", false); }
@@ -1655,6 +1663,10 @@ namespace AccountEx.BussinessLogic
         {
             get { return Get<bool>("ORDER.SALEORDER.SHOWRATEAMOUNT", true); }
         }
+        public static bool IsRequiredSaleRequisition
+        {
+            get { return Get<bool>("ORDER.SALEORDER.RequiredSaleRequisition", false); }
+        }
 
         public static string SALEORDERRateName
         {
@@ -1664,6 +1676,10 @@ namespace AccountEx.BussinessLogic
         {
             get { return Get("PURCHASEORDER.RateNameText", "Rate"); }
         }
+        public static bool IsRequiredPurchaseRequisition
+        {
+            get { return Get<bool>("ORDER.PURCHASEORDER.RequiredPurchaseRequisition", false); }
+        }
         public static bool IsPurchaseOrderAllowRate
         {
             get { return Get<bool>("ORDER.PURCHASEORDER.SHOWRATEAMOUNT", false); }
@@ -1672,9 +1688,17 @@ namespace AccountEx.BussinessLogic
         {
             get { return Get<bool>("DELIVERYCHALLAN.GIN.SHOWRATEAMOUNT", false); }
         }
+        public static bool IsRequiredSalesOrder
+        {
+            get { return Get<bool>("DELIVERYCHALLAN.GIN.RequiredSalesOrder", false); }
+        }
         public static bool IsGRNAllowRate
         {
             get { return Get<bool>("DELIVERYCHALLAN.GRN.SHOWRATEAMOUNT", false); }
+        }
+        public static bool IsRequiredPurchaseOrder
+        {
+            get { return Get<bool>("DELIVERYCHALLAN.GRN.RequiredPurchaseOrder", false); }
         }
 
         public static bool IsGRNAllowStock

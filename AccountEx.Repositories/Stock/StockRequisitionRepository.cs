@@ -17,33 +17,39 @@ namespace AccountEx.Repositories
             base.Db = repo.GetContext();
         }
 
-        public StockRequisition GetByVoucherNo(int voucherno)
+        public StockRequisition GetByVoucherNo(int voucherno, int locationId)
         {
-            return FiscalCollection.FirstOrDefault(p => p.VoucherNumber == voucherno);
+            return FiscalCollection.FirstOrDefault(p => p.VoucherNumber == voucherno && p.AuthLocationId == locationId);
         }
-        public StockRequisition GetByVoucherNo(int voucherno, int id)
+        public StockRequisition GetByVoucherNo(int voucherno, int id, int locationId)
         {
-            return FiscalCollection.FirstOrDefault(p => p.VoucherNumber == voucherno && p.Id != id);
+            return FiscalCollection.FirstOrDefault(p => p.VoucherNumber == voucherno && p.Id != id && p.AuthLocationId == locationId);
         }
-        public bool CheckIsVoucherNoExist(int voucherno, int id)
+        public bool CheckIsVoucherNoExist(int voucherno, int id, int locationId)
         {
-            return FiscalCollection.Any(p => p.VoucherNumber == voucherno && p.Id != id);
+            return FiscalCollection.Any(p => p.VoucherNumber == voucherno && p.Id != id && p.AuthLocationId == locationId);
         }
-        public StockRequisition GetByInvoiceNo(int bookno, int id)
+        public StockRequisition GetByInvoiceNo(int bookno, int id, int locationId)
         {
-            return FiscalCollection.FirstOrDefault(p => p.InvoiceNumber == bookno && p.Id != id);
+            return FiscalCollection.FirstOrDefault(p => p.InvoiceNumber == bookno && p.Id != id && p.AuthLocationId == locationId);
         }
-        public bool CheckIdInvoiceNoExist(int bookno, int id)
+        public bool CheckIdInvoiceNoExist(int bookno, int id, int locationId)
         {
-            return FiscalCollection.Any(p => p.InvoiceNumber == bookno && p.Id != id);
+            return FiscalCollection.Any(p => p.InvoiceNumber == bookno && p.Id != id && p.AuthLocationId == locationId);
         }
-        public int GetNextVoucherNumber()
+        public int GetNextVoucherNumber(int locationId)
         {
             var maxnumber = 1;
             if (!FiscalCollection.Any())
                 return maxnumber;
             //return FiscalCollection.OrderByDescending(p => p.VoucherNumber).FirstOrDefault().VoucherNumber + 1;
-            return FiscalCollection.OrderByDescending(p => p.VoucherNumber).FirstOrDefault().VoucherNumber + 1;
+            var voucher = FiscalCollection.Where(x => x.AuthLocationId == locationId)
+                                  .OrderByDescending(p => p.VoucherNumber)
+                                  .FirstOrDefault();
+            if (voucher == null)
+                return maxnumber;
+
+            return voucher.VoucherNumber + 1;
         }
         public override void Update(StockRequisition r)
         {
@@ -56,28 +62,28 @@ namespace AccountEx.Repositories
             r.Status = dbStockRequisition.Status;
             base.Update(r, true, false);
         }
-        public StockRequisition GetByVoucherNumber(int voucherno, string key, out bool next, out bool previous)
+        public StockRequisition GetByVoucherNumber(int voucherno, string key, int locationId, out bool next, out bool previous)
         {
             StockRequisition v = null;
             switch (key)
             {
                 case "first":
-                    v = FiscalCollection.OrderBy(p => p.VoucherNumber).FirstOrDefault();
+                    v = FiscalCollection.Where(x => x.AuthLocationId == locationId).OrderBy(p => p.VoucherNumber).FirstOrDefault();
                     break;
                 case "last":
-                    v = FiscalCollection.OrderByDescending(p => p.VoucherNumber).FirstOrDefault();
+                    v = FiscalCollection.Where(x => x.AuthLocationId == locationId).OrderByDescending(p => p.VoucherNumber).FirstOrDefault();
                     break;
                 case "next":
-                    v = FiscalCollection.Where(p => p.VoucherNumber > voucherno).OrderBy(p => p.VoucherNumber).FirstOrDefault();
+                    v = FiscalCollection.Where(p => p.VoucherNumber > voucherno && p.AuthLocationId == locationId).OrderBy(p => p.VoucherNumber).FirstOrDefault();
                     break;
                 case "previous":
-                    v = FiscalCollection.Where(p => p.VoucherNumber < voucherno).OrderByDescending(p => p.VoucherNumber).FirstOrDefault(); ;
+                    v = FiscalCollection.Where(p => p.VoucherNumber < voucherno && p.AuthLocationId == locationId).OrderByDescending(p => p.VoucherNumber).FirstOrDefault();
                     break;
                 case "same":
-                    v = FiscalCollection.FirstOrDefault(p => p.VoucherNumber == voucherno);
+                    v = FiscalCollection.FirstOrDefault(p => p.VoucherNumber == voucherno && p.AuthLocationId == locationId);
                     break;
                 case "challan":
-                    v = FiscalCollection.FirstOrDefault(p => p.VoucherNumber == voucherno);
+                    v = FiscalCollection.FirstOrDefault(p => p.VoucherNumber == voucherno && p.AuthLocationId == locationId);
                     break;
 
             }
@@ -86,7 +92,7 @@ namespace AccountEx.Repositories
                 voucherno = v.VoucherNumber;
             else if (key != "nextvouchernumber" && key != "challan")
             {
-                v = FiscalCollection.OrderByDescending(p => p.VoucherNumber).FirstOrDefault();
+                v = FiscalCollection.Where(p => p.AuthLocationId == locationId).OrderByDescending(p => p.VoucherNumber).FirstOrDefault();
 
             }
             if (v == null && !FiscalCollection.Any())
@@ -97,16 +103,16 @@ namespace AccountEx.Repositories
                 v.Date = DateTime.Now;
                 v.CreatedAt = DateTime.Now;
             }
-            next = FiscalCollection.Any(p => p.VoucherNumber > voucherno);
-            previous = FiscalCollection.Any(p => p.VoucherNumber < voucherno);
+            next = FiscalCollection.Any(p => p.VoucherNumber > voucherno &&  p.AuthLocationId == locationId);
+            previous = FiscalCollection.Any(p => p.VoucherNumber < voucherno && p.AuthLocationId == locationId);
             return v;
         }
-        public void DeleteByVoucherNumber(int voucherno)
+        public void DeleteByVoucherNumber(int voucherno, int locationId)
         {
             using (var scope = TransactionScopeBuilder.Create())
             {
 
-                var record = FiscalCollection.FirstOrDefault(p => p.VoucherNumber == voucherno);
+                var record = FiscalCollection.FirstOrDefault(p => p.VoucherNumber == voucherno && p.AuthLocationId == locationId);
                 if (record != null)
                 {
                     Db.StockRequisitions.Remove(record);
@@ -133,10 +139,10 @@ namespace AccountEx.Repositories
                 scope.Complete();
             }
         }
-        public void Update(int srnno)
+        public void Update(int srnno, int locationId)
         {
 
-            var srn = FiscalCollection.FirstOrDefault(p => p.VoucherNumber == srnno);
+            var srn = FiscalCollection.FirstOrDefault(p => p.VoucherNumber == srnno && p.AuthLocationId == locationId);
             if (srn != null)
             {
                 srn.Status = (byte)AccountEx.Common.TransactionStatus.Delivered;

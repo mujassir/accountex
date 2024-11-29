@@ -1,0 +1,120 @@
+@{
+    Layout = "_Layout.cshtml";
+
+}
+@using AccountEx.Common;
+@using AccountEx.CodeFirst.Models;
+@{
+    ViewBag.FormTitle = "Location Wise Stock";
+    ViewBag.Title = ViewBag.FormTitle;
+
+}
+<style type="text/css">
+    #tbldetail tfoot {
+        font-weight: bold;
+    }
+
+    .report-table tbody tr td.dataTables_empty {
+        text-align: center;
+    }
+</style>
+
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">
+        <span class="main-title">@ViewBag.FormTitle</span>
+        <small id="lblReportDate" class="pull-right small visible-print"></small>
+
+    </h1>
+}
+
+<!-- END PAGE HEADER-->
+<div class="row hidden-print" id="form-info">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-filter"></i>Report Filters
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                </div>
+                <div class="actions">
+                    <button class="btn blue hidden-print" onclick="window.print();"><i class="fa fa-print"></i>&nbsp;Print </button>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal" data-save="Save">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="prefix">Locations</label>
+                        <div class="col-md-3">
+                            <select id="LocationIds" class="select2 form-control" multiple >
+                                @foreach (var item in (List<Location>)ViewBag.Locations)
+                                {
+                                    <option value="@item.Id" @(item.Id == ViewBag.Locations[0].Id ? "selected" : "")>@item.Name</option>
+                                }
+
+                            </select>
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <div class="form-actions">
+                    <div class="form-group">
+
+                        <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+                        <div class="col-md-8">
+                            <button id="btnShowReport" type="submit" class="btn btn-primary">Show Report</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <!-- END EXAMPLE TABLE PORTLET-->
+</div>
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title hidden-print">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Report Data
+                </div>
+                <div class="tools">
+                    <div id="column-hide-show-container" class="column-hide-show-container pull-right hidden-print">
+                    </div>
+                </div>
+                <div class="tools pull-right">
+                    @{ Html.RenderPartial("_Export_Button"); }
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table id="mainTable" class="table table-striped table-bordered table-hover report-table" data-export='true'>
+                    <thead></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+<div id="jsondata" class="hide">
+    <p id="data">@ViewBag.FormSetting</p>
+</div>
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Reports/LocationWiseStock.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            LocationWiseStock.init();
+        });
+    </script>
+}

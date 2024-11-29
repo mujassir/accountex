@@ -11,6 +11,7 @@ using AccountEx.CodeFirst.Models.Transactions;
 using AccountEx.CodeFirst.Models.Vehicles;
 using AccountEx.CodeFirst.Models.Pharmaceutical;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using AccountEx.CodeFirst.Models.Stock;
 
 
 
@@ -102,6 +103,7 @@ namespace AccountEx.CodeFirst.Context
         public DbSet<WheatPurchaseItem> WheatPurchaseItems { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<UserCompany> UserCompanies { get; set; }
+        public DbSet<UserLocation> UserLocations { get; set; }
         public DbSet<RoleAccess> RoleAccesses { get; set; }
         public DbSet<RoleAction> RoleActions { get; set; }
         public DbSet<Transporter> Transporters { get; set; }
@@ -116,6 +118,8 @@ namespace AccountEx.CodeFirst.Context
         public DbSet<DeliveryChallan> DeliveryChallans { get; set; }
 
         public DbSet<Company> Companies { get; set; }
+        public DbSet<Location> Locations { get; set; }
+        public DbSet<WareHouse> WareHouses { get; set; }
         public DbSet<ServiceItem> ServiceItems { get; set; }
         public DbSet<SaleServicesItem> SaleServicesItems { get; set; }
         public DbSet<SystemLog> SystemLogs { get; set; }
@@ -126,6 +130,8 @@ namespace AccountEx.CodeFirst.Context
         public DbSet<EmployeeIncomeConfig> EmployeeIncomeConfigs { get; set; }
         public DbSet<StockRequisition> StockRequisitions { get; set; }
         public DbSet<StockRequisitionItem> StockRequisitionItems { get; set; }
+        public DbSet<InternalStockTransfer> InternalStockTransfers { get; set; }
+        public DbSet<InternalStockTransferItem> InternalStockTransferItems { get; set; }
 
 
         public DbSet<ESalary> ESalaries { get; set; }
@@ -286,6 +292,11 @@ namespace AccountEx.CodeFirst.Context
                 .HasRequired(uc => uc.Company) 
                 .WithMany()
                 .HasForeignKey(uc => uc.AuthCompanyId);
+
+            modelBuilder.Entity<UserLocation>()
+                .HasRequired(uc => uc.Location) 
+                .WithMany()
+                .HasForeignKey(uc => uc.AuthLocationId);
 
 
 

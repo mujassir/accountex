@@ -75,17 +75,18 @@ var CustomerDiscounts = function () {
             $("#" + DATATABLE_ID + " tbody tr").each(function () {
 
 
-                var discount = Common.GetInt($(this).children(":nth-child(3)").children("input[type='text']").val());
+                var discount = Common.GetInt($(this).children(":nth-child(4)").children("input[type='text']").val());
 
-                var type = $(this).children(":nth-child(3)").children("select").val();
+                var type = $(this).children(":nth-child(4)").children("select").val();
                 items.push({
-                    Id: $(this).children(":nth-child(4)").children("input.Id").val(),
-                    ProductId: $(this).children(":nth-child(1)").children("input.ProductId").val(),
-                    ProductTitle: $(this).children(":nth-child(1)").text(),
-                    ProductCode: $(this).children(":nth-child(2)").text(),
+                    Enable: $(this).find("span.checked").find("input.Enable").length ? true : false,
+                    Id: $(this).children(":nth-child(5)").children("input.Id").val(),
+                    ProductId: $(this).children(":nth-child(2)").children("input.ProductId").val(),
+                    ProductTitle: $(this).children(":nth-child(2)").text(),
+                    ProductCode: $(this).children(":nth-child(3)").text(),
                     CustomerId: $("#Account").val(),
                     CustomerTitle: $("#Account option:selected").text(),
-                    COAProductId: $(this).children(":nth-child(4)").children("input.COAProductId").val(),
+                    COAProductId: $(this).children(":nth-child(5)").children("input.COAProductId").val(),
                     Discount: discount,
 
 
@@ -150,7 +151,7 @@ var CustomerDiscounts = function () {
 
                             if (discount == "0") discount = "";
 
-                            html += "<tr><td><input type=hidden class='ProductId' value=" + customerDiscount.ProductId + " />" + customerDiscount.ProductTitle + "</td><td>" + customerDiscount.ProductCode + "</td><td> <input type='text' class='number form-control input-xsmall Discount hide' value='"
+                            html += "<tr><td class='Enable'><input type=checkbox disabled class='Enable' " + (customerDiscount.Enable ? 'checked' : '') + " /></td><td><input type=hidden class='ProductId' value=" + customerDiscount.ProductId + " />" + customerDiscount.ProductTitle + "</td><td>" + customerDiscount.ProductCode + "</td><td> <input type='text' class='number form-control input-xsmall Discount hide' value='"
                                 + discount + "' /><span class='Discount'>" + discount + "</span></td><td class=hide><input type=hidden class='Id' value=" + customerDiscount.Id + " /><input type=hidden class='CustomerId' value=" + customerDiscount.CustomerId + " /><input type=hidden class='CustomerTitle' value=" + customerDiscount.CustomerTitle + " /><input type=hidden class='COAProductId' value=" + customerDiscount.COAProductId + " /></td></tr>";
                         }
 
@@ -182,6 +183,12 @@ var CustomerDiscounts = function () {
         },
         Edit: function () {
             $("#btnEdit,span.Discount").addClass("hide");
+            $("input[type='checkbox'].Enable").prop('disabled', false);
+            $("input[type='checkbox'].Enable")
+                .prop('disabled', false)
+                .closest(".checker")
+                .removeClass("disabled");
+
             $("#btnSave,input[type='text'].Discount").removeClass("hide");
 
         },
@@ -214,7 +221,7 @@ var CustomerDiscounts = function () {
                         "sNext": "Next"
                     }
                 },
-                "aaSorting": [[0, "asc"]],
+                "aaSorting": [[1, "asc"]],
                 "aoColumnDefs": [
                      { 'bSortable': false, "aTargets": ["no-sort"] },
                      { "bSearchable": true, "aTargets": [0] }

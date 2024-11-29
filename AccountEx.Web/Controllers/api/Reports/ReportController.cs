@@ -199,6 +199,13 @@ namespace AccountEx.Web.Controllers.api.Reports
                     case "GetProductionDetail":
                         response = GetProductionDetail();
                         break;
+                    case "InternalStockTransfer":
+                        response = GetInternalStockTransfer();
+                        break;
+                    case "LocationWiseStock":
+                        var locationIds = QueryString["locationIds"];
+                        response = GetLocationWiseStock(locationIds);
+                        break;
 
 
 
@@ -609,6 +616,30 @@ namespace AccountEx.Web.Controllers.api.Reports
             var date2 = Convert.ToDateTime(Request.GetQueryString("date2"));
 
             var data = new ReportRepository().GetProductionDetail(date1, date2);
+            var response = new ApiResponse
+            {
+                Success = true,
+                Data = data
+            };
+            return response;
+        }
+        private ApiResponse GetInternalStockTransfer()
+        {
+
+            var date1 = Convert.ToDateTime(Request.GetQueryString("date1"));
+            var date2 = Convert.ToDateTime(Request.GetQueryString("date2"));
+
+            var data = new ReportRepository().GetInternalStockTransferDetail(date1, date2);
+            var response = new ApiResponse
+            {
+                Success = true,
+                Data = data
+            };
+            return response;
+        }
+        private ApiResponse GetLocationWiseStock(string locationIds = null)
+        {
+            var data = new TransactionRepository().GetStockWarehouseAndLocationWise(locationIds);
             var response = new ApiResponse
             {
                 Success = true,

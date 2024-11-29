@@ -26,7 +26,7 @@ namespace AccountEx.BussinessLogic
                     orderbookingRepo.Update(input);
                 }
                 if (input.SRN != 0)
-                    stockRequisitionRepo.Update(input.SRN);
+                    stockRequisitionRepo.Update(input.SRN, input.AuthLocationId);
                 orderbookingRepo.SaveChanges();
                 scope.Complete();
             }

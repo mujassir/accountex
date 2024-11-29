@@ -171,6 +171,8 @@
     <Compile Include="Production\ProductReceipeRepository .cs" />
     <Compile Include="Production\ProductReceipeitemRepository.cs" />
     <Compile Include="RentalSystem\RentOpeningBalanceRepository.cs" />
+    <Compile Include="Stock\InternalStockTransferItemRepository.cs" />
+    <Compile Include="Stock\InternalStockTransferRepository.cs" />
     <Compile Include="Stock\StockRequisitionItemRepository.cs" />
     <Compile Include="System\Configuration\FiscalSettingRepository.cs" />
     <Compile Include="Transactions\BankReceiptItemRepository.cs" />

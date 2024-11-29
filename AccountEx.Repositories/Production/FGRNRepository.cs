@@ -19,7 +19,7 @@ namespace AccountEx.Repositories
             base.Add(fgrn);
             var wip = wipRepo.GetByVoucherNumber(fgrn.WPNo);
             if (wip != null)
-                orderBookingRepo.Update(wip.OrderNo, VoucherType.SaleOrder, (byte)AccountEx.Common.TransactionStatus.FGRN);
+                orderBookingRepo.Update(wip.OrderNo, VoucherType.SaleOrder, (byte)AccountEx.Common.TransactionStatus.FGRN, 0);
         }
         public int GetNextVoucherNumber(VoucherType vouchertype)
         {
@@ -121,7 +121,7 @@ namespace AccountEx.Repositories
                 var fgrn = FiscalCollection.FirstOrDefault(p => p.Id == id);
                 var wip = new WorkInProgressRepository().GetByVoucherNumber(fgrn.WPNo);
                 if (wip != null)
-                    new OrderBookingRepository().Update(wip.OrderNo, VoucherType.SaleOrder, (byte)AccountEx.Common.TransactionStatus.Ready);
+                    new OrderBookingRepository().Update(wip.OrderNo, VoucherType.SaleOrder, (byte)AccountEx.Common.TransactionStatus.Ready, 0);
                 Db.DeliveryChallans.Remove(fgrn);
                 SaveLog(fgrn, ActionType.Deleted);
                 Db.SaveChanges();

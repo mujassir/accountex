@@ -29,7 +29,7 @@ namespace AccountEx.BussinessLogic
                 repo.Update(p);
             }
             if (includOrder)
-                orderBookingRepo.Update(p.OrderNo, VoucherType.SaleOrder, (byte)TransactionStatus.Ready);
+                orderBookingRepo.Update(p.OrderNo, VoucherType.SaleOrder, (byte)TransactionStatus.Ready, 0);
             if (addtrans)
                 AddTransaction(p, repo);
             repo.SaveChanges();

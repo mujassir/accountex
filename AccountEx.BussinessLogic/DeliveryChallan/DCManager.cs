@@ -21,12 +21,18 @@ namespace AccountEx.BussinessLogic
                 if (dc.Id == 0)
                 {
                     dc.CreatedDate = DateTime.Now;
-                    dc.VoucherNumber = repo.GetNextVoucherNumber(dc.TransactionType);
+                    dc.VoucherNumber = repo.GetNextVoucherNumber(dc.TransactionType, dc.AuthLocationId);
                     repo.Save(dc);
                 }
                 else
                 {
                     repo.Update(dc, repo);
+                }
+                if (addTransaction)
+                {
+
+                    AddTransaction(dc, repo);
+
                 }
                 repo.SaveChanges();
                 scope.Complete();
@@ -219,7 +225,7 @@ namespace AccountEx.BussinessLogic
 
 
                 var type = input.TransactionType == VoucherType.GoodIssue ? VoucherType.SaleOrder : VoucherType.PurchaseOrder;
-                var record = repo.GetByVoucherNumber(input.VoucherNumber, type, input.Id);
+                var record = repo.GetByVoucherNumber(input.VoucherNumber, type, input.Id, input.AuthLocationId);
 
                 if (!SiteContext.Current.User.IsAdmin)
                 {
@@ -270,7 +276,7 @@ namespace AccountEx.BussinessLogic
                 var productionStatueses = new List<byte> { (byte)TransactionStatus.FGRN, (byte)TransactionStatus.Pending, (byte)TransactionStatus.PartialyDelivered };
                 if (!allowDupliateBookNo)
                 {
-                    record = repo.GetByBookNumber(input.InvoiceNumber, input.TransactionType, input.Id);
+                    record = repo.GetByBookNumber(input.InvoiceNumber, input.TransactionType, input.Id, input.AuthLocationId);
 
                     if (record != null)
                     {
@@ -312,7 +318,7 @@ namespace AccountEx.BussinessLogic
 
                 if (input.OrderNo > 0)
                 {
-                    var order = orderbookingrepo.GetByVoucherNumber(input.OrderNo, type);
+                    var order = orderbookingrepo.GetByVoucherNumber(input.OrderNo, type, input.AuthLocationId);
                     if (order == null)
                     {
                         err += "Invalid order no.,";
@@ -338,7 +344,7 @@ namespace AccountEx.BussinessLogic
                         //        err += item.ItemCode + "-" + item.ItemName + " is not included in current order.,";
                         //}
 
-                        var goodsNotes = repo.GetByOrderNumber(input.TransactionType, input.OrderNo)
+                        var goodsNotes = repo.GetByOrderNumber(input.TransactionType, input.OrderNo, input.AuthLocationId)
                          .Where(p => p.VoucherNumber != input.VoucherNumber).SelectMany(p => p.DCItems).GroupBy(p => p.ItemId).Select(p => new
                          {
                              ItemId = p.Key,
@@ -381,7 +387,7 @@ namespace AccountEx.BussinessLogic
                     }
                     if (input.OrderNo > 0)
                     {
-                        var order = orderbookingrepo.GetByVoucherNumber(input.OrderNo, type);
+                        var order = orderbookingrepo.GetByVoucherNumber(input.OrderNo, type, input.AuthLocationId);
                         if (order != null && order.Status == (byte)TransactionStatus.Invoiced)
                         {
                             err += "Order is already processed and goods note can't be updated.,";

@@ -188,6 +188,7 @@ namespace AccountEx.DbMapping
         public byte TransactionType { get; set; }
         public DateTime Date { get; set; }
         public string Date1 { get; set; }
+        public int MinimumStock { get; set; }
         public Nullable<int> Size { get; set; }
 
 

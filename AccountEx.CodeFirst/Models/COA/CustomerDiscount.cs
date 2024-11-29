@@ -7,6 +7,7 @@ namespace AccountEx.CodeFirst.Models
         
         public Nullable<int> CustomerId { get; set; }
         public string CustomerTitle { get; set; }
+        public bool Enable { get; set; }
         public Nullable<int> ProductId { get; set; }
         public string ProductTitle { get; set; }
         public Nullable<int> COAProductId { get; set; }

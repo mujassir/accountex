@@ -10,9 +10,13 @@ var OrderBooking = function () {
     var PageData = new Object();
     var focusElement = "#Date";
     var currency = "";
+    var requiredRequisition = false;
+    var getRequisition = false;
+
     return {
         init: function () {
             var $this = this;
+            $this.LoadPageSetting();
             //multi-char placeholder
             $("#VoucherNumber").keypress(function (e) {
                 if (e.which == 13) {
@@ -31,7 +35,13 @@ var OrderBooking = function () {
                 var text = $(this).find("option:selected").text();
                 $("#item-container thead tr ").find("th:nth-child(6)").text("Amount in " + text);
             });
+            $("#AuthLocationName").change(function (e) {
+                $this.LoadVoucher("nextvouchernumber");
+            });
 
+            if (requiredRequisition) {
+                this.MarkRequiredRequisition();
+            }
             $(document).on("keyup", "input.Code", function (event) {
 
                 if (event.which == 13) {
@@ -128,6 +138,7 @@ var OrderBooking = function () {
                         $(tr).find("input.Name").val(account.Name);
 
                         var product = Common.GetAccountDetailByAccountId(account.Id);
+                        var discount = Common.GetDiscountDetail(product.AccountId);
                         //$(tr).find("input.ItemId").val(account.Id);
                         //$(tr).find("input.Name").val(account.Name);
 
@@ -135,7 +146,7 @@ var OrderBooking = function () {
                         $(tr).find(":nth-child(2) input.Name").val(account.Name);
                         $(tr).find(":nth-child(3) input.Article").val(product.Article);
                         $(tr).find(":nth-child(5) input.Unit").val(product.UnitType);
-                        $(tr).find(":nth-child(6) input.Rate").val((voucher == "saleorder" ? product.SalePrice : product.PurchasePrice));
+                        $(tr).find(":nth-child(6) input.Rate").val((voucher == "saleorder" ? product.SalePrice : product.PurchasePrice) - ( discount || 0));
                         //$(".container-message").hide();
 
                         $(".container-message").hide();
@@ -199,6 +210,7 @@ var OrderBooking = function () {
                 if (typeof party != "undefined" && party != null) {
                     //     $this.GetPreviousBalance(party.Id);
                     $(".container-message").hide();
+                    Common.LoadDiscount(party.Id, $this.AutoCompleteInit)
                 }
 
                 else {
@@ -212,7 +224,6 @@ var OrderBooking = function () {
             $(document).on("click", "#SRNTable > tbody tr", function () {
                 $this.SelectStockRequisition(this);
             });
-            $this.LoadPageSetting();
             var url = Setting.APIBaseUrl + API_CONTROLLER + "?type=" + $this.GetType();
 
             AppData.AccountDetail = PageSetting.AccountDetails;
@@ -240,10 +251,12 @@ var OrderBooking = function () {
         Add: function () {
             Common.Clear();
             this.CustomClear();
+            $('#AuthLocationName').trigger('change');
             this.GetNextVoucherNumber();
             $(".container-message").hide();
         },
         AddItem: function () {
+            if (requiredRequisition) return
             var $this = this;
             //if (Common.Validate($("#addrow"))) {
             var code = $("#item-container tbody tr:nth-last-child(1) td:nth-child(1) input.Code").val();
@@ -279,10 +292,18 @@ var OrderBooking = function () {
         },
         LoadStockRequisition: function (key) {
             var $this = this;
-            var srn = Common.GetInt($("#SRN").val());
+            var srn = $("#SRN").val();
+            getRequisition = false;
+            if (!srn) return;
+            var locationId = $("#AuthLocationId").val();
             var type = VoucherType[$this.GetType()];
+            const token = srn.split("-");
+            var voucherNumber = srn;
+            if (token.length > 1) {
+                voucherNumber = token.slice(1).join("-");
+            }
             Common.WrapAjax({
-                url: Setting.APIBaseUrl + "StockRequisition/" + srn + "?type" + type + "&key=" + key + "&voucher=" + srn,
+                url: Setting.APIBaseUrl + "StockRequisition/" + voucherNumber + "?type=" + type + "&key=" + key + "&voucher=" + srn + "&locationId=" + locationId,
                 type: "GET",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -301,6 +322,10 @@ var OrderBooking = function () {
 
                         else {
                             $("#VoucherNumber").val(voucherno);
+                            if (d.VoucherCode) {
+                                $(`#AuthLocationName`).select2('val', d.VoucherCode)
+                                $(`#AuthLocationId`).val(d.AuthLocationId)
+                            }
                             $(".date-picker,.ac-date").each(function () {
                                 Common.SetDate(this, $(this).val());
                             });
@@ -429,8 +454,15 @@ var OrderBooking = function () {
                     Common.ShowError(err);
                     return;
                 }
-                record["TransactionType"] = VoucherType[$this.GetType()],
+                record["VoucherCode"] = $("#AuthLocationName")?.find(":selected")?.data("code") || null
+                record["TransactionType"] = VoucherType[$this.GetType()];
                 record["OrderItems"] = Items;
+                if (record["SRN"]) {
+                    const token = record["SRN"].split("-");
+                    if (token.length > 1) {
+                        record["SRN"] = token.splice(1).join("-")
+                    }
+                }
                 LIST_CHANGED = true;
                 Common.WrapAjax({
                     url: Setting.APIBaseUrl + API_CONTROLLER,
@@ -555,14 +587,14 @@ var OrderBooking = function () {
             //   $("#lblNetTotal").html(nettotal);
         },
 
-
         LoadVoucher: function (key) {
             var $this = this;
             var voucherno = Common.GetInt($("#VoucherNumber").val());
             var bookNo = Common.GetInt($("#InvoiceNumber").val());
+            var locationId = Common.GetInt($("#AuthLocationId").val());
 
             Common.WrapAjax({
-                url: Setting.APIBaseUrl + API_CONTROLLER + "/" + voucherno + "?type=" + VoucherType[$this.GetType()] + "&key=" + key + "&voucher=" + voucherno + "&bookNo=" + bookNo,
+                url: Setting.APIBaseUrl + API_CONTROLLER + "/" + voucherno + "?type=" + VoucherType[$this.GetType()] + "&key=" + key + "&voucher=" + voucherno + "&bookNo=" + bookNo + "&locationId=" + locationId,
                 type: "GET",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -571,15 +603,29 @@ var OrderBooking = function () {
                 blockMessage: "Loading  orderbooking ...please wait",
                 success: function (res) {
                     if (res.Success) {
-                        $this.CustomClear();
+                        if (!getRequisition)
+                            $this.CustomClear();
                         $("#item-container tbody").html("");
                         var d = res.Data.Order;
+                        var defaultLocationId = d?.AuthLocationId || 0;
+                        if (!d?.AuthLocationId) {
+                            defaultLocationId = $("#AuthLocationName")?.find(":selected")?.data("custom")
+                        }
+                        const srn = $("#SRN").val();
                         Common.MapEditData(d, "#form-info");
+                        $("#SRN").val(srn);
+
+                        $this.MarkRequiredRequisition();
+                        $(`#AuthLocationId`).val(defaultLocationId)
                         if (d == null) {
-                            $this.CustomClear();
+                            if (!getRequisition)
+                                $this.CustomClear();
                             $("#SRN").prop("disabled", false);
                             $("#SRNSearchIcon").removeClass("hide");
                             $("#VoucherNumber,#InvoiceNumber").val(res.Data.VoucherNumber);
+
+                            if (getRequisition)
+                                $this.LoadStockRequisition("challan");
                         }
                         else {
 
@@ -626,7 +672,6 @@ var OrderBooking = function () {
                     } else {
                         Common.ShowError(res.Error);
                     }
-
                 },
                 error: function (e) {
                 }
@@ -641,8 +686,9 @@ var OrderBooking = function () {
             var type = VoucherType[$this.GetType()];
             Common.ConfirmDelete(function () {
                 var voucherno = Common.GetInt($("#VoucherNumber").val());
+                var locationId = Common.GetInt($("#AuthLocationId").val());
                 var id = Common.GetInt($("#Id").val());
-                var url = Setting.APIBaseUrl + API_CONTROLLER + "/" + id + "?type=" + type + "&voucherNo=" + voucherno;
+                var url = Setting.APIBaseUrl + API_CONTROLLER + "/" + id + "?type=" + type + "&voucherNo=" + voucherno + "&locationId=" + locationId;
                 //var url = Setting.APIBaseUrl + API_CONTROLLER + "/" + voucherno;
 
                 if (id <= 0) {
@@ -786,12 +832,26 @@ var OrderBooking = function () {
                 $("#DCNo,#lbldc,#lblorderno,#OrderNo").addClass("hide");
                 $("#data-srn-no").removeClass("hide");
             }
+            if (this.GetType() == "purchaseorder") {
+                requiredRequisition = PageSetting?.RequiredPurchaseRequisition;
+            } else if (this.GetType() == "saleorder") {
+                requiredRequisition = PageSetting?.RequiredSaleRequisition;
+            }
             this.LoadAccounts();
 
         },
+        onCustomerLoad: function () {
+            this.AutoCompleteInit()
+            $this.AutoCompleteInit()
+        },
         AutoCompleteInit: function (partyid) {
             var $this = this;
-            var products = Common.GetLeafAccounts(PageSetting.Products);
+            let products = Common.GetLeafAccounts(PageSetting.Products);
+            const EnableProductIds = Common.GetData("CustomerDiscount" + Common.LocalStoragePrefix)
+                ?.filter(x => x.Enable)?.map(x => x.COAProductId) || []
+            if (PageSetting.ShowOnlyCustomerProducts) {
+                products = products.filter(x => EnableProductIds.includes(x.Id))
+            }
             var suggestion = new Array();
             for (var i in products) {
                 var product = products[i];
@@ -816,11 +876,12 @@ var OrderBooking = function () {
                     var tr = $(this).closest("tr");
                     if (typeof account != "undefined" && account != null) {
                         var product = Common.GetAccountDetailByAccountId(account.Id);
+                        var discount = Common.GetDiscountDetail(product.AccountId);
                         $(tr).find(":nth-child(1) input.ItemId").val(account.Id);
                         $(tr).find(":nth-child(2) input.Name").val(account.Name);
                         $(tr).find(":nth-child(3) input.ArticleNo").val(product.ArticleNo);
                         $(tr).find(":nth-child(5) input.Unit").val(product.UnitType);
-                        $(tr).find(":nth-child(6) input.Rate").val((voucher == "saleorder" ? product.SalePrice : product.PurchasePrice));
+                        $(tr).find(":nth-child(7) input.Rate").val((voucher == "saleorder" ? product.SalePrice : product.PurchasePrice) - (discount || 0));
 
                         $(".container-message").hide();
                     }
@@ -862,12 +923,37 @@ var OrderBooking = function () {
         SelectStockRequisition: function (tr) {
             var $this = this;
             var srn = $(tr).find("input.VoucherNumber").val();
+            var locationId = Common.GetInt($(tr).find("input.VoucherNumber").attr("data-location-id"));
+            var locationCode = $(tr).find("input.VoucherNumber").attr("data-location-code");
+
+            if (locationId > 0 && !PageSetting.IsMultipleLocationEnabled) {
+                Common.ShowError("Multiple location wise voucher not enabled.");
+                return
+            }
+            if (locationId == 0 && PageSetting.IsMultipleLocationEnabled) {
+                Common.ShowError("Location is not selected in this voucher");
+                return
+            }
             if (srn.trim() != "" && srn != null) {
                 $("#SRN").val(srn);
-                $this.LoadStockRequisition("challan");
+                if (PageSetting.IsMultipleLocationEnabled) {
+                    const existingAutLocId = $("#AuthLocationId").val();
+                    if (existingAutLocId != locationId) {
+                        getRequisition = true
+                        $("#AuthLocationId").val(locationId)
+                        $('#AuthLocationName').select2('val', locationCode);
+                        this.LoadVoucher("nextvouchernumber");
+                    } else {
+                        $this.LoadStockRequisition("challan");
+                    }
+                } else {
+                    $this.LoadStockRequisition("challan");
+                }
                 $('#btnOrderClose').click();
             }
         },
+        MarkRequiredRequisition: function () {
+        }
     };
 }();
 

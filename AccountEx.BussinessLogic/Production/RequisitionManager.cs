@@ -105,7 +105,7 @@ namespace AccountEx.BussinessLogic
                 {
                     err += "Fiscal year is closed No action can be done.,";
                 }
-                var order = orderRepo.GetByVoucherNumber(input.OrderNo, type, ordertype);
+                var order = orderRepo.GetByVoucherNumber(input.OrderNo, type, ordertype, 0);
                 if (order == null)
                 {
                     err += "Invalid order number.,";
@@ -170,7 +170,7 @@ namespace AccountEx.BussinessLogic
                         }
                     }
 
-                    var orderdata = orderRepo.GetByVoucherNumber(input.OrderNo, type, ordertype);
+                    var orderdata = orderRepo.GetByVoucherNumber(input.OrderNo, type, ordertype, 0);
                     if (ordertype == (byte)OrderType.Production && orderdata.Status != (byte)TransactionStatus.PendingProduction)
                     {
                         err += "Order is already processed and requisition can't be updated.";
@@ -221,7 +221,7 @@ namespace AccountEx.BussinessLogic
                 if (GINP != null)
                 {
                     err += "Requisition has goods issue notes and can't be deleted.";
-                    var order = orderRepo.GetByVoucherNumber(GINP.OrderNo, type, ordertype);
+                    var order = orderRepo.GetByVoucherNumber(GINP.OrderNo, type, ordertype, 0);
                     if (order != null)
                     {
 

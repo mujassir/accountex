@@ -570,9 +570,18 @@ namespace AccountEx.Web.Controllers.mvc
             setting.Add(new SettingExtra() { Key = "Suppliers", Value = SettingManager.SupplierHeadId + "" });
             setting.Add(new SettingExtra() { Key = "Products", Value = SettingManager.ProductHeadId + "" });
             setting.Add(new SettingExtra() { Key = "BarCodeEnabled", Value = SettingManager.BarCodeEnabled });
+            setting.Add(new SettingExtra() { Key = "IsMultipleLocationEnabled", Value = SettingManager.IsMultipleLocationEnabled });
+            setting.Add(new SettingExtra() { Key = "RequiredPurchaseRequisition", Value = SettingManager.IsRequiredPurchaseRequisition });
+            setting.Add(new SettingExtra() { Key = "RequiredSaleRequisition", Value = SettingManager.IsRequiredSaleRequisition });
+            setting.Add(new SettingExtra() { Key = "ShowOnlyCustomerProducts", Value = SettingManager.ShowOnlyCustomerProducts });
             //if (SettingManager.BarCodeEnabled)
             setting.Add(new SettingExtra() { Key = "AccountDetails", Value = new AccountDetailRepository().GetAll<OrderDcEx>((byte)AccountDetailFormType.Products) });
             ViewBag.FormSetting = JsonConvert.SerializeObject(setting.ToList());
+            ViewBag.Locations = new GenericRepository<UserLocation>().AsQueryable()
+                .Where(x => x.UserId == (int)SiteContext.Current.User.Id)
+                .Include(x => x.Location)
+                .Select(x => x.Location)
+                .ToList();
             return View();
         }
         public ActionResult Adjustment()
@@ -595,7 +604,19 @@ namespace AccountEx.Web.Controllers.mvc
             setting.Add(new SettingExtra() { Key = "BarCodeEnabled", Value = SettingManager.BarCodeEnabled });
             //if (SettingManager.BarCodeEnabled)
             setting.Add(new SettingExtra() { Key = "AccountDetails", Value = new AccountDetailRepository().GetAll<UltratechDC>((byte)AccountDetailFormType.Products) });
-            ViewBag.FormSetting = JsonConvert.SerializeObject(setting.ToList()); ;
+
+            setting.Add(new SettingExtra() { Key = "IsMultipleLocationEnabled", Value = SettingManager.IsMultipleLocationEnabled });
+            setting.Add(new SettingExtra() { Key = "RequiredPurchaseOrder", Value = SettingManager.IsRequiredPurchaseOrder });
+            setting.Add(new SettingExtra() { Key = "RequiredSaleOrder", Value = SettingManager.IsRequiredSalesOrder });
+            ViewBag.FormSetting = JsonConvert.SerializeObject(setting.ToList());
+            ViewBag.Locations = new GenericRepository<UserLocation>().AsQueryable()
+                .Where(x => x.UserId == (int)SiteContext.Current.User.Id)
+                .Include(x => x.Location)
+                .Select(x => x.Location)
+                .ToList();
+            ViewBag.Warehouses = new GenericRepository<WareHouse>().AsQueryable()
+                .ToList();
+
             return View();
         }
         public ActionResult NTDeliveryChallan()
@@ -1157,10 +1178,51 @@ namespace AccountEx.Web.Controllers.mvc
             // setting.ForEach(p => p.VoucherType = p.VoucherType.ToLower());
             var setting = new List<SettingExtra>();
             setting.Add(new SettingExtra() { Key = "Products", Value = SettingManager.ProductHeadId });
+            setting.Add(new SettingExtra() { Key = "isMultipleLocationEnabled", Value = SettingManager.IsMultipleLocationEnabled });
             //setting.Add(new SettingExtra() { Key = "AccountDetails", Value = new AccountDetailRepository().GetAll().Where(p => p.Code != null) });
             setting.Add(new SettingExtra() { Key = "AccountDetails", Value = new AccountDetailRepository().GetAll<RequisitionEx>((byte)AccountDetailFormType.Products) });
             setting.Add(new SettingExtra() { Key = "BarCodeEnabled", Value = SettingManager.BarCodeEnabled });
+            setting.Add(new SettingExtra() { Key = "ProductHeadId", Value = new AccountRepository().GetAccountTree(SettingManager.ProductHeadId).FirstOrDefault()?.Id ?? 0 });
             ViewBag.FormSetting = JsonConvert.SerializeObject(setting);
+            ViewBag.Locations = new GenericRepository<UserLocation>().AsQueryable()
+                .Where(x => x.UserId == (int)SiteContext.Current.User.Id)
+                .Include(x => x.Location)
+                .Select(x => x.Location)
+                .ToList();
+            return View();
+        }
+        public ActionResult InternalStockTransfer()
+        {
+            var setting = new List<SettingExtra>();
+            setting.Add(new SettingExtra() { Key = "Products", Value = SettingManager.ProductHeadId });
+            setting.Add(new SettingExtra() { Key = "isMultipleLocationEnabled", Value = SettingManager.IsMultipleLocationEnabled });
+            setting.Add(new SettingExtra() { Key = "AccountDetails", Value = new AccountDetailRepository().GetAll<RequisitionEx>((byte)AccountDetailFormType.Products) });
+            setting.Add(new SettingExtra() { Key = "ProductHeadId", Value = new AccountRepository().GetAccountTree(SettingManager.ProductHeadId).FirstOrDefault()?.Id ?? 0 });
+            ViewBag.FormSetting = JsonConvert.SerializeObject(setting);
+            ViewBag.Locations = new GenericRepository<UserLocation>().AsQueryable()
+                .Where(x => x.UserId == (int)SiteContext.Current.User.Id)
+                .Include(x => x.Location)
+                .Select(x => x.Location)
+                .ToList();
+            ViewBag.Warehouses = new GenericRepository<WareHouse>().AsQueryable()
+                .ToList();
+            return View();
+        }
+        public ActionResult InternalStockTransferReceive()
+        {
+            var setting = new List<SettingExtra>();
+            setting.Add(new SettingExtra() { Key = "Products", Value = SettingManager.ProductHeadId });
+            setting.Add(new SettingExtra() { Key = "isMultipleLocationEnabled", Value = SettingManager.IsMultipleLocationEnabled });
+            setting.Add(new SettingExtra() { Key = "AccountDetails", Value = new AccountDetailRepository().GetAll<RequisitionEx>((byte)AccountDetailFormType.Products) });
+            setting.Add(new SettingExtra() { Key = "ProductHeadId", Value = new AccountRepository().GetAccountTree(SettingManager.ProductHeadId).FirstOrDefault()?.Id ?? 0 });
+            ViewBag.FormSetting = JsonConvert.SerializeObject(setting);
+            ViewBag.Locations = new GenericRepository<UserLocation>().AsQueryable()
+                .Where(x => x.UserId == (int)SiteContext.Current.User.Id)
+                .Include(x => x.Location)
+                .Select(x => x.Location)
+                .ToList();
+            ViewBag.Warehouses = new GenericRepository<WareHouse>().AsQueryable()
+                .ToList();
             return View();
         }
         //

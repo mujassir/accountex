@@ -11,7 +11,8 @@ namespace AccountEx.CodeFirst.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations.Schema;
+
     public partial class StockRequisition:BaseEntity
     {
         public StockRequisition()
@@ -19,6 +20,7 @@ namespace AccountEx.CodeFirst.Models
             this.StockRequisitionItems = new HashSet<StockRequisitionItem>();
         }
         public int VoucherNumber { get; set; }
+        public string VoucherCode { get; set; }
         public int FiscalId { get; set; }
         public System.DateTime Date { get; set; }
         public int InvoiceNumber { get; set; }
@@ -26,7 +28,8 @@ namespace AccountEx.CodeFirst.Models
         public string Description { get; set; }
         public byte Status { get; set; }
         public string Instructions { get; set; }
-     
+        
+        public int AuthLocationId { get; set; }
         public virtual ICollection<StockRequisitionItem> StockRequisitionItems { get; set; }
         
     }
