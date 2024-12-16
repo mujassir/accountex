@@ -186,6 +186,15 @@ namespace AccountEx.Web.Controllers.mvc
             return View();
         }
         [OutputCache(CacheProfile = "Medium")]
+        public ActionResult DiaryProducts()
+        {
+            ViewBag.ProductGroups = new GenericRepository<ProductGroup>().GetNames();
+            var setting = new List<SettingExtra>();
+            //setting.Add(new SettingExtra() { Key = "BarCodeEnabled", Value = SettingManager.BarCodeEnabled });
+            ViewBag.FormSetting = JsonConvert.SerializeObject(setting);
+            return View();
+        }
+        [OutputCache(CacheProfile = "Medium")]
         public ActionResult Equipments()
         {
             ViewBag.ProductGroups = new GenericRepository<ProductGroup>().GetNames();

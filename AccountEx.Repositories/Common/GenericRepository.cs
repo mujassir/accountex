@@ -507,6 +507,13 @@ namespace AccountEx.Repositories
                 log.ComputerUser = Environment.UserName;
                 log.ComputerName = Environment.MachineName;
                 log.LogData.Add(new LogData() { Data = jsondata });
+
+                var unitType = record?.GetType()?.GetProperty("UnitType")?.GetValue(record, null)?.ToString() ?? "";
+                if (!string.IsNullOrEmpty(unitType) && new List<string> { "Milker", "Non-Milker", "Pregnant", "Meat", "Kid" }.Contains(unitType))
+                {
+                    log.LogData.Add(new LogData { Data = $"{unitType}: Status Updated to {unitType}", RecordId = log.DocumentId ?? 0 });
+                }
+
                 if (saveChanges)
                 {
                     Db.SystemLogs.Add(log);

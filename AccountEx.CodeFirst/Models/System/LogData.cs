@@ -10,6 +10,7 @@ namespace AccountEx.CodeFirst.Models
 
         public int SystemLogId { get; set; }
         public string Data { get; set; }
+        public int RecordId { get; set; }
       
     }
 }

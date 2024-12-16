@@ -8390,6 +8390,7 @@
     <Content Include="Views\Reports\Labour.cshtml" />
     <Content Include="Views\Company\index.cshtml" />
     <Content Include="Views\Company\UserCompanies.cshtml" />
+    <Content Include="Views\Manage\DiaryProducts.cshtml" />
     <None Include="Web.config">
       <SubType>Designer</SubType>
     </None>

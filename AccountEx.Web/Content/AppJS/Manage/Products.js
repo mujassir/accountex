@@ -1,12 +1,14 @@
 ﻿
 var Products = function () {
     var max = 0;
+    var FORM_TYPE = "";
     var DATATABLE_ID = "mainTable";
     var API_CONTROLLER = "Product";
     var LIST_LOADED = false;
     var PageSetting = new Object();
     return {
-        init: function () {
+        init: function (type) {
+            FORM_TYPE = type;
             var $this = this;
             $("#Code").keyup(function (e) {
                 if (e.which == 13)
@@ -63,7 +65,7 @@ var Products = function () {
             //$('#form-info').addClass('hide');
             //$('#div-table').removeClass('hide');
             if (!LIST_LOADED) {
-                var url = Setting.APIBaseUrl + API_CONTROLLER;
+                var url = Setting.APIBaseUrl + API_CONTROLLER + "?type=" + FORM_TYPE;
                 LIST_LOADED = true;
                 DataTable.BindDatatable(DATATABLE_ID, url);
             }
@@ -164,6 +166,7 @@ var Products = function () {
                     success: function (res) {
                         if (res.Success) {
                             $this.CustomClear();
+                            $("#LogsTableView").html("");
                             //$this.ListView();
                             DataTable.RefreshDatatable(DATATABLE_ID);
                             Common.ShowMessage(true, { message: Messages.RecordSaved });
@@ -192,7 +195,29 @@ var Products = function () {
                 success: function (res) {
                     if (res.Success) {
                         var j = res.Data;
+                        var logs = res.Logs;
                         Common.MapEditData(j, $("#form-info"));
+                        if (logs.length > 0) {
+                            console.log(j)
+                            let html = "";
+                            html = `<table class="table">
+                                <thead>
+                                    <tr>
+                                        <th width="125">Date</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>`;
+
+                            html += logs.map(x => `<tr><td>${new Date(x.CreatedAt).toDateString()}</td><td>${x.Data}</td></tr>`)
+
+                            html += `
+                                </tbody>
+                            </table>
+                            `;
+                            $("#LogsTableView").html(html);
+
+                        }
                         $(".date-picker").each(function () {
                             Common.SetDate(this, $(this).val());
                         });

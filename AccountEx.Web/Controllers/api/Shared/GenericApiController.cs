@@ -3,6 +3,7 @@ using System.Web.Http;
 using AccountEx.Common;
 using AccountEx.Repositories;
 using AccountEx.BussinessLogic;
+using AccountEx.CodeFirst.Models;
 
 namespace AccountEx.Web.Controllers.api.Shared
 {
@@ -37,7 +38,7 @@ namespace AccountEx.Web.Controllers.api.Shared
                 {
                     Success = true,
                     Data = new GenericRepository<T>().GetById(id),
-
+                    Logs = new GenericRepository<LogData>().Get(x => x.RecordId == id)
                 };
             }
             catch (Exception ex)
