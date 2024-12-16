@@ -25,7 +25,7 @@ namespace AccountEx.Web.Controllers.api.Manage
             var type = (QueryString["type"] + "").Trim();
             if (type == "report")
                 return GetDataTableForReport();
-            if (type == "DiaryProducts")
+            if (type == "DairyProducts")
                 return GetDataTableForDiaryProducts();
             else
                 return GetDataTable();

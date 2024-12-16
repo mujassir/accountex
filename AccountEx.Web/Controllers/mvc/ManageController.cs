@@ -186,7 +186,7 @@ namespace AccountEx.Web.Controllers.mvc
             return View();
         }
         [OutputCache(CacheProfile = "Medium")]
-        public ActionResult DiaryProducts()
+        public ActionResult DairyProducts()
         {
             ViewBag.ProductGroups = new GenericRepository<ProductGroup>().GetNames();
             var setting = new List<SettingExtra>();
