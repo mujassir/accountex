@@ -42,5 +42,24 @@ namespace AccountEx.Web.Controllers.mvc
             ViewBag.FormSetting = JsonConvert.SerializeObject(setting.ToList()); ;
             return View();
         }
+        public ActionResult LocationWise()
+        {
+            var setting = new List<SettingExtra>();
+            setting.Add(new SettingExtra() { Key = "Products", Value = SettingManager.ProductHeadId + "" });
+            setting.Add(new SettingExtra() { Key = "AccountDetails", Value = new AccountDetailRepository().GetAll().Where(p => p.Code != null) });
+            ViewBag.FormSetting = JsonConvert.SerializeObject(setting.ToList());
+
+            ViewBag.Locations = new GenericRepository<UserLocation>().AsQueryable()
+                .Where(x => x.UserId == (int)SiteContext.Current.User.Id)
+                .Include(x => x.Location)
+                .Select(x => x.Location)
+                .ToList();
+            ViewBag.Machines = new GenericRepository<Machine>().AsQueryable()
+                .ToList();
+            ViewBag.Warehouses = new GenericRepository<WareHouse>().AsQueryable()
+                .ToList();
+
+            return View();
+        }
     }
 }

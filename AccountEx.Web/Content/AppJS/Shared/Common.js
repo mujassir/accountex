@@ -2370,6 +2370,9 @@ var Common = function () {
                 }
             });
         },
+        ProductStockWarehouseAndLocationWise: function (productId) {
+            return Common.GetData("ProductStockWarehouseAndLocationWise" + Common.LocalStoragePrefix)
+        },
         GetNextAccountCode: function (api_controller) {
             var $this = this;
             var accountId = 0;

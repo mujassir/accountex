@@ -3,10 +3,12 @@ var InternalStockTransfer = function () {
     var API_CONTROLLER = "Report";
     var datatableId = "mainTable";
     var listLoaded = false;
+    var StockTransferType = 1;
     return {
         init: function () {
             var $this = this;
             PageSetting = Common.LoadPageSetting();
+            StockTransferType = location.pathname === "/reports/internalStockTransfer" ? 1 : 2;
             $("#btnShowReport").click(function () {
                 $this.LoadData();
             });

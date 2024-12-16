@@ -528,4 +528,32 @@ namespace AccountEx.Common
         SaleItem = 2,
 
     }
+    public enum StockType : byte
+    {
+        Active = 1,
+        Waste = 2,
+        Consume = 3
+
+    }
+    public enum StockTransferType : byte
+    {
+        LocationWise = 1,
+        MachineWise = 2,
+        Production = 3,
+
+    }
+    public enum ProductionStatus: byte
+    {
+        None = 0,
+        StockRequested = 1,
+        StockIssued = 2,
+        StockReceived = 3,
+        ProductionStarted = 4,
+        ProductionCompleted = 5
+    }
+    public enum ProductionUnitItemType : byte
+    {
+        Raw = 1,
+        Finished = 2,
+    }
 }

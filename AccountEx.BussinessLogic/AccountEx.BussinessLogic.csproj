@@ -139,6 +139,7 @@
     <Compile Include="Nexus\NexusCaseManager.cs" />
     <Compile Include="Production\InternalStockTransferManager.cs" />
     <Compile Include="Production\LaboursManager.cs" />
+    <Compile Include="Production\ProductionUnitManager.cs" />
     <Compile Include="Production\StockRequisitionManager.cs" />
     <Compile Include="RentalSystem\RentOpeningBalanceManager.cs" />
     <Compile Include="Security\Class1.cs" />

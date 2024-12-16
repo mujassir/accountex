@@ -32,12 +32,17 @@ namespace AccountEx.Web.Controllers.api.Transaction
                 {
                     int.TryParse(queryString["locationId"], out locationId);
                 }
+                int type = (int)StockTransferType.LocationWise;
+                if (queryString["type"] == "2")
+                {
+                    type = (int)StockTransferType.MachineWise;
+                }
                 //var data = TransactionManager.GetVocuherDetail(voucher, vouchertype, queryString["key"]);
                 bool next, previous;
                 if (voucherNumber == 0) key = "nextvouchernumber";
                 if (key == "nextvouchernumber")
-                    voucherNumber = repo.GetNextVoucherNumber();
-                var data = repo.GetByVoucherNumber(voucherNumber, key, out next, out previous);
+                    voucherNumber = repo.GetNextVoucherNumber(type);
+                var data = repo.GetByVoucherNumber(voucherNumber, key, type, out next, out previous);
                 response = new ApiResponse
                 {
                     Success = true,
@@ -123,7 +128,7 @@ namespace AccountEx.Web.Controllers.api.Transaction
             try
             {
                 var repo = new InternalStockTransferRepository();
-                var record = repo.CheckIsVoucherNoExist(input.VoucherNumber, input.Id);
+                var record = repo.CheckIsVoucherNoExist(input.VoucherNumber, input.Id, input.StockTransferType);
                 foreach (var item in input.InternalStockTransferItems.Where(p => p.ItemId == 0))
                 {
                     err += item.ItemCode + "-" + item.ItemName + " is no valid.,";

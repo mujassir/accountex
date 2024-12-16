@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AccountEx.Common;
+using System;
 
 namespace AccountEx.CodeFirst.Models.Stock
 {
@@ -20,5 +21,6 @@ namespace AccountEx.CodeFirst.Models.Stock
         public byte Status { get; set; }
         public decimal QuantityDelivered { get; set; }
         public Decimal? StockBalance { get; set; }
+        public int Type { get; set; }
     }
 }

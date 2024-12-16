@@ -73,6 +73,7 @@ else
                         <input type="text" id="IsDeleted" class="hide" />
                         <input type="text" id="Status" class="hide" />
                         <input type="text" id="PreVoucherNumber" class="hide" />
+                        <input type="text" id="StockTransferType" class="hide" />
                         <div class="form-body">
                             <div class="hide alert alert-danger container-message">
                                 <i class="close" onclick="$(this).parent().hide();"></i>
@@ -132,8 +133,7 @@ else
                                         <select id="FromWarehouseName" class="form-control input-small" data-clear="false" show-clear="false" data-placeholder="Select Warehouse" data-trackchange="true">
                                             @foreach (var item in warehouses)
                                             {
-                                                <option data-custom="@item.Id" value="@item.Id" data-code="@item.Code" data-location="@item.LocationId"
-                                                        @(item.IsDefault || (!hasWDefault && item.Id == firstWItemId) ? "selected" : "")>
+                                                <option data-custom="@item.Id" value="@item.Id" data-code="@item.Code" data-location="@item.LocationId">
                                                     @item.Name
                                                 </option>
                                             }
@@ -145,8 +145,7 @@ else
                                         <select id="ToWarehouseName" class="form-control input-small" data-clear="false" show-clear="false" data-placeholder="Select Warehouse" data-trackchange="true">
                                             @foreach (var item in warehouses)
                                             {
-                                                <option data-custom="@item.Id" value="@item.Id" data-code="@item.Code" data-location="@item.LocationId"
-                                                        @(item.IsDefault || (!hasWDefault && item.Id == firstWItemId) ? "selected" : "")>
+                                                <option data-custom="@item.Id" value="@item.Id" data-code="@item.Code" data-location="@item.LocationId">
                                                     @item.Name
                                                 </option>
                                             }
@@ -156,7 +155,7 @@ else
                                 </div>
                             }
                             <div class="form-group">
-                                <label class="col-md-2 control-label" for="prefix">SRN.</label>
+                                <label class="col-md-2 control-label" for="prefix">Voucher # :</label>
                                 <div class="col-md-1 container-voucher">
                                     <label id="lblVoucherNumber" class="label label-info label-voucher hide"></label>
                                     <input type="text" class="form-control number input-small" id="VoucherNumber" data-required="required" data-plus-as-tab="false" data-validate="true" data-message="Voucher Number is required" data-include-in-item="true">
@@ -326,6 +325,7 @@ else
     <tr>
         <td>
             <input type="hidden" class="ItemId" id="ItemId" data-db-column="ItemId">
+            <input type="hidden" class="Type" id="Type" data-db-column="Type">
             <input type="hidden" class="EntryType" id="EntryType" data-db-column="EntryType" value="@((int)EntryType.Item)"><input type="hidden">
             <input type="text" class="Code form-control typeahead input-small ui-autocomplete-input" data-db-column="ItemCode" autocomplete="off">
         </td>
@@ -340,6 +340,8 @@ else
         </td>
         <td class="align-right">
             <input type="text" class="Quantity form-control input-small num3" data-db-column="Quantity" data-db-type="decimal">
+            <input type="text" class="Rate hide" data-db-column="Rate" data-db-type="decimal">
+            <input type="text" class="Amount hide" data-db-column="Amount" data-db-type="decimal">
         </td>
         <td>
             <input type="text" class="Unit form-control input-small" data-db-column="Unit" disabled>

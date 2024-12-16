@@ -22,9 +22,9 @@ namespace AccountEx.Repositories
         {
             return FiscalCollection.FirstOrDefault(p => p.VoucherNumber == voucherno && p.Id != id);
         }
-        public bool CheckIsVoucherNoExist(int voucherno, int id)
+        public bool CheckIsVoucherNoExist(int voucherno, int id, int type)
         {
-            return FiscalCollection.Any(p => p.VoucherNumber == voucherno && p.Id != id);
+            return FiscalCollection.Any(p => p.VoucherNumber == voucherno && p.Id != id && p.StockTransferType == type);
         }
         public InternalStockTransfer GetByInvoiceNo(int bookno, int id)
         {
@@ -34,13 +34,14 @@ namespace AccountEx.Repositories
         {
             return FiscalCollection.Any(p => p.InvoiceNumber == bookno && p.Id != id);
         }
-        public int GetNextVoucherNumber()
+        public int GetNextVoucherNumber(int type)
         {
             var maxnumber = 1;
             if (!FiscalCollection.Any())
                 return maxnumber;
             //return FiscalCollection.OrderByDescending(p => p.VoucherNumber).FirstOrDefault().VoucherNumber + 1;
             var voucher = FiscalCollection
+                                  .Where(x => x.StockTransferType == type)
                                   .OrderByDescending(p => p.VoucherNumber)
                                   .FirstOrDefault();
             if (voucher == null)
@@ -59,28 +60,28 @@ namespace AccountEx.Repositories
             r.Status = received == true ? (byte)1 : dbInternalStockTransfer.Status;
             base.Update(r, true, false);
         }
-        public InternalStockTransfer GetByVoucherNumber(int voucherno, string key, out bool next, out bool previous)
+        public InternalStockTransfer GetByVoucherNumber(int voucherno, string key, int type, out bool next, out bool previous)
         {
             InternalStockTransfer v = null;
             switch (key)
             {
                 case "first":
-                    v = FiscalCollection.OrderBy(p => p.VoucherNumber).FirstOrDefault();
+                    v = FiscalCollection.Where(x => x.StockTransferType == type).OrderBy(p => p.VoucherNumber).FirstOrDefault();
                     break;
                 case "last":
-                    v = FiscalCollection.OrderByDescending(p => p.VoucherNumber).FirstOrDefault();
+                    v = FiscalCollection.Where(x => x.StockTransferType == type).OrderByDescending(p => p.VoucherNumber).FirstOrDefault();
                     break;
                 case "next":
-                    v = FiscalCollection.Where(p => p.VoucherNumber > voucherno).OrderBy(p => p.VoucherNumber).FirstOrDefault();
+                    v = FiscalCollection.Where(p => p.VoucherNumber > voucherno && p.StockTransferType == type).OrderBy(p => p.VoucherNumber).FirstOrDefault();
                     break;
                 case "previous":
-                    v = FiscalCollection.Where(p => p.VoucherNumber < voucherno).OrderByDescending(p => p.VoucherNumber).FirstOrDefault();
+                    v = FiscalCollection.Where(p => p.VoucherNumber < voucherno && p.StockTransferType == type).OrderByDescending(p => p.VoucherNumber).FirstOrDefault();
                     break;
                 case "same":
-                    v = FiscalCollection.FirstOrDefault(p => p.VoucherNumber == voucherno);
+                    v = FiscalCollection.FirstOrDefault(p => p.VoucherNumber == voucherno && p.StockTransferType == type);
                     break;
                 case "challan":
-                    v = FiscalCollection.FirstOrDefault(p => p.VoucherNumber == voucherno);
+                    v = FiscalCollection.FirstOrDefault(p => p.VoucherNumber == voucherno && p.StockTransferType == type);
                     break;
 
             }
@@ -89,10 +90,10 @@ namespace AccountEx.Repositories
                 voucherno = v.VoucherNumber;
             else if (key != "nextvouchernumber" && key != "challan")
             {
-                v = FiscalCollection.OrderByDescending(p => p.VoucherNumber).FirstOrDefault();
+                v = FiscalCollection.Where(x => x.StockTransferType == type).OrderByDescending(p => p.VoucherNumber).FirstOrDefault();
 
             }
-            if (v == null && !FiscalCollection.Any())
+            if (v == null && !FiscalCollection.Where(x => x.StockTransferType == type).Any())
             {
                 v = new InternalStockTransfer();
                 v.VoucherNumber = 1001;
@@ -100,8 +101,8 @@ namespace AccountEx.Repositories
                 v.Date = DateTime.Now;
                 v.CreatedAt = DateTime.Now;
             }
-            next = FiscalCollection.Any(p => p.VoucherNumber > voucherno);
-            previous = FiscalCollection.Any(p => p.VoucherNumber < voucherno);
+            next = FiscalCollection.Where(x => x.StockTransferType == type).Any(p => p.VoucherNumber > voucherno);
+            previous = FiscalCollection.Where(x => x.StockTransferType == type).Any(p => p.VoucherNumber < voucherno);
             return v;
         }
         public void DeleteByVoucherNumber(int voucherno)

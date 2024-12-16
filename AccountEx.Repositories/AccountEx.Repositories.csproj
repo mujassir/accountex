@@ -167,6 +167,8 @@
     <Compile Include="Notifications\NotificationRepository.cs" />
     <Compile Include="Order\OrderServiceItemRepository.cs" />
     <Compile Include="Pharmaceutical\DoctorRepository.cs" />
+    <Compile Include="Production\ProductionUnitItemRepository.cs" />
+    <Compile Include="Production\ProductionUnitRepository.cs" />
     <Compile Include="Production\RequisitionItemRepository.cs" />
     <Compile Include="Production\ProductReceipeRepository .cs" />
     <Compile Include="Production\ProductReceipeitemRepository.cs" />

@@ -8,9 +8,13 @@ var InternalStockTransfer = function () {
     var PageSetting = new Object();
     var PageData = new Object();
     var focusElement = "#InvoiceNumber";
+    var StockTransferType = 1;
+    var isReturnStock = false;
     return {
         init: function () {
             var $this = this;
+            StockTransferType = location.pathname === "/transaction/internalStockTransfer" ? 1 : 2;
+            isReturnStock = ["/transaction/ProductionStockTransferReturn", "/transaction/ProductionStockTransferReturnReceive"].includes(location.pathname);
             $("#VoucherNumber").keyup(function (e) {
                 if (e.which == 13) {
                     $(this).val() == "0" ? focusElement = "#InvoiceNumber" : "#Date";
@@ -38,9 +42,21 @@ var InternalStockTransfer = function () {
             });
             $("#FromLocationName").change(function (e) {
                 $this.ResetFromWarehouse();
+                $this.ResetFromMachine();
+            });
+            $("#IsReturn").change(function (e) {
+                const isChecked = $("#IsReturn").val();
+                if (isChecked == 'true') {
+                    $('#ReturnStockPropDiv').removeClass("hide")
+                    $('#StockPropDiv').addClass("hide")
+                } else {
+                    $('#StockPropDiv').removeClass("hide")
+                    $('#ReturnStockPropDiv').addClass("hide")
+                }
             });
             $("#ToLocationName").change(function (e) {
                 $this.ResetToWarehouse();
+                $this.ResetToMachine();
             });
             $(document).on("keyup", ".Code", function (event) {
                 var type = $this.GetType();
@@ -264,17 +280,27 @@ var InternalStockTransfer = function () {
                 if (!fromLocation && PageSetting.isMultipleLocationEnabled) {
                     err += " Please select from location.";
                 }
-                var fromWarehouse = $("#FromWarehouseName")?.find(":selected")?.data("custom") || null;
-                if (!fromWarehouse && PageSetting.isMultipleLocationEnabled) {
-                    err += " Please select from warehouse.";
-                }
                 var toLocation = $("#ToLocationName")?.find(":selected")?.data("custom") || null;
                 if (!toLocation && PageSetting.isMultipleLocationEnabled) {
                     err += " Please select to location.";
                 }
+                var fromWarehouse = $("#FromWarehouseName")?.find(":selected")?.data("custom") || null;
+                if (StockTransferType == 1 && !fromWarehouse && PageSetting.isMultipleLocationEnabled) {
+                    err += " Please select from warehouse.";
+                }
                 var toWarehouse = $("#ToWarehouseName")?.find(":selected")?.data("custom") || null;
-                if (!toWarehouse && PageSetting.isMultipleLocationEnabled) {
+                if (StockTransferType == 1 && !toWarehouse && PageSetting.isMultipleLocationEnabled) {
                     err += " Please select to warehouse.";
+                }
+
+                var fromMachine = $("#FromMachineName")?.find(":selected")?.data("custom") || null;
+                if (isReturnStock && StockTransferType == 2 && !fromMachine && PageSetting.isMultipleLocationEnabled) {
+                    err += " Please select from machine.";
+                }
+
+                var toMachine = $("#ToMachineName")?.find(":selected")?.data("custom") || null;
+                if (!isReturnStock && StockTransferType == 2 && !toMachine && PageSetting.isMultipleLocationEnabled) {
+                    err += " Please select to machine.";
                 }
 
                 if (err.trim() != "") {
@@ -285,6 +311,9 @@ var InternalStockTransfer = function () {
                 record["FromWarehouseId"] = fromWarehouse || 0;
                 record["ToLocationId"] = toLocation || 0;
                 record["ToWarehouseId"] = toWarehouse || 0;
+                record["FromMachineId"] = fromMachine || 0;
+                record["ToMachineId"] = toMachine || 0;
+                record["StockTransferType"] = StockTransferType;
 
                 record["TransactionType"] = VoucherType[voucher],
                     record["InternalStockTransferItems"] = Items;
@@ -399,7 +428,7 @@ var InternalStockTransfer = function () {
             var voucherno = Common.GetInt($("#VoucherNumber").val());
             var locationId = Common.GetInt($("#AuthLocationId").val());
             Common.WrapAjax({
-                url: Setting.APIBaseUrl + API_CONTROLLER + "/" + voucherno + "?&key=" + key + "&voucher=" + voucherno + "&locationId=" + locationId,
+                url: Setting.APIBaseUrl + API_CONTROLLER + "/" + voucherno + "?&key=" + key + "&voucher=" + voucherno + "&locationId=" + locationId + "&type=" + StockTransferType,
                 type: "GET",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -412,27 +441,43 @@ var InternalStockTransfer = function () {
                         $("#item-container tbody").html("");
                         $this.CustomClear();
                         var d = res.Data.Order;
+                        const existingFromLocationId = $('#FromLocationId').val();
+                        const existingToLocationId = $('#ToLocationId').val();
                         Common.MapEditData(d, "#form-info");
 
-                        if (d?.FromLocationId) {
-                            $('#FromLocationId').val(d.FromLocationId)
-                            $('#FromLocationName').val(d.FromLocationId)
-                        }
+                        $('#FromLocationId').val(d?.FromLocationId || existingFromLocationId)
+                        $('#FromLocationName').val(d?.FromLocationId || existingFromLocationId)
+                        $('#ToLocationId').val(d?.ToLocationId || existingToLocationId)
+                        $('#ToLocationName').val(d?.ToLocationId || existingToLocationId)
+
                         $this.ResetFromWarehouse()
                         if (d?.FromWarehouseId) {
                             $('#FromWarehouseId').val(d.FromWarehouseId)
                             $('#FromWarehouseName').val(d.FromWarehouseId)
                         }
-                        if (d?.ToLocationId) {
-                            $('#ToLocationId').val(d.ToLocationId)
-                            $('#ToLocationName').val(d.ToLocationId)
+                        $this.ResetFromMachine()
+                        if (d?.FromMachineId) {
+                            $('#FromMachineId').val(d.FromMachineId)
+                            $('#FromMachineName').val(d.FromMachineId)
                         }
                         $this.ResetToWarehouse()
                         if (d?.ToWarehouseId) {
+                            $("#IsReturn").prop("checked", true);
+                            $.uniform.update();
                             $('#ToWarehouseId').val(d.ToWarehouseId)
                             $('#ToWarehouseName').val(d.ToWarehouseId)
                         }
-
+                        $this.ResetToMachine()
+                        if (d?.ToMachineId) {
+                            $('#ToMachineId').val(d.ToMachineId)
+                            $('#ToMachineName').val(d.ToMachineId)
+                        }
+                        $this.ResetFromMachine()
+                        if (d?.FromMachineId) {
+                            $('#FromMachineId').val(d.FromMachineId)
+                            $('#FromMachineName').val(d.FromMachineId)
+                        }
+                        $("#IsReturn").trigger("change");
                         if (d == null) {
                             $("#DCNo").removeProp("disabled");
                             $this.CustomClear();
@@ -586,7 +631,7 @@ var InternalStockTransfer = function () {
                         $(tr).find("input.ArticleNo").val(product.ArticleNo);
                         $(tr).find("input.Stock").val(quantity || 0);
                         $(tr).find("input.Unit").val(product.UnitType);
-                        $(tr).find("input.Rate").val((voucher == "saleorder" ? product.SalePrice : product.PurchasePrice));
+                        $(tr).find("input.Rate").val(product.PurchasePrice);
                         $(".container-message").hide();
                     }
                 }
@@ -596,7 +641,7 @@ var InternalStockTransfer = function () {
         ResetFromWarehouse: function () {
             $(`#FromWarehouseName`).val(null);
             const locId = $("#FromLocationId").val();
-            document.querySelectorAll('#FromWarehouseName option').forEach(el => {
+            document.querySelectorAll('#FromWarehouseName option')?.forEach(el => {
                 el.style.display = 'none';
                 if (el.getAttribute('data-location') == locId) {
                     el.style.display = 'block';
@@ -605,8 +650,42 @@ var InternalStockTransfer = function () {
         },
         ResetToWarehouse: function () {
             $(`#ToWarehouseName`).val(null);
+            $(`#ToWarehouseId`).val(null);
             const locId = $("#ToLocationId").val();
-            document.querySelectorAll('#ToWarehouseName option').forEach(el => {
+            document.querySelectorAll('#ToWarehouseName option')?.forEach(el => {
+                el.style.display = 'none';
+                if (el.getAttribute('data-location') == locId) {
+                    el.style.display = 'block';
+                }
+            });
+        },
+        ResetFromMachine: function () {
+            $(`#FromMachineName`).val(null);
+            $(`#FromMachineId`).val(null);
+            const locId = $("#FromLocationId").val();
+            document.querySelectorAll('#FromMachineName option')?.forEach(el => {
+                el.style.display = 'none';
+                if (el.getAttribute('data-location') == locId) {
+                    el.style.display = 'block';
+                }
+            });
+        },
+        ResetToMachine: function () {
+            $(`#ToMachineName`).val(null);
+            $(`#ToMachineId`).val(null);
+            const locId = $("#ToLocationId").val();
+            document.querySelectorAll('#ToMachineName option')?.forEach(el => {
+                el.style.display = 'none';
+                if (el.getAttribute('data-location') == locId) {
+                    el.style.display = 'block';
+                }
+            });
+        },
+        ResetFromMachine: function () {
+            $(`#FromMachineName`).val(null);
+            $(`#FromMachineId`).val(null);
+            const locId = $("#ToLocationId").val();
+            document.querySelectorAll('#FromMachineName option')?.forEach(el => {
                 el.style.display = 'none';
                 if (el.getAttribute('data-location') == locId) {
                     el.style.display = 'block';

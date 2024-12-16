@@ -351,6 +351,15 @@ namespace AccountEx.Web.Controllers.mvc
                 .ToList();
             return View();
         }
+        public ActionResult Machines()
+        {
+            ViewBag.Locations = new GenericRepository<UserLocation>().AsQueryable()
+                .Where(x => x.UserId == (int)SiteContext.Current.User.Id)
+                .Include(x => x.Location)
+                .Select(x => x.Location)
+                .ToList();
+            return View();
+        }
         public ActionResult UnitTypes()
         {
             return View();

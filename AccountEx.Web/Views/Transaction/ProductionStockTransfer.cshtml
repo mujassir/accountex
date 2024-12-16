@@ -1,10 +1,10 @@
 @using AccountEx.CodeFirst.Models
 @section PageStyle
 {
-    <link href="~/Content/InternalStockTransferReceive.css" rel="stylesheet" />
+    <link href="~/Content/InternalStockTransfer.css" rel="stylesheet" />
 }
 @{
-    ViewBag.Title = "Receive Internal Stock Transfer";
+    ViewBag.Title = "Production Stock Transfer";
 }
 @using AccountEx.BussinessLogic;
 @using AccountEx.Common;
@@ -43,7 +43,7 @@ else
 {
     @section PageTitle
 {
-        <h1 class="font-green-sharp bold hidden-print">Receive Internal Stock Transfer</h1>
+        <h1 class="font-green-sharp bold hidden-print">Manage Production Stock Transfer</h1>
     }
     //hide
     <div class="hidden-print" id="form-info">
@@ -52,13 +52,13 @@ else
             <div class="portlet light">
                 <div class="portlet-title">
                     <div class="caption">
-                        <i class="fa fa-edit"></i>Receive Internal Stock Transfer
+                        <i class="fa fa-edit"></i>Add/Edit Production Stock Transfer
                     </div>
                     <div class="actions hide">
-                        <a href="javascript:;" onclick="InternalStockTransferReceive.LoadVoucher('previous')" class="btn blue">
+                        <a href="javascript:;" onclick="InternalStockTransfer.LoadVoucher('previous')" class="btn blue">
                             <i class="fa fa-angle-left"></i>&nbsp;Back
                         </a>
-                        <a href="javascript:;" onclick="InternalStockTransferReceive.LoadVoucher('next')" class="btn blue">
+                        <a href="javascript:;" onclick="InternalStockTransfer.LoadVoucher('next')" class="btn blue">
                             <i class="fa fa-angle-left"></i>&nbsp;Next
                         </a>
 
@@ -73,7 +73,6 @@ else
                         <input type="text" id="IsDeleted" class="hide" />
                         <input type="text" id="Status" class="hide" />
                         <input type="text" id="PreVoucherNumber" class="hide" />
-                        <input type="text" id="StockTransferType" class="hide" />
                         <div class="form-body">
                             <div class="hide alert alert-danger container-message">
                                 <i class="close" onclick="$(this).parent().hide();"></i>
@@ -92,7 +91,7 @@ else
                                 <div class="form-group">
                                     <label class="col-md-2 control-label" for="prefix">From Location</label>
                                     <div class="col-md-1">
-                                        <select id="FromLocationName" disabled="disabled" class="form-control input-small" data-clear="false" show-clear="false" data-placeholder="Select Location" data-trackchange="true">
+                                        <select id="FromLocationName" class="form-control input-small" data-clear="false" show-clear="false" data-placeholder="Select Location" data-trackchange="true">
                                             @foreach (var item in locations)
                                             {
                                                 <option data-custom="@item.Id" value="@item.Id" data-code="@item.Code"
@@ -116,22 +115,32 @@ else
                                         </select>
                                         <input type="text" class="hide" id="ToLocationId" data-clear="false" />
                                     </div>
+                                    <div class="form-group">
+                                        <div class="col-md-2">
+                                            <label id="IsReturnActive" class="control-label" for="IsReturn">
+                                                <input type="checkbox" id="IsReturn" data-checktrack='false' />
+                                                Is Return
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                             }
                             @{
                                 // Check if any location is marked as default
-                                var warehouses = (List<WareHouse>)ViewBag.Warehouses;
-                                bool hasWDefault = warehouses.Any(x => x.IsDefault);
-                                var firstWarehouse = warehouses.FirstOrDefault();
-                                int firstWItemId = firstWarehouse != null ? firstWarehouse.Id : 0;
+                                var machines = (List<Machine>)ViewBag.Machines;
+                                bool hasWDefault = machines.Any(x => x.IsDefault);
+                                var firstMachine = machines.FirstOrDefault();
+                                int firstWItemId = firstMachine != null ? firstMachine.Id : 0;
+                                // Check if any location is marked as default
+                                var Warehouses = (List<WareHouse>)ViewBag.Warehouses;
                             }
-                            @if (warehouses.Count > 0)
+                            @if (machines.Count > 0)
                             {
-                                <div class="form-group">
+                                <div id="StockPropDiv" class="form-group">
                                     <label class="col-md-2 control-label" for="prefix">From Warehouse</label>
                                     <div class="col-md-1">
-                                        <select id="FromWarehouseName" class="form-control input-small" data-clear="false" show-clear="false" data-placeholder="Select Warehouse" data-trackchange="true">
-                                            @foreach (var item in warehouses)
+                                        <select id="FromWarehouseName" class="form-control input-small" data-clear="false" show-clear="false" data-placeholder="Select Machine" data-trackchange="true">
+                                            @foreach (var item in Warehouses)
                                             {
                                                 <option data-custom="@item.Id" value="@item.Id" data-code="@item.Code" data-location="@item.LocationId">
                                                     @item.Name
@@ -140,17 +149,46 @@ else
                                         </select>
                                         <input type="text" class="hide" id="FromWarehouseId" data-clear="false" />
                                     </div>
+                                    <label class="col-md-2 control-label" for="prefix">To Machine</label>
+                                    <div class="col-md-2">
+                                        <select id="ToMachineName" class="form-control input-small" data-clear="false" show-clear="false" data-placeholder="Select Machine" data-trackchange="true">
+                                            @foreach (var item in machines)
+                                            {
+                                                <option data-custom="@item.Id" value="@item.Id" data-code="@item.Code" data-location="@item.LocationId"
+                                                        @(item.IsDefault || (!hasWDefault && item.Id == firstWItemId) ? "selected" : "")>
+                                                    @item.Name
+                                                </option>
+                                            }
+                                        </select>
+                                        <input type="text" class="hide" id="ToMachineId" data-clear="false" />
+                                    </div>
+                                </div>
+
+                                <div id="ReturnStockPropDiv" class="form-group hide">
+                                    <label class="col-md-2 control-label" for="prefix">From Machine</label>
+                                    <div class="col-md-1">
+                                        <select id="FromMachineName" class="form-control input-small" data-clear="false" show-clear="false" data-placeholder="Select Machine" data-trackchange="true">
+                                            @foreach (var item in machines)
+                                            {
+                                                <option data-custom="@item.Id" value="@item.Id" data-code="@item.Code" data-location="@item.LocationId"
+                                                        @(item.IsDefault || (!hasWDefault && item.Id == firstWItemId) ? "selected" : "")>
+                                                    @item.Name
+                                                </option>
+                                            }
+                                        </select>
+                                        <input type="text" class="hide" id="ToMachineId" data-clear="false" />
+                                    </div>
                                     <label class="col-md-2 control-label" for="prefix">To Warehouse</label>
                                     <div class="col-md-2">
-                                        <select id="ToWarehouseName" class="form-control input-small" data-clear="false" show-clear="false" data-placeholder="Select Warehouse" data-trackchange="true">
-                                            @foreach (var item in warehouses)
+                                        <select id="ToWarehouseName" class="form-control input-small" data-clear="false" show-clear="false" data-placeholder="Select Machine" data-trackchange="true">
+                                            @foreach (var item in Warehouses)
                                             {
                                                 <option data-custom="@item.Id" value="@item.Id" data-code="@item.Code" data-location="@item.LocationId">
                                                     @item.Name
                                                 </option>
                                             }
                                         </select>
-                                        <input type="text" class="hide" id="ToWarehouseId" data-clear="false" />
+                                        <input type="text" class="hide" id="FromWarehouseId" data-clear="false" />
                                     </div>
                                 </div>
                             }
@@ -219,31 +257,44 @@ else
                                 <div class="btn-set pull-left">
 
                                     @*<button class="btn tooltips" data-container="body" data-placement="top" data-original-title="Tooltip in top">Top</button>*@
-                                    <a href="javascript:;" onclick="InternalStockTransferReceive.LoadVoucher('first')" class="btn blue tooltips disabled first" data-original-title="First">
+                                    <a href="javascript:;" onclick="InternalStockTransfer.LoadVoucher('first')" class="btn blue tooltips disabled first" data-original-title="First">
                                         <i class="fa fa-angle-double-left"></i>
                                     </a>
-                                    <a href="javascript:;" onclick="InternalStockTransferReceive.LoadVoucher('previous')" class="btn blue tooltips disabled previous" data-original-title="Previous">
+                                    <a href="javascript:;" onclick="InternalStockTransfer.LoadVoucher('previous')" class="btn blue tooltips disabled previous" data-original-title="Previous">
                                         <i class="fa fa-angle-left"></i>
                                     </a>
-                                    <a href="javascript:;" onclick="InternalStockTransferReceive.LoadVoucher('next')" class="btn blue tooltips disabled next" data-original-title="Next">
+                                    <a href="javascript:;" onclick="InternalStockTransfer.LoadVoucher('next')" class="btn blue tooltips disabled next" data-original-title="Next">
                                         <i class="fa fa-angle-right"></i>
                                     </a>
-                                    <a href="javascript:;" onclick="InternalStockTransferReceive.LoadVoucher('last')" class="btn blue tooltips disabled last" data-original-title="Last">
+                                    <a href="javascript:;" onclick="InternalStockTransfer.LoadVoucher('last')" class="btn blue tooltips disabled last" data-original-title="Last">
                                         <i class="fa fa-angle-double-right"></i>
                                     </a>
                                 </div>
                                 <div class="btn-set pull-right">
                                     @if (!SiteContext.Current.Fiscal.IsClosed)
                                     {
-                                        <button id="saveBtn" type="button" class="btn btn-primary green" onclick="InternalStockTransferReceive.Save()">
+                                        <button type="button" class="btn purple-plum" onclick="InternalStockTransfer.New()">
+                                            <i class="fa  fa-plus-circle"></i>
+                                            New
+                                        </button>
+                                        <button id="saveBtn" type="button" class="btn btn-primary green" onclick="InternalStockTransfer.Save()">
                                             <i class="fa fa-check"></i>
-                                            Receive
+                                            Save
+                                        </button>
+                                        <button type="button" id="btndelete" class="btn red" onclick="InternalStockTransfer.Delete()">
+                                            <i class="fa fa-trash-o"></i>
+                                            Delete
                                         </button>
                                     }
-                                    <button type="button" id="btnprint" class="btn yellow" onclick="InternalStockTransferReceive.Print()">
+                                    <button type="button" id="btnprint" class="btn yellow" onclick="InternalStockTransfer.Print()">
                                         <i class="fa fa-print"></i>
 
                                         Print
+                                    </button>
+                                    <button type="button" class="btn blue" onclick="window.location='@(Url.Content(SettingManager.DashBoardUrl))'">
+                                        <i class="fa  fa-times-circle"></i>
+
+                                        Close
                                     </button>
                                 </div>
                             </div>
@@ -265,7 +316,7 @@ else
                         <i class="fa fa-list"></i>Record Listing
                     </div>
                     <div class="actions">
-                        <a href="javascript:;" onclick="InternalStockTransferReceive.Add()" class="btn blue">
+                        <a href="javascript:;" onclick="InternalStockTransfer.Add()" class="btn blue">
                             <i class="fa fa-plus"></i>&nbsp;New
                         </a>
                     </div>
@@ -314,7 +365,7 @@ else
             <input type="hidden" class="ItemId" id="ItemId" data-db-column="ItemId">
             <input type="hidden" class="Type" id="Type" data-db-column="Type">
             <input type="hidden" class="EntryType" id="EntryType" data-db-column="EntryType" value="@((int)EntryType.Item)"><input type="hidden">
-            <input type="text" disabled="disabled" class="Code form-control typeahead input-small ui-autocomplete-input" data-db-column="ItemCode" autocomplete="off">
+            <input type="text" class="Code form-control typeahead input-small ui-autocomplete-input" data-db-column="ItemCode" autocomplete="off">
         </td>
         <td>
             <input type="text" disabled="disabled" class="Name form-control input-medium" data-db-column="ItemName">
@@ -326,12 +377,12 @@ else
             <input type="text" disabled="disabled" class="Stock form-control input-medium" data-db-column="StockBalance">
         </td>
         <td class="align-right">
-            <input type="text" disabled="disabled" class="Quantity form-control input-small num3" data-db-column="Quantity" data-db-type="decimal">
+            <input type="text" class="Quantity form-control input-small num3" data-db-column="Quantity" data-db-type="decimal">
             <input type="text" class="Rate hide" data-db-column="Rate" data-db-type="decimal">
             <input type="text" class="Amount hide" data-db-column="Amount" data-db-type="decimal">
         </td>
         <td>
-            <input type="text" disabled="disabled" class="Unit form-control input-small" data-db-column="Unit" disabled>
+            <input type="text" class="Unit form-control input-small" data-db-column="Unit" disabled>
         </td>
 
         @* <td class="hide">
@@ -339,7 +390,7 @@ else
             <td class="hide">
                 <input type="text" class="Amount form-control input-small" data-db-column="Amount" data-db-type="decimal" disabled></td>*@
         <td style="width: 8px;">
-            @*<span class="action"><i class="fa fa-trash-o" onclick="InternalStockTransferReceive.DeleteRow(this)" data-original-title="Delete Item"></i></span>*@
+            <span class="action"><i class="fa fa-trash-o" onclick="InternalStockTransfer.DeleteRow(this)" data-original-title="Delete Item"></i></span>
 
         </td>
     </tr>
@@ -367,7 +418,7 @@ else
         </div>
         <div class="col-xs-5">
         </div>
-        <div class="col-xs-7" style="margin-top: 70px;"><b style="font-size: 25px; float: right;">Receive Internal Stock Transfer</b></div>
+        <div class="col-xs-7" style="margin-top: 70px;"><b style="font-size: 25px; float: right;">Production Stock Transfer</b></div>
     </div>
 
 
@@ -412,7 +463,7 @@ else
                             </td>
                         </tr>
                         <tr>
-                            <td class="font-size"><b>SRN # :</b></td>
+                            <td class="font-size"><b>Voucher # :</b></td>
                             <td>
                                 <span id="lblVoucherCode"></span><span id="lblVoucherNumber"></span>
                             </td>
@@ -482,10 +533,10 @@ else
     <script src="~/Content/AutoComplete/jquery-ui.js"></script>
     <link href="~/Content/AutoComplete/jquery-ui.css" rel="stylesheet" />
     @* <script src="~/Content/HotKey/jquery.hotkeys.js"></script>*@
-    <script src="~/Content/AppJS/Transaction/InternalStockTransferReceive.js"></script>
+    <script src="~/Content/AppJS/Transaction/InternalStockTransfer.js"></script>
     <script>
         jQuery(document).ready(function () {
-            InternalStockTransferReceive.init();
+            InternalStockTransfer.init();
         });
     </script>
 }

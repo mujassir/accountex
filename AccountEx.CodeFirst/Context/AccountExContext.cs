@@ -12,6 +12,7 @@ using AccountEx.CodeFirst.Models.Vehicles;
 using AccountEx.CodeFirst.Models.Pharmaceutical;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using AccountEx.CodeFirst.Models.Stock;
+using AccountEx.CodeFirst.Models.Production;
 
 
 
@@ -120,6 +121,7 @@ namespace AccountEx.CodeFirst.Context
         public DbSet<Company> Companies { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<WareHouse> WareHouses { get; set; }
+        public DbSet<Machine> Machines { get; set; }
         public DbSet<ServiceItem> ServiceItems { get; set; }
         public DbSet<SaleServicesItem> SaleServicesItems { get; set; }
         public DbSet<SystemLog> SystemLogs { get; set; }
@@ -132,6 +134,8 @@ namespace AccountEx.CodeFirst.Context
         public DbSet<StockRequisitionItem> StockRequisitionItems { get; set; }
         public DbSet<InternalStockTransfer> InternalStockTransfers { get; set; }
         public DbSet<InternalStockTransferItem> InternalStockTransferItems { get; set; }
+        public DbSet<ProductionUnit> ProductionUnits { get; set; }
+        public DbSet<ProductionUnitItem> ProductionUnitItems { get; set; }
 
 
         public DbSet<ESalary> ESalaries { get; set; }

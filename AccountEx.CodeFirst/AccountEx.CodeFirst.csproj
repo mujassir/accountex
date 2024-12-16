@@ -188,6 +188,8 @@
     <Compile Include="Models\Nexus\vw_NexusDepartmentMapping.cs" />
     <Compile Include="Models\Pharmaceutical\Doctor.cs" />
     <Compile Include="Models\Production\ProdcutReceipeitem.cs" />
+    <Compile Include="Models\Production\ProductionUnit.cs" />
+    <Compile Include="Models\Production\ProductionUnitItem.cs" />
     <Compile Include="Models\Production\vw_ProductReceipes.cs" />
     <Compile Include="Models\Production\ProductReceipe.cs" />
     <Compile Include="Models\Production\WPItemWithParentDetail.cs" />
@@ -195,6 +197,7 @@
     <Compile Include="Models\Stock\InternalStockTransferItem.cs" />
     <Compile Include="Models\System\FiscalSetting.cs" />
     <Compile Include="Models\System\Location.cs" />
+    <Compile Include="Models\System\Machine.cs" />
     <Compile Include="Models\System\WareHouse.cs" />
     <Compile Include="Models\UserRoles\UserCompany.cs" />
     <Compile Include="Models\Transactions\PayablePayment.cs" />

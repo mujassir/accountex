@@ -297,6 +297,7 @@
     <Compile Include="Controllers\api\Lab\TestController.cs" />
     <Compile Include="Controllers\api\Lab\TestCategoryController.cs" />
     <Compile Include="Controllers\api\Manage\LocationController.cs" />
+    <Compile Include="Controllers\api\Manage\MachineController.cs" />
     <Compile Include="Controllers\api\Manage\TemplateController.cs" />
     <Compile Include="Controllers\api\Manage\SupplierCurrenciesController.cs" />
     <Compile Include="Controllers\api\Manage\CurrencyRateController.cs" />
@@ -319,7 +320,7 @@
     <Compile Include="Controllers\api\Nexus\NexusSyncApiController.cs" />
     <Compile Include="Controllers\api\Nexus\NexusCaseController.cs" />
     <Compile Include="Controllers\api\Pharmaceutical\DoctorController.cs" />
-    <Compile Include="Controllers\api\Production\ProductionWithReceipeController.cs" />
+    <Compile Include="Controllers\api\Production\ProductionUnitController.cs" />
     <Compile Include="Controllers\api\Production\ProductReceipeController.cs" />
     <Compile Include="Controllers\api\RentalSystem\BlockController.cs" />
     <Compile Include="Controllers\api\RentalSystem\ChallanController.cs" />
@@ -559,6 +560,9 @@
     <Compile Include="Models\ReportModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Content Include="Views\Transaction\ProductionStockTransferReturn.cshtml" />
+    <None Include="Views\Transaction\ProductionStockTransferReturnReceive.cshtml" />
+    <None Include="Views\Production\LocationWise.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_GlobalResources\Resource.resx">
@@ -695,6 +699,7 @@
     <Content Include="Content\AppJS\Manage\Brands.js" />
     <Content Include="Content\AppJS\Manage\Labour.js" />
     <Content Include="Content\AppJS\Manage\Locations.js" />
+    <Content Include="Content\AppJS\Manage\Machines.js" />
     <Content Include="Content\AppJS\Manage\Templates.js" />
     <Content Include="Content\AppJS\Manage\SupplierCurrencies.js" />
     <Content Include="Content\AppJS\Manage\CurrencyRates.js" />
@@ -722,6 +727,7 @@
     <Content Include="Content\AppJS\Pharmaceutical\SalesRap.js" />
     <Content Include="Content\AppJS\Pharmaceutical\Doctors.js" />
     <Content Include="Content\AppJS\Production\Production.js" />
+    <Content Include="Content\AppJS\Production\ProductionLocationWise.js" />
     <Content Include="Content\AppJS\Production\ProductReceipe.js" />
     <Content Include="Content\AppJS\RentalSystem\Challans.js" />
     <Content Include="Content\AppJS\Manage\Cities.js" />
@@ -860,6 +866,7 @@
     <Content Include="Content\AppJS\Reports\TrialBalance.js" />
     <Content Include="Content\AppJS\Reports\VoucherList.js" />
     <Content Include="Content\AppJS\Reports\VoucherPrint.js" />
+    <Content Include="Content\AppJS\Shared\CommonV2.js" />
     <Content Include="Content\AppJS\Shared\Url.js" />
     <Content Include="Content\AppJS\Shared\autoNumeric.js" />
     <Content Include="Content\AppJS\Shared\Common.js" />
@@ -8143,21 +8150,51 @@
     <Content Include="Upload\LogBookScanned\921081243Her aik bat.jpg" />
     <Content Include="Upload\LogBookScanned\990415288Her aik bat 1.jpg" />
     <Content Include="Upload\ProjectFiles\1721766187kr.jpg" />
-    <Content Include="Upload\Puri Technologies\AgreementFiles\172175_18042315381883_img.jpg" />
-    <Content Include="Upload\Puri Technologies\AgreementFiles\211951_18042316092258_error.png" />
-    <Content Include="Upload\Puri Technologies\AgreementFiles\255460_18042315384791_img.jpg" />
-    <Content Include="Upload\Puri Technologies\AgreementFiles\397955_18042315595984_error.png" />
-    <Content Include="Upload\Puri Technologies\AgreementFiles\424244_18042316404814_kr png.png" />
-    <Content Include="Upload\Puri Technologies\AgreementFiles\469279_18042315362020_error.png" />
-    <Content Include="Upload\Puri Technologies\AgreementFiles\522910_18042316311066_error.png" />
-    <Content Include="Upload\Puri Technologies\AgreementFiles\73563_18042315351066_error.png" />
-    <Content Include="Upload\Puri Technologies\AgreementFiles\784049_18042315332113_error.png" />
-    <Content Include="Upload\Puri Technologies\AgreementFiles\830736_18042316391127_error.png" />
-    <Content Include="Upload\Puri Technologies\AgreementFiles\871012_17072113092564_1478701611407.png" />
-    <Content Include="Upload\Puri Technologies\AgreementFiles\902333_18042315374194_error.png" />
-    <Content Include="Upload\Puri Technologies\AgreementFiles\945788_18042315400655_kr.jfif" />
-    <Content Include="Upload\Puri Technologies\AgreementFiles\96576_18042315351970_error.png" />
-    <Content Include="Upload\Puri Technologies\AgreementFiles\967276_18042315573245_error.png" />
+    <Content Include="Upload\Puri Technologies\AgreementFiles\172175_18042315381883_img.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Upload\Puri Technologies\AgreementFiles\211951_18042316092258_error.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Upload\Puri Technologies\AgreementFiles\255460_18042315384791_img.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Upload\Puri Technologies\AgreementFiles\397955_18042315595984_error.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Upload\Puri Technologies\AgreementFiles\424244_18042316404814_kr png.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Upload\Puri Technologies\AgreementFiles\469279_18042315362020_error.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Upload\Puri Technologies\AgreementFiles\522910_18042316311066_error.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Upload\Puri Technologies\AgreementFiles\73563_18042315351066_error.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Upload\Puri Technologies\AgreementFiles\784049_18042315332113_error.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Upload\Puri Technologies\AgreementFiles\830736_18042316391127_error.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Upload\Puri Technologies\AgreementFiles\871012_17072113092564_1478701611407.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Upload\Puri Technologies\AgreementFiles\902333_18042315374194_error.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Upload\Puri Technologies\AgreementFiles\945788_18042315400655_kr.jfif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Upload\Puri Technologies\AgreementFiles\96576_18042315351970_error.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Upload\Puri Technologies\AgreementFiles\967276_18042315573245_error.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Upload\Puri Technologies\ApplicationLogo\375385_17072516574507__20170709_134019.JPG" />
     <Content Include="Upload\Puri Technologies\ApplicationLogo\955133_17072516532981_65ml.png" />
     <Content Include="Upload\Puri Technologies\LogBookScanned\437231_17072113210472_1478701611407.png" />
@@ -8410,6 +8447,9 @@
     <Content Include="Views\Transaction\InternalStockTransferReceive.cshtml" />
     <Content Include="Views\Reports\InternalStockTransfer.cshtml" />
     <Content Include="Views\Reports\LocationWiseStock.cshtml" />
+    <Content Include="Views\Transaction\ProductionStockTransfer.cshtml" />
+    <Content Include="Views\Manage\machines.cshtml" />
+    <Content Include="Views\Transaction\ProductionStockTransferReceive.cshtml" />
     <None Include="Web.config">
       <SubType>Designer</SubType>
     </None>

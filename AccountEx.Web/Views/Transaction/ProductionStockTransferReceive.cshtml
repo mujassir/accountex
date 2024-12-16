@@ -4,7 +4,7 @@
     <link href="~/Content/InternalStockTransferReceive.css" rel="stylesheet" />
 }
 @{
-    ViewBag.Title = "Receive Internal Stock Transfer";
+    ViewBag.Title = "Receive Production Stock Transfer";
 }
 @using AccountEx.BussinessLogic;
 @using AccountEx.Common;
@@ -43,7 +43,7 @@ else
 {
     @section PageTitle
 {
-        <h1 class="font-green-sharp bold hidden-print">Receive Internal Stock Transfer</h1>
+        <h1 class="font-green-sharp bold hidden-print">Receive Production Stock Transfer</h1>
     }
     //hide
     <div class="hidden-print" id="form-info">
@@ -52,7 +52,7 @@ else
             <div class="portlet light">
                 <div class="portlet-title">
                     <div class="caption">
-                        <i class="fa fa-edit"></i>Receive Internal Stock Transfer
+                        <i class="fa fa-edit"></i>Receive Production Stock Transfer
                     </div>
                     <div class="actions hide">
                         <a href="javascript:;" onclick="InternalStockTransferReceive.LoadVoucher('previous')" class="btn blue">
@@ -73,7 +73,6 @@ else
                         <input type="text" id="IsDeleted" class="hide" />
                         <input type="text" id="Status" class="hide" />
                         <input type="text" id="PreVoucherNumber" class="hide" />
-                        <input type="text" id="StockTransferType" class="hide" />
                         <div class="form-body">
                             <div class="hide alert alert-danger container-message">
                                 <i class="close" onclick="$(this).parent().hide();"></i>
@@ -92,7 +91,7 @@ else
                                 <div class="form-group">
                                     <label class="col-md-2 control-label" for="prefix">From Location</label>
                                     <div class="col-md-1">
-                                        <select id="FromLocationName" disabled="disabled" class="form-control input-small" data-clear="false" show-clear="false" data-placeholder="Select Location" data-trackchange="true">
+                                        <select id="FromLocationName" class="form-control input-small" data-clear="false" show-clear="false" data-placeholder="Select Location" data-trackchange="true">
                                             @foreach (var item in locations)
                                             {
                                                 <option data-custom="@item.Id" value="@item.Id" data-code="@item.Code"
@@ -116,44 +115,82 @@ else
                                         </select>
                                         <input type="text" class="hide" id="ToLocationId" data-clear="false" />
                                     </div>
+                                    <div class="form-group">
+                                        <div class="col-md-2">
+                                            <label id="IsReturnActive" class="control-label" for="IsReturn">
+                                                <input type="checkbox" id="IsReturn" data-checktrack='false' />
+                                                Is Return
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                             }
                             @{
                                 // Check if any location is marked as default
-                                var warehouses = (List<WareHouse>)ViewBag.Warehouses;
-                                bool hasWDefault = warehouses.Any(x => x.IsDefault);
-                                var firstWarehouse = warehouses.FirstOrDefault();
-                                int firstWItemId = firstWarehouse != null ? firstWarehouse.Id : 0;
+                                var machines = (List<Machine>)ViewBag.Machines;
+                                bool hasWDefault = machines.Any(x => x.IsDefault);
+                                var firstMachine = machines.FirstOrDefault();
+                                int firstWItemId = firstMachine != null ? firstMachine.Id : 0;
+                                // Check if any location is marked as default
+                                var Warehouses = (List<WareHouse>)ViewBag.Warehouses;
                             }
-                            @if (warehouses.Count > 0)
-                            {
-                                <div class="form-group">
-                                    <label class="col-md-2 control-label" for="prefix">From Warehouse</label>
-                                    <div class="col-md-1">
-                                        <select id="FromWarehouseName" class="form-control input-small" data-clear="false" show-clear="false" data-placeholder="Select Warehouse" data-trackchange="true">
-                                            @foreach (var item in warehouses)
-                                            {
-                                                <option data-custom="@item.Id" value="@item.Id" data-code="@item.Code" data-location="@item.LocationId">
-                                                    @item.Name
-                                                </option>
-                                            }
-                                        </select>
-                                        <input type="text" class="hide" id="FromWarehouseId" data-clear="false" />
-                                    </div>
-                                    <label class="col-md-2 control-label" for="prefix">To Warehouse</label>
-                                    <div class="col-md-2">
-                                        <select id="ToWarehouseName" class="form-control input-small" data-clear="false" show-clear="false" data-placeholder="Select Warehouse" data-trackchange="true">
-                                            @foreach (var item in warehouses)
-                                            {
-                                                <option data-custom="@item.Id" value="@item.Id" data-code="@item.Code" data-location="@item.LocationId">
-                                                    @item.Name
-                                                </option>
-                                            }
-                                        </select>
-                                        <input type="text" class="hide" id="ToWarehouseId" data-clear="false" />
-                                    </div>
+
+                            <div id="StockPropDiv" class="form-group">
+                                <label class="col-md-2 control-label" for="prefix">From Warehouse</label>
+                                <div class="col-md-1">
+                                    <select id="FromWarehouseName" class="form-control input-small" data-clear="false" show-clear="false" data-placeholder="Select Machine" data-trackchange="true">
+                                        @foreach (var item in Warehouses)
+                                        {
+                                            <option data-custom="@item.Id" value="@item.Id" data-code="@item.Code" data-location="@item.LocationId">
+                                                @item.Name
+                                            </option>
+                                        }
+                                    </select>
+                                    <input type="text" class="hide" id="FromWarehouseId" data-clear="false" />
                                 </div>
-                            }
+                                <label class="col-md-2 control-label" for="prefix">To Machine</label>
+                                <div class="col-md-2">
+                                    <select id="ToMachineName" class="form-control input-small" data-clear="false" show-clear="false" data-placeholder="Select Machine" data-trackchange="true">
+                                        @foreach (var item in machines)
+                                        {
+                                            <option data-custom="@item.Id" value="@item.Id" data-code="@item.Code" data-location="@item.LocationId"
+                                                    @(item.IsDefault || (!hasWDefault && item.Id == firstWItemId) ? "selected" : "")>
+                                                @item.Name
+                                            </option>
+                                        }
+                                    </select>
+                                    <input type="text" class="hide" id="ToMachineId" data-clear="false" />
+                                </div>
+                            </div>
+
+                            <div id="ReturnStockPropDiv" class="form-group hide">
+                                <label class="col-md-2 control-label" for="prefix">From Machine</label>
+                                <div class="col-md-1">
+                                    <select id="FromMachineName" class="form-control input-small" data-clear="false" show-clear="false" data-placeholder="Select Machine" data-trackchange="true">
+                                        @foreach (var item in machines)
+                                        {
+                                            <option data-custom="@item.Id" value="@item.Id" data-code="@item.Code" data-location="@item.LocationId"
+                                                    @(item.IsDefault || (!hasWDefault && item.Id == firstWItemId) ? "selected" : "")>
+                                                @item.Name
+                                            </option>
+                                        }
+                                    </select>
+                                    <input type="text" class="hide" id="ToMachineId" data-clear="false" />
+                                </div>
+                                <label class="col-md-2 control-label" for="prefix">To Warehouse</label>
+                                <div class="col-md-2">
+                                    <select id="ToWarehouseName" class="form-control input-small" data-clear="false" show-clear="false" data-placeholder="Select Machine" data-trackchange="true">
+                                        @foreach (var item in Warehouses)
+                                        {
+                                            <option data-custom="@item.Id" value="@item.Id" data-code="@item.Code" data-location="@item.LocationId">
+                                                @item.Name
+                                            </option>
+                                        }
+                                    </select>
+                                    <input type="text" class="hide" id="FromWarehouseId" data-clear="false" />
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <label class="col-md-2 control-label" for="prefix">SRN.</label>
                                 <div class="col-md-1 container-voucher">

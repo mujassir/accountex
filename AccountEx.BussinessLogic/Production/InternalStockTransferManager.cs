@@ -19,6 +19,7 @@ namespace AccountEx.BussinessLogic
                     {
                         item.Status = input.Status;
                         item.QuantityDelivered = 0;
+                        item.Type = (int)StockType.Active;
                     }
                     repo.Add(input,true,false);
                }

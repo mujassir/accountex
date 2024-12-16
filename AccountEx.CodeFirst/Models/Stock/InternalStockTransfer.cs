@@ -23,6 +23,9 @@ namespace AccountEx.CodeFirst.Models.Stock
         public int ToLocationId { get; set; }
         public int FromWarehouseId { get; set; }
         public int ToWarehouseId { get; set; }
+        public int FromMachineId { get; set; }
+        public int ToMachineId { get; set; }
+        public int StockTransferType { get; set; } // Location to Warehouse or Location To Machine
         public virtual ICollection<InternalStockTransferItem> InternalStockTransferItems { get; set; }
 
     }
