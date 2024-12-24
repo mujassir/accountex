@@ -1,4 +1,5 @@
 @using AccountEx.Common;
+@using AccountEx.CodeFirst.Models;
 @using AccountEx.BussinessLogic;
 @{
     ViewBag.Title = "Diary Products";
@@ -22,7 +23,7 @@
             <a data-toggle="tab" href="#BasicInfo">Basic Info</a>
         </li>
         <li>
-            <a data-toggle="tab" href="#Logs">Logs</a>
+            <a data-toggle="tab" href="#Purchase">Actions</a>
         </li>
     </ul>
     <div class="tabbable-custom" id="form-info">
@@ -66,7 +67,7 @@
                                                     <div class="form-group">
                                                         <label class="col-md-4 control-label" for="prefix">Deliveries</label>
                                                         <div class="col-md-6">
-                                                            <input type="text" class="form-control " id="Company" data-required="false" data-message="Deliveries is required" />
+                                                            <input type="number" class="form-control " id="Company" data-required="false" data-message="Deliveries is required" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
@@ -82,9 +83,9 @@
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label class="col-md-4 control-label" for="prefix">Purchase Price</label>
+                                                        <label class="col-md-4 control-label" for="prefix">Cross Date</label>
                                                         <div class="col-md-6">
-                                                            <input type="text" class="form-control " id="PurchasePrice" />
+                                                            <input type="date" class="form-control " id="DOJ" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
@@ -120,6 +121,15 @@
                                         </div>
 
                                     </div>
+
+                                    <br />
+                                    <div class="form-actions">
+                                        <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+                                        <div class="col-md-8">
+                                            <button type="button" class="btn btn-primary green" onclick="Products.Save()" data-plus-as-tab="false">Save</button>
+                                            <button id="btnCancel" type="button" class="btn btn-default" onclick="Products.Add()">Cancel</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <!-- END EXAMPLE TABLE PORTLET-->
@@ -127,32 +137,84 @@
                     </div>
                 </div>
             </div>
-            <div id="Logs" class="tab-pane">
+
+            <div id="Purchase" class="tab-pane">
                 <div class="portlet-body">
-                    <div class="row" id="div-formLogs">
+                    <div class="row" id="div-formPurchase">
                         <div class="col-md-12 col-sm-12">
                             <!-- BEGIN EXAMPLE TABLE PORTLET-->
                             <div class="portlet light">
-                                <div id="LogsTableView"></div>
+                                <div class="portlet-body form">
+                                    <div id="ActionsData" class="form-horizontal hide">
+                                        <div class="form-body">
+                                            <div class="row">
+                                                <div class="form-group">
+                                                    <label class="col-md-2 control-label" for="prefix">Supplier</label>
+                                                    <div class="col-md-4">
+                                                        <select id="SupplierId" class="form-control select2" placeholder="Select supplier">
+                                                            <option></option>
+                                                            @foreach (var p in (List<AccountDetail>)ViewBag.Suppliers)
+                                                            {
+                                                                <option data-custom="@p.AccountId" value="@p.AccountId">@p.Name</option>
+                                                            }
+                                                        </select>
+                                                        <input type="hidden" value="SupplierId" />
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <input type="text" class="form-control" style="height: 34px" placeholder="Purcahse Price" id="PurchasePrice" />
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <button type="button" class="btn btn-primary green" onclick="Products.SalePurchase(false)" data-plus-as-tab="false">Purchase</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <h4 class="caption">Logs</h4>
+                                                <div id="LogsTableView"></div>
+                                            </div>
+                                            <div>
+                                                <h4 class="caption">Activity</h4>
+                                                <div id="ActivityTableView"></div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="form-group">
+                                                    <label class="col-md-2 control-label" for="prefix">Customer</label>
+                                                    <div class="col-md-4">
+                                                        <select id="CustomerId" class="form-control select2" placeholder="Select Customer">
+                                                            <option></option>
+                                                            @foreach (var p in (List<AccountDetail>)ViewBag.Customers)
+                                                            {
+                                                                <option data-custom="@p.AccountId" value="@p.AccountId">@p.Name</option>
+                                                            }
+                                                        </select>
+                                                        <input type="hidden" value="CustomerId" />
+                                                    </div>
+
+                                                    <div class="col-md-2">
+                                                        <input type="text" class="form-control" style="height: 34px" placeholder="Sale Price" id="SalePrice" />
+                                                    </div>
+
+                                                    <div class="col-md-2">
+                                                        <button type="button" class="btn btn-primary green" onclick="Products.SalePurchase(true)" data-plus-as-tab="false">Sale</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
                             </div>
-                            <!-- END EXAMPLE TABLE PORTLET-->
                         </div>
+                        <!-- END EXAMPLE TABLE PORTLET-->
                     </div>
                 </div>
+            </div>
 
-            </div>
-        </div>
-        <br />
-        <div class="form-actions">
-            <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
-            <div class="col-md-8">
-                <button type="button" class="btn btn-primary green" onclick="Products.Save()" data-plus-as-tab="false">Save</button>
-                <button type="button" class="btn btn-primary hide green" onclick="Products.SaveClose()">Save & Close</button>
-                <button id="btnCancel" type="button" class="btn btn-default" onclick="Products.Add()">Cancel</button>
-            </div>
         </div>
     </div>
-
 </div>
 
 <div class="row" id="div-table">

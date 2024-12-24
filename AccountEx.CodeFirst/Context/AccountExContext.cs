@@ -93,6 +93,8 @@ namespace AccountEx.CodeFirst.Context
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<SupplierGroup> SupplierGroups { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<DairyAdjustment> DairyAdjustments { get; set; }
+        public DbSet<DairyTransaction> DairyTransactions { get; set; }
         public DbSet<TransactionType> TransactionTypes { get; set; }
         public DbSet<UserProfile> UserProfiles { get; set; }
         public DbSet<User> Users { get; set; }

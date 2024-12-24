@@ -1,6 +1,7 @@
 ﻿
 var Adjustment = function () {
     var max = 0;
+    var FORM_TYPE = "";
     var LIST_LOADED = false;
     var LIST_CHANGED = false;
     var API_CONTROLLER = "Adjustment";
@@ -10,7 +11,8 @@ var Adjustment = function () {
     var PageData = new Object();
     var focusElement = "#InvoiceNumber";
     return {
-        init: function () {
+        init: function (type = "") {
+            FORM_TYPE = type;
             var $this = this;
             Common.BindShortKeys($this);
             $("#Discount").keyup(function () {
@@ -433,13 +435,14 @@ var Adjustment = function () {
                 if (Items.length <= 0) {
                     err += "Please add atleast one item.,";
                 }
-                if (Common.GetInt(record.NetTotal) <= 0) {
+                if (Common.GetInt(record.NetTotal) <= 0 && FORM_TYPE !== "DairyAdjustment") {
                     err += "Transaction total amount should be graeter than zero(0).,";
                 }
                 if (err.trim() != "") {
                     Common.ShowError(err);
                     return;
                 }
+                console.log(Items)
                 record["SaleItems"] = Items;
                 Common.WrapAjax({
                     url: Setting.APIBaseUrl + API_CONTROLLER,
@@ -659,7 +662,6 @@ var Adjustment = function () {
                 blockMessage: "Loading  " + $this.GetType() + " ...please wait",
                 success: function (res) {
                     if (res.Success) {
-
                         $("#item-container tbody").html("");
                         $this.CustomClear();
                         var d = res.Data.Order;
@@ -725,6 +727,23 @@ var Adjustment = function () {
 
                             }
                         }
+                        if (d?.Id < 1 && FORM_TYPE == "DairyAdjustment") {
+                            $("#TransactionType").val($("#TransactionType option").first().val());
+
+                            var tokens = Common.GetLeafAccounts(PageSetting.Products);
+                            const items = tokens.map(e => {
+                                return {
+                                    ItemId: e.Id,
+                                    ItemCode: e.AccountCode,
+                                    ItemName: e.DisplayName,
+                                    Quantity: 0,
+                                    FoderConsumed: 0,
+                                    Medicine: 0,
+                                }
+                            })
+                            Common.MapItemData(items);
+                        }
+
                         if (res.Data.Next)
                             $(".form-actions .next,.form-actions .last").removeClass("disabled");
                         else

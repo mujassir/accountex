@@ -150,6 +150,29 @@ namespace AccountEx.DbMapping
         public decimal Amount { get; set; }
 
     }
+    public class GetDairyProfileReport
+    {
+        public string Status { get; set; }
+        public string Shift { get; set; }
+        public int? ItemGroupId { get; set; }
+        public string ItemGroupName { get; set; }
+        public int ItemId { get; set; }
+        public string ItemCode { get; set; }
+        public string ItemName { get; set; }
+        public decimal? Milk { get; set; }
+        public decimal? ItemA { get; set; }
+        public decimal? ItemB { get; set; }
+        public decimal? ItemC { get; set; }
+        public decimal? ItemD { get; set; }
+        public decimal? Medicines { get; set; }
+        public decimal? MilkPrice { get; set; }
+        public decimal? ItemAPrice { get; set; }
+        public decimal? ItemBPrice { get; set; }
+        public decimal? ItemCPrice { get; set; }
+        public decimal? ItemDPrice { get; set; }
+        public decimal? MedicinePrice { get; set; }
+        public decimal? PL { get; set; }
+    }
     public class StockReport
     {
 

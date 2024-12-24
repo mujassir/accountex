@@ -192,6 +192,8 @@
     <Compile Include="Models\Production\ProductReceipe.cs" />
     <Compile Include="Models\Production\WPItemWithParentDetail.cs" />
     <Compile Include="Models\System\FiscalSetting.cs" />
+    <Compile Include="Models\Transactions\DairyAdjustment.cs" />
+    <Compile Include="Models\Transactions\DairyTransaction.cs" />
     <Compile Include="Models\UserRoles\UserCompany.cs" />
     <Compile Include="Models\Transactions\PayablePayment.cs" />
     <Compile Include="Models\Vehicles\SupplierCurrency.cs" />

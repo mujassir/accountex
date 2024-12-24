@@ -16,6 +16,8 @@ using System.Data.Entity;
 using AccountEx.Repositories.Config;
 using AccountEx.Web.Models;
 using Scriban;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
+using System.Threading.Tasks;
 
 namespace AccountEx.Web.Controllers.mvc
 {
@@ -584,6 +586,27 @@ namespace AccountEx.Web.Controllers.mvc
             setting.Add(new SettingExtra() { Key = "BarCodeEnabled", Value = SettingManager.BarCodeEnabled });
             ViewBag.FormSetting = JsonConvert.SerializeObject(setting);
             ViewBag.CompanyPartners = new CompanyPartnerRepository().GetNames();
+            return View();
+        }
+        public ActionResult DairyAdjustment()
+        {
+            var setting = new List<SettingExtra>();
+            setting.Add(new SettingExtra() { Key = "Salesman", Value = SettingManager.SalemanHeadId + "" });
+            setting.Add(new SettingExtra() { Key = "Products", Value = SettingManager.ProductHeadId });
+            setting.Add(new SettingExtra() { Key = "AccountDetails", Value = new AccountDetailRepository().GetAll<AccountDetail>((byte)AccountDetailFormType.Products) });
+            ViewBag.FormSetting = JsonConvert.SerializeObject(setting);
+            ViewBag.CompanyPartners = new CompanyPartnerRepository().GetNames();
+            ViewBag.ProductGroups = new GenericRepository<ProductGroup>().GetNames();
+            ViewBag.Products = new AccountDetailRepository().AsQueryable().Where(p => p.AccountDetailFormId == (int)AccountDetailFormType.Products).ToList();
+            return View();
+        }
+        public ActionResult DairyTransaction()
+        {
+            var setting = new List<SettingExtra>();
+            setting.Add(new SettingExtra() { Key = "Customers", Value = SettingManager.CustomerHeadId + "" });
+            setting.Add(new SettingExtra() { Key = "Products", Value = SettingManager.ProductHeadId });
+            setting.Add(new SettingExtra() { Key = "AccountDetails", Value = new AccountDetailRepository().GetAll<AccountDetail>() });
+            ViewBag.FormSetting = JsonConvert.SerializeObject(setting);
             return View();
         }
         public ActionResult DeliveryChallan()

@@ -1,9 +1,12 @@
 ﻿using AccountEx.CodeFirst.Models;
+using AccountEx.CodeFirst.Models.Transactions;
 using AccountEx.Common;
 using AccountEx.Repositories;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.UI.WebControls;
 using Transaction = AccountEx.CodeFirst.Models.Transaction;
 
 namespace AccountEx.BussinessLogic
@@ -37,8 +40,17 @@ namespace AccountEx.BussinessLogic
                     if (autoVoucherNo)
                         sale.VoucherNumber = nextVoucherFromSale ? repo.GetNextVoucherNumber(sale.TransactionType) : tranrRepo.GetNextVoucherNumber(sale.TransactionType);
                     //sale.InvoiceNumber = nextVoucherFromSale ? new SaleRepository().GetNextBookNumber(sale.TransactionType) : new TransactionRepository().GetNextInvoiceNumber(sale.TransactionType);
-                    repo.Add(sale);
 
+                    if (new List<VoucherType> { VoucherType.Sale, VoucherType.Purchase }.Contains(sale.TransactionType))
+                    {
+                        new GenericRepository<LogData>().Add(
+                            new LogData
+                            {
+                                Data = $"Item " + (sale.TransactionType == VoucherType.Sale ? "Sold" : "Purchased"),
+                                RecordId = sale.SaleItems.FirstOrDefault().ItemId
+                            });
+                    }
+                    repo.Add(sale);
                 }
                 else
                 {
@@ -339,6 +351,52 @@ namespace AccountEx.BussinessLogic
         public static string ValidateSave(Sale input, bool allowDupliateItem, bool allowDupliateBookNo)
         {
             return ValidateSave(input, allowDupliateItem, allowDupliateBookNo, true);
+        }
+
+        public static void SaveDairyTransaction(List<DairyTransaction> items)
+        {
+            var dt = DateTime.Now;
+            var repo = new GenericRepository<DairyTransaction>();
+            int voucherNumber = items.FirstOrDefault(x => x.VoucherNumber > 0)?.VoucherNumber
+                ?? (repo.GetAll().OrderByDescending(p => p.VoucherNumber).FirstOrDefault()?.VoucherNumber ?? 0) + 1;
+
+            var dbRecords = repo.GetAll(x => x.VoucherNumber == voucherNumber);
+            foreach (var item in items)
+            {
+                var record = dbRecords.FirstOrDefault(x => x.Id == item.Id);
+                if (record == null)
+                {
+                    item.VoucherNumber = voucherNumber;
+                    item.CreatedAt = dt;
+                    item.Date = item.Date == DateTime.MinValue ? dt : item.Date;
+                    item.FiscalId = SiteContext.Current.Fiscal.Id;
+                    repo.Add(item);
+                }
+                else
+                {
+                    record.Date = item.Date == DateTime.MinValue ? dt : item.Date;
+                    record.ItemId = item.ItemId;
+                    record.ItemCode = item.ItemCode;
+                    record.ItemName = item.ItemName;
+                    record.Comment = item.Comment;
+                    record.Qty = item.Qty;
+                    record.Rate = item.Rate;
+                    record.Amount = item.Amount;
+                    record.TotalQty= item.TotalQty;
+                    record.TotalAmount= item.TotalAmount;
+                    record.EntryType = item.EntryType;
+
+                    record.ModifiedAt = dt;
+                    record.FiscalId = SiteContext.Current.Fiscal.Id;
+                    repo.Update(record);
+                }
+            }
+
+            var removedRecords = dbRecords.Where(x => !items.Where(e => e.Id > 0).Select(e => e.Id).Contains(x.Id));
+            foreach (var item in removedRecords)
+                repo.Delete(item.Id);
+
+            repo.SaveChanges();
         }
 
         public static string ValidateSave(Sale input, bool allowDupliateItem, bool allowDupliateBookNo, bool isAccountRequired)

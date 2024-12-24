@@ -4,6 +4,7 @@ using AccountEx.Common;
 using AccountEx.Repositories;
 using AccountEx.BussinessLogic;
 using AccountEx.CodeFirst.Models;
+using AccountEx.CodeFirst.Models.Transactions;
 
 namespace AccountEx.Web.Controllers.api.Shared
 {
@@ -34,11 +35,20 @@ namespace AccountEx.Web.Controllers.api.Shared
             ApiResponse response;
             try
             {
+                var data = new GenericRepository<T>().GetById(id);
+                int accId = 0;
+                if (data != null)
+                    accId = (data as dynamic)?.AccountId ?? 0;
+                
                 response = new ApiResponse
                 {
                     Success = true,
-                    Data = new GenericRepository<T>().GetById(id),
-                    Logs = new GenericRepository<LogData>().Get(x => x.RecordId == id)
+                    Data = data,
+                    Logs = new
+                    {
+                       Logs = new GenericRepository<LogData>().Get(x => x.RecordId == id),
+                       Adjustments = new GenericRepository<DairyAdjustment>().Get(x => x.ItemId == accId),
+                    }
                 };
             }
             catch (Exception ex)

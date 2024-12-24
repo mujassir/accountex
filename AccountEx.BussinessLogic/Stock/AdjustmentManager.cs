@@ -5,6 +5,7 @@ using AccountEx.Repositories;
 using System;
 using Transaction = AccountEx.CodeFirst.Models.Transaction;
 using System.Collections.Generic;
+using AccountEx.CodeFirst.Models.Transactions;
 
 namespace AccountEx.BussinessLogic
 {
@@ -129,6 +130,52 @@ namespace AccountEx.BussinessLogic
                 item.FiscalId = SiteContext.Current.Fiscal.Id;
             }
             transactionRepo.Add(trans);
+        }
+
+        public static void SaveDairyAdjustment(List<DairyAdjustment> items)
+        {
+            var dt = DateTime.Now;
+            var repo = new GenericRepository<DairyAdjustment>();
+            int voucherNumber = items.FirstOrDefault(x => x.VoucherNumber > 0)?.VoucherNumber 
+                ?? (repo.GetAll().OrderByDescending(p => p.VoucherNumber).FirstOrDefault()?.VoucherNumber  ?? 0) + 1;
+
+            var dbRecords = repo.GetAll(x => x.VoucherNumber == voucherNumber);
+            foreach (var item in items)
+            {
+                var record = dbRecords.FirstOrDefault(x => x.Id == item.Id);
+                if(record == null)
+                {
+                    item.VoucherNumber = voucherNumber;
+                    item.CreatedAt = dt;
+                    item.Date = item.Date == DateTime.MinValue ? dt : item.Date;
+                    item.FiscalId = SiteContext.Current.Fiscal.Id;
+                    repo.Add(item);
+                } else
+                {
+                    record.Date = item.Date == DateTime.MinValue ? dt : item.Date;
+                    record.ItemId = item.ItemId;
+                    record.ItemCode = item.ItemCode;
+                    record.ItemName = item.ItemName;
+                    record.Comment = item.Comment;
+                    record.Milk = item.Milk;
+                    record.ItemA = item.ItemA;
+                    record.ItemB = item.ItemB;
+                    record.ItemC = item.ItemC;
+                    record.ItemD = item.ItemD;
+                    record.Medicine = item.Medicine;
+                    record.EntryType = item.EntryType;
+
+                    record.ModifiedAt = dt;
+                    record.FiscalId = SiteContext.Current.Fiscal.Id;
+                    repo.Update(record);
+                }
+            }
+
+            var removedRecords = dbRecords.Where(x => !items.Where(e => e.Id > 0).Select(e => e.Id).Contains(x.Id));
+            foreach (var item in removedRecords)
+                repo.Delete(item.Id);
+
+            repo.SaveChanges();
         }
 
     }

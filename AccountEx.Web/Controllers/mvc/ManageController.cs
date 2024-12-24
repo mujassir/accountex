@@ -189,9 +189,12 @@ namespace AccountEx.Web.Controllers.mvc
         public ActionResult DairyProducts()
         {
             ViewBag.ProductGroups = new GenericRepository<ProductGroup>().GetNames();
+            var accDetails = new AccountDetailRepository().AsQueryable().ToList();
             var setting = new List<SettingExtra>();
-            //setting.Add(new SettingExtra() { Key = "BarCodeEnabled", Value = SettingManager.BarCodeEnabled });
+            setting.Add(new SettingExtra() { Key = "AccountDetails", Value = accDetails });
             ViewBag.FormSetting = JsonConvert.SerializeObject(setting);
+            ViewBag.Suppliers = accDetails.Where(p => p.AccountDetailFormId == (int)AccountDetailFormType.Suppliers).ToList();
+            ViewBag.Customers = accDetails.Where(p => p.AccountDetailFormId == (int)AccountDetailFormType.Customers).ToList();
             return View();
         }
         [OutputCache(CacheProfile = "Medium")]

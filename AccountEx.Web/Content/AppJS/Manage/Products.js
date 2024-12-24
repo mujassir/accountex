@@ -150,6 +150,7 @@ var Products = function () {
             if (Common.Validate($("#form-info"))) {
                 var record = Common.SetValue($("#form-info"));
                 if (Common.GetInt(record.Id) > 0) {
+                    console.log(record.TempCode)
                     if (record.Code != record.TempCode) {
                         err = "You cannot change account code.Please save with previous  Account Code (" + record.TempCode + ")";
                         Common.ShowError(err);
@@ -172,6 +173,8 @@ var Products = function () {
                             Common.ShowMessage(true, { message: Messages.RecordSaved });
                             Common.GetNextAccountCode(API_CONTROLLER);
                             $("#Name").focus();
+
+                            $("#ActionsData").addClass("hide");
                         }
                         else {
                             Common.ShowError(res.Error);
@@ -181,6 +184,76 @@ var Products = function () {
                     }
                 });
             }
+        },
+        SalePurchase: function (Sale = false) {
+            $(".portlet .container-message").addClass("hide");
+            var data = Common.SetValue($("#form-info"));
+            
+            if (!data?.Id)
+                return Common.ShowError("Please select product");
+
+            const accountId = $(Sale ? "#CustomerId" : "#SupplierId").val();
+            if (!accountId)
+                return Common.ShowError("Please select " + Sale ? "customer" : "supplier");
+
+            const supplier = Common.GetAccountDetailByAccountId(accountId);
+            if (!supplier)
+                return Common.ShowError("Invalid " + Sale ? "Customer" : "Supplier");
+
+            const sPrice = $("#SalePrice").val();
+            if (!sPrice && Sale)
+                return Common.ShowError("Invalid supplier");
+
+            const transactionType = Sale ? VoucherType['sale'] : VoucherType['purchase'];
+            const price = Sale ? $("#SalePrice").val() : data.PurchasePrice;
+            var $this = this;
+            const record = {
+                TransactionType: transactionType,
+                Date: (new Date()).toDateString(),
+                AccountCode: supplier.Code,
+                AccountId: supplier.AccountId,
+                AccountName: supplier.Name,
+                PartyAddress: supplier.Address,
+                QuantityTotal: 1,
+                GrossTotal: price,
+                NetTotal: price,
+                SaleItems: [{
+                    ItemId: data.Id,
+                    ItemCode: data.Code,
+                    ItemName: data.Name,
+                    Quantity: 1,
+                    Unit: 1,
+                    Rate: price,
+                    Amount: price,
+                    TransactionType: transactionType,
+                }]
+            }
+
+            Common.WrapAjax({
+                url: Setting.APIBaseUrl + "Trans",
+                type: "POST",
+                data: record,
+                blockUI: true,
+                blockElement: "#form-info",
+                blockMessage: "Saving product ...please wait",
+                success: function (res) {
+                    if (res.Success) {
+                        $this.CustomClear();
+                        $("#LogsTableView").html("");
+                        $("#ActionsData").addClass("hide");
+                        //$this.ListView();
+                        DataTable.RefreshDatatable(DATATABLE_ID);
+                        Common.ShowMessage(true, { message: Messages.RecordSaved });
+                        Common.GetNextAccountCode(API_CONTROLLER);
+                        $("#ActionsData").addClass("hide");
+                    }
+                    else {
+                        Common.ShowError(res.Error);
+                    }
+                },
+                error: function (e) {
+                }
+            });
         },
         Edit: function (id) {
             var $this = this;
@@ -196,11 +269,14 @@ var Products = function () {
                     if (res.Success) {
                         var j = res.Data;
                         var logs = res.Logs;
+                        $("#ActionsData").removeClass("hide");
                         Common.MapEditData(j, $("#form-info"));
-                        if (logs.length > 0) {
-                            console.log(j)
-                            let html = "";
-                            html = `<table class="table">
+                        if (logs) {
+                            var logsData = logs.Logs;
+                            var logsAdjustments = logs.Adjustments;
+                            var logsTransactions = logs.Transactions;
+                            if (logsData.length > 0) {
+                                let html = `<table class="table table-bordered">
                                 <thead>
                                     <tr>
                                         <th width="125">Date</th>
@@ -209,14 +285,70 @@ var Products = function () {
                                 </thead>
                                 <tbody>`;
 
-                            html += logs.map(x => `<tr><td>${new Date(x.CreatedAt).toDateString()}</td><td>${x.Data}</td></tr>`)
+                                for (let x of logsData) {
+                                    if (x.CreatedAt && x.Data) {
+                                        html += `<tr><td>${new Date(x.CreatedAt).toDateString()}</td><td>${x.Data}</td></tr>`
+                                    }
+                                }
 
-                            html += `
+                                html += `
                                 </tbody>
                             </table>
                             `;
-                            $("#LogsTableView").html(html);
+                                $("#LogsTableView").html(html);
+                            }
 
+                            if (logsAdjustments.length > 0) {
+                                let html = `<table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th width="125">Date</th>
+                                        <th>Voucher #</th>
+                                        <th class="text-right">Milk</th>
+                                        <th class="text-right">Item A</th>
+                                        <th class="text-right">Item B</th>
+                                        <th class="text-right">Item C</th>
+                                        <th class="text-right">Item D</th>
+                                        <th class="text-right">Medicine</th>
+                                    </tr>
+                                </thead>
+                                <tbody>`;
+
+                                for (let x of logsAdjustments) {
+                                    if (x.CreatedAt) {
+                                        html += `<tr>
+                                        <td>${new Date(x.Date).toDateString()}</td>
+                                        <td>${x.VoucherNumber}</td>
+                                        <td class="text-right">${x.Milk}</td>
+                                        <td class="text-right">${x.ItemA}</td>
+                                        <td class="text-right">${x.ItemB}</td>
+                                        <td class="text-right">${x.ItemC}</td>
+                                        <td class="text-right">${x.ItemD}</td>
+                                        <td class="text-right">${x.Medicine}</td>
+                                        </tr>`
+                                    }
+                                }
+                                const totalMilk = logsAdjustments.map(x => x.Milk).reduce((accumulator, current) => accumulator + current);
+                                const totalItemA = logsAdjustments.map(x => x.ItemA).reduce((accumulator, current) => accumulator + current);
+                                const totalItemB = logsAdjustments.map(x => x.ItemB).reduce((accumulator, current) => accumulator + current);
+                                const totalItemC = logsAdjustments.map(x => x.ItemC).reduce((accumulator, current) => accumulator + current);
+                                const totalItemD = logsAdjustments.map(x => x.ItemD).reduce((accumulator, current) => accumulator + current);
+                                const totalMedicine = logsAdjustments.map(x => x.Medicine).reduce((accumulator, current) => accumulator + current);
+                                html += `
+                                </tbody>
+                                <tfoot>
+                                    <th colspan="2" class="text-right">Total:</th>
+                                    <td class="text-right">${totalMilk}</td>
+                                    <td class="text-right">${totalItemA}</td>
+                                    <td class="text-right">${totalItemB}</td>
+                                    <td class="text-right">${totalItemC}</td>
+                                    <td class="text-right">${totalItemD}</td>
+                                    <td class="text-right">${totalMedicine}</td>
+                                </tfoot>
+                            </table>
+                            `;
+                                $("#ActivityTableView").html(html);
+                            }
                         }
                         $(".date-picker").each(function () {
                             Common.SetDate(this, $(this).val());
@@ -329,7 +461,7 @@ var Products = function () {
                 var token = tokens[i];
                 PageSetting[token.Key] = token.Value;
             }
-            //this.LoadAccounts();
+            AppData.AccountDetail = PageSetting.AccountDetails;
         },
     };
 }();

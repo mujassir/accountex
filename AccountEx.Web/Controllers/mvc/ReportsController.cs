@@ -252,6 +252,12 @@ namespace AccountEx.Web.Controllers.mvc
             //    ViewBag.Accounts = new List<Account>();
             return View();
         }
+        public ActionResult DairyProfile()
+        {
+            ViewBag.ProductGroups = new GenericRepository<ProductGroup>().GetNames();
+            ViewBag.Accounts = new AccountRepository().GetAccountTree(SettingManager.ProductHeadId);
+            return View();
+        }
         public ActionResult StockByQuantity()
         {
             ViewBag.ProductGroups = new GenericRepository<ProductGroup>().GetNames();

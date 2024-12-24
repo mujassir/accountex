@@ -721,6 +721,12 @@ namespace AccountEx.Repositories
 
             return Db.Database.SqlQuery<StockReport>(sqlquery).ToList();
         }
+
+        public List<GetDairyProfileReport> GetDairyProfile(DateTime fromdate, DateTime todate)
+        {
+            var sqlquery = string.Format("EXEC [dbo].[GetDairyAdjustments] @FromDate = '{0}', @ToDate = '{1}', @CompanyId = {2}", fromdate.ToString("yyyy-MM-dd"), todate.ToString("yyyy-MM-dd"), SiteContext.Current.User.CompanyId);
+            return Db.Database.SqlQuery<GetDairyProfileReport>(sqlquery).ToList();
+        }
         public List<StockReport> GetStockByQuantity(DateTime fromdate, DateTime todate, int accountId)
         {
             var sqlquery = string.Format("EXEC [dbo].[GetStockByQuantitySize] @FromDate = '{0}', @ToDate = '{1}', @CompanyId = {2},@FiscalId = {3}", fromdate.ToString("yyyy-MM-dd"), todate.ToString("yyyy-MM-dd"), SiteContext.Current.User.CompanyId, SiteContext.Current.Fiscal.Id);

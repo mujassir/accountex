@@ -18,6 +18,8 @@ namespace AccountEx.Web.Controllers.api
                 return GetStockByQuantity();
             else if (Key == "GetStockByWeight")
                 return GetStockByWeight();
+            else if (Key == "GetDairyProfile")
+                return GetDairyProfile();
             else
                 return GetStock();
         }
@@ -31,6 +33,18 @@ namespace AccountEx.Web.Controllers.api
             {
                 item.GroupName = !string.IsNullOrWhiteSpace(item.GroupName) ? item.GroupName.Trim() : "";
             }
+            var response = new ApiResponse
+            {
+                Success = true,
+                Data = transactions
+            };
+            return response;
+        }
+        private ApiResponse GetDairyProfile()
+        {
+            var date1 = Convert.ToDateTime(Request.GetQueryString("fromdate"));
+            var date2 = Convert.ToDateTime(Request.GetQueryString("todate"));
+            var transactions = new TransactionRepository().GetDairyProfile(date1, date2);
             var response = new ApiResponse
             {
                 Success = true,
