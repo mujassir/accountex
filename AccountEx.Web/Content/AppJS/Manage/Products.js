@@ -157,6 +157,9 @@ var Products = function () {
                         return;
                     }
                 }
+                if (FORM_TYPE == "DairyProducts") {
+                    record.Route = "#" + FORM_TYPE + "#";
+                }
                 Common.WrapAjax({
                     url: Setting.APIBaseUrl + API_CONTROLLER,
                     type: "POST",
@@ -218,7 +221,7 @@ var Products = function () {
                 GrossTotal: price,
                 NetTotal: price,
                 SaleItems: [{
-                    ItemId: data.Id,
+                    ItemId: data.AccountId,
                     ItemCode: data.Code,
                     ItemName: data.Name,
                     Quantity: 1,

@@ -38,7 +38,17 @@ namespace AccountEx.Web.Controllers.api.Shared
                 var data = new GenericRepository<T>().GetById(id);
                 int accId = 0;
                 if (data != null)
-                    accId = (data as dynamic)?.AccountId ?? 0;
+                {
+                    var accountIdProperty = data.GetType().GetProperty("AccountId");
+                    if (accountIdProperty != null)
+                    {
+                        var accountId = accountIdProperty.GetValue(data);
+                        if (accountId != null)
+                        {
+                            accId = (int)accountId;
+                        }
+                    }
+                }
                 
                 response = new ApiResponse
                 {
@@ -46,7 +56,7 @@ namespace AccountEx.Web.Controllers.api.Shared
                     Data = data,
                     Logs = new
                     {
-                       Logs = new GenericRepository<LogData>().Get(x => x.RecordId == id),
+                       Logs = new GenericRepository<LogData>().Get(x => x.RecordId == accId),
                        Adjustments = new GenericRepository<DairyAdjustment>().Get(x => x.ItemId == accId),
                     }
                 };

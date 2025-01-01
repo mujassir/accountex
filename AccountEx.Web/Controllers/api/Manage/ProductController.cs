@@ -10,6 +10,7 @@ using AccountEx.CodeFirst;
 using AccountEx.CodeFirst.Models;
 using System.Web.Http;
 using System.Web;
+using AccountEx.CodeFirst.Mapping;
 
 namespace AccountEx.Web.Controllers.api.Manage
 {
@@ -66,7 +67,7 @@ namespace AccountEx.Web.Controllers.api.Manage
             var displayStart = Convert.ToInt32(queryString["iDisplayStart"]);
             var search = (queryString["sSearch"] + "").Trim();
             var numericsearch = Numerics.GetInt((queryString["sSearch"] + "").Trim());
-            var records = Repository.AsQueryable().Where(p => p.AccountDetailFormId == AccountDetailFormId);
+            var records = Repository.AsQueryable().Where(p => p.AccountDetailFormId == AccountDetailFormId && p.Route != "#DairyProducts#");
             var totalRecords = records.Count();
             var totalDisplayRecords = totalRecords;
             var filteredList = records;
@@ -116,6 +117,7 @@ namespace AccountEx.Web.Controllers.api.Manage
         protected JQueryResponse GetDataTableForDiaryProducts()
         {
             var queryString = Request.RequestUri.ParseQueryString();
+            var type = (QueryString["type"] + "").Trim();
             var coloumns = new[] { "Code", "BarCode", "Name", "Company", "Readings", "Weight", "UnitType", "" };
             var echo = Convert.ToInt32(queryString["sEcho"]);
             var displayLength = Convert.ToInt32(queryString["iDisplayLength"]);
@@ -123,7 +125,7 @@ namespace AccountEx.Web.Controllers.api.Manage
             var displayStart = Convert.ToInt32(queryString["iDisplayStart"]);
             var search = (queryString["sSearch"] + "").Trim();
             var numericsearch = Numerics.GetInt((queryString["sSearch"] + "").Trim());
-            var records = Repository.AsQueryable().Where(p => p.AccountDetailFormId == AccountDetailFormId);
+            var records = Repository.AsQueryable().Where(p => p.AccountDetailFormId == AccountDetailFormId && p.Route == "#" + type + "#");
             var totalRecords = records.Count();
             var totalDisplayRecords = totalRecords;
             var filteredList = records;

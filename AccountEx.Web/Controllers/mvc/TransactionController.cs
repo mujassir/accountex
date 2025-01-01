@@ -596,7 +596,10 @@ namespace AccountEx.Web.Controllers.mvc
             setting.Add(new SettingExtra() { Key = "AccountDetails", Value = new AccountDetailRepository().GetAll<AccountDetail>((byte)AccountDetailFormType.Products) });
             ViewBag.FormSetting = JsonConvert.SerializeObject(setting);
             ViewBag.CompanyPartners = new CompanyPartnerRepository().GetNames();
-            ViewBag.ProductGroups = new GenericRepository<ProductGroup>().GetNames();
+            ViewBag.ProductGroups = new GenericRepository<vw_ProductGroups>()
+                .GetAll(x => x.Division == "Non-Sale Items")
+                .Select(x => new IdName { Id = x.Id, Name = x.Name })
+                .ToList();
             ViewBag.Products = new AccountDetailRepository().AsQueryable().Where(p => p.AccountDetailFormId == (int)AccountDetailFormType.Products).ToList();
             return View();
         }

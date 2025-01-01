@@ -8,6 +8,7 @@ using System.Configuration;
 using AccountEx.CodeFirst.Models;
 using AccountEx.Repositories.Vehicles;
 using AccountEx.DbMapping;
+using AccountEx.CodeFirst.Models.Transactions;
 
 namespace AccountEx.Repositories
 {
@@ -408,7 +409,17 @@ namespace AccountEx.Repositories
         public List<Transaction> GetTransactions(int accountId, DateTime date1, DateTime date2, bool exludeOpening)
         {
 
-            return GetTransactions(accountId, date1, date2, exludeOpening, 0);
+            var list = GetTransactions(accountId, date1, date2, exludeOpening, 0);
+            var dairyTransactions = new GenericRepository<DairyTransaction>().GetAll(x => x.ItemId == accountId && x.Date >= date1 && x.Date <= date2);
+            list.AddRange(dairyTransactions.Select(x => new Transaction {
+                TransactionType = VoucherType.Sale,
+                VoucherNumber = x.VoucherNumber,
+                AccountId = x.ItemId,
+                Date = x.Date,
+                Credit = 0,
+                Debit = (decimal)x.Amount
+            }));
+            return list;
         }
         public List<Transaction> GetTransactions(int accountId, DateTime date1, DateTime date2, bool exludeOpening, int branchId)
         {
