@@ -14,6 +14,10 @@ var CustomerDiscounts = function () {
                 $("#" + DATATABLE_ID).dataTable().fnDestroy();
                 $this.LoadCustomerDiscounts();
             });
+            $("#Supplier").change(function () {
+                $("#" + DATATABLE_ID).dataTable().fnDestroy();
+                $this.LoadCustomerDiscounts(true);
+            });
         },
         BindEvents: function () {
             $("input[type='text'].debit,input[type='text'].Discount").change(function () {
@@ -68,8 +72,11 @@ var CustomerDiscounts = function () {
             var totalItems = new Array();
             var allowedqty = 0;
             var previousqty = 0;
+
+            const supplierId = Common.GetInt($("#Supplier").val());
             var customerId = Common.GetInt($("#Account").val());
-            if (customerId == 0 && !confirm('This will update discount for all customers.Are you sure to continue?'))
+            console.log(supplierId, customerId)
+            if (supplierId == 0 && customerId == 0 && !confirm('This will update discount for all customers.Are you sure to continue?'))
                 return;
             var err = "";
             $("#" + DATATABLE_ID + " tbody tr").each(function () {
@@ -84,7 +91,7 @@ var CustomerDiscounts = function () {
                     ProductId: $(this).children(":nth-child(2)").children("input.ProductId").val(),
                     ProductTitle: $(this).children(":nth-child(2)").text(),
                     ProductCode: $(this).children(":nth-child(3)").text(),
-                    CustomerId: $("#Account").val(),
+                    CustomerId: supplierId || customerId,
                     CustomerTitle: $("#Account option:selected").text(),
                     COAProductId: $(this).children(":nth-child(5)").children("input.COAProductId").val(),
                     Discount: discount,
@@ -132,13 +139,20 @@ var CustomerDiscounts = function () {
         //    LIST_LOADED = true;
 
         //},
-        LoadCustomerDiscounts: function () {
+        LoadCustomerDiscounts: function (supplier) {
 
             var $this = this;
             var html = "";
             var select = "";
             var amount = 0;
-            var account = $("#Account").val();
+            var account = supplier ? $("#Supplier").val() : $("#Account").val();
+            if (supplier) {
+                account = $("#Supplier").val();
+                $("#Account").select2('val', null);
+            } else {
+                account = $("#Account").val();
+                $("#Supplier").select2('val', null);
+            }
             Common.WrapAjax({
                 url: Setting.APIBaseUrl + API_CONTROLLER + "?account=" + account,
                 type: "GET",

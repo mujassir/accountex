@@ -76,7 +76,9 @@ namespace AccountEx.Repositories
             {
                 discounts = new List<CustomerDiscount>();
                 var customers = AsQueryable<AccountDetail>().
-                    Where(p => p.AccountDetailFormId == (byte)AccountDetailFormType.Customers).
+                    Where(p => p.AccountDetailFormId == (byte)AccountDetailFormType.Customers
+                    || p.AccountDetailFormId == (byte)AccountDetailFormType.Suppliers
+                    ).
                     Select(p => new
                     {
                         p.AccountId,
@@ -128,7 +130,7 @@ namespace AccountEx.Repositories
             var deletedIds = dbdiscountIds.Where(p => !Ids.Contains(p)).Select(p => p).ToList();
             deletedIds.AddRange(discounts.Where(p => p.Discount == 0 && p.Id > 0).Select(p => p.Id).ToList());
             new CustomerDiscountRepository(this).Delete(deletedIds);
-            var validDiscounts = discounts.Where(p => p.Discount > 0).ToList();
+            var validDiscounts = discounts.Where(p => p.Discount > 0 || p.Enable == true).ToList();
             new CustomerDiscountRepository(this).Save(validDiscounts);
         }
     }

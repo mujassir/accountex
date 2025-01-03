@@ -284,7 +284,9 @@ namespace AccountEx.Web.Controllers.mvc
             ViewBag.Voucher = VoucherType.OpeningBalance;
             var rep = new AccountRepository();
             var accounts = rep.GetLeafAccounts(Numerics.GetInt(SettingManager.CustomerHeadId));
+            var suppliers = rep.GetLeafAccounts(Numerics.GetInt(SettingManager.SupplierHeadId));
             ViewBag.Customers = accounts;
+            ViewBag.Suppliers = suppliers;
             return View();
         }
         [OutputCache(CacheProfile = "Medium")]

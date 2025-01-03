@@ -88,6 +88,18 @@
                             </select>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="prefix">Supplier</label>
+                        <div class="col-md-8">
+                            <select id="Supplier" class="form-control Filterselect2" placeholder="All">
+                                <option></option>
+                                @foreach (var item in (List<IdName>)ViewBag.Suppliers)
+                                {
+                                    <option value="@item.Id">@item.Name</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
 
 
 
