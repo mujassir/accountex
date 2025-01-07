@@ -282,6 +282,16 @@ namespace AccountEx.Web.Controllers.api.Transaction
                     p.SalesmanName.Contains(search)
 
                     );
+
+            if (SettingManager.IsMultipleLocationEnabled)
+            {
+                var autLocations = new GenericRepository<UserLocation>().AsQueryable()
+                    .Where(x => x.UserId == (int)SiteContext.Current.User.Id)
+                    .Select(x => x.AuthLocationId)
+                    .ToList();
+                filteredList = filteredList.Where(x => autLocations.Contains(x.AuthLocationId));
+            }
+
             var orderedList = filteredList.OrderByDescending(p => p.Id);
             var totalRecords = filteredList.Count();
             var totalDisplayRecords = totalRecords;

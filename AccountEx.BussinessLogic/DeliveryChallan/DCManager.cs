@@ -197,7 +197,7 @@ namespace AccountEx.BussinessLogic
                 item.Date = s.Date == DateTime.MinValue ? dt : s.Date;
                 item.FiscalId = SiteContext.Current.Fiscal.Id;
             }
-            repo.Add(trans);
+            repo.Add(trans, true);
         }
 
 
@@ -430,7 +430,7 @@ namespace AccountEx.BussinessLogic
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 err = "error in data validation";
             }

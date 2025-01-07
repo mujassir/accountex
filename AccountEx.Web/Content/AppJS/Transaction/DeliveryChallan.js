@@ -291,8 +291,7 @@ var DeliveryChallan = function () {
                             Common.MapEditData(d, "#form-info");
                             $("#OrderId").val(d.Id);
                             $("#VoucherNumber").val(voucherno);
-                            if (d.VoucherCode) {
-                                $(`#AuthLocationName`).val(d.VoucherCode)
+                            if (d.AuthLocationId) {
                                 $(`#AuthLocationId`).val(d.AuthLocationId)
                             }
                             if (d?.WareHouseId) {
