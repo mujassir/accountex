@@ -300,6 +300,7 @@ var Trans = function () {
             var html = "";
             var dcIds = "";
             var dcnumbers = "";
+            var locationIds = [];
             $("#DCTable > tbody tr").each(function () {
                 var tr = $(this);
                 if ($(tr).find("td:nth-child(1) input").is(":checked")) {
@@ -308,8 +309,24 @@ var Trans = function () {
                     var dcnumber = $(tr).find("td:nth-child(2) input.DCNo").val();
                     dcnumbers += dcnumber + ",";
                     html += "<tr>" + $(tr).html() + "</tr>"
+
+                    var locationId = $(tr).find("td:nth-child(2) input.locationData")?.val();
+                    if (locationId) locationIds.push(locationId)
                 }
             });
+            if (locationIds.length) {
+                let uniqueIds = [...new Set(locationIds)];
+                if (uniqueIds.length > 1) {
+                    Common.ShowError("Please select only one location delivery challans");
+                    return;
+                } else {
+                    var selectedId = $("#AuthLocationId").val();
+                    if (selectedId !== uniqueIds[0]) {
+                        return Common.ShowError("Please select same location first before select delivery challans");
+                    }
+                    $("#AuthLocationId").val(uniqueIds[0]);
+                }
+            }
             dcIds = dcIds.replace(/(^,)|(,$)/g, "");
             dcnumbers = dcnumbers.replace(/(^,)|(,$)/g, "");
             $("#table-dc-detail > tbody").html(html);

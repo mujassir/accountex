@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -202,8 +203,20 @@ namespace AccountEx.Web.Controllers.api.Transaction
             var intSearch = Numerics.GetInt((queryString["sSearch"] + "").Trim());
             if (!string.IsNullOrWhiteSpace(queryString["dcNumbers"]))
                 dcNumbers = (queryString["dcNumbers"].Split(',')).ToList().Select(p => Numerics.GetInt(p)).ToList();
+            
+            var Locations = new GenericRepository<UserLocation>().AsQueryable()
+                .Where(x => x.UserId == (int)SiteContext.Current.User.Id)
+                .Include(x => x.Location)
+                .Select(x => x.Location)
+                .ToList();
+            var LocationIds = Locations.Select(x => x.Id).ToList();
+
             //var records = new DeliveryChallanRepository().GetPendingDeliveryChallan(type);
             var records = new GenericRepository<vw_PendingDeliveryChallan>().AsQueryable(true).Where(p => p.Status != (byte)TransactionStatus.Delivered && p.TransactionType == (byte)type);
+            if(LocationIds.Count > 0)
+            {
+                records = records.Where(x => LocationIds.Contains(x.AuthLocationId));
+            }
             if (pageType > 0)
                 records = records.Where(p => p.InvoiceTransactionType == pageType);
 
@@ -231,12 +244,18 @@ namespace AccountEx.Web.Controllers.api.Transaction
             var rs = new JQueryResponse();
             foreach (var item in orderedList)
             {
+                var location = Locations.Find(x => x.Id == item.AuthLocationId);
+                var voucherPrefix = "";
+                if(location != null)
+                {
+                    voucherPrefix = location.Code + "-";
+                }
                 var data = new List<string>();
                 var strChecked = "";
                 if (dcNumbers.Contains(item.VoucherNumber))
                     strChecked = "checked='checked'";
                 data.Add("<td><input type='checkbox' " + strChecked + " class='checkboxes' value='" + (string.IsNullOrWhiteSpace(strChecked) ? "0" : "1") + "' /></td>");
-                data.Add("<input type='text' class='DCNo form-control hide' value='" + item.VoucherNumber + "' /><input type='text' class='DcId hide' value='" + item.Id + "' />" + item.VoucherNumber + "");
+                data.Add("<input type='text' class='DCNo form-control hide' value='" + item.VoucherNumber + "' /><input type='text' class='DcId hide' value='" + item.Id + "' /><input type='hidden' class=\"locationData\" value='" + location.Id + "' />" + voucherPrefix + item.VoucherNumber + "");
                 data.Add(item.AccountCode);
                 data.Add(item.AccountName);
                 data.Add(item.OrderNumber + "");

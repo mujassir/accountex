@@ -21,6 +21,7 @@ namespace AccountEx.CodeFirst.Models
         public Nullable<int> CompanyId { get; set; }
         public int FiscalId { get; set; }
         public bool IsDeleted { get; set; }
+        public int AuthLocationId { get; set; }
         public  Nullable<int> CompanyPartnerId { get; set; }
 
     }
