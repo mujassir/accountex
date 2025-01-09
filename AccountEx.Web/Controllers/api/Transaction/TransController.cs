@@ -25,6 +25,11 @@ namespace AccountEx.Web.Controllers.api.Transaction
                 var queryString = Request.RequestUri.ParseQueryString();
                 var type = queryString["type"];
                 var key = queryString["key"].ToLower();
+                int locationId = 0;
+                if (queryString["locationId"] != null)
+                {
+                    int.TryParse(queryString["locationId"], out locationId);
+                }
                 var vouchertype = (VoucherType)Convert.ToByte(type);
                 //var data = TransactionManager.GetVocuherDetail(voucher, vouchertype, queryString["key"]);
                 bool next, previous;
@@ -35,10 +40,10 @@ namespace AccountEx.Web.Controllers.api.Transaction
                 if (voucherNumber == 0) key = "nextvouchernumber";
                 if (key == "nextvouchernumber")
                 {
-                    voucherNumber = tranRepo.GetNextVoucherNumber(vouchertype);
-                    invoiceNumber = tranRepo.GetNextInvoiceNumber(vouchertype);
+                    voucherNumber = tranRepo.GetNextVoucherNumber(vouchertype, locationId);
+                    invoiceNumber = tranRepo.GetNextInvoiceNumber(vouchertype, locationId);
                 }
-                var data = saleRepo.GetByVoucherNumber(voucherNumber, vouchertype, key, out next, out previous);
+                var data = saleRepo.GetByVoucherNumber(voucherNumber, vouchertype, key, out next, out previous, locationId);
                 var dcs = new object();
                 if (data != null)
                     dcs = dcRepo.Get(data.InvoiceDcs.Select(p => p.DcId).ToList());

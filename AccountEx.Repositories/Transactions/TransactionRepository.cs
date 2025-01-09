@@ -212,12 +212,12 @@ namespace AccountEx.Repositories
         {
             return FiscalCollection.Where(p => p.TransactionType == voucherType && p.VoucherNumber == voucherNumber).ToList();
         }
-        public int GetNextVoucherNumber(VoucherType vouchertype= VoucherType.Production)
+        public int GetNextVoucherNumber(VoucherType vouchertype= VoucherType.Production, int locationId = 0)
         {
             var maxnumber = ConfigurationReader.GetConfigKeyValue<int>("VoucherStartNumber", 1001);
-            if (!FiscalCollection.Any(p => p.TransactionType == vouchertype))
+            if (!FiscalCollection.Any(p => p.TransactionType == vouchertype && p.AuthLocationId == locationId))
                 return maxnumber;
-            return FiscalCollection.Where(p => p.TransactionType == vouchertype).OrderByDescending(p => p.VoucherNumber).FirstOrDefault().VoucherNumber + 1;
+            return FiscalCollection.Where(p => p.TransactionType == vouchertype && p.AuthLocationId == locationId).OrderByDescending(p => p.VoucherNumber).FirstOrDefault().VoucherNumber + 1;
         }
         //over load for adjustment
         public int GetNextVoucherNumber(List<VoucherType> vouchertype)
@@ -228,13 +228,13 @@ namespace AccountEx.Repositories
             return FiscalCollection.Where(p => vouchertype.Contains(p.TransactionType)).OrderByDescending(p => p.VoucherNumber).FirstOrDefault().VoucherNumber + 1;
         }
 
-        public int GetNextInvoiceNumber(VoucherType vouchertype)
+        public int GetNextInvoiceNumber(VoucherType vouchertype, int locationId = 0)
         {
 
             var maxnumber = ConfigurationReader.GetConfigKeyValue<int>("InvoiceStartNumber", 1);
-            if (!FiscalCollection.Any(p => p.TransactionType == vouchertype))
+            if (!FiscalCollection.Any(p => p.TransactionType == vouchertype && p.AuthLocationId == locationId))
                 return maxnumber;
-            return FiscalCollection.Where(p => p.TransactionType == vouchertype).OrderByDescending(p => p.InvoiceNumber).FirstOrDefault().InvoiceNumber + 1;
+            return FiscalCollection.Where(p => p.TransactionType == vouchertype && p.AuthLocationId == locationId).OrderByDescending(p => p.InvoiceNumber).FirstOrDefault().InvoiceNumber + 1;
         }
         public int GetLastInvoiceNumber(VoucherType vouchertype)
         {

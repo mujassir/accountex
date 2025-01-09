@@ -31,6 +31,7 @@ namespace AccountEx.CodeFirst.Models
         public DateTime? CreatedDate { get; set; }
         public string PartyAddress { get; set; }
         public Nullable<int> BranchId { get; set; }
+        public int AuthLocationId { get; set; }
         //public string ChequeNumber { get; set; }
     }
 }

@@ -44,6 +44,9 @@ var Trans = function () {
                     //$('#InvoiceNumber').focus();
                 }
             });
+            $("#AuthLocationId").change(function (e) {
+                $this.LoadVoucher("nextvouchernumber");
+            });
             $("#Date").keyup(function (e) {
                 var type = $this.GetType();
                 if (e.which == 13) {
@@ -710,9 +713,10 @@ var Trans = function () {
         LoadVoucher: function (key) {
             var $this = this;
             var voucherno = Common.GetInt($("#VoucherNumber").val());
+            var locationId = $("#AuthLocationId").val();
             //url: Setting.APIBaseUrl + API_CONTROLLER + "/" + voucherno + "?type=" + VoucherType[$this.GetType()] + "?&key=" + key,
             Common.WrapAjax({
-                url: Setting.APIBaseUrl + API_CONTROLLER + "/" + voucherno + "?type=" + VoucherType[$this.GetType()] + "&key=" + key + "&voucher=" + voucherno,
+                url: Setting.APIBaseUrl + API_CONTROLLER + "/" + voucherno + "?type=" + VoucherType[$this.GetType()] + "&key=" + key + "&voucher=" + voucherno + "&locationId=" + locationId,
                 type: "GET",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -733,6 +737,7 @@ var Trans = function () {
                             $this.CustomClear();
                             $("#VoucherNumber").val(res.Data.VoucherNumber);
                             $("#InvoiceNumber").val(res.Data.InvoiceNumber);
+                            $("#AuthLocationId").val(locationId);
                         }
                         else {
                             //var voucher = this.GetType();
@@ -755,6 +760,7 @@ var Trans = function () {
                                 if (d.Id == 0)
                                     $("input:radio[value='credit']").trigger("change");
                             }
+                            $("#AuthLocationId").val(locationId);
                             if (d.Id > 0 && d.SaleItems != null && d.SaleItems.length > 0) {
                                 CURRENT_VOCUHER = d;
                                 $("#btndelete,#btnprint").prop("disabled", false);

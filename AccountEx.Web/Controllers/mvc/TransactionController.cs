@@ -149,6 +149,13 @@ namespace AccountEx.Web.Controllers.mvc
             setting.Add(new SettingExtra() { Key = "CheckStockAvailability", Value = SettingManager.CheckStockAvailability });
             ViewBag.FormSetting = JsonConvert.SerializeObject(setting);
             ViewBag.CompanyPartners = new CompanyPartnerRepository().GetNames();
+
+            ViewBag.Locations = new GenericRepository<UserLocation>().AsQueryable()
+                .Where(x => x.UserId == (int)SiteContext.Current.User.Id)
+                .Include(x => x.Location)
+                .Select(x => x.Location)
+                .ToList();
+
             return View();
         }
         public ActionResult OstricSale()
@@ -823,7 +830,6 @@ namespace AccountEx.Web.Controllers.mvc
             setting.Add(new SettingExtra() { Key = "GSTPercent", Value = SettingManager.Gst });
             setting.Add(new SettingExtra() { Key = "AccountDetails", Value = new AccountDetailRepository().GetAll<UltraTechTransSaleEx>((byte)AccountDetailFormType.Products) });
             setting.Add(new SettingExtra() { Key = "BarCodeEnabled", Value = SettingManager.BarCodeEnabled });
-
 
             //if (Request["setdata"] == "data")
             //{

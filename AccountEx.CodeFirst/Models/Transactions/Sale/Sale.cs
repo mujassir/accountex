@@ -106,6 +106,7 @@ namespace AccountEx.CodeFirst.Models
         public string Type { get; set; }
         public string PatientVoucherNumber { get; set; }
         public string PatientNo { get; set; }
+        public int AuthLocationId { get; set; }
         public virtual ICollection<SaleItem> SaleItems { get; set; }
         public virtual ICollection<SaleServicesItem> SaleServicesItems { get; set; }
         public virtual ICollection<ServiceExpense> ServiceExpenses { get; set; }

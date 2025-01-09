@@ -1,4 +1,5 @@
-﻿@using AccountEx.Common;
+﻿﻿@using AccountEx.CodeFirst.Models
+@using AccountEx.Common;
 
 @{
     //ViewBag.FormTitle = "Add/Edit Commercial Sales";
@@ -190,18 +191,43 @@ else
                                 <strong></strong>
                                 <div class="form-body message-content"></div>
                             </div>
+                            @{
+                                // Check if any location is marked as default
+                                var locations = (List<Location>)ViewBag.Locations;
+                                bool hasDefault = locations.Any(x => x.IsDefault);
+                                var firstLocation = locations.FirstOrDefault();
+                                int firstItemId = firstLocation != null ? firstLocation.Id : 0;
+                            }
+                            <div class="form-group @(locations.Count > 0 && SettingManager.IsMultipleLocationEnabled ? "" : "hide")">
+                                <label class="col-md-2 control-label" for="prefix">Location</label>
+                                <div class="col-md-1">
+                                    <select id="AuthLocationId" class="form-control input-small" data-clear="false" data-placeholder="Select Location" data-trackchange="true">
+                                        <option></option>
+                                        @if (SettingManager.IsMultipleLocationEnabled)
+                                        {
+                                            foreach (var item in locations)
+                                            {
+                                                <option value="@item.Id"
+                                                        @(item.IsDefault || (!hasDefault && item.Id == firstItemId) ? "selected" : "")>
+                                                    @item.Name
+                                                </option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label class="col-md-2 control-label" for="prefix">Vou #</label>
-                                <div class="col-md-1 container-voucher">
+                                <div class="col-md-2 container-voucher">
                                     <label id="lblVoucherNumber" class="label label-info label-voucher hide"></label>
-                                    <input type="text" class="form-control number input-xsmall" id="VoucherNumber" data-plus-as-tab="false" data-required="required" data-message="Voucher Number is required" data-include-in-item="true">
+                                    <input type="text" class="form-control number input-small" id="VoucherNumber" data-plus-as-tab="false" data-required="required" data-message="Voucher Number is required" data-include-in-item="true">
                                 </div>
                                 <label class="col-md-1 control-label" for="prefix">Book #</label>
                                 <div class="col-md-1">
                                     <input type="text" id="InvoiceNumber" data-validate="true" data-required="required" data-message="Book Number is required" class="number form-control input-xsmall" data-plus-as-tab="false" data-include-in-item="true">
                                 </div>
                                 <label class="col-md-1 control-label" for="prefix">Date</label>
-                                <div class="col-md-2">
+                                <div class="col-md-1">
 
                                     <input id="Date" type="text" class="form-control date-picker" data-clear-type='date' data-validate="true" data-required="required" data-message="Date is required" data-plus-as-tab="false" data-hide-dropdown="true" data-fiscal-date="true">
                                 </div>
@@ -209,8 +235,8 @@ else
                                 {
                                     <div class="col-md-2">
                                         @*  <a href="javascript:;" onclick="Trans.GetDC()" class="hide btn green btn-xs btn-load">Load DC&nbsp;
-                                                                                    <i class="fa fa-search"></i>
-                                            </a>*@
+                                                            <i class="fa fa-search"></i>
+                    </a>*@
                                         <div class="input-group">
                                             <input type="text" id="DCNo" class="number form-control " data-plus-as-tab="false" disabled="disabled" readonly="readonly" />
                                             <span id="dc-search" class="input-group-btn">
@@ -222,12 +248,12 @@ else
                                     </div>
                                 }
                                 @*  <div class="col-md-1">
-                                        <input type="text" id="DCNo" class="number form-control input-xxsmall" data-plus-as-tab="false">
-                                    </div>*@
+                <input type="text" id="DCNo" class="number form-control input-xxsmall" data-plus-as-tab="false">
+            </div>*@
                                 @*  <label id="lblorderno" class="col-md-1 control-label" for="prefix">Order #</label>
-                                    <div class="col-md-1">
-                                        <input type="text" id="OrderNo" class="number form-control input-xsmall" data-plus-as-tab="false" disabled="disabled" readonly="readonly">
-                                    </div>*@
+            <div class="col-md-1">
+                <input type="text" id="OrderNo" class="number form-control input-xsmall" data-plus-as-tab="false" disabled="disabled" readonly="readonly">
+            </div>*@
                             </div>
                             <div class="form-group">
                                 <label class="col-md-2 control-label master-account-label" for="prefix">Party</label>

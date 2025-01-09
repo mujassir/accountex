@@ -35,7 +35,7 @@ namespace AccountEx.BussinessLogic
                 {
                     sale.CreatedDate = DateTime.Now;
                     if (autoVoucherNo)
-                        sale.VoucherNumber = nextVoucherFromSale ? repo.GetNextVoucherNumber(sale.TransactionType) : tranrRepo.GetNextVoucherNumber(sale.TransactionType);
+                        sale.VoucherNumber = nextVoucherFromSale ? repo.GetNextVoucherNumber(sale.TransactionType, sale.AuthLocationId) : tranrRepo.GetNextVoucherNumber(sale.TransactionType, sale.AuthLocationId);
                     //sale.InvoiceNumber = nextVoucherFromSale ? new SaleRepository().GetNextBookNumber(sale.TransactionType) : new TransactionRepository().GetNextInvoiceNumber(sale.TransactionType);
                     repo.Add(sale);
 
@@ -126,6 +126,7 @@ namespace AccountEx.BussinessLogic
                     TransactionType = s.TransactionType,
                     EntryType = (byte) EntryType.MasterDetail,
                     Quantity = 1,
+                    AuthLocationId = s.AuthLocationId,
                     Debit =
                         s.TransactionType == VoucherType.Sale ||
                         s.TransactionType == VoucherType.PurchaseReturn
@@ -154,6 +155,7 @@ namespace AccountEx.BussinessLogic
                     TransactionType = s.TransactionType,
                     EntryType = (byte) EntryType.HeadAccount,
                     Quantity = 1,
+                    AuthLocationId = s.AuthLocationId,
                     Credit =
                         s.TransactionType == VoucherType.Sale ||
                         s.TransactionType == VoucherType.PurchaseReturn
@@ -178,6 +180,7 @@ namespace AccountEx.BussinessLogic
                     TransactionType = s.TransactionType,
                     EntryType = (byte)EntryType.Discount,
                     Comments = s.Comments,
+                    AuthLocationId = s.AuthLocationId,
                     Debit = s.TransactionType == VoucherType.Sale || s.TransactionType == VoucherType.PurchaseReturn
                             ? Numerics.GetInt(s.Discount)
                             : 0,
@@ -199,6 +202,7 @@ namespace AccountEx.BussinessLogic
                     AccountId = s.VehicleId,
                     TransactionType = s.TransactionType,
                     EntryType = (byte)EntryType.Discount,
+                    AuthLocationId = s.AuthLocationId,
                     Credit = s.TransactionType == VoucherType.Sale || s.TransactionType == VoucherType.PurchaseReturn
                             ? Numerics.GetInt(s.TotalFreight)
                             : 0,
@@ -216,6 +220,7 @@ namespace AccountEx.BussinessLogic
                     AccountId = SettingManager.FreightHeadId,
                     TransactionType = s.TransactionType,
                     EntryType = (byte)EntryType.Discount,
+                    AuthLocationId = s.AuthLocationId,
                     Debit = s.TransactionType == VoucherType.Sale || s.TransactionType == VoucherType.PurchaseReturn
                             ? Numerics.GetInt(s.TotalFreight)
                             : 0,
@@ -255,6 +260,7 @@ namespace AccountEx.BussinessLogic
                     VoucherNumber = s.VoucherNumber,
                     AccountId = s.AccountId,
                     TransactionType = s.TransactionType,
+                    AuthLocationId = s.AuthLocationId,
                     EntryType = (byte) EntryType.MasterDetail,
                     Quantity = 1,
                     Debit =
@@ -282,6 +288,7 @@ namespace AccountEx.BussinessLogic
                                     ? SettingManager.GstSaleReturnAccountHeadId
                                     : SettingManager.GstPurchaseReturnAccountHeadId,
                     TransactionType = s.TransactionType,
+                    AuthLocationId = s.AuthLocationId,
                     EntryType = (byte) EntryType.HeadAccount,
                     Quantity = 1,
                     Credit =
@@ -306,6 +313,7 @@ namespace AccountEx.BussinessLogic
                     AccountId = SettingManager.GstHeadId,
                     TransactionType = s.TransactionType,
                     EntryType = (byte)EntryType.Gst,
+                    AuthLocationId = s.AuthLocationId,
                     Credit = s.TransactionType == VoucherType.GstSale || s.TransactionType == VoucherType.GstPurchaseReturn
                   ? Numerics.GetInt(s.GstAmountTotal)
                   : 0,
@@ -388,14 +396,14 @@ namespace AccountEx.BussinessLogic
                     err += "Voucher date should be within current fiscal year.,";
                 }
 
-                var isExist = saleRepo.IsVoucherExits(input.VoucherNumber, input.TransactionType, input.Id);
+                var isExist = saleRepo.IsVoucherExits(input.VoucherNumber, input.TransactionType, input.Id, input.AuthLocationId);
                 if (isExist)
                 {
                     err += "Voucher no already exist.,";
                 }
                 if (!allowDupliateBookNo)
                 {
-                    isExist = saleRepo.IsBookNoExits(input.InvoiceNumber, input.TransactionType, input.Id);
+                    isExist = saleRepo.IsBookNoExits(input.InvoiceNumber, input.TransactionType, input.Id, input.AuthLocationId);
 
                     if (isExist)
                     {
@@ -468,7 +476,7 @@ namespace AccountEx.BussinessLogic
                         }
                         else
                         {
-                            var previousvoucher = new SaleRepository().GetById(input.Id);
+                            var previousvoucher = new SaleRepository().FirstOrDefault(x => x.Id == input.Id && x.AuthLocationId == input.AuthLocationId);
                             var preitem = previousvoucher.SaleItems.FirstOrDefault(p => p.ItemId == item.ItemId);
                             if (preitem == null)
                             {
