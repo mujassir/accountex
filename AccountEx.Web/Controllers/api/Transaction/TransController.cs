@@ -40,7 +40,7 @@ namespace AccountEx.Web.Controllers.api.Transaction
                 if (voucherNumber == 0) key = "nextvouchernumber";
                 if (key == "nextvouchernumber")
                 {
-                    voucherNumber = tranRepo.GetNextVoucherNumber(vouchertype, locationId);
+                    voucherNumber = saleRepo.GetNextVoucherNumber(vouchertype, locationId);
                     invoiceNumber = tranRepo.GetNextInvoiceNumber(vouchertype, locationId);
                 }
                 var data = saleRepo.GetByVoucherNumber(voucherNumber, vouchertype, key, out next, out previous, locationId);

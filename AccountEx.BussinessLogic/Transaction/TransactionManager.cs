@@ -22,7 +22,7 @@ namespace AccountEx.BussinessLogic
         }
         public static void Save(Sale sale, bool addTransaction, bool autoVoucherNo)
         {
-            Save(sale, addTransaction, false, autoVoucherNo);
+            Save(sale, addTransaction, true, autoVoucherNo);
         }
         public static void Save(Sale sale, bool addTransaction, bool nextVoucherFromSale, bool autoVoucherNo)
         {
