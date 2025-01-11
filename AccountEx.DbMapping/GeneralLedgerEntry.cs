@@ -19,12 +19,15 @@ namespace AccountEx.DbMapping
         public string Debit { get; set; }
         public string Credit { get; set; }
         public string Balance { get; set; }
+        public int AuthLocationId { get; set; }
+        public string LocationName { get; set; }
         public GeneralLedgerEntry(Transaction tr)
         {
             Date = tr.Date.ToString(AppSetting.DateFormat);
             VoucherType = Enum.GetName(typeof(VoucherType), tr.TransactionType);
             TransactionType = tr.TransactionType;
             VoucherNumber = tr.VoucherNumber + "";
+            AuthLocationId= tr.AuthLocationId;
             InvoiceNumber = tr.InvoiceNumber + "";
             AccountId = tr.AccountId;
             Description = tr.Comments + "";

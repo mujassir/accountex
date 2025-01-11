@@ -29,5 +29,6 @@ namespace AccountEx.Common
        public decimal GSTAmount { get; set; }
        public decimal Amount { get; set; }
        public decimal NetAmount { get; set; }
+       public int AuthLocationId { get; set; }
    }
 }

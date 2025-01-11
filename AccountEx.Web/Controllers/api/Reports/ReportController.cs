@@ -21,6 +21,7 @@ using AccountEx.DbMapping;
 using System.Data.Entity.Core.Objects;
 using System.Linq.Expressions;
 using AccountEx.CodeFirst.Models.Production;
+using System.Data.Entity;
 
 namespace AccountEx.Web.Controllers.api.Reports
 {
@@ -1129,11 +1130,15 @@ namespace AccountEx.Web.Controllers.api.Reports
             var totalCredit = transactions.Sum(p => p.Credit);
             var records = new List<GeneralLedgerEntry>();
             var runningTotal = openingBalance;
+
+            var Locations = new GenericRepository<Location>().GetAll();
+
             foreach (var item in transactions)
             {
                 runningTotal += item.Debit - item.Credit;
                 var entry = new GeneralLedgerEntry(item);
                 entry.Balance = Numerics.DecimalToString(runningTotal);
+                entry.LocationName = Locations.Find(x => x.Id == entry.AuthLocationId)?.Name ?? "";
                 records.Add(entry);
             }
 

@@ -71,25 +71,30 @@ var DetailedGeneralLedger = function () {
                         var select = "";
                         var voucherTypes = new Array(1, 2, 3, 4, 25, 26, 27, 28);
                         var amount = 0;
-                        var data = res.Data.Records;
+                        var locationsData = res.Data.Records;
                         html += "<tr class='bold'><td></td><td>Opening Balance</td><td></td><td></td><td></td><td>" + res.Data.OpeningBalance + "</td></tr>";
-                        for (var i in data) {
-                            var vouchertype = Common.GetKeyFromEnum(data[i].TransactionType, VoucherType);
-                            var url = Common.GetTransactionUrl(data[i].TransactionType, data[i].VoucherNumber);
-                            var vouchershortname = Common.GetKeyFromEnum(data[i].TransactionType, VoucherShortName);
-                            var vType = VoucherTypes[data[i].TransactionType];
-                            html += "<tr>";
-                            html += "<td>" + data[i].Date + "</td>";
-                            html += "  <td><a href='" + url + "' data-original-title='" + vType.Description + "' data-toggle='tooltip'>" + vType.Code + "-" + data[i].VoucherNumber + "</a></td>";
-                            if ($.inArray(data[i].TransactionType, voucherTypes) !== -1) {
-                                html += "<td>" + $this.GetVoucherDetail(data[i].VoucherNumber, data[i].TransactionType, res.Data.SalesDetail) + "</td>";
-                            } else {
-                                html += "<td>" + data[i].Description + "</td>";
+                        const locations = [...new Set(locationsData.map(x => x?.LocationName))].sort();
+                        for (let key in locations) {
+                            var data = locationsData.filter(x => x.LocationName == locations[key])
+                            if (locations[key]) html += `<tr><td colspan="100%">Location: <strong>${locations[key]}</strong></td></tr>`;
+                            for (var i in data) {
+                                var vouchertype = Common.GetKeyFromEnum(data[i].TransactionType, VoucherType);
+                                var url = Common.GetTransactionUrl(data[i].TransactionType, data[i].VoucherNumber);
+                                var vouchershortname = Common.GetKeyFromEnum(data[i].TransactionType, VoucherShortName);
+                                var vType = VoucherTypes[data[i].TransactionType];
+                                html += "<tr>";
+                                html += "<td>" + data[i].Date + "</td>";
+                                html += "  <td><a href='" + url + "' data-original-title='" + vType.Description + "' data-toggle='tooltip'>" + vType.Code + "-" + data[i].VoucherNumber + "</a></td>";
+                                if ($.inArray(data[i].TransactionType, voucherTypes) !== -1) {
+                                    html += "<td>" + $this.GetVoucherDetail(data[i].VoucherNumber, data[i].TransactionType, data[i].AuthLocationId, res.Data.SalesDetail) + "</td>";
+                                } else {
+                                    html += "<td>" + data[i].Description + "</td>";
+                                }
+                                html += "<td class='align-right'>" + data[i].Debit + "</td>";
+                                html += "<td class='align-right'>" + data[i].Credit + "</td>";
+                                html += "<td class='align-right'>" + data[i].Balance + "</td>";
+                                html += "</tr>";
                             }
-                            html += "<td class='align-right'>" + data[i].Debit + "</td>";
-                            html += "<td class='align-right'>" + data[i].Credit + "</td>";
-                            html += "<td class='align-right'>" + data[i].Balance + "</td>";
-                            html += "</tr>";
                         }
                         if (res.Data.Records.length == 0)
                             html += "  <tr><td colspan='6' style='text-align: center'>No record(s) found</td></tr>";
@@ -106,8 +111,12 @@ var DetailedGeneralLedger = function () {
             });
         },
 
-        GetVoucherDetail: function (voucherNo, transactionType, sales) {
-            var records = Enumerable.From(sales).Where(function (p) { return p.VoucherNumber == voucherNo && p.TransactionType == transactionType }).ToArray();
+        GetVoucherDetail: function (voucherNo, transactionType, locationId, sales) {
+            var records = Enumerable.From(sales).Where(function (p) {
+                return p.VoucherNumber == voucherNo
+                    && p.TransactionType == transactionType
+                    && p.AuthLocationId == locationId
+            }).ToArray();
             var html = "<table class='bold full-width'>";
             for (var i in records) {
                 var sale = records[i];
