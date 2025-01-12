@@ -24,6 +24,11 @@
     var showDiscount = "hide";
     var colspan = !string.IsNullOrWhiteSpace(showDiscount) ? "6" : "10";
 }
+<style>
+    .nowrap {
+        white-space: nowrap;
+    }
+</style>
 @if (!string.IsNullOrWhiteSpace(error))
 {
     <div class="note note-danger note-bordered">
@@ -117,6 +122,7 @@ else
                                 <div class="col-md-2">
                                     <select id="Shift" class="form-control select2" placeholder="Select Status">
                                         <option value="Morning">Morning</option>
+                                        <option value="Noon">Noon</option>
                                         <option value="Evening">Evening</option>
                                     </select>
                                 </div>
@@ -138,36 +144,81 @@ else
                                                 <th>Code</th>
                                                 <th style="width: 30%;">Name</th>
                                                 <th style="width: 30%;">Comments</th>
-                                                <th class="MilkCol align-center">Milk</th>
-                                                <th class="align-center">Item A</th>
-                                                <th class="align-center">Item B</th>
-                                                <th class="align-center">Item C</th>
-                                                <th class="align-center">Item D</th>
-                                                <th class="align-center">Medicine</th>
+                                                <th id="Item-@(SettingManager.VDailyActivityDebitItem1Id)" 
+                                                    class="DebitItemCol nowrap align-center @(SettingManager.VDailyActivityDebitItem1Id == 0 ? "hide" : "")">
+                                                    DItem 1
+                                                </th>
+                                                <th id="Item-@(SettingManager.VDailyActivityDebitItem2Id)" 
+                                                    class="DebitItemCol nowrap align-center @(SettingManager.VDailyActivityDebitItem2Id == 0 ? "hide" : "")">
+                                                    DItem 2
+                                                </th>
+                                                <th id="Item-@(SettingManager.VDailyActivityCreditItem1Id)" 
+                                                    class="align-center nowrap @(SettingManager.VDailyActivityCreditItem1Id == 0 ? "hide" : "")">
+                                                    CItem 1
+                                                </th>
+                                                <th id="Item-@(SettingManager.VDailyActivityCreditItem2Id)" 
+                                                    class="align-center nowrap @(SettingManager.VDailyActivityCreditItem2Id == 0 ? "hide" : "")">
+                                                    CItem 2
+                                                    </th>
+                                                <th id="Item-@(SettingManager.VDailyActivityCreditItem3Id)" 
+                                                    class="align-center nowrap @(SettingManager.VDailyActivityCreditItem3Id == 0 ? "hide" : "")">
+                                                    CItem 3
+                                                    </th>
+                                                <th id="Item-@(SettingManager.VDailyActivityCreditItem4Id)" 
+                                                    class="align-center nowrap @(SettingManager.VDailyActivityCreditItem4Id == 0 ? "hide" : "")">
+                                                    CItem 4
+                                                    </th>
+                                                <th id="Item-@(SettingManager.VDailyActivityCreditItem5Id)" 
+                                                    class="align-center nowrap @(SettingManager.VDailyActivityCreditItem5Id == 0 ? "hide" : "")">
+                                                    CItem 5
+                                                    </th>
+                                                <th id="Item-@(SettingManager.VDailyActivityCreditItem6Id)" 
+                                                    class="align-center nowrap @(SettingManager.VDailyActivityCreditItem6Id == 0 ? "hide" : "")">
+                                                    CItem 6
+                                                    </th>
+                                                <th id="Item-@(SettingManager.VDailyActivityCreditItem7Id)" 
+                                                    class="align-center nowrap @(SettingManager.VDailyActivityCreditItem7Id == 0 ? "hide" : "")">
+                                                    CItem 7
+                                                    </th>
+                                                <th id="Item-@(SettingManager.VDailyActivityCreditItem8Id)" 
+                                                    class="align-center nowrap @(SettingManager.VDailyActivityCreditItem8Id == 0 ? "hide" : "")">
+                                                    CItem 8
+                                                    </th>
                                                 <th></th>
                                             </tr>
                                             <tr>
                                                 <td class="align-right" colspan="3"></td>
-                                                <td class="MilkCol align-center">
-                                                    <input type="text" id="TotalMilk" class="form-control align-center">
+                                                <td class="DebitItemCol align-center @(SettingManager.VDailyActivityDebitItem1Id == 0 ? "hide" : "")">
+                                                    <input type="text" id="TotalDebitItem1" class="form-control align-center">
                                                 </td>
-                                                <td class="align-center">
-                                                    <input type="text" id="TotalItemA" class="form-control align-center">
+                                                <td class="DebitItemCol align-center @(SettingManager.VDailyActivityDebitItem2Id == 0 ? "hide" : "")">
+                                                    <input type="text" id="TotalDebitItem2" class="form-control align-center">
                                                 </td>
-                                                <td class="align-center">
-                                                    <input type="text" id="TotalItemB" class="form-control align-center">
+                                                <td class="align-center @(SettingManager.VDailyActivityCreditItem1Id == 0 ? "hide" : "")">
+                                                    <input type="text" id="TotalCreditItem1" class="form-control align-center">
                                                 </td>
-                                                <td class="align-center">
-                                                    <input type="text" id="TotalItemC" class="form-control align-center">
+                                                <td class="align-center @(SettingManager.VDailyActivityCreditItem2Id == 0 ? "hide" : "")">
+                                                    <input type="text" id="TotalCreditItem2" class="form-control align-center">
                                                 </td>
-                                                <td class="align-center">
-                                                    <input type="text" id="TotalItemD" class="form-control align-center">
+                                                <td class="align-center @(SettingManager.VDailyActivityCreditItem3Id == 0 ? "hide" : "")">
+                                                    <input type="text" id="TotalCreditItem3" class="form-control align-center">
                                                 </td>
-                                                <td class="align-center">
-                                                    <input type="text" id="TotalMedicine" class="form-control align-center">
+                                                <td class="align-center @(SettingManager.VDailyActivityCreditItem4Id == 0 ? "hide" : "")">
+                                                    <input type="text" id="TotalCreditItem4" class="form-control align-center">
+                                                </td>
+                                                <td class="align-center @(SettingManager.VDailyActivityCreditItem5Id == 0 ? "hide" : "")">
+                                                    <input type="text" id="TotalCreditItem5" class="form-control align-center">
+                                                </td>
+                                                <td class="align-center @(SettingManager.VDailyActivityCreditItem6Id == 0 ? "hide" : "")">
+                                                    <input type="text" id="TotalCreditItem6" class="form-control align-center">
+                                                </td>
+                                                <td class="align-center @(SettingManager.VDailyActivityCreditItem7Id == 0 ? "hide" : "")">
+                                                    <input type="text" id="TotalCreditItem7" class="form-control align-center">
+                                                </td>
+                                                <td class="align-center @(SettingManager.VDailyActivityCreditItem8Id == 0 ? "hide" : "")">
+                                                    <input type="text" id="TotalCreditItem8" class="form-control align-center">
                                                 </td>
                                                 <td></td>
-
                                             </tr>
                                         </thead>
                                         <tbody data-plus-as-tab="false">
@@ -301,27 +352,49 @@ else
         <td>
             <input type="text" class="Comment form-control input-medium" data-db-column="Comment">
         </td>
-        <td class="MilkCol align-center">
-            <input type="text" class="Milk form-control input-small num align-center" data-db-column="Milk" data-db-type="float">
+        <td class="DebitItemCol align-center @(SettingManager.VDailyActivityDebitItem1Id == 0 ? "hide" : "")">
+            <input type="hidden" class="DebitItem1Code" value="@SettingManager.VDailyActivityDebitItem1Id" data-db-column="DebitItem1Code" data-db-type="float">
+            <input type="text" class="DebitItem1 form-control input-small num align-center" data-db-column="DebitItem1" data-db-type="float">
         </td>
-        <td class="align-center">
-            <input type="text" class="ItemA form-control input-small num align-center" data-db-column="ItemA" data-db-type="float">
+        <td class="DebitItemCol align-center @(SettingManager.VDailyActivityDebitItem2Id == 0 ? "hide" : "")">
+            <input type="hidden" class="DebitItem2Code" value="@SettingManager.VDailyActivityDebitItem2Id" data-db-column="DebitItem2Code" data-db-type="float">
+            <input type="text" class="DebitItem2 form-control input-small num align-center" data-db-column="DebitItem2" data-db-type="float">
         </td>
-        <td class="align-center">
-            <input type="text" class="ItemB form-control input-small num align-center" data-db-column="ItemB" data-db-type="float">
+        <td class="CreditItemCol align-center @(SettingManager.VDailyActivityCreditItem1Id == 0 ? "hide" : "")">
+            <input type="hidden" class="CreditItem1Code" value="@SettingManager.VDailyActivityCreditItem1Id" data-db-column="CreditItem1Code" data-db-type="float">
+            <input type="text" class="CreditItem1 form-control input-small num align-center" data-db-column="CreditItem1" data-db-type="float">
         </td>
-        <td class="align-center">
-            <input type="text" class="ItemC form-control input-small num align-center" data-db-column="ItemC" data-db-type="float">
+        <td class="CreditItemCol align-center @(SettingManager.VDailyActivityCreditItem2Id == 0 ? "hide" : "")">
+            <input type="hidden" class="CreditItem2Code" value="@SettingManager.VDailyActivityCreditItem2Id" data-db-column="CreditItem2Code" data-db-type="float">
+            <input type="text" class="CreditItem2 form-control input-small num align-center" data-db-column="CreditItem2" data-db-type="float">
         </td>
-        <td class="align-center">
-            <input type="text" class="ItemD form-control input-small num align-center" data-db-column="ItemD" data-db-type="float">
+        <td class="CreditItemCol align-center @(SettingManager.VDailyActivityCreditItem3Id == 0 ? "hide" : "")">
+            <input type="hidden" class="CreditItem3Code" value="@SettingManager.VDailyActivityCreditItem3Id" data-db-column="CreditItem3Code" data-db-type="float">
+            <input type="text" class="CreditItem3 form-control input-small num align-center" data-db-column="CreditItem3" data-db-type="float">
         </td>
-        <td class="align-center">
-            <input type="text" class="Medicine form-control input-small num align-center" data-db-column="Medicine" data-db-type="float">
+        <td class="CreditItemCol align-center @(SettingManager.VDailyActivityCreditItem4Id == 0 ? "hide" : "")">
+            <input type="hidden" class="CreditItem4Code" value="@SettingManager.VDailyActivityCreditItem4Id" data-db-column="CreditItem4Code" data-db-type="float">
+            <input type="text" class="CreditItem4 form-control input-small num align-center" data-db-column="CreditItem4" data-db-type="float">
         </td>
+        <td class="CreditItemCol align-center @(SettingManager.VDailyActivityCreditItem5Id == 0 ? "hide" : "")">
+            <input type="hidden" class="CreditItem5Code" value="@SettingManager.VDailyActivityCreditItem5Id" data-db-column="CreditItem5Code" data-db-type="float">
+            <input type="text" class="CreditItem5 form-control input-small num align-center" data-db-column="CreditItem5" data-db-type="float">
+        </td>
+        <td class="CreditItemCol align-center @(SettingManager.VDailyActivityCreditItem6Id == 0 ? "hide" : "")">
+            <input type="hidden" class="CreditItem6Code" value="@SettingManager.VDailyActivityCreditItem6Id" data-db-column="CreditItem6Code" data-db-type="float">
+            <input type="text" class="CreditItem6 form-control input-small num align-center" data-db-column="CreditItem6" data-db-type="float">
+        </td>
+        <td class="CreditItemCol align-center @(SettingManager.VDailyActivityCreditItem7Id == 0 ? "hide" : "")">
+            <input type="hidden" class="CreditItem7Code" value="@SettingManager.VDailyActivityCreditItem7Id" data-db-column="CreditItem7Code" data-db-type="float">
+            <input type="text" class="CreditItem7 form-control input-small num align-center" data-db-column="CreditItem7" data-db-type="float">
+        </td>
+        <td class="CreditItemCol align-center @(SettingManager.VDailyActivityCreditItem8Id == 0 ? "hide" : "")">
+            <input type="hidden" class="CreditItem8Code" value="@SettingManager.VDailyActivityCreditItem8Id" data-db-column="CreditItem8Code" data-db-type="float">
+            <input type="text" class="CreditItem8 form-control input-small num align-center" data-db-column="CreditItem8" data-db-type="float">
+        </td>
+
         <td style="width: 8px;">
             <span class="action"><i class="fa fa-trash-o" onclick="Adjustment.DeleteRow(this)" data-original-title="Delete Item"></i></span>
-
         </td>
     </tr>
 </script>

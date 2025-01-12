@@ -157,12 +157,27 @@ namespace AccountEx.BussinessLogic
                     record.ItemCode = item.ItemCode;
                     record.ItemName = item.ItemName;
                     record.Comment = item.Comment;
-                    record.Milk = item.Milk;
-                    record.ItemA = item.ItemA;
-                    record.ItemB = item.ItemB;
-                    record.ItemC = item.ItemC;
-                    record.ItemD = item.ItemD;
-                    record.Medicine = item.Medicine;
+                    record.DebitItem1Code = item.DebitItem1Code;
+                    record.DebitItem1 = item.DebitItem1;
+                    record.DebitItem2Code = item.DebitItem2Code;
+                    record.DebitItem2 = item.DebitItem2;
+                    record.CreditItem1Code = item.CreditItem1Code;
+                    record.CreditItem1 = item.CreditItem1;
+                    record.CreditItem2Code = item.CreditItem2Code;
+                    record.CreditItem2 = item.CreditItem2;
+                    record.CreditItem3Code = item.CreditItem3Code;
+                    record.CreditItem3 = item.CreditItem3;
+                    record.CreditItem4Code = item.CreditItem4Code;
+                    record.CreditItem4 = item.CreditItem4;
+                    record.CreditItem5Code = item.CreditItem5Code;
+                    record.CreditItem5 = item.CreditItem5;
+                    record.CreditItem6Code = item.CreditItem6Code;
+                    record.CreditItem6 = item.CreditItem6;
+                    record.CreditItem7Code = item.CreditItem7Code;
+                    record.CreditItem7 = item.CreditItem7;
+                    record.CreditItem8Code = item.CreditItem8Code;
+                    record.CreditItem8 = item.CreditItem8;
+
                     record.EntryType = item.EntryType;
 
                     record.ModifiedAt = dt;

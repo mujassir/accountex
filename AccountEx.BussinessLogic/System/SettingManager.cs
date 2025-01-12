@@ -538,6 +538,46 @@ namespace AccountEx.BussinessLogic
         {
             get { return Get("COA.DepriciationAc"); }
         }
+        public static string VDailyActivityDebitItem1
+        {
+            get { return Get("V_Daily_Activity_DebitItem1"); }
+        }
+        public static string VDailyActivityDebitItem2
+        {
+            get { return Get("V_Daily_Activity_DebitItem2"); }
+        }
+        public static string VDailyActivityCreditItem1
+        {
+            get { return Get("V_Daily_Activity_CreditItem1"); }
+        }
+        public static string VDailyActivityCreditItem2
+        {
+            get { return Get("V_Daily_Activity_CreditItem2"); }
+        }
+        public static string VDailyActivityCreditItem3
+        {
+            get { return Get("V_Daily_Activity_CreditItem3"); }
+        }
+        public static string VDailyActivityCreditItem4
+        {
+            get { return Get("V_Daily_Activity_CreditItem4"); }
+        }
+        public static string VDailyActivityCreditItem5
+        {
+            get { return Get("V_Daily_Activity_CreditItem5"); }
+        }
+        public static string VDailyActivityCreditItem6
+        {
+            get { return Get("V_Daily_Activity_CreditItem6"); }
+        }
+        public static string VDailyActivityCreditItem7
+        {
+            get { return Get("V_Daily_Activity_CreditItem7"); }
+        }
+        public static string VDailyActivityCreditItem8
+        {
+            get { return Get("V_Daily_Activity_CreditItem8"); }
+        }
         public static int LogBookAcAcccountId
         {
             get { return GetByTitle(LogBookAc); }
@@ -901,6 +941,46 @@ namespace AccountEx.BussinessLogic
         public static int StockConsumptionAccountId
         {
             get { return GetByTitle(StockConsumptionAc); }
+        }
+        public static int VDailyActivityDebitItem1Id
+        {
+            get { return GetByTitle(VDailyActivityDebitItem1); }
+        }
+        public static int VDailyActivityDebitItem2Id
+        {
+            get { return GetByTitle(VDailyActivityDebitItem2); }
+        }
+        public static int VDailyActivityCreditItem1Id
+        {
+            get { return GetByTitle(VDailyActivityCreditItem1); }
+        }
+        public static int VDailyActivityCreditItem2Id
+        {
+            get { return GetByTitle(VDailyActivityCreditItem2); }
+        }
+        public static int VDailyActivityCreditItem3Id
+        {
+            get { return GetByTitle(VDailyActivityCreditItem3); }
+        }
+        public static int VDailyActivityCreditItem4Id
+        {
+            get { return GetByTitle(VDailyActivityCreditItem4); }
+        }
+        public static int VDailyActivityCreditItem5Id
+        {
+            get { return GetByTitle(VDailyActivityCreditItem5); }
+        }
+        public static int VDailyActivityCreditItem6Id
+        {
+            get { return GetByTitle(VDailyActivityCreditItem6); }
+        }
+        public static int VDailyActivityCreditItem7Id
+        {
+            get { return GetByTitle(VDailyActivityCreditItem7); }
+        }
+        public static int VDailyActivityCreditItem8Id
+        {
+            get { return GetByTitle(VDailyActivityCreditItem8); }
         }
 
         public static int GstHeadId

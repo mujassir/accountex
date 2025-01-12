@@ -56,9 +56,6 @@ namespace AccountEx.Web.Controllers.api.Transaction
                 var Previous = currentVNum > 0 ? currentVNum - 1 : maxVoucherNumber;
                 var VoucherNumber = currentVNum == 0 ? maxVoucherNumber + 1 : currentVNum;
                 var dairyAdjustment = new GenericRepository<DairyAdjustment>();
-                var milkSum = dairyAdjustment.AsQueryable().Sum(x => (decimal?)x.Milk) ?? 0;
-                var qtySum = repo.AsQueryable().Sum(x => (decimal?)x.Qty) ?? 0;
-                var totalMilk = milkSum - qtySum;
 
                 if (key == "nextvouchernumber")
                 {
@@ -78,9 +75,7 @@ namespace AccountEx.Web.Controllers.api.Transaction
                         Order = record.Count > 0 ? record : null,
                         Next,
                         Previous,
-                        VoucherNumber,
-                        TotalMilk = totalMilk
-
+                        VoucherNumber
                     }
                 };
             }

@@ -74,31 +74,31 @@ var Adjustment = function () {
                 const status = $("#ItemStatus").val();
                 const groupId = $("#GroupId").val();
                 const products = PageSetting.AccountDetails.filter(x => x.GroupId == groupId && x.UnitType == status);
+                console.log(PageSetting.AccountDetails)
                 $("#item-container tbody").html("")
-                if (status == "Milker") {
-                    $(".MilkCol").removeClass("hide")
-                } else {
-                    $(".MilkCol").addClass("hide")
-                }
                 const items = products.map(e => {
                     return {
                         "ItemId": e.AccountId,
                         "ItemCode": e.Code,
                         "ItemName": e.Name,
                         "Comment": null,
-                        "Milk": 1,
-                        "ItemA": 1,
-                        "ItemB": 1,
-                        "ItemC": 1,
-                        "ItemD": 1,
-                        "Medicine": 1
+                        "DebitItem1": 1,
+                        "DebitItem2": 1,
+                        "CreditItem1": 1,
+                        "CreditItem2": 1,
+                        "CreditItem3": 1,
+                        "CreditItem4": 1,
+                        "CreditItem5": 1,
+                        "CreditItem6": 1,
+                        "CreditItem7": 1,
+                        "CreditItem8": 1,
                     }
                 })
                 Common.MapItemData(items);
                 $this.CalculateCalculations();
 
             });
-            $(document).on("blur", "#TotalMilk, #TotalItemA, #TotalItemB, #TotalItemC, #TotalItemD, #TotalMedicine", function () {
+            $(document).on("blur", "#TotalDebitItem1, #TotalDebitItem2, #TotalCreditItem1, #TotalCreditItem2, #TotalCreditItem3, #TotalCreditItem4, #TotalCreditItem5, #TotalCreditItem6, #TotalCreditItem7, #TotalCreditItem8", function () {
                 const rows = $("#item-container tbody").find("tr");
                 const validRows = [];
 
@@ -114,33 +114,41 @@ var Adjustment = function () {
                 const rowCount = validRows.length || 1;
 
                 // Calculate distributed counts
-                const milkCount = ($("#TotalMilk").val()?.trim() || 0) / rowCount;
-                const itemACount = ($("#TotalItemA").val()?.trim() || 0) / rowCount;
-                const itemBCount = ($("#TotalItemB").val()?.trim() || 0) / rowCount;
-                const itemCCount = ($("#TotalItemC").val()?.trim() || 0) / rowCount;
-                const itemDCount = ($("#TotalItemD").val()?.trim() || 0) / rowCount;
-                const medicineCount = ($("#TotalMedicine").val()?.trim() || 0) / rowCount;
+                const debitItem1Count = ($("#TotalDebitItem1").val()?.trim() || 0) / rowCount;
+                const debitItem2Count = ($("#TotalDebitItem2").val()?.trim() || 0) / rowCount;
+                const creditItem1Count = ($("#TotalCreditItem1").val()?.trim() || 0) / rowCount;
+                const creditItem2Count = ($("#TotalCreditItem2").val()?.trim() || 0) / rowCount;
+                const creditItem3Count = ($("#TotalCreditItem3").val()?.trim() || 0) / rowCount;
+                const creditItem4Count = ($("#TotalCreditItem4").val()?.trim() || 0) / rowCount;
+                const creditItem5Count = ($("#TotalCreditItem5").val()?.trim() || 0) / rowCount;
+                const creditItem6Count = ($("#TotalCreditItem6").val()?.trim() || 0) / rowCount;
+                const creditItem7Count = ($("#TotalCreditItem7").val()?.trim() || 0) / rowCount;
+                const creditItem8Count = ($("#TotalCreditItem8").val()?.trim() || 0) / rowCount;
 
                 // Update the values in each valid row
                 $(validRows).each(function () {
-                    $(this).find("td input.Milk").val(milkCount);
-                    $(this).find("td input.ItemA").val(itemACount);
-                    $(this).find("td input.ItemB").val(itemBCount);
-                    $(this).find("td input.ItemC").val(itemCCount);
-                    $(this).find("td input.ItemD").val(itemDCount);
-                    $(this).find("td input.Medicine").val(medicineCount);
+                    $(this).find("td input.DebitItem1").val(debitItem1Count);
+                    $(this).find("td input.DebitItem2").val(debitItem2Count);
+                    $(this).find("td input.CreditItem1").val(creditItem1Count);
+                    $(this).find("td input.CreditItem2").val(creditItem2Count);
+                    $(this).find("td input.CreditItem3").val(creditItem3Count);
+                    $(this).find("td input.CreditItem4").val(creditItem4Count);
+                    $(this).find("td input.CreditItem5").val(creditItem5Count);
+                    $(this).find("td input.CreditItem6").val(creditItem6Count);
+                    $(this).find("td input.CreditItem7").val(creditItem7Count);
+                    $(this).find("td input.CreditItem8").val(creditItem8Count);
                 });
             });
 
-            $(document).on("keyup", ".Milk,.ItemA,.ItemB,.ItemC,.ItemD,.Medicine", function (event) {
+            $(document).on("keyup", ".DebitItem1,.DebitItem2,.CreditItem1,.CreditItem2,.CreditItem2,.CreditItem3, .CreditItem4, .CreditItem5, .CreditItem6, .CreditItem7, .CreditItem8", function (event) {
                 var tr = $(this).closest("tr");
-                var qty = Common.GetInt($(tr).find("input.Milk").val());
-                if (event.which == 13 && qty > 0)
-                    $this.AddItem();
-                else if (event.which == 13 && qty <= 0) {
-                    var err = "Item " + code + " must have quantity greater than zero(0).,";
-                    Common.ShowError(err);
-                }
+                //var qty = Common.GetInt($(tr).find("input.Milk").val());
+                //if (event.which == 13 && qty > 0)
+                //    $this.AddItem();
+                //else if (event.which == 13 && qty <= 0) {
+                //    var err = "Item " + code + " must have quantity greater than zero(0).,";
+                //    Common.ShowError(err);
+                //}
 
                 $this.CalculateCalculations();
             });
@@ -184,22 +192,31 @@ var Adjustment = function () {
         },
         CalculateCalculations: function () {
             const rows = $("#item-container tbody").find("tr");
-            let milk = itemA = itemB = itemC = itemD = medicine = 0;
+            let debitItem1 = debitItem2 = creditItem1 = creditItem2 = creditItem3 = creditItem4 = creditItem5 = creditItem6 = creditItem7 = creditItem8 = 0;
             rows.each(function () {
-                milk += Number($(this).find("td input.Milk")?.val()?.trim() || '0');
-                itemA += Number($(this).find("td input.ItemA")?.val()?.trim() || '0');
-                itemB += Number($(this).find("td input.ItemB")?.val()?.trim() || '0');
-                itemC += Number($(this).find("td input.ItemC")?.val()?.trim() || '0');
-                itemD += Number($(this).find("td input.ItemD")?.val()?.trim() || '0');
-                medicine += Number($(this).find("input.Medicine")?.val()?.trim() || '0');
+                debitItem1 += Number($(this).find("td input.DebitItem1")?.val()?.trim() || '0');
+                debitItem2 += Number($(this).find("td input.DebitItem2")?.val()?.trim() || '0');
+                creditItem1 += Number($(this).find("td input.CreditItem1")?.val()?.trim() || '0');
+                creditItem2 += Number($(this).find("td input.CreditItem2")?.val()?.trim() || '0');
+                creditItem3 += Number($(this).find("td input.CreditItem3")?.val()?.trim() || '0');
+                creditItem4 += Number($(this).find("td input.CreditItem4")?.val()?.trim() || '0');
+                creditItem5 += Number($(this).find("td input.CreditItem5")?.val()?.trim() || '0');
+                creditItem6 += Number($(this).find("td input.CreditItem6")?.val()?.trim() || '0');
+                creditItem7 += Number($(this).find("td input.CreditItem7")?.val()?.trim() || '0');
+                creditItem8 += Number($(this).find("td input.CreditItem8")?.val()?.trim() || '0');
             });
 
-            $("#TotalMilk").val(milk);
-            $("#TotalItemA").val(itemA);
-            $("#TotalItemB").val(itemB);
-            $("#TotalItemC").val(itemC);
-            $("#TotalItemD").val(itemD);
-            $("#TotalMedicine").val(medicine);
+            $("#TotalDebitItem1").val(debitItem1);
+            $("#TotalDebitItem2").val(debitItem2);
+            $("#TotalCreditItem1").val(creditItem1);
+            $("#TotalCreditItem2").val(creditItem2);
+            $("#TotalCreditItem3").val(creditItem3);
+            $("#TotalCreditItem4").val(creditItem4);
+            $("#TotalCreditItem5").val(creditItem5);
+            $("#TotalCreditItem6").val(creditItem6);
+            $("#TotalCreditItem7").val(creditItem7);
+            $("#TotalCreditItem8").val(creditItem8);
+
         },
         New: function () {
             var $this = this;
@@ -480,7 +497,7 @@ var Adjustment = function () {
                     }
                 );
             }
-
+            $this.UpdateHeaderLabel();
             $("#AccountCode").autocomplete({
                 source: suggestion,
                 selectFirst: true,
@@ -500,6 +517,19 @@ var Adjustment = function () {
             });
 
 
+
+        },
+        UpdateHeaderLabel: function () {
+            const ele = document.querySelectorAll("[id^='Item-']");
+            var exids = new Array();
+            exids.push(Common.GetInt(PageSetting.Products));
+            var items = Common.GetLeafAccounts(exids);
+            ele.forEach(row => {
+                const name = items.find(x => x.Id == row?.id?.split("-")?.[1])?.Name
+                if (name) {
+                    row.innerHTML = name
+                }
+            })
 
         },
         LoadPageSetting: function () {
