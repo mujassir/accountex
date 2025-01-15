@@ -469,6 +469,11 @@ namespace AccountEx.Web.Controllers.mvc
                                     StorageKey = Sha2Sign.Hash(user.CompanyId)
                                 }
                             };
+
+                            if (user.locked == true && host.StartsWith("acc"))
+                            {
+                                response = new ApiResponse() { Success = false, Error = "This Username is restricted on this application" };
+                            }
                         }
                         else
                             response = new ApiResponse() { Success = false, Error = "Username or Password provided is incorrect." };
