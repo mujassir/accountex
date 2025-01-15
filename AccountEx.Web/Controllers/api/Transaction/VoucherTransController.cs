@@ -44,6 +44,12 @@ namespace AccountEx.Web.Controllers.api.Transaction
                 var queryString = Request.RequestUri.ParseQueryString();
                 var type = queryString["type"];
                 var key = queryString["key"].ToLower();
+
+                int locationId = 0;
+                if (queryString["locationId"] != null)
+                {
+                    int.TryParse(queryString["locationId"], out locationId);
+                }
                 var vouchertype = (VoucherType)Convert.ToByte(type);
                 //var data = TransactionManager.GetVocuherDetail(voucher, vouchertype, queryString["key"]);
                 bool next, previous;
@@ -56,8 +62,8 @@ namespace AccountEx.Web.Controllers.api.Transaction
 
                     //voucherNumber = new TransactionRepository().GetNextVoucherNumber(vouchertype);
 
-                    voucherNumber = repo.GetNextVoucherNumber(vouchertype);
-                var data = repo.GetByVoucherNumber(voucherNumber, vouchertype, key, out next, out previous);
+                    voucherNumber = repo.GetNextVoucherNumber(vouchertype, locationId);
+                var data = repo.GetByVoucherNumber(voucherNumber, vouchertype, key, locationId, out next, out previous);
                 response = new ApiResponse
                 {
                     Success = true,
@@ -232,6 +238,12 @@ namespace AccountEx.Web.Controllers.api.Transaction
             {
                 var queryString = Request.RequestUri.ParseQueryString();
                 var type = (queryString["type"]);
+
+                int locationId = 0;
+                if (queryString["locationId"] != null)
+                {
+                    int.TryParse(queryString["locationId"], out locationId);
+                }
                 var vouchertype = (VoucherType)Convert.ToByte(type);
                 var voucherNo = id;
                 var err = ServerValidateDelete(voucherNo, vouchertype);
@@ -239,7 +251,7 @@ namespace AccountEx.Web.Controllers.api.Transaction
                 {
 
 
-                    VoucherManager.Delete(id, vouchertype);
+                    VoucherManager.Delete(id, vouchertype, locationId);
                     response = new ApiResponse { Success = true };
                 }
                 else
@@ -435,7 +447,7 @@ namespace AccountEx.Web.Controllers.api.Transaction
                     err += item.AccountCode + "-" + item.AccountName + " is not valid code.,";
                 }
 
-                var isExist = repo.IsVoucherExistByVoucherNo(input.VoucherNumber, input.Id, input.TransactionType);
+                var isExist = repo.IsVoucherExistByVoucherNo(input.VoucherNumber, input.Id, input.TransactionType, input.AuthLocationId);
 
                 if (isExist)
                 {

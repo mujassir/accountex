@@ -4,6 +4,7 @@
 }
 @using AccountEx.BussinessLogic;
 @using AccountEx.Common;
+﻿@using AccountEx.CodeFirst.Models
 @{
     var type = Request.QueryString["type"] + "";
     var vouchertype = ((VoucherType)Enum.Parse(typeof(VoucherType), type, true));
@@ -87,6 +88,30 @@ else
                                 <i class="close" onclick="$(this).parent().hide();"></i>
                                 <strong></strong>
                                 <div class="form-body message-content"></div>
+                            </div>
+                            @{
+                                // Check if any location is marked as default
+                                var locations = (List<Location>)ViewBag.Locations;
+                                bool hasDefault = locations.Any(x => x.IsDefault);
+                                var firstLocation = locations.FirstOrDefault();
+                                int firstItemId = firstLocation != null ? firstLocation.Id : 0;
+                            }
+                            <div class="form-group @(locations.Count > 0 && SettingManager.IsMultipleLocationEnabled ? "" : "hide")">
+                                <label class="col-md-2 control-label" for="prefix">Location</label>
+                                <div class="col-md-3">
+                                    <select id="AuthLocationId" class="form-control input-small" data-clear="false" data-placeholder="Select Location" data-trackchange="true">
+                                        @if (SettingManager.IsMultipleLocationEnabled)
+                                        {
+                                            foreach (var item in locations)
+                                            {
+                                                <option value="@item.Id" data-code="@item.Code"
+                                                        @(item.IsDefault || (!hasDefault && item.Id == firstItemId) ? "selected" : "")>
+                                                    @item.Name
+                                                </option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-md-2 control-label" for="prefix">Voucher Number</label>

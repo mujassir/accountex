@@ -40,6 +40,8 @@ namespace AccountEx.CodeFirst.Models
         public bool IsPaid { get; set; }
         public bool IsFinal { get; set; }
         public decimal TotalPaid { get; set; }
+        public int AuthLocationId { get; set; }
+        public string VoucherCode { get; set; }
         public virtual ICollection<VoucherItem> VoucherItems { get; set; }
     }
 }

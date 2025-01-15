@@ -26,6 +26,9 @@ var JV = function () {
             //    });
             //}
             BRANCHID = $("#BranchId").val();
+            $("#AuthLocationId").change(function (e) {
+                $this.LoadVoucher("nextvouchernumber");
+            });
             $("#BranchId").change(function () {
                 LIST_LOADED = false;
                 BRANCHID = $("#BranchId").val();
@@ -449,6 +452,7 @@ var JV = function () {
         Add: function () {
             var $this = this;
             Common.Clear();
+            $('#AuthLocationId').trigger('change');
             $("#form-info").removeClass("hide");
             $("#div-table,#div-report").addClass("hide");
             $("select", "#form-info").each(function () {
@@ -717,11 +721,11 @@ var JV = function () {
 
         LoadVoucher: function (key, isClone) {
             var $this = this;
-
+            var locationId = $("#AuthLocationId").val();
             var voucherno = Common.GetInt($("#VoucherNumber").val());
             //url: Setting.APIBaseUrl + API_CONTROLLER + "/" + voucherno + "?type=" + VoucherType[$this.GetType()] + "?&key=" + key,
             Common.WrapAjax({
-                url: Setting.APIBaseUrl + API_CONTROLLER + "/" + voucherno + "?type=" + VoucherType[$this.GetType()] + "&key=" + key + "&voucher=" + voucherno,
+                url: Setting.APIBaseUrl + API_CONTROLLER + "/" + voucherno + "?type=" + VoucherType[$this.GetType()] + "&key=" + key + "&voucher=" + voucherno + "&locationId=" + locationId,
                 type: "GET",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -730,6 +734,7 @@ var JV = function () {
                 blockMessage: "Loading  " + $this.GetType() + " ...please wait",
                 success: function (res) {
                     if (res.Success) {
+
 
 
                         if (isClone != null && isClone != undefined) {
@@ -746,7 +751,12 @@ var JV = function () {
                             $this.CustomClear();
                             $("#item-container tbody").html("");
                             var d = res.Data.Order;
+                            var defaultLocationId = d?.AuthLocationId || 0;
+                            if (!d?.AuthLocationId) {
+                                defaultLocationId = $("#AuthLocationId")?.val()
+                            }
                             Common.MapEditData(d, "#form-info");
+                            $(`#AuthLocationId`).val(defaultLocationId)
                             if (d == null) {
                                 $this.CustomClear();
                                 $("#VoucherNumber,#InvoiceNumber").val(res.Data.VoucherNumber);
@@ -757,6 +767,9 @@ var JV = function () {
                                 $(".date-picker,.ac-date").each(function () {
                                     Common.SetDate(this, d[$(this).attr("Id")]);
                                 });
+                                if (d.VoucherCode) {
+                                    $(`#AuthLocationId`).val(d.AuthLocationId)
+                                }
                                 if (d.Id > 0 && d.VoucherItems != null && d.VoucherItems.length > 0) {
                                     $(".btnClone").removeClass("hide");
                                     if (d.IsFinal && ALLOWFINALIZATION) {
@@ -857,10 +870,10 @@ var JV = function () {
         Delete: function (id) {
             var $this = this;
             var type = VoucherType[$this.GetType()];
-
+            var locationId = Common.GetInt($("#AuthLocationId").val());
             Common.ConfirmDelete(function () {
                 var voucherno = Common.GetInt($("#VoucherNumber").val());
-                var url = Setting.APIBaseUrl + API_CONTROLLER + "/" + voucherno + "?type=" + type + "&voucher=" + voucherno;
+                var url = Setting.APIBaseUrl + API_CONTROLLER + "/" + voucherno + "?type=" + type + "&voucher=" + voucherno + "&locationId=" + locationId;
                 var id = Common.GetInt($("#Id").val());
                 if (id <= 0) {
                     Common.ShowError("No Voucher found for deletion.");

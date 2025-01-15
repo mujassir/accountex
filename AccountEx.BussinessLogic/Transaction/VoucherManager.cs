@@ -795,14 +795,14 @@ namespace AccountEx.BussinessLogic
 
         }
 
-        public static void Delete(int voucherno, VoucherType transactiontype)
+        public static void Delete(int voucherno, VoucherType transactiontype, int locationId = 0)
         {
             var repo = new VoucherTransRepository();
             var transRepo = new TransactionRepository(repo);
             using (var scope = TransactionScopeBuilder.Create())
             {
-                transRepo.HardDelete(voucherno, transactiontype);
-                repo.DeleteByVoucherNumber(voucherno, transactiontype);
+                transRepo.HardDelete(voucherno, transactiontype, locationId);
+                repo.DeleteByVoucherNumber(voucherno, transactiontype, locationId);
                 repo.SaveChanges();
                 scope.Complete();
             }

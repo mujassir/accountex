@@ -29,6 +29,9 @@ var BankVoucher = function () {
                     $(this).parent().next("td").find("input").focus();
                 }
             });
+            $("#AuthLocationId").change(function (e) {
+                $this.LoadVoucher("nextvouchernumber");
+            });
             $("#Date").keyup(function (e) {
                 if (e.which == 13) {
 
@@ -401,6 +404,7 @@ var BankVoucher = function () {
         Add: function () {
             var $this = this;
             Common.Clear();
+            $('#AuthLocationId').trigger('change');
             $("#form-info").removeClass("hide");
             $("#div-table,#div-report").addClass("hide");
             $("select", "#form-info").each(function () {
@@ -673,6 +677,7 @@ var BankVoucher = function () {
 
         LoadVoucher: function (key) {
             var $this = this;
+            var locationId = $("#AuthLocationId").val();
             $("#item-container tbody").html("");
             var voucherno = Common.GetInt($("#VoucherNumber").val());
             var allowFinal = false;
@@ -684,7 +689,7 @@ var BankVoucher = function () {
             }
             //url: Setting.APIBaseUrl + API_CONTROLLER + "/" + voucherno + "?type=" + VoucherType[$this.GetType()] + "?&key=" + key,
             Common.WrapAjax({
-                url: Setting.APIBaseUrl + API_CONTROLLER + "/" + voucherno + "?type=" + VoucherType[$this.GetType()] + "&key=" + key + "&voucher=" + voucherno,
+                url: Setting.APIBaseUrl + API_CONTROLLER + "/" + voucherno + "?type=" + VoucherType[$this.GetType()] + "&key=" + key + "&voucher=" + voucherno + "&locationId=" + locationId,
                 type: "GET",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -696,7 +701,13 @@ var BankVoucher = function () {
                         $this.CustomClear();
                         $("#item-container tbody").html("");
                         var d = res.Data.Order;
+
+                        var defaultLocationId = d?.AuthLocationId || 0;
+                        if (!d?.AuthLocationId) {
+                            defaultLocationId = $("#AuthLocationId")?.val();
+                        }
                         Common.MapEditData(d, "#form-info");
+                        $(`#AuthLocationId`).val(defaultLocationId)
                         if (d == null) {
                             $this.CustomClear();
                             $("#VoucherNumber,#InvoiceNumber").val(res.Data.VoucherNumber);
@@ -716,6 +727,9 @@ var BankVoucher = function () {
                                     $("#btnunfinal").addClass("hide");
                                 }
                                 $("#btndelete,#btnprint").prop("disabled", false);
+                                if (d.VoucherCode) {
+                                    $(`#AuthLocationId`).val(d.AuthLocationId)
+                                }
                                 var html = "";
                                 var items = d.VoucherItems;
                                 Common.MapItemData(items);
@@ -801,10 +815,10 @@ var BankVoucher = function () {
         Delete: function (id) {
             var $this = this;
             var type = VoucherType[$this.GetType()];
-
+            var locationId = Common.GetInt($("#AuthLocationId").val());
             Common.ConfirmDelete(function () {
                 var voucherno = Common.GetInt($("#VoucherNumber").val());
-                var url = Setting.APIBaseUrl + API_CONTROLLER + "/" + voucherno + "?type=" + type + "&voucher=" + voucherno;
+                var url = Setting.APIBaseUrl + API_CONTROLLER + "/" + voucherno + "?type=" + type + "&voucher=" + voucherno + "&locationId=" + locationId;;
                 var id = Common.GetInt($("#Id").val());
                 if (id <= 0) {
                     Common.ShowError("No Voucher found for deletion.");

@@ -809,25 +809,24 @@ namespace AccountEx.Repositories
             return Collection.Any(p => accounts.Contains(p.AccountId));
         }
 
-        public void HardDelete(int voucherNumber, VoucherType type)
+        public void HardDelete(int voucherNumber, VoucherType type, int locationId = 0)
         {
-            HardDelete(voucherNumber, new List<VoucherType>() { type });
+            HardDelete(voucherNumber, new List<VoucherType>() { type }, locationId);
         }
-        public void HardDelete(int voucherNumber, List<VoucherType> types)
+        public void HardDelete(int voucherNumber, List<VoucherType> types, int locationId = 0)
         {
-            HardDelete(new List<int> { voucherNumber }, types);
+            HardDelete(new List<int> { voucherNumber }, types, locationId);
         }
-        public void HardDelete(List<int> voucherNumbers, VoucherType type)
+        public void HardDelete(List<int> voucherNumbers, VoucherType type, int locationId = 0)
         {
-            HardDelete(voucherNumbers, new List<VoucherType> { type });
+            HardDelete(voucherNumbers, new List<VoucherType> { type }, locationId);
         }
-        public void HardDelete(List<int> voucherNumber, List<VoucherType> types)
+        public void HardDelete(List<int> voucherNumber, List<VoucherType> types, int locationId)
         {
 
             if (voucherNumber.Count() > 0 && types.Count() > 0)
             {
-
-                var query = string.Format("DELETE FROM dbo.Transactions WHERE TransactionType IN({0}) AND VoucherNumber IN({1})  AND FiscalId={2} AND CompanyId={3}", string.Join(",", types.Select(p => Numerics.GetByte(p))), string.Join(",", voucherNumber), SiteContext.Current.Fiscal.Id, SiteContext.Current.User.CompanyId);
+                var query = string.Format("DELETE FROM dbo.Transactions WHERE TransactionType IN({0}) AND VoucherNumber IN({1})  AND FiscalId={2} AND CompanyId={3} AND AuthLocationId={4}", string.Join(",", types.Select(p => Numerics.GetByte(p))), string.Join(",", voucherNumber), SiteContext.Current.Fiscal.Id, SiteContext.Current.User.CompanyId, locationId);
                 Db.Database.ExecuteSqlCommand(query);
             }
         }

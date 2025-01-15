@@ -84,7 +84,7 @@ namespace AccountEx.Web.Controllers.api.Transaction
                     //voucherNumber = new TransactionRepository().GetNextVoucherNumber(vouchertype);
 
                     voucherNumber = repo.GetNextVoucherNumber(vouchertype);
-                var data = repo.GetByVoucherNumber(voucherNumber, vouchertype, key, out next, out previous);
+                var data = repo.GetByVoucherNumber(voucherNumber, vouchertype, key, 0, out next, out previous);
                 response = new ApiResponse
                 {
                     Success = true,

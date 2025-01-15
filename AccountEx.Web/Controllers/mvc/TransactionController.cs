@@ -929,6 +929,11 @@ namespace AccountEx.Web.Controllers.mvc
             }
             ViewBag.CostCenters = new CostCenterRepository().GetNames();
             ViewBag.Cities = new CityRepository().GetNames();
+            ViewBag.Locations = new GenericRepository<UserLocation>().AsQueryable()
+                .Where(x => x.UserId == (int)SiteContext.Current.User.Id)
+                .Include(x => x.Location)
+                .Select(x => x.Location)
+                .ToList();
             return View();
         }
         public ActionResult VoucherPosting()
@@ -1009,6 +1014,11 @@ namespace AccountEx.Web.Controllers.mvc
             ViewBag.CostCenters = new CostCenterRepository().GetNames();
             ViewBag.Cities = new CityRepository().GetNames();
             ViewBag.FormSettings = JsonConvert.SerializeObject(setting);
+            ViewBag.Locations = new GenericRepository<UserLocation>().AsQueryable()
+                .Where(x => x.UserId == (int)SiteContext.Current.User.Id)
+                .Include(x => x.Location)
+                .Select(x => x.Location)
+                .ToList();
             return View();
         }
         public ActionResult BLPayments()
@@ -1059,6 +1069,11 @@ namespace AccountEx.Web.Controllers.mvc
             settings.Add(new SettingExtra() { Key = "AmountInWordType", Value = SettingManager.AmountInWordType });
             ViewBag.FormSettings = JsonConvert.SerializeObject(settings);
             ViewBag.CompanyPartners = new CompanyPartnerRepository().GetNames();
+            ViewBag.Locations = new GenericRepository<UserLocation>().AsQueryable()
+                .Where(x => x.UserId == (int)SiteContext.Current.User.Id)
+                .Include(x => x.Location)
+                .Select(x => x.Location)
+                .ToList();
             return View();
         }
 
