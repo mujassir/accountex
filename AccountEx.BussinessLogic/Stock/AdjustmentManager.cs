@@ -63,7 +63,7 @@ namespace AccountEx.BussinessLogic
         {
             var dt = DateTime.Now;
             var transactionRepo = new TransactionRepository(repo);
-            transactionRepo.HardDelete(s.VoucherNumber, s.TransactionType);
+            transactionRepo.HardDelete(s.VoucherNumber, s.TransactionType, s.AuthLocationId);
             var trans = new List<Transaction>
             {
                 new Transaction

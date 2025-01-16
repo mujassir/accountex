@@ -35,7 +35,7 @@ namespace AccountEx.BussinessLogic
         public static void AddTransaction(Voucher v)
         {
             var dt = DateTime.Now;
-            new TransactionRepository().HardDelete(v.VoucherNumber, v.TransactionType);
+            new TransactionRepository().HardDelete(v.VoucherNumber, v.TransactionType, v.AuthLocationId);
             var trans = v.VoucherItems.Select(item => new Transaction
             {
                 AccountId = item.AccountId,
@@ -84,7 +84,7 @@ namespace AccountEx.BussinessLogic
         public static void AddJvTransaction(Voucher v)
         {
             var dt = DateTime.Now;
-            new TransactionRepository().HardDelete(v.VoucherNumber, v.TransactionType);
+            new TransactionRepository().HardDelete(v.VoucherNumber, v.TransactionType, v.AuthLocationId);
             var trans = v.VoucherItems.Select(item => new Transaction
             {
                 AccountId = item.AccountId,

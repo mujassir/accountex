@@ -125,7 +125,7 @@ namespace AccountEx.BussinessLogic
             using (var scope = TransactionScopeBuilder.Create())
             {
                 var dc = new DeliveryChallanRepository().GetById(id);
-                new TransactionRepository().HardDelete(dc.VoucherNumber, dc.TransactionType);
+                new TransactionRepository().HardDelete(dc.VoucherNumber, dc.TransactionType, dc.AuthLocationId);
                 new DeliveryChallanRepository().Delete(dc);
                 scope.Complete();
             }
