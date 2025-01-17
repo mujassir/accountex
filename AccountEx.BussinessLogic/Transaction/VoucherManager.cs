@@ -651,7 +651,7 @@ namespace AccountEx.BussinessLogic
         {
             var dt = DateTime.Now;
             var transRepo = new TransactionRepository(baseRepo);
-            transRepo.HardDelete(v.VoucherNumber, v.TransactionType);
+            transRepo.HardDelete(v.VoucherNumber, v.TransactionType, v.AuthLocationId);
             var trans = v.VoucherItems.Select(item => new Transaction
             {
                 ReferenceId = v.Id,
@@ -662,6 +662,7 @@ namespace AccountEx.BussinessLogic
                 InvoiceNumber = v.InvoiceNumber,
                 VoucherNumber = v.VoucherNumber,
                 TransactionType = v.TransactionType,
+                AuthLocationId = v.AuthLocationId,
                 EntryType = (byte)EntryType.Item,
                 Comments = item.Description,
                 Credit = v.TransactionType == VoucherType.CashReceipts || v.TransactionType == VoucherType.BankReceipts
@@ -684,6 +685,7 @@ namespace AccountEx.BussinessLogic
                       InvoiceNumber = v.InvoiceNumber,
                       VoucherNumber = v.VoucherNumber,
                       TransactionType = v.TransactionType,
+                      AuthLocationId = v.AuthLocationId,
                       EntryType = (byte)EntryType.MasterDetail,
                       Comments = item.Description,
                       Debit = v.TransactionType == VoucherType.CashReceipts || v.TransactionType == VoucherType.BankReceipts
