@@ -712,7 +712,7 @@ namespace AccountEx.BussinessLogic
         {
             var dt = DateTime.Now;
             var transRepo = new TransactionRepository(baseRepo);
-            transRepo.HardDelete(v.VoucherNumber, v.TransactionType);
+            transRepo.HardDelete(v.VoucherNumber, v.TransactionType, v.AuthLocationId);
             var trans = v.VoucherItems.Select(item => new Transaction
             {
                 ReferenceId = v.Id,
@@ -724,6 +724,7 @@ namespace AccountEx.BussinessLogic
                 VoucherNumber = v.VoucherNumber,
                 TransactionType = v.TransactionType,
                 EntryType = (byte)EntryType.Item,
+                AuthLocationId = v.AuthLocationId,
                 Comments = item.Description,
                 Credit = Numerics.GetInt(item.Amount),
             }).ToList();
@@ -741,6 +742,7 @@ namespace AccountEx.BussinessLogic
                       TransactionType = v.TransactionType,
                       EntryType = (byte)EntryType.MasterDetail,
                       Comments = item.Description,
+                      AuthLocationId = v.AuthLocationId,
                       Debit = Numerics.GetInt(item.Amount)
                   }).ToList()
 
@@ -759,7 +761,7 @@ namespace AccountEx.BussinessLogic
         {
             var dt = DateTime.Now;
             var transRepo = new TransactionRepository(baseRepo);
-            transRepo.HardDelete(v.VoucherNumber, v.TransactionType);
+            transRepo.HardDelete(v.VoucherNumber, v.TransactionType, v.AuthLocationId);
             var trans = v.VoucherItems.Select(item => new Transaction
             {
                 ReferenceId = v.Id,
@@ -769,6 +771,7 @@ namespace AccountEx.BussinessLogic
                 VoucherNumber = v.VoucherNumber,
                 TransactionType = v.TransactionType,
                 EntryType = (byte)EntryType.Item,
+                AuthLocationId = v.AuthLocationId,
                 Credit = Numerics.GetDecimal(item.Credit),
                 Debit = Numerics.GetDecimal(item.Debit),
                 ChequeNumber = item.ChequeNumber,
