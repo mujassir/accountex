@@ -53,7 +53,7 @@ else
             <div class="portlet light">
                 <div class="portlet-title">
                     <div class="caption">
-                        <i class="fa fa-edit"></i>Manage Dairy Transaction
+                        <i class="fa fa-edit"></i>Manage Dairy Transaction <span class="isNew badge badge-primary">New</span><span class="isUpdate badge badge-warning">Update</span>
                     </div>
                     <div class="actions hide">
                         <a href="javascript:;" onclick="Transaction.LoadVoucher('previous')" class="btn blue">
@@ -293,7 +293,7 @@ else
     <script src="~/Content/AutoComplete/jquery-ui.js"></script>
     <link href="~/Content/AutoComplete/jquery-ui.css" rel="stylesheet" />
     @* <script src="../../Content/HotKey/jquery.hotkeys.js"></script>*@
-    <script src="~/Content/AppJS/Transaction/DairyTransaction.js"></script>
+    <script src="~/Content/AppJS/Transaction/DairyTransaction.js?v=1"></script>
     <script>
         jQuery(document).ready(function () {
             Transaction.init();

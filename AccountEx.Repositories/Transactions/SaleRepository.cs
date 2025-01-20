@@ -252,7 +252,7 @@ namespace AccountEx.Repositories
         public void Delete(Sale sale)
         {
 
-
+            if (sale == null) return;
             if (sale.InvoiceDcs.Count() > 0)
             {
                 var dcIds = sale.InvoiceDcs.Select(p => p.DcId).ToList();

@@ -398,8 +398,17 @@ namespace AccountEx.BussinessLogic
 
             repo.SaveChanges();
         }
+        public static void DeleteDairyTransaction(int vNum)
+        {
+            var dt = DateTime.Now;
+            var repo = new GenericRepository<DairyTransaction>();
+            var item = repo.GetAll(x => x.VoucherNumber == vNum);
+            var ids = item.Select(x => x.Id).ToList();
+            repo.Delete(ids);
+            repo.SaveChanges();
+        }
 
-        public static string ValidateSave(Sale input, bool allowDupliateItem, bool allowDupliateBookNo, bool isAccountRequired)
+            public static string ValidateSave(Sale input, bool allowDupliateItem, bool allowDupliateBookNo, bool isAccountRequired)
         {
             var err = ",";
             try

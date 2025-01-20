@@ -192,6 +192,15 @@ namespace AccountEx.BussinessLogic
 
             repo.SaveChanges();
         }
+        public static void DeleteDairyAdjustment(int vNum)
+        {
+            var dt = DateTime.Now;
+            var repo = new GenericRepository<DairyAdjustment>();
+            var item = repo.GetAll(x => x.VoucherNumber == vNum);
+            var ids = item.Select(x => x.Id).ToList();
+            repo.Delete(ids);
+            repo.SaveChanges();
+        }
 
     }
 }

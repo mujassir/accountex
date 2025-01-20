@@ -311,13 +311,23 @@ var Transaction = function () {
                         if (d == null) {
                             $this.CustomClear();
                             $("#VoucherNumber").val(res.Data.VoucherNumber);
+                            $('.isNew').removeClass('hide')
+                            $('.isUpdate').addClass('hide')
                         }
                         else {
                             if (d && d.length > 0) {
+                                if (d[0].Id == 0) {
+                                    $('.isNew').removeClass('hide')
+                                    $('.isUpdate').addClass('hide')
+                                } else {
+                                    $('.isNew').addClass('hide')
+                                    $('.isUpdate').removeClass('hide')
+                                }
                                 $("#btndelete,#btnprint").prop("disabled", false);
                                 $this.LoadReportData(res);
                                 Common.MapItemData(d);
                                 $("#VoucherNumber").val(d[0].VoucherNumber);
+                                $("#Id").val(d[0].Id);
                                 $("#Shift").select2("val", d[0].Shift);
                                 $(".date-picker").each(function () {
                                     Common.SetDate($("#Date"), d[0].Date);

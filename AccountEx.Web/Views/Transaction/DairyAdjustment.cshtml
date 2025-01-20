@@ -58,7 +58,7 @@ else
             <div class="portlet light">
                 <div class="portlet-title">
                     <div class="caption">
-                        <i class="fa fa-edit"></i>Manage Daily Activity
+                        <i class="fa fa-edit"></i>Manage Daily Activity <span class="isNew badge badge-primary">New</span><span class="isUpdate badge badge-warning">Update</span>
                     </div>
                     <div class="actions hide">
                         <a href="javascript:;" onclick="Adjustment.LoadVoucher('previous')" class="btn blue">
@@ -141,7 +141,7 @@ else
                                     <table id="item-container" class="table table-bordered griditem">
                                         <thead>
                                             <tr>
-                                                <th>Code</th>
+                                                <th style="min-width: 80px">Code</th>
                                                 <th style="width: 30%;">Name</th>
                                                 <th style="width: 30%;">Comments</th>
                                                 <th id="Item-@(SettingManager.VDailyActivityDebitItem1Id)" 
@@ -152,7 +152,7 @@ else
                                                     class="DebitItemCol nowrap align-center @(SettingManager.VDailyActivityDebitItem2Id == 0 ? "hide" : "")">
                                                     DItem 2
                                                 </th>
-                                                <th id="Item-@(SettingManager.VDailyActivityCreditItem1Id)" 
+                                                <th id="Item-@(SettingManager.VDailyActivityCreditItem1Id)"
                                                     class="align-center nowrap @(SettingManager.VDailyActivityCreditItem1Id == 0 ? "hide" : "")">
                                                     CItem 1
                                                 </th>

@@ -152,8 +152,7 @@ namespace AccountEx.Web.Controllers.api.Transaction
             {
                 var queryString = Request.RequestUri.ParseQueryString();
                 var voucherNo = Numerics.GetInt(queryString["voucherNo"]);
-                var vouchertypes = new List<VoucherType>() { VoucherType.AdjustmentIn, VoucherType.AdjustmentOut };
-                TransactionManager.Delete(voucherNo, vouchertypes);
+                AdjustmentManager.DeleteDairyAdjustment(voucherNo);
                 response = new ApiResponse { Success = true };
             }
             catch (Exception ex)
