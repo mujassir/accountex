@@ -232,14 +232,14 @@ namespace AccountEx.Repositories
             previous = FiscalCollection.Any(p => vtype.Contains(p.TransactionType) && p.VoucherNumber < voucherno);
             return v;
         }
-        public void DeleteByVoucherNumber(int voucherno, VoucherType trtype)
+        public void DeleteByVoucherNumber(int voucherno, VoucherType trtype, int locationId = 0)
         {
-            var sale = FiscalCollection.FirstOrDefault(p => p.VoucherNumber == voucherno && p.TransactionType == trtype);
+            var sale = FiscalCollection.FirstOrDefault(p => p.VoucherNumber == voucherno && p.TransactionType == trtype && p.AuthLocationId == locationId);
             Delete(sale);
         }
-        public void DeleteByVoucherNumber(int voucherno, List<VoucherType> transactionTypes)
+        public void DeleteByVoucherNumber(int voucherno, List<VoucherType> transactionTypes, int locationId = 0)
         {
-            var sale = FiscalCollection.FirstOrDefault(p => p.VoucherNumber == voucherno && transactionTypes.Contains(p.TransactionType));
+            var sale = FiscalCollection.FirstOrDefault(p => p.VoucherNumber == voucherno && transactionTypes.Contains(p.TransactionType) && p.AuthLocationId == locationId);
             Delete(sale);
         }
 
@@ -252,8 +252,8 @@ namespace AccountEx.Repositories
         public void Delete(Sale sale)
         {
 
-
-            if (sale.InvoiceDcs.Count() > 0)
+            if (sale == null) return;
+            if (sale?.InvoiceDcs.Count() > 0)
             {
                 var dcIds = sale.InvoiceDcs.Select(p => p.DcId).ToList();
                 var dbDcs = AsQueryable<DeliveryChallan>(true).Where(p => dcIds.Contains(p.Id)).ToList();

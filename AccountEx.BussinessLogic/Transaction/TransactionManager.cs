@@ -80,7 +80,7 @@ namespace AccountEx.BussinessLogic
             return d;
         }
 
-        public static void Delete(int voucherno, VoucherType transactiontype)
+        public static void Delete(int voucherno, VoucherType transactiontype, int locationId = 0)
         {
             var saleRepo = new SaleRepository();
             var err = CGSManager.IsSaleExitAfterPurchase(voucherno, transactiontype, saleRepo);
@@ -89,8 +89,8 @@ namespace AccountEx.BussinessLogic
             using (var scope = TransactionScopeBuilder.Create())
             {
                 var tranRepo = new TransactionRepository(saleRepo);
-                tranRepo.HardDelete(voucherno, transactiontype);
-                saleRepo.DeleteByVoucherNumber(voucherno, transactiontype);
+                tranRepo.HardDelete(voucherno, transactiontype, locationId);
+                saleRepo.DeleteByVoucherNumber(voucherno, transactiontype, locationId);
                 saleRepo.SaveChanges();
                 scope.Complete();
             }

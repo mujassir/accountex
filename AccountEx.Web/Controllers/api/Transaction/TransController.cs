@@ -250,8 +250,13 @@ namespace AccountEx.Web.Controllers.api.Transaction
             {
                 var queryString = Request.RequestUri.ParseQueryString();
                 var type = (queryString["type"]);
+                int locationId = 0;
+                if (queryString["locationId"] != null)
+                {
+                    int.TryParse(queryString["locationId"], out locationId);
+                }
                 var vouchertype = (VoucherType)Convert.ToByte(type);
-                TransactionManager.Delete(id, vouchertype);
+                TransactionManager.Delete(id, vouchertype, locationId);
                 response = new ApiResponse { Success = true };
             }
             catch (Exception ex)

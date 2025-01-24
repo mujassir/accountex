@@ -893,9 +893,10 @@ var Trans = function () {
 
         },
         DeleteMultiple: function (id) {
+            var locationId = $("#AuthLocationId").val();
             Common.ConfirmDelete(function () {
                 Common.WrapAjax({
-                    url: Setting.APIBaseUrl + API_CONTROLLER + "/" + id,
+                    url: Setting.APIBaseUrl + API_CONTROLLER + "/" + id + "&locationId=" + locationId,
                     type: "DELETE",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
@@ -915,10 +916,11 @@ var Trans = function () {
         Delete: function () {
             var $this = this;
             var type = VoucherType[$this.GetType()];
+            var locationId = $("#AuthLocationId").val();
 
             Common.ConfirmDelete(function () {
                 var voucherno = Common.GetInt($("#VoucherNumber").val());
-                var url = Setting.APIBaseUrl + API_CONTROLLER + "/" + voucherno + "?type=" + type + "&voucherNo=" + voucherno;
+                var url = Setting.APIBaseUrl + API_CONTROLLER + "/" + voucherno + "?type=" + type + "&voucherNo=" + voucherno + "&locationId=" + locationId;
                 //var url = Setting.APIBaseUrl + API_CONTROLLER + "/" + voucherno;
                 var id = Common.GetInt($("#Id").val());
                 if (id <= 0) {
