@@ -24,7 +24,7 @@ var Stock = function () {
                 $("#tbldetail tbody tr").removeClass("hide");
             }
             else {
-                var gr = group.replace(/\s+/g, "-").replace(/\\|\//g, "-").toLowerCase();
+                var gr = group.replace(/\s+/g, "-").replace(/\\|\//g, "-").replace(/[()]/g, "").toLowerCase();
                 $("#tbldetail tbody tr:not(.grouptr" + gr + ")").addClass("hide");
                 $("#tbldetail tbody tr.grouptr" + gr).removeClass("hide");
             }
@@ -81,11 +81,13 @@ var Stock = function () {
              }).ToArray();
 
                         for (var i in stockbyGroups) {
+                            var groupName = "";
                             var group = "";
                             var stockbyGroup = stockbyGroups[i];
                             if (stockbyGroup.GroupName != undefined && stockbyGroup.GroupName != null && stockbyGroup.GroupName != "null")
-                                group = stockbyGroup.GroupName.replace(/\\|\//g, "-");
-                            html += "<tr class='grouptr" + group.replace(/\s+/g, "-").toLowerCase() + " group-tr'><td colspan='8' class='group'>" + group + "</td></tr>";
+                                groupName = stockbyGroup.GroupName.replace(/\\|\//g, "-");
+                                group = groupName.replace(/[()]/g, "");
+                            html += "<tr class='grouptr" + group.replace(/\s+/g, "-").toLowerCase() + " group-tr'><td colspan='8' class='group'>" + groupName + "</td></tr>";
                             var stocks = stockbyGroup.Stocks;
                             for (var i in stocks) {
                                 var product = stocks[i];

@@ -121,7 +121,6 @@ var StockOB = function () {
         //},
 
         LoadProducts: function () {
-
             var $this = this;
             var html = "";
             var select = "";
@@ -214,9 +213,13 @@ var StockOB = function () {
                 "fnDrawCallback": function () {
                     App.initUniform();
                     $this.ReinializePlugin();
+                    setTimeout(() => {
+                        if ($("#btnEdit").hasClass("hide")) {
+                            $this.Edit();
+                        }
+                    }, 500)
                 }
             });
-
             //oTable.fnSort([[1, 'desc']]);
 
             jQuery("#" + tableId + "_wrapper .dataTables_filter input").addClass("form-control input-medium input-inline"); // modify table search input

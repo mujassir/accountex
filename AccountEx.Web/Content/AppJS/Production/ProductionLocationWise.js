@@ -1206,6 +1206,7 @@ var Production = function () {
                     success: function (res) {
                         if (res.Success) {
                             $this.GetNextVoucherNumber();
+                            $this.ListView();
                         } else {
                             Common.ShowError(res.Error);
                         }

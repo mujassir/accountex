@@ -214,6 +214,8 @@ namespace AccountEx.Web.Controllers.api.Transaction
                 var err = ServerValidateDelete(id);
                 if (err == "")
                 {
+                    var itemIds = new ProductionUnitItemRepository().GetAll(x => x.ProductionUnitId == id);
+                    new ProductionUnitItemRepository().Delete(itemIds.Select(x => x.Id).ToList());
                     new ProductionUnitRepository().Delete(id);
                     response = new ApiResponse { Success = true };
                 }
