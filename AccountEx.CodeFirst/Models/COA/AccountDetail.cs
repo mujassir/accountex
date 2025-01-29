@@ -157,6 +157,9 @@ namespace AccountEx.CodeFirst.Models
         public Nullable<bool> IsVehicleRequired { get; set; }
         public Nullable<int> CurrencyId { get; set; }
         public bool IsForex { get; set; }
-
+        public string PregnanceyDays { get; set; }
+        public string Pregnancey { get; set; }
+        public string DaysinMilk { get; set; }
+        public string Gender { get; set; }
     }
 }

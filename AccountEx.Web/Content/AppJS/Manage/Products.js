@@ -160,6 +160,7 @@ var Products = function () {
                 if (FORM_TYPE == "DairyProducts") {
                     record.Route = "#" + FORM_TYPE + "#";
                 }
+                record.DOJ = $("#DOJ").val();
                 Common.WrapAjax({
                     url: Setting.APIBaseUrl + API_CONTROLLER,
                     type: "POST",
@@ -274,6 +275,12 @@ var Products = function () {
                         var logs = res.Logs;
                         $("#ActionsData").removeClass("hide");
                         Common.MapEditData(j, $("#form-info"));
+                        if (j.DOJ) {
+                            const date = new Date(j.DOJ);
+                            if (!isNaN(date.getTime())) { // Check if the date is valid
+                                $("#DOJ").val(date.toISOString().split('T')[0]); // Format as YYYY-MM-DD
+                            }
+                        }
                         if (logs) {
                             var logsData = logs.Logs;
                             var logsAdjustments = logs.Adjustments;

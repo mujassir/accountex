@@ -212,10 +212,10 @@ namespace AccountEx.Web.Controllers.api.Transaction
                 {
                     err += "<li>Voucher no already exist.</li>";
                 }
-                if (SettingManager.CurrencyAdjustmentAccountId == 0)
-                {
-                    err += "Currency adjustment Account is missing.";
-                }
+                //if (SettingManager.CurrencyAdjustmentAccountId == 0)
+                //{
+                //    err += "Currency adjustment Account is missing.";
+                //}
 
             }
             catch (Exception)
