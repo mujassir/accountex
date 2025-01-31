@@ -82,6 +82,7 @@
     <Compile Include="Models\COA\Brand.cs" />
     <Compile Include="Models\COA\Challan.cs" />
     <Compile Include="Models\COA\ChallanItem.cs" />
+    <Compile Include="Models\COA\DoctorActivity.cs" />
     <Compile Include="Models\COA\vw_ProductGroup.cs" />
     <Compile Include="Models\COA\vw_PharmacyProduct.cs" />
     <Compile Include="Models\COA\Ship.cs" />

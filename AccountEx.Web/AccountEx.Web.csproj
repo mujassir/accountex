@@ -296,6 +296,7 @@
     <Compile Include="Controllers\api\Lab\ParameterController.cs" />
     <Compile Include="Controllers\api\Lab\TestController.cs" />
     <Compile Include="Controllers\api\Lab\TestCategoryController.cs" />
+    <Compile Include="Controllers\api\Manage\DoctorActivityController.cs" />
     <Compile Include="Controllers\api\Manage\TemplateController.cs" />
     <Compile Include="Controllers\api\Manage\SupplierCurrenciesController.cs" />
     <Compile Include="Controllers\api\Manage\CurrencyRateController.cs" />
@@ -556,8 +557,10 @@
     <Compile Include="Models\ReportModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Content Include="Content\AppJS\Manage\DoctorActivity.js" />
     <Content Include="Content\AppJS\Reports\DairyProfile.js" />
     <Content Include="Views\Reports\DairyProfile.cshtml" />
+    <None Include="Views\Manage\DoctorActivity.cshtml" />
     <None Include="Views\Transaction\DairyTransaction.cshtml" />
   </ItemGroup>
   <ItemGroup>

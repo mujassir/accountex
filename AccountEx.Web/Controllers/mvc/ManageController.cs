@@ -197,6 +197,17 @@ namespace AccountEx.Web.Controllers.mvc
             ViewBag.Customers = accDetails.Where(p => p.AccountDetailFormId == (int)AccountDetailFormType.Customers).ToList();
             return View();
         }
+
+        [OutputCache(CacheProfile = "Medium")]
+        public ActionResult DoctorActivity()
+        {
+            var Products = new AccountDetailRepository().AsQueryable().Where(p => p.AccountDetailFormId == (int)AccountDetailFormType.Products).ToList();
+            var setting = new List<SettingExtra>();
+            setting.Add(new SettingExtra() { Key = "Products", Value = Products });
+            ViewBag.FormSetting = JsonConvert.SerializeObject(setting);
+            ViewBag.Products = Products;
+            return View();
+        }
         [OutputCache(CacheProfile = "Medium")]
         public ActionResult Equipments()
         {

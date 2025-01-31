@@ -56,8 +56,8 @@ namespace AccountEx.Web.Controllers.api.Shared
                     Data = data,
                     Logs = new
                     {
-                       Logs = new GenericRepository<LogData>().Get(x => x.RecordId == accId),
-                       Adjustments = new GenericRepository<DairyAdjustment>().Get(x => x.ItemId == accId),
+                       Logs = accId > 0 ? new GenericRepository<LogData>().Get(x => x.RecordId == accId) : null,
+                       Adjustments = accId > 0 ? new GenericRepository<DairyAdjustment>().Get(x => x.ItemId == accId) : null,
                     }
                 };
             }

@@ -61,6 +61,7 @@ namespace AccountEx.CodeFirst.Context
         public DbSet<MenuItem> MenuItems { get; set; }
 
         public DbSet<Product> Products { get; set; }
+        public DbSet<DoctorActivity> DoctorActivities { get; set; }
         public DbSet<ProjectReceipt> ProjectReceipts { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<Purchase> Purchases { get; set; }

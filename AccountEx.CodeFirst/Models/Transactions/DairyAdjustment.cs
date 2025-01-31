@@ -15,25 +15,95 @@ namespace AccountEx.CodeFirst.Models.Transactions
         public string ItemName { get; set; }
         public string Comment { get; set; }
         public int? DebitItem1Code { get; set; }
+        public decimal? DebitItem1Price { get; set; }
         public decimal? DebitItem1 { get; set; }
         public int? DebitItem2Code { get; set; }
+        public decimal? DebitItem2Price { get; set; }
         public decimal? DebitItem2 { get; set; }
+        public int? DebitItem3Code { get; set; }
+        public decimal? DebitItem3Price { get; set; }
+        public decimal? DebitItem3 { get; set; }
+        public int? DebitItem4Code { get; set; }
+        public decimal? DebitItem4Price { get; set; }
+        public decimal? DebitItem4 { get; set; }
+        public int? DebitItem5Code { get; set; }
+        public decimal? DebitItem5Price { get; set; }
+        public decimal? DebitItem5 { get; set; }
         public int? CreditItem1Code { get; set; }
+        public decimal? CreditItem1Price { get; set; }
         public decimal? CreditItem1 { get; set; }
         public int? CreditItem2Code { get; set; }
+        public decimal? CreditItem2Price { get; set; }
         public decimal? CreditItem2 { get; set; }
         public int? CreditItem3Code { get; set; }
+        public decimal? CreditItem3Price { get; set; }
         public decimal? CreditItem3 { get; set; }
         public int? CreditItem4Code { get; set; }
+        public decimal? CreditItem4Price { get; set; }
         public decimal? CreditItem4 { get; set; }
         public int? CreditItem5Code { get; set; }
+        public decimal? CreditItem5Price { get; set; }
         public decimal? CreditItem5 { get; set; }
         public int? CreditItem6Code { get; set; }
+        public decimal? CreditItem6Price { get; set; }
         public decimal? CreditItem6 { get; set; }
         public int? CreditItem7Code { get; set; }
+        public decimal? CreditItem7Price { get; set; }
         public decimal? CreditItem7 { get; set; }
         public int? CreditItem8Code { get; set; }
+        public decimal CreditItem8Price { get; set; }
         public decimal? CreditItem8 { get; set; }
+        public int? CreditItem9Code { get; set; }
+        public decimal? CreditItem9Price { get; set; }
+        public decimal? CreditItem9 { get; set; }
+        public int? CreditItem10Code { get; set; }
+        public decimal? CreditItem10Price { get; set; }
+        public decimal? CreditItem10 { get; set; }
+        public int? CreditItem11Code { get; set; }
+        public decimal? CreditItem11Price { get; set; }
+        public decimal? CreditItem11 { get; set; }
+        public int? CreditItem12Code { get; set; }
+        public decimal? CreditItem12Price { get; set; }
+        public decimal? CreditItem12 { get; set; }
+        public int? CreditItem13Code { get; set; }
+        public decimal? CreditItem13Price { get; set; }
+        public decimal? CreditItem13 { get; set; }
+        public int? CreditItem14Code { get; set; }
+        public decimal? CreditItem14Price { get; set; }
+        public decimal? CreditItem14 { get; set; }
+        public int? CreditItem15Code { get; set; }
+        public decimal? CreditItem15Price { get; set; }
+        public decimal? CreditItem15 { get; set; }
+        public int? CreditItem16Code { get; set; }
+        public decimal? CreditItem16Price { get; set; }
+        public decimal? CreditItem16 { get; set; }
+        public int? CreditItem17Code { get; set; }
+        public decimal? CreditItem17Price { get; set; }
+        public decimal? CreditItem17 { get; set; }
+        public int? CreditItem18Code { get; set; }
+        public decimal? CreditItem18Price { get; set; }
+        public decimal? CreditItem18 { get; set; }
+        public int? CreditItem19Code { get; set; }
+        public decimal? CreditItem19Price { get; set; }
+        public decimal? CreditItem19 { get; set; }
+        public int? CreditItem20Code { get; set; }
+        public decimal? CreditItem20Price { get; set; }
+        public decimal? CreditItem20 { get; set; }
+        public int? CreditItem21Code { get; set; }
+        public decimal? CreditItem21Price { get; set; }
+        public decimal? CreditItem21 { get; set; }
+        public int? CreditItem22Code { get; set; }
+        public decimal? CreditItem22Price { get; set; }
+        public decimal? CreditItem22 { get; set; }
+        public int? CreditItem23Code { get; set; }
+        public decimal? CreditItem23Price { get; set; }
+        public decimal? CreditItem23 { get; set; }
+        public int? CreditItem24Code { get; set; }
+        public decimal? CreditItem24Price { get; set; }
+        public decimal? CreditItem24 { get; set; }
+        public int? CreditItem25Code { get; set; }
+        public decimal? CreditItem25Price { get; set; }
+        public decimal? CreditItem25 { get; set; }
         public int? EntryType { get; set; }
         public int FiscalId { get; set; }
         public bool IsDeleted { get; set; }

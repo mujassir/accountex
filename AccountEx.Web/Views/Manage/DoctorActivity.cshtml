@@ -1,0 +1,234 @@
+﻿@using AccountEx.Common;
+@using AccountEx.CodeFirst.Models;
+@using AccountEx.BussinessLogic;
+@{
+    ViewBag.Title = "Diary Products";
+}
+
+@section PageTitle
+{
+
+    <h1 class="font-green-sharp bold">Doctor Activity</h1>
+}
+
+<!-- END PAGE HEADER-->
+@if (SettingManager.ProductHeadId == 0)
+{
+    @Html.Partial("_HeadAccountMissing")
+}
+<div class="tabbable-custom">
+
+    <ul class="nav nav-tabs ">
+        <li class="active">
+            <a data-toggle="tab" href="#BasicInfo">Basic Info</a>
+        </li>
+    </ul>
+    <div class="tabbable-custom" id="form-info">
+
+        <div class="tab-content " data-save="save">
+            <input type="hidden" id="Id" />
+            <input type="hidden" id="TempCode" />
+
+            <div id="BasicInfo" class="tab-pane active">
+
+                <div class="portlet-body">
+                    <div class="row" id="div-formBasicInfo">
+                        <div class="col-md-12 col-sm-12">
+                            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                            <div class="portlet light">
+                                <div class="portlet-body form">
+                                    <div class="form-horizontal">
+                                        <div class="form-body">
+                                            <div class="row">
+
+                                                <div class="col-md-6">
+                                                    @Html.Partial("_ParentAccount", new ViewDataDictionary { { "HeadId", SettingManager.ProductHeadId }, { "Labelcolspan", 4 }, { "Divcolspan", 6 } })
+                                                    <input type="hidden" id="Id"/>
+                                                    <div class="form-group">
+                                                        <label class="col-md-4 control-label" for="prefix">Animal</label>
+                                                        <div class="col-md-6">
+                                                            <select id="Product" class="form-control select2" placeholder="Select Animal">
+                                                                <option></option>
+                                                                @foreach (var item in (List<AccountDetail>)ViewBag.Products)
+                                                                {
+                                                                    <option value="@item.Id">@item.Name </option>
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-md-4 control-label" for="prefix">Code</label>
+                                                        <div class="col-md-6">
+                                                            <input type="text" class="form-control" id="Code" data-required="false" readonly data-message="Code is required" maxlength="15" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-md-4 control-label" for="prefix">Tag</label>
+                                                        <div class="col-md-6">
+                                                            <input type="text" class="form-control " id="Tag" data-required="required" readonly data-message="Tag is required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-md-4 control-label" for="prefix">Date</label>
+                                                        <div class="col-md-6">
+                                                            <input type="date" class="form-control " id="Date" data-required="required" data-message="Date is required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-md-4 control-label" for="prefix">Cattle Status</label>
+                                                        <div class="col-md-6">
+                                                            <select id="CattleStatus" class="form-control select2" placeholder="Select Cattle Status">
+                                                                <option></option>
+                                                                <option value="Yes">Adult</option>
+                                                                <option value="Yung">Yung</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-md-4 control-label" for="prefix">Pregnancey Status</label>
+                                                        <div class="col-md-6">
+                                                            <select id="PregnanceyStatus" class="form-control select2" placeholder="Select Pregnancey Status">
+                                                                <option></option>
+                                                                <option value="Milking">Milking</option>
+                                                                <option value="CloseUp">Close Up</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-md-4 control-label" for="prefix">Breeding Status</label>
+                                                        <div class="col-md-6">
+                                                            <select id="BreedingStatus" class="form-control select2" placeholder="Select Breeding Status">
+                                                                <option></option>
+                                                                <option value="Bred">Bred</option>
+                                                                <option value="Open">Open</option>
+                                                                <option value="Preghcdf">Preg hcdf</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-md-4 control-label" for="prefix">Days in Milk</label>
+                                                        <div class="col-md-6">
+                                                            <input type="text" class="form-control " id="DaysinMilk" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-md-4 control-label" for="prefix">Bull Name</label>
+                                                        <div class="col-md-6">
+                                                            <input type="text" class="form-control " id="BullName" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-md-4 control-label" for="prefix">Days/Preg</label>
+                                                        <div class="col-md-6">
+                                                            <input type="text" class="form-control " id="DaysPreg" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-md-4 control-label" for="prefix">Month/Preg</label>
+                                                        <div class="col-md-6">
+                                                            <input type="text" class="form-control " id="MonthPreg" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-md-4 control-label" for="prefix">Milk</label>
+                                                        <div class="col-md-6">
+                                                            <input type="text" class="form-control " id="MonthPreg" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    <br />
+                                    <div class="form-actions">
+                                        <label class="col-md-2 control-label" for="prefix">&nbsp;</label>
+                                        <div class="col-md-8">
+                                            <button type="button" class="btn btn-primary green" onclick="Products.Save()" data-plus-as-tab="false">Save</button>
+                                            <button id="btnCancel" type="button" class="btn btn-default" onclick="Products.Add()">Cancel</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- END EXAMPLE TABLE PORTLET-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="div-table">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-list"></i>Products Listing
+                </div>
+                <div class="actions hide">
+                    <button id="btnEdit" type="button" class="btn blue" onclick="Products.Add()"><i class="fa fa-plus"></i>&nbsp;New</button>
+                    <button id="btnSave" type="button" class="btn blue hide" onclick="Products.Save()"><i class="fa fa-check"></i>&nbsp;Save Changes</button>
+
+
+                </div>
+                <div class="tools hide">
+                    <a href="javascript:;" class="collapse"></a>
+                </div>
+            </div>
+
+            <div class="portlet-body">
+                <div class="hide alert alert-danger container-message">
+                    <i class="close" onclick="$(this).parent().hide();"></i>
+                    <strong></strong>
+                    <div class="form-body message-content"></div>
+                </div>
+                <table class="table table-striped table-bordered table-hover" id="mainTable">
+                    <thead>
+                        <tr>
+                            @*  <th style="width: 8px;" class="no-sort">
+                                    <input type="checkbox" class="group-checkable" data-set="#mainTable .checkboxes" />
+                                </th>*@
+                            <th>Code</th>
+                            <th>Tag</th>
+                            <th>Date</th>
+                            <th>Cattle Status</th>
+                            <th>Pregnancey Status</th>
+                            <th>Breeding Status</th>
+                            <th>DIM</th>
+                            <th>Bull Name</th>
+                            <th>Days/Preg</th>
+                            <th>Month/Preg</th>
+                            <th>Milk</th>
+                            <th style="width: 75px;" class="no-sort"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="11">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+<div id="jsondata" class="hide">
+    <p id="data">@ViewBag.FormSetting</p>
+</div>
+@section FooterScript
+{
+    <script src="~/Content/AppJS/Manage/DoctorActivity.js?v=1"></script>
+    <script>
+        jQuery(document).ready(function () {
+            Products.init("DairyProducts");
+        });
+    </script>
+}

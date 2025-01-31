@@ -74,7 +74,6 @@ var Adjustment = function () {
                 const status = $("#ItemStatus").val();
                 const groupId = $("#GroupId").val();
                 const products = PageSetting.AccountDetails.filter(x => x.GroupId == groupId && x.UnitType == status);
-                console.log(PageSetting.AccountDetails)
                 $("#item-container tbody").html("")
                 const items = products.map(e => {
                     return {
@@ -84,6 +83,9 @@ var Adjustment = function () {
                         "Comment": null,
                         "DebitItem1": 1,
                         "DebitItem2": 1,
+                        "DebitItem3": 1,
+                        "DebitItem4": 1,
+                        "DebitItem5": 1,
                         "CreditItem1": 1,
                         "CreditItem2": 1,
                         "CreditItem3": 1,
@@ -92,13 +94,31 @@ var Adjustment = function () {
                         "CreditItem6": 1,
                         "CreditItem7": 1,
                         "CreditItem8": 1,
+                        "CreditItem9": 1,
+                        "CreditItem10": 1,
+                        "CreditItem11": 1,
+                        "CreditItem12": 1,
+                        "CreditItem13": 1,
+                        "CreditItem14": 1,
+                        "CreditItem15": 1,
+                        "CreditItem16": 1,
+                        "CreditItem17": 1,
+                        "CreditItem18": 1,
+                        "CreditItem19": 1,
+                        "CreditItem20": 1,
+                        "CreditItem21": 1,
+                        "CreditItem22": 1,
+                        "CreditItem23": 1,
+                        "CreditItem24": 1,
+                        "CreditItem25": 1,
                     }
                 })
                 Common.MapItemData(items);
                 $this.CalculateCalculations();
+                $this.UpdateHeaderLabel();
 
             });
-            $(document).on("blur", "#TotalDebitItem1, #TotalDebitItem2, #TotalCreditItem1, #TotalCreditItem2, #TotalCreditItem3, #TotalCreditItem4, #TotalCreditItem5, #TotalCreditItem6, #TotalCreditItem7, #TotalCreditItem8", function () {
+            $(document).on("blur", "#TotalDebitItem1, #TotalDebitItem2, #TotalDebitItem3, #TotalDebitItem4, #TotalDebitItem5, #TotalCreditItem1, #TotalCreditItem2, #TotalCreditItem3, #TotalCreditItem4, #TotalCreditItem5, #TotalCreditItem6, #TotalCreditItem7, #TotalCreditItem8, #TotalCreditItem9, #TotalCreditItem10, #TotalCreditItem11, #TotalCreditItem12, #TotalCreditItem13, #TotalCreditItem14, #TotalCreditItem15, #TotalCreditItem16, #TotalCreditItem17, #TotalCreditItem18, #TotalCreditItem19, #TotalCreditItem20, #TotalCreditItem21, #TotalCreditItem22, #TotalCreditItem23, #TotalCreditItem24, #TotalCreditItem25", function () {
                 const rows = $("#item-container tbody").find("tr");
                 const validRows = [];
 
@@ -116,6 +136,9 @@ var Adjustment = function () {
                 // Calculate distributed counts
                 const debitItem1Count = ($("#TotalDebitItem1").val()?.trim() || 0) / rowCount;
                 const debitItem2Count = ($("#TotalDebitItem2").val()?.trim() || 0) / rowCount;
+                const debitItem3Count = ($("#TotalDebitItem3").val()?.trim() || 0) / rowCount;
+                const debitItem4Count = ($("#TotalDebitItem4").val()?.trim() || 0) / rowCount;
+                const debitItem5Count = ($("#TotalDebitItem5").val()?.trim() || 0) / rowCount;
                 const creditItem1Count = ($("#TotalCreditItem1").val()?.trim() || 0) / rowCount;
                 const creditItem2Count = ($("#TotalCreditItem2").val()?.trim() || 0) / rowCount;
                 const creditItem3Count = ($("#TotalCreditItem3").val()?.trim() || 0) / rowCount;
@@ -124,11 +147,31 @@ var Adjustment = function () {
                 const creditItem6Count = ($("#TotalCreditItem6").val()?.trim() || 0) / rowCount;
                 const creditItem7Count = ($("#TotalCreditItem7").val()?.trim() || 0) / rowCount;
                 const creditItem8Count = ($("#TotalCreditItem8").val()?.trim() || 0) / rowCount;
+                const creditItem9Count = ($("#TotalCreditItem9").val()?.trim() || 0) / rowCount;
+                const creditItem10Count = ($("#TotalCreditItem10").val()?.trim() || 0) / rowCount;
+                const creditItem11Count = ($("#TotalCreditItem11").val()?.trim() || 0) / rowCount;
+                const creditItem12Count = ($("#TotalCreditItem12").val()?.trim() || 0) / rowCount;
+                const creditItem13Count = ($("#TotalCreditItem13").val()?.trim() || 0) / rowCount;
+                const creditItem14Count = ($("#TotalCreditItem14").val()?.trim() || 0) / rowCount;
+                const creditItem15Count = ($("#TotalCreditItem15").val()?.trim() || 0) / rowCount;
+                const creditItem16Count = ($("#TotalCreditItem16").val()?.trim() || 0) / rowCount;
+                const creditItem17Count = ($("#TotalCreditItem17").val()?.trim() || 0) / rowCount;
+                const creditItem18Count = ($("#TotalCreditItem18").val()?.trim() || 0) / rowCount;
+                const creditItem19Count = ($("#TotalCreditItem19").val()?.trim() || 0) / rowCount;
+                const creditItem20Count = ($("#TotalCreditItem20").val()?.trim() || 0) / rowCount;
+                const creditItem21Count = ($("#TotalCreditItem21").val()?.trim() || 0) / rowCount;
+                const creditItem22Count = ($("#TotalCreditItem22").val()?.trim() || 0) / rowCount;
+                const creditItem23Count = ($("#TotalCreditItem23").val()?.trim() || 0) / rowCount;
+                const creditItem24Count = ($("#TotalCreditItem24").val()?.trim() || 0) / rowCount;
+                const creditItem25Count = ($("#TotalCreditItem25").val()?.trim() || 0) / rowCount;
 
                 // Update the values in each valid row
                 $(validRows).each(function () {
                     $(this).find("td input.DebitItem1").val(debitItem1Count);
                     $(this).find("td input.DebitItem2").val(debitItem2Count);
+                    $(this).find("td input.DebitItem3").val(debitItem3Count);
+                    $(this).find("td input.DebitItem4").val(debitItem4Count);
+                    $(this).find("td input.DebitItem5").val(debitItem5Count);
                     $(this).find("td input.CreditItem1").val(creditItem1Count);
                     $(this).find("td input.CreditItem2").val(creditItem2Count);
                     $(this).find("td input.CreditItem3").val(creditItem3Count);
@@ -137,10 +180,27 @@ var Adjustment = function () {
                     $(this).find("td input.CreditItem6").val(creditItem6Count);
                     $(this).find("td input.CreditItem7").val(creditItem7Count);
                     $(this).find("td input.CreditItem8").val(creditItem8Count);
+                    $(this).find("td input.CreditItem9").val(creditItem9Count);
+                    $(this).find("td input.CreditItem10").val(creditItem10Count);
+                    $(this).find("td input.CreditItem11").val(creditItem11Count);
+                    $(this).find("td input.CreditItem12").val(creditItem12Count);
+                    $(this).find("td input.CreditItem13").val(creditItem13Count);
+                    $(this).find("td input.CreditItem14").val(creditItem14Count);
+                    $(this).find("td input.CreditItem15").val(creditItem15Count);
+                    $(this).find("td input.CreditItem16").val(creditItem16Count);
+                    $(this).find("td input.CreditItem17").val(creditItem17Count);
+                    $(this).find("td input.CreditItem18").val(creditItem18Count);
+                    $(this).find("td input.CreditItem19").val(creditItem19Count);
+                    $(this).find("td input.CreditItem20").val(creditItem20Count);
+                    $(this).find("td input.CreditItem21").val(creditItem21Count);
+                    $(this).find("td input.CreditItem22").val(creditItem22Count);
+                    $(this).find("td input.CreditItem23").val(creditItem23Count);
+                    $(this).find("td input.CreditItem24").val(creditItem24Count);
+                    $(this).find("td input.CreditItem25").val(creditItem25Count);
                 });
             });
 
-            $(document).on("keyup", ".DebitItem1,.DebitItem2,.CreditItem1,.CreditItem2,.CreditItem2,.CreditItem3, .CreditItem4, .CreditItem5, .CreditItem6, .CreditItem7, .CreditItem8", function (event) {
+            $(document).on("keyup", ".DebitItem1,.DebitItem2,.DebitItem3,.DebitItem4,.DebitItem5,.CreditItem1,.CreditItem2,.CreditItem2,.CreditItem3, .CreditItem4, .CreditItem5, .CreditItem6, .CreditItem7, .CreditItem8, .CreditItem9, .CreditItem10, .CreditItem11, .CreditItem12, .CreditItem13, .CreditItem14, .CreditItem15, .CreditItem16, .CreditItem17, .CreditItem18, .CreditItem19, .CreditItem20, .CreditItem21, .CreditItem22, .CreditItem23, .CreditItem24, .CreditItem25", function (event) {
                 var tr = $(this).closest("tr");
                 //var qty = Common.GetInt($(tr).find("input.Milk").val());
                 //if (event.which == 13 && qty > 0)
@@ -192,10 +252,15 @@ var Adjustment = function () {
         },
         CalculateCalculations: function () {
             const rows = $("#item-container tbody").find("tr");
-            let debitItem1 = debitItem2 = creditItem1 = creditItem2 = creditItem3 = creditItem4 = creditItem5 = creditItem6 = creditItem7 = creditItem8 = 0;
+            let debitItem1 = debitItem2 = debitItem3 = debitItem4 = debitItem5 = 0;
+            let creditItem1 = creditItem2 = creditItem3 = creditItem4 = creditItem5 = creditItem6 = creditItem7 = creditItem8 = creditItem9 = creditItem10 = creditItem11 = 0;
+            let creditItem12 = creditItem13 = creditItem14 = creditItem15 = creditItem16 = creditItem17 = creditItem18 = creditItem19 = creditItem20 = creditItem21 = creditItem22 = creditItem23 = creditItem24 = creditItem25 = 0;
             rows.each(function () {
                 debitItem1 += Number($(this).find("td input.DebitItem1")?.val()?.trim() || '0');
                 debitItem2 += Number($(this).find("td input.DebitItem2")?.val()?.trim() || '0');
+                debitItem3 += Number($(this).find("td input.DebitItem3")?.val()?.trim() || '0');
+                debitItem4 += Number($(this).find("td input.DebitItem4")?.val()?.trim() || '0');
+                debitItem5 += Number($(this).find("td input.DebitItem5")?.val()?.trim() || '0');
                 creditItem1 += Number($(this).find("td input.CreditItem1")?.val()?.trim() || '0');
                 creditItem2 += Number($(this).find("td input.CreditItem2")?.val()?.trim() || '0');
                 creditItem3 += Number($(this).find("td input.CreditItem3")?.val()?.trim() || '0');
@@ -204,10 +269,30 @@ var Adjustment = function () {
                 creditItem6 += Number($(this).find("td input.CreditItem6")?.val()?.trim() || '0');
                 creditItem7 += Number($(this).find("td input.CreditItem7")?.val()?.trim() || '0');
                 creditItem8 += Number($(this).find("td input.CreditItem8")?.val()?.trim() || '0');
+                creditItem9 += Number($(this).find("td input.CreditItem9")?.val()?.trim() || '0');
+                creditItem10 += Number($(this).find("td input.CreditItem10")?.val()?.trim() || '0');
+                creditItem11 += Number($(this).find("td input.CreditItem11")?.val()?.trim() || '0');
+                creditItem12 += Number($(this).find("td input.CreditItem12")?.val()?.trim() || '0');
+                creditItem13 += Number($(this).find("td input.CreditItem13")?.val()?.trim() || '0');
+                creditItem14 += Number($(this).find("td input.CreditItem14")?.val()?.trim() || '0');
+                creditItem15 += Number($(this).find("td input.CreditItem15")?.val()?.trim() || '0');
+                creditItem16 += Number($(this).find("td input.CreditItem16")?.val()?.trim() || '0');
+                creditItem17 += Number($(this).find("td input.CreditItem17")?.val()?.trim() || '0');
+                creditItem18 += Number($(this).find("td input.CreditItem18")?.val()?.trim() || '0');
+                creditItem19 += Number($(this).find("td input.CreditItem19")?.val()?.trim() || '0');
+                creditItem20 += Number($(this).find("td input.CreditItem20")?.val()?.trim() || '0');
+                creditItem21 += Number($(this).find("td input.CreditItem21")?.val()?.trim() || '0');
+                creditItem22 += Number($(this).find("td input.CreditItem22")?.val()?.trim() || '0');
+                creditItem23 += Number($(this).find("td input.CreditItem23")?.val()?.trim() || '0');
+                creditItem24 += Number($(this).find("td input.CreditItem24")?.val()?.trim() || '0');
+                creditItem25 += Number($(this).find("td input.CreditItem25")?.val()?.trim() || '0');
             });
 
             $("#TotalDebitItem1").val(debitItem1);
             $("#TotalDebitItem2").val(debitItem2);
+            $("#TotalDebitItem3").val(debitItem3);
+            $("#TotalDebitItem4").val(debitItem4);
+            $("#TotalDebitItem5").val(debitItem5);
             $("#TotalCreditItem1").val(creditItem1);
             $("#TotalCreditItem2").val(creditItem2);
             $("#TotalCreditItem3").val(creditItem3);
@@ -216,6 +301,23 @@ var Adjustment = function () {
             $("#TotalCreditItem6").val(creditItem6);
             $("#TotalCreditItem7").val(creditItem7);
             $("#TotalCreditItem8").val(creditItem8);
+            $("#TotalCreditItem9").val(creditItem9);
+            $("#TotalCreditItem10").val(creditItem10);
+            $("#TotalCreditItem11").val(creditItem11);
+            $("#TotalCreditItem12").val(creditItem12);
+            $("#TotalCreditItem13").val(creditItem13);
+            $("#TotalCreditItem14").val(creditItem14);
+            $("#TotalCreditItem15").val(creditItem15);
+            $("#TotalCreditItem16").val(creditItem16);
+            $("#TotalCreditItem17").val(creditItem17);
+            $("#TotalCreditItem18").val(creditItem18);
+            $("#TotalCreditItem19").val(creditItem19);
+            $("#TotalCreditItem20").val(creditItem20);
+            $("#TotalCreditItem21").val(creditItem21);
+            $("#TotalCreditItem22").val(creditItem22);
+            $("#TotalCreditItem23").val(creditItem23);
+            $("#TotalCreditItem24").val(creditItem24);
+            $("#TotalCreditItem25").val(creditItem25);
 
         },
         New: function () {
@@ -298,14 +400,25 @@ var Adjustment = function () {
             var scope = $("#form-info");
             var record = Common.SetValue(scope);
             Items = Common.SaveItemData().filter(x => x.ItemId && x.ItemCode);
-            Items.map(e => {
+            const saveItems = [];
+            Items.forEach(e => {
                 e.Date = record.Date
                 e.Shift = record.Shift
                 e.Status = record.ItemStatus
                 e.ItemGroupId = record.GroupId
                 e.ItemGroupName = record.GroupName
                 e.VoucherNumber = record.VoucherNumber
-                return e
+
+                if (!id) {
+                    var items = PageSetting.AccountDetails;
+                    for (let key in e) {
+                        if ((key.startsWith("DebitItem") || key.startsWith("CreditItem") && !key.endsWith("Code"))) {
+                            const item = items.find(x => x.AccountId == e[key + 'Code'])
+                            e[key + 'Price'] = item?.PurchasePrice || 0;
+                        }
+                    }
+                }
+                saveItems.push(e)
             })
             if (Common.Validate($("#mainform"))) {
                 var err = "";
@@ -319,7 +432,7 @@ var Adjustment = function () {
                 Common.WrapAjax({
                     url: Setting.APIBaseUrl + API_CONTROLLER,
                     type: "POST",
-                    data: { Items },
+                    data: { Items: saveItems },
                     blockUI: true,
                     blockElement: "#form-info",
                     blockMessage: "Saving ...please wait",
@@ -533,11 +646,12 @@ var Adjustment = function () {
             const ele = document.querySelectorAll("[id^='Item-']");
             var exids = new Array();
             exids.push(Common.GetInt(PageSetting.Products));
-            var items = Common.GetLeafAccounts(exids);
+            var items = PageSetting.AccountDetails;
             ele.forEach(row => {
-                const name = items.find(x => x.Id == row?.id?.split("-")?.[1])?.Name
-                if (name) {
-                    row.innerHTML = name
+                const key = row?.id?.split("-")?.[1];
+                const item = items.find(x => x.AccountId == key)
+                if (item?.Name) {
+                    row.innerHTML = item?.Name
                 }
             })
 
