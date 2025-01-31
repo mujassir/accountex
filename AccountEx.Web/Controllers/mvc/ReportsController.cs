@@ -102,6 +102,14 @@ namespace AccountEx.Web.Controllers.mvc
             ViewBag.FormSetting = JsonConvert.SerializeObject(setting);
             return View();
         }
+        public ActionResult DailyActivityLedger()
+        {
+            var products = new AccountDetailRepository().GetNames(AccountDetailFormType.Products);
+            var setting = new List<SettingExtra>();
+            setting.Add(new SettingExtra() { Key = "Products", Value = products });
+            ViewBag.FormSetting = JsonConvert.SerializeObject(setting);
+            return View();
+        }
         public ActionResult Labour()
         {
             var setting = new List<SettingExtra>();

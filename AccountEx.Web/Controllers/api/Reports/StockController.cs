@@ -3,6 +3,7 @@ using AccountEx.Common;
 using AccountEx.Repositories;
 using System;
 using System.Linq;
+using AccountEx.CodeFirst.Models.Transactions;
 
 namespace AccountEx.Web.Controllers.api
 {
@@ -20,6 +21,8 @@ namespace AccountEx.Web.Controllers.api
                 return GetStockByWeight();
             else if (Key == "GetDairyProfile")
                 return GetDairyProfile();
+            else if (Key == "DailyActivityLedger")
+                return GetDailyActivityLedger();
             else
                 return GetStock();
         }
@@ -45,6 +48,24 @@ namespace AccountEx.Web.Controllers.api
             var date1 = Convert.ToDateTime(Request.GetQueryString("fromdate"));
             var date2 = Convert.ToDateTime(Request.GetQueryString("todate"));
             var transactions = new TransactionRepository().GetDairyProfile(date1, date2);
+            var response = new ApiResponse
+            {
+                Success = true,
+                Data = transactions
+            };
+            return response;
+        }
+        private ApiResponse GetDailyActivityLedger()
+        {
+            var date1 = Convert.ToDateTime(Request.GetQueryString("fromdate"));
+            var date2 = Convert.ToDateTime(Request.GetQueryString("todate"));
+            var startDate = date1.Date; 
+            var endDate = date2.Date.AddDays(1).AddTicks(-1);
+
+            var transactions = new GenericRepository<DairyAdjustment>()
+                .GetAll(x => x.Date >= startDate && x.Date <= endDate);
+
+
             var response = new ApiResponse
             {
                 Success = true,
