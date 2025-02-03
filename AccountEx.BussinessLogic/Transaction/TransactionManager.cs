@@ -357,9 +357,11 @@ namespace AccountEx.BussinessLogic
         {
             var dt = DateTime.Now;
             var repo = new GenericRepository<DairyTransaction>();
+            var tranrRepo = new TransactionRepository(repo);
             int voucherNumber = items.FirstOrDefault(x => x.VoucherNumber > 0)?.VoucherNumber
                 ?? (repo.GetAll().OrderByDescending(p => p.VoucherNumber).FirstOrDefault()?.VoucherNumber ?? 0) + 1;
 
+            var saveItems = new List<DairyTransaction>();
             var dbRecords = repo.GetAll(x => x.VoucherNumber == voucherNumber);
             foreach (var item in items)
             {
@@ -370,6 +372,7 @@ namespace AccountEx.BussinessLogic
                     item.CreatedAt = dt;
                     item.Date = item.Date == DateTime.MinValue ? dt : item.Date;
                     item.FiscalId = SiteContext.Current.Fiscal.Id;
+                    saveItems.Add(item);
                     repo.Add(item);
                 }
                 else
@@ -388,6 +391,7 @@ namespace AccountEx.BussinessLogic
 
                     record.ModifiedAt = dt;
                     record.FiscalId = SiteContext.Current.Fiscal.Id;
+                    saveItems.Add(record);
                     repo.Update(record);
                 }
             }
@@ -395,6 +399,53 @@ namespace AccountEx.BussinessLogic
             var removedRecords = dbRecords.Where(x => !items.Where(e => e.Id > 0).Select(e => e.Id).Contains(x.Id));
             foreach (var item in removedRecords)
                 repo.Delete(item.Id);
+
+            var masterRec = saveItems.FirstOrDefault();
+            // Add Transaction 
+            var trans = new List<Transaction>()
+            {
+                new Transaction
+                {
+                    ReferenceId = masterRec.Id,
+                    InvoiceNumber = 0,
+                    VoucherNumber = masterRec.VoucherNumber,
+                    AccountId = SettingManager.SaleAccountHeadId,
+                    TransactionType = VoucherType.DairySale,
+                    EntryType = (byte)EntryType.MasterDetail,
+                    Quantity = 1,
+                    Debit = 0,
+                    Credit = (decimal)items.Sum(x => x.Amount),
+                    Comments = masterRec.Comment,
+                }
+            };
+            trans.AddRange(
+                saveItems.Select(x => 
+                new Transaction() {
+                    ReferenceId = x.Id,
+                    InvoiceNumber = 0,
+                    VoucherNumber = x.VoucherNumber,
+                    AccountId = x.ItemId,
+                    TransactionType = VoucherType.DairySale,
+                    EntryType = (byte)EntryType.MasterDetail,
+                    Quantity = (decimal)x.Qty,
+                    Debit = (decimal)x.Amount,
+                    Credit = 0,
+                    Comments = x.Comment,
+                })
+          );
+
+            foreach (var tr in trans)
+            {
+                tr.VoucherNumber = masterRec.VoucherNumber;
+                tr.CreatedDate = dt;
+                tr.Date = masterRec.Date == DateTime.MinValue ? dt : masterRec.Date;
+                tr.Comments = masterRec.Comment;
+                tr.FiscalId = SiteContext.Current.Fiscal.Id;
+            }
+
+            var mTrans = trans.FirstOrDefault();
+            tranrRepo.HardDelete(mTrans.VoucherNumber, mTrans.TransactionType);
+            tranrRepo.Save(trans);
 
             repo.SaveChanges();
         }

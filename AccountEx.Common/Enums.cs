@@ -177,6 +177,7 @@ namespace AccountEx.Common
         Labours=73,
         CarRent=74,
         Doctor =75,
+        DairySale = 76,
     }
 
 
