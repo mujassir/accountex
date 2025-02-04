@@ -114,7 +114,10 @@ else
                                                 <th>Code</th>
                                                 <th style="width: 30%;">Name</th>
                                                 <th style="width: 30%;">Comments</th>
-                                                <th class="align-right">Milk</th>
+                                                <th class="align-right">Morning</th>
+                                                <th class="align-right">Noon</th>
+                                                <th class="align-right">Evening</th>
+                                                <th class="align-right">Total Milk</th>
                                                 <th class="align-right">Rate</th>
                                                 <th class="align-right">Amount</th>
                                                 <th></th>
@@ -124,7 +127,7 @@ else
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <td colspan="3" class="text-right">Total: </td>
+                                                <td colspan="6" class="text-right">Total: </td>
                                                 <td>
                                                     <input type="text" id="TotalQty" disabled="disabled" class="form-control input-small align-right" data-db-column="TotalAmount" data-db-type="float">
                                                 </td>
@@ -267,6 +270,15 @@ else
         </td>
         <td>
             <input type="text" class="Comment form-control input-medium" data-db-column="Comment">
+        </td>
+        <td class="align-center">
+            <input type="text" class="Morning form-control input-small num align-right" data-db-column="Morning" data-db-type="float">
+        </td>
+        <td class="align-center">
+            <input type="text" class="Noon form-control input-small num align-right" data-db-column="Noon" data-db-type="float">
+        </td>
+        <td class="align-center">
+            <input type="text" class="Evening form-control input-small num align-right" data-db-column="Evening" data-db-type="float">
         </td>
         <td class="align-center">
             <input type="text" class="Qty form-control input-small num align-right" data-db-column="Qty" data-db-type="float">

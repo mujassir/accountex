@@ -11,6 +11,9 @@ namespace AccountEx.CodeFirst.Models.Transactions
         public string ItemCode { get; set; }
         public string ItemName { get; set; }
         public string Comment { get; set; }
+        public decimal? Morning { get; set; }
+        public decimal? Noon { get; set; }
+        public decimal? Evening { get; set; }
         public decimal? Qty { get; set; }
         public decimal? Rate { get; set; }
         public decimal? Amount { get; set; }

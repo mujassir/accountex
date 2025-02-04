@@ -278,12 +278,13 @@ var Transaction = function () {
                 html += "<tr>";
                 html += "<td>" + (index++) + "</td>";
                 html += "<td>" + item.ItemName + "</td>";
-                html += "<td>" + item.Quantity + "</td>";
+                html += "<td>" + item.Morning + "</td>";
+                html += "<td>" + item.Noon + "</td>";
+                html += "<td>" + item.Evening + "</td>";
+                html += "<td>" + item.Qty + "</td>";
                 //html += "<td>" + item.Unit + "</td>";
                 html += "<td>" + item.Rate.format() + "</td>";
                 html += "<td>" + item.Amount.format() + "</td>";
-                html += "<td>" + item.DiscountAmount.format() + "</td>";
-                html += "<td>" + item.NetAmount.format() + "</td>";
                 html += "</tr>";
             }
             $("#report-saleitem tbody").append(html);
